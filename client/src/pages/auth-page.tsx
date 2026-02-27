@@ -30,7 +30,7 @@ export default function AuthPage() {
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { username: "", password: "", confirmPassword: "" },
+    defaultValues: { username: "", firstName: "", lastName: "", password: "", confirmPassword: "" },
   });
 
   const resetForm = useForm<z.infer<typeof resetPasswordSchema>>({
@@ -67,7 +67,7 @@ export default function AuthPage() {
   const onRegister = async (data: z.infer<typeof registerSchema>) => {
     setIsSubmitting(true);
     try {
-      await register(data.username, data.password);
+      await register(data.username, data.firstName, data.lastName, data.password);
       toast({
         title: "Account created!",
         description: "Welcome to ComplianceQuest!",
@@ -235,6 +235,42 @@ export default function AuthPage() {
               >
                 <Form {...registerForm}>
                   <form onSubmit={registerForm.handleSubmit(onRegister)} className="flex flex-col gap-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        control={registerForm.control}
+                        name="firstName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>First Name</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="First name"
+                                data-testid="input-register-first-name"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={registerForm.control}
+                        name="lastName"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Last Name</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                placeholder="Last name"
+                                data-testid="input-register-last-name"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                     <FormField
                       control={registerForm.control}
                       name="username"

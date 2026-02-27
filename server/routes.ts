@@ -131,10 +131,13 @@ export async function registerRoutes(
 
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, password } = req.body;
+      const { username, firstName, lastName, password } = req.body;
 
       if (!username || !password) {
         return res.status(400).json({ message: "Username and password are required" });
+      }
+      if (!firstName || !lastName) {
+        return res.status(400).json({ message: "First name and last name are required" });
       }
       if (username.length < 3) {
         return res.status(400).json({ message: "Username must be at least 3 characters" });
@@ -153,6 +156,8 @@ export async function registerRoutes(
 
       let user = await storage.createUser({
         username,
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
         password: hashedPassword,
       });
 
@@ -409,6 +414,8 @@ export async function registerRoutes(
         return {
           id: u.id,
           username: u.username,
+          firstName: u.firstName,
+          lastName: u.lastName,
           totalXp: streak?.totalXp || 0,
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,

@@ -6,6 +6,8 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
+  firstName: text("first_name").notNull().default(""),
+  lastName: text("last_name").notNull().default(""),
   password: text("password").notNull(),
   isAdmin: boolean("is_admin").notNull().default(false),
   dailyGoal: integer("daily_goal").notNull().default(5),
@@ -58,6 +60,8 @@ export type QuizSession = typeof quizSessions.$inferSelect;
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
+  firstName: true,
+  lastName: true,
   password: true,
 });
 
@@ -68,6 +72,8 @@ export const loginSchema = z.object({
 
 export const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {

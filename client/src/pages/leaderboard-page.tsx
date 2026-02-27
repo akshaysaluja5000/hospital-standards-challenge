@@ -10,6 +10,8 @@ import { levels } from "@shared/questions";
 interface LeaderboardEntry {
   id: number;
   username: string;
+  firstName: string;
+  lastName: string;
   totalXp: number;
   currentStreak: number;
   longestStreak: number;
@@ -17,6 +19,20 @@ interface LeaderboardEntry {
   accuracy: number;
   levelsCompleted: number;
   lastActive: string | null;
+}
+
+function displayName(entry: LeaderboardEntry): string {
+  if (entry.firstName && entry.lastName) {
+    return `${entry.firstName} ${entry.lastName}`;
+  }
+  return entry.username;
+}
+
+function initials(entry: LeaderboardEntry): string {
+  if (entry.firstName && entry.lastName) {
+    return `${entry.firstName.charAt(0)}${entry.lastName.charAt(0)}`.toUpperCase();
+  }
+  return entry.username.charAt(0).toUpperCase();
 }
 
 export default function LeaderboardPage() {
@@ -103,10 +119,10 @@ export default function LeaderboardPage() {
                 transition={{ delay: 0.1 }}
               >
                 <div className="w-16 h-16 rounded-full bg-gray-300/20 border-2 border-gray-400 flex items-center justify-center">
-                  <span className="text-xl font-black">{topThree[1].username.charAt(0).toUpperCase()}</span>
+                  <span className="text-xl font-black">{initials(topThree[1])}</span>
                 </div>
                 <Medal size={20} className="text-gray-400" />
-                <p className="text-xs font-bold truncate w-full text-center" data-testid={`text-rank-2-name`}>{topThree[1].username}</p>
+                <p className="text-xs font-bold truncate w-full text-center" data-testid={`text-rank-2-name`}>{displayName(topThree[1])}</p>
                 <p className="text-xs text-muted-foreground font-medium">{topThree[1].totalXp} XP</p>
               </motion.div>
             )}
@@ -118,9 +134,9 @@ export default function LeaderboardPage() {
             >
               <Crown size={24} className="text-yellow-500" />
               <div className="w-20 h-20 rounded-full bg-yellow-500/20 border-2 border-yellow-500 flex items-center justify-center">
-                <span className="text-2xl font-black">{topThree[0].username.charAt(0).toUpperCase()}</span>
+                <span className="text-2xl font-black">{initials(topThree[0])}</span>
               </div>
-              <p className="text-sm font-black truncate w-full text-center" data-testid={`text-rank-1-name`}>{topThree[0].username}</p>
+              <p className="text-sm font-black truncate w-full text-center" data-testid={`text-rank-1-name`}>{displayName(topThree[0])}</p>
               <p className="text-xs text-primary font-bold">{topThree[0].totalXp} XP</p>
             </motion.div>
 
@@ -132,10 +148,10 @@ export default function LeaderboardPage() {
                 transition={{ delay: 0.2 }}
               >
                 <div className="w-16 h-16 rounded-full bg-amber-700/20 border-2 border-amber-700 flex items-center justify-center">
-                  <span className="text-xl font-black">{topThree[2].username.charAt(0).toUpperCase()}</span>
+                  <span className="text-xl font-black">{initials(topThree[2])}</span>
                 </div>
                 <Medal size={20} className="text-amber-700" />
-                <p className="text-xs font-bold truncate w-full text-center" data-testid={`text-rank-3-name`}>{topThree[2].username}</p>
+                <p className="text-xs font-bold truncate w-full text-center" data-testid={`text-rank-3-name`}>{displayName(topThree[2])}</p>
                 <p className="text-xs text-muted-foreground font-medium">{topThree[2].totalXp} XP</p>
               </motion.div>
             )}
@@ -174,13 +190,13 @@ export default function LeaderboardPage() {
                   </div>
 
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isMe ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"}`}>
-                    <span className="text-xs font-bold">{entry.username.charAt(0).toUpperCase()}</span>
+                    <span className="text-xs font-bold">{initials(entry)}</span>
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className={`text-sm font-bold truncate ${isMe ? "text-primary" : ""}`}>
-                        {entry.username}
+                        {displayName(entry)}
                         {isMe && <span className="text-xs font-normal text-muted-foreground ml-1">(you)</span>}
                       </p>
                     </div>
