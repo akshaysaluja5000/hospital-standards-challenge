@@ -1,16 +1,383 @@
-import type { Express } from "express";
+import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+import session from "express-session";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import { scrypt, randomBytes, timingSafeEqual } from "crypto";
+import { promisify } from "util";
 import { storage } from "./storage";
+import { format } from "date-fns";
+import connectPgSimple from "connect-pg-simple";
+import { z } from "zod";
+import type { User } from "@shared/schema";
+
+const submitSchema = z.object({
+  levelId: z.string().min(1),
+  score: z.number().int().min(0),
+  totalQuestions: z.number().int().min(1),
+  xpEarned: z.number().int().min(0),
+});
+
+const settingsSchema = z.object({
+  dailyGoal: z.number().int().min(1).max(50).optional(),
+  reminderEnabled: z.boolean().optional(),
+});
+
+const scryptAsync = promisify(scrypt);
+
+async function hashPassword(password: string): Promise<string> {
+  const salt = randomBytes(16).toString("hex");
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${buf.toString("hex")}.${salt}`;
+}
+
+async function comparePassword(supplied: string, stored: string): Promise<boolean> {
+  const [hashed, salt] = stored.split(".");
+  const buf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+  return timingSafeEqual(Buffer.from(hashed, "hex"), buf);
+}
+
+declare global {
+  namespace Express {
+    interface User {
+      id: number;
+      username: string;
+      email: string;
+      isVerified: boolean;
+      isAdmin: boolean;
+      dailyGoal: number;
+      reminderEnabled: boolean;
+      createdAt: Date;
+    }
+  }
+}
+
+function requireAuth(req: Request, res: Response, next: NextFunction) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+  next();
+}
+
+function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  if (!req.isAuthenticated() || !req.user?.isAdmin) {
+    return res.status(403).json({ message: "Admin access required" });
+  }
+  next();
+}
 
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
-  // put application routes here
-  // prefix all routes with /api
+  const PgStore = connectPgSimple(session);
 
-  // use storage to perform CRUD operations on the storage interface
-  // e.g. storage.insertUser(user) or storage.getUserByUsername(username)
+  app.use(
+    session({
+      store: new PgStore({
+        conString: process.env.DATABASE_URL,
+        createTableIfMissing: true,
+      }),
+      secret: process.env.SESSION_SECRET!,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      },
+    })
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.use(
+    new LocalStrategy(async (username, password, done) => {
+      try {
+        const user = await storage.getUserByUsername(username);
+        if (!user) {
+          return done(null, false, { message: "Invalid username or password" });
+        }
+        const valid = await comparePassword(password, user.password);
+        if (!valid) {
+          return done(null, false, { message: "Invalid username or password" });
+        }
+        return done(null, user);
+      } catch (err) {
+        return done(err);
+      }
+    })
+  );
+
+  passport.serializeUser((user: any, done) => {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id: number, done) => {
+    try {
+      const user = await storage.getUser(id);
+      if (!user) return done(null, false);
+      const { password, verificationToken, ...safeUser } = user;
+      done(null, safeUser as Express.User);
+    } catch (err) {
+      done(err);
+    }
+  });
+
+  app.post("/api/auth/register", async (req, res) => {
+    try {
+      const { username, email, password } = req.body;
+
+      if (!username || !email || !password) {
+        return res.status(400).json({ message: "Username, email, and password are required" });
+      }
+      if (username.length < 3) {
+        return res.status(400).json({ message: "Username must be at least 3 characters" });
+      }
+      if (password.length < 6) {
+        return res.status(400).json({ message: "Password must be at least 6 characters" });
+      }
+
+      const existingUsername = await storage.getUserByUsername(username);
+      if (existingUsername) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
+      const existingEmail = await storage.getUserByEmail(email);
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+
+      const hashedPassword = await hashPassword(password);
+      const isFirstUser = (await storage.getAllUsers()).length === 0;
+
+      let user = await storage.createUser({
+        username,
+        email,
+        password: hashedPassword,
+      });
+
+      const updates: any = { isVerified: true };
+      if (isFirstUser) {
+        updates.isAdmin = true;
+      }
+      user = (await storage.updateUser(user.id, updates))!;
+
+      await storage.upsertStreak(user.id, {
+        currentStreak: 0,
+        longestStreak: 0,
+        totalXp: 0,
+      });
+
+      req.login(user, (err) => {
+        if (err) return res.status(500).json({ message: "Login failed after registration" });
+        const { password: _, verificationToken: __, ...safeUser } = user;
+        res.status(201).json(safeUser);
+      });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message || "Registration failed" });
+    }
+  });
+
+  app.post("/api/auth/login", (req, res, next) => {
+    passport.authenticate("local", (err: any, user: any, info: any) => {
+      if (err) return next(err);
+      if (!user) return res.status(401).json({ message: info?.message || "Invalid credentials" });
+      req.login(user, (err) => {
+        if (err) return next(err);
+        const { password: _, verificationToken: __, ...safeUser } = user;
+        res.json(safeUser);
+      });
+    })(req, res, next);
+  });
+
+  app.post("/api/auth/logout", (req, res) => {
+    req.logout((err) => {
+      if (err) return res.status(500).json({ message: "Logout failed" });
+      res.json({ message: "Logged out" });
+    });
+  });
+
+  app.get("/api/auth/me", (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    res.json(req.user);
+  });
+
+  app.patch("/api/auth/settings", requireAuth, async (req, res) => {
+    try {
+      const parsed = settingsSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ message: "Invalid settings data" });
+      }
+      const updates: any = {};
+      if (parsed.data.dailyGoal !== undefined) updates.dailyGoal = parsed.data.dailyGoal;
+      if (parsed.data.reminderEnabled !== undefined) updates.reminderEnabled = parsed.data.reminderEnabled;
+      const user = await storage.updateUser(req.user!.id, updates);
+      if (!user) return res.status(404).json({ message: "User not found" });
+      const { password: _, verificationToken: __, ...safeUser } = user;
+      res.json(safeUser);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/game/streak", requireAuth, async (req, res) => {
+    try {
+      let streak = await storage.getStreak(req.user!.id);
+      if (!streak) {
+        streak = await storage.upsertStreak(req.user!.id, {
+          currentStreak: 0,
+          longestStreak: 0,
+          totalXp: 0,
+        });
+      }
+      res.json(streak);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/game/progress", requireAuth, async (req, res) => {
+    try {
+      const progress = await storage.getProgress(req.user!.id);
+      res.json(progress);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/game/activities", requireAuth, async (req, res) => {
+    try {
+      const activities = await storage.getActivities(req.user!.id);
+      res.json(activities);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/game/today", requireAuth, async (req, res) => {
+    try {
+      const today = format(new Date(), "yyyy-MM-dd");
+      let activity = await storage.getDailyActivity(req.user!.id, today);
+      if (!activity) {
+        activity = { id: 0, userId: req.user!.id, date: today, questionsAnswered: 0, correctAnswers: 0, xpEarned: 0 };
+      }
+      res.json(activity);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/game/submit", requireAuth, async (req, res) => {
+    try {
+      const parsed = submitSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ message: "Invalid submission data" });
+      }
+      const { levelId, score, totalQuestions, xpEarned } = parsed.data;
+      const userId = req.user!.id;
+      const today = format(new Date(), "yyyy-MM-dd");
+
+      await storage.upsertProgress(userId, levelId, score, totalQuestions);
+      await storage.upsertDailyActivity(userId, today, totalQuestions, score, xpEarned);
+
+      let streak = await storage.getStreak(userId);
+      if (!streak) {
+        streak = await storage.upsertStreak(userId, {
+          currentStreak: 1,
+          longestStreak: 1,
+          totalXp: xpEarned,
+          lastPlayedDate: today,
+        });
+      } else {
+        const lastPlayed = streak.lastPlayedDate;
+        let newStreak = streak.currentStreak;
+
+        if (lastPlayed) {
+          const lastDate = new Date(lastPlayed);
+          const todayDate = new Date(today);
+          const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+
+          if (diffDays === 1) {
+            newStreak = streak.currentStreak + 1;
+          } else if (diffDays > 1) {
+            newStreak = 1;
+          }
+        } else {
+          newStreak = 1;
+        }
+
+        const newLongest = Math.max(newStreak, streak.longestStreak);
+        streak = await storage.upsertStreak(userId, {
+          currentStreak: newStreak,
+          longestStreak: newLongest,
+          totalXp: streak.totalXp + xpEarned,
+          lastPlayedDate: today,
+        });
+      }
+
+      res.json({ success: true, streak });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/admin/stats", requireAdmin, async (req, res) => {
+    try {
+      const allUsers = await storage.getAllUsers();
+      const allStreaks = await storage.getAllStreaks();
+      const allActivities = await storage.getAllActivities();
+      const today = format(new Date(), "yyyy-MM-dd");
+
+      const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
+      const activitiesByUser = new Map<number, DailyActivity[]>();
+      allActivities.forEach((a) => {
+        const list = activitiesByUser.get(a.userId) || [];
+        list.push(a);
+        activitiesByUser.set(a.userId, list);
+      });
+
+      const activeToday = allActivities.filter((a) => a.date === today && a.questionsAnswered > 0).length;
+      const totalQuestionsAnswered = allActivities.reduce((sum, a) => sum + a.questionsAnswered, 0);
+      const totalCorrect = allActivities.reduce((sum, a) => sum + a.correctAnswers, 0);
+      const averageAccuracy = totalQuestionsAnswered > 0
+        ? Math.round((totalCorrect / totalQuestionsAnswered) * 100)
+        : 0;
+
+      const userList = allUsers.map((u) => {
+        const streak = streakMap.get(u.id);
+        const userActivities = activitiesByUser.get(u.id) || [];
+        const questionsAnswered = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
+        const correct = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
+        const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
+
+        return {
+          id: u.id,
+          username: u.username,
+          email: u.email,
+          totalXp: streak?.totalXp || 0,
+          currentStreak: streak?.currentStreak || 0,
+          longestStreak: streak?.longestStreak || 0,
+          questionsAnswered,
+          accuracy,
+          lastActive: streak?.lastPlayedDate || null,
+        };
+      }).sort((a, b) => b.totalXp - a.totalXp);
+
+      res.json({
+        totalUsers: allUsers.length,
+        activeToday,
+        totalQuestionsAnswered,
+        averageAccuracy,
+        userList,
+      });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
 
   return httpServer;
 }
