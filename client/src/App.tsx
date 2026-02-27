@@ -10,6 +10,7 @@ import PlayPage from "@/pages/play-page";
 import StudyPage from "@/pages/study-page";
 import ProfilePage from "@/pages/profile-page";
 import AdminPage from "@/pages/admin-page";
+import LeaderboardPage from "@/pages/leaderboard-page";
 import HandbookPage from "@/pages/handbook-page";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
@@ -75,6 +76,9 @@ function Router() {
       </Route>
       <Route path="/handbook">
         {() => <ProtectedRoute component={HandbookPage} />}
+      </Route>
+      <Route path="/leaderboard">
+        {() => <ProtectedRoute component={LeaderboardPage} />}
       </Route>
       <Route path="/profile">
         {() => <ProtectedRoute component={ProfilePage} />}

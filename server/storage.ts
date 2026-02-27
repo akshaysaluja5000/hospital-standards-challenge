@@ -93,7 +93,6 @@ export class DatabaseStorage implements IStorage {
 
   async upsertProgress(userId: number, levelId: string, score: number, totalQuestions: number): Promise<UserProgress> {
     const existing = await this.getProgressByLevel(userId, levelId);
-    const completed = (score / totalQuestions) * 100 >= 60;
 
     if (existing) {
       const newBestScore = Math.max(existing.bestScore, score);
@@ -101,8 +100,8 @@ export class DatabaseStorage implements IStorage {
         score,
         totalQuestions,
         bestScore: newBestScore,
-        completed: completed || existing.completed,
-        completedAt: completed && !existing.completed ? new Date() : existing.completedAt,
+        completed: true,
+        completedAt: existing.completedAt || new Date(),
       }).where(eq(userProgress.id, existing.id)).returning();
       return updated;
     }
@@ -113,8 +112,8 @@ export class DatabaseStorage implements IStorage {
       score,
       totalQuestions,
       bestScore: score,
-      completed,
-      completedAt: completed ? new Date() : null,
+      completed: true,
+      completedAt: new Date(),
     }).returning();
     return created;
   }

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Lock, CheckCircle2, Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Level, UserProgress } from "@shared/schema";
 
@@ -16,7 +16,7 @@ interface LevelCardProps {
   onStudy: () => void;
 }
 
-export function LevelCard({ level, progress, isUnlocked, index, onPlay, onStudy }: LevelCardProps) {
+export function LevelCard({ level, progress, index, onPlay, onStudy }: LevelCardProps) {
   const Icon = iconMap[level.icon] || Star;
   const isCompleted = progress?.completed;
   const bestScore = progress?.bestScore || 0;
@@ -28,9 +28,7 @@ export function LevelCard({ level, progress, isUnlocked, index, onPlay, onStudy 
       className={`w-full rounded-2xl border-2 p-5 transition-all ${
         isCompleted
           ? "border-chart-1/40 bg-chart-1/5"
-          : isUnlocked
-          ? "border-border bg-card"
-          : "border-border/50 bg-muted/50 opacity-60"
+          : "border-border bg-card"
       }`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -41,13 +39,11 @@ export function LevelCard({ level, progress, isUnlocked, index, onPlay, onStudy 
         <div
           className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center"
           style={{
-            backgroundColor: isUnlocked ? `${level.color}15` : undefined,
-            color: isUnlocked ? level.color : undefined,
+            backgroundColor: `${level.color}15`,
+            color: level.color,
           }}
         >
-          {!isUnlocked ? (
-            <Lock size={24} className="text-muted-foreground" />
-          ) : isCompleted ? (
+          {isCompleted ? (
             <CheckCircle2 size={28} className="text-chart-1" />
           ) : (
             <Icon size={28} />
@@ -84,39 +80,29 @@ export function LevelCard({ level, progress, isUnlocked, index, onPlay, onStudy 
                 </span>
               </>
             )}
-            {!isUnlocked && (
-              <>
-                <span className="text-xs text-muted-foreground">|</span>
-                <span className="text-xs text-muted-foreground font-medium">
-                  Score 60% to unlock
-                </span>
-              </>
-            )}
           </div>
 
-          {isUnlocked && (
-            <div className="flex gap-2 mt-3">
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs"
-                onClick={onStudy}
-                data-testid={`button-study-${level.id}`}
-              >
-                <BookOpen size={14} className="mr-1.5" />
-                Study First
-              </Button>
-              <Button
-                size="sm"
-                className="text-xs"
-                onClick={onPlay}
-                data-testid={`button-level-${level.id}`}
-              >
-                <Play size={14} className="mr-1.5" />
-                Play Quiz
-              </Button>
-            </div>
-          )}
+          <div className="flex gap-2 mt-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs"
+              onClick={onStudy}
+              data-testid={`button-study-${level.id}`}
+            >
+              <BookOpen size={14} className="mr-1.5" />
+              Study First
+            </Button>
+            <Button
+              size="sm"
+              className="text-xs"
+              onClick={onPlay}
+              data-testid={`button-level-${level.id}`}
+            >
+              <Play size={14} className="mr-1.5" />
+              Play Quiz
+            </Button>
+          </div>
         </div>
       </div>
     </motion.div>

@@ -14,11 +14,13 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 - Username/password authentication (no email required)
 - Guest mode: play all levels without an account (progress/streaks/XP not saved)
 - Username-based password reset (forgot password flow)
-- 11 levels based on Joint Commission audit domains (~13-15 questions each, 153 total)
+- 11 levels based on Joint Commission audit domains (~13-14 questions each) — ALL unlocked from start (no sequential gating)
+- No pass/fail threshold — every completion is recorded, with tiered feedback (Excellent 80%+, Good 50%+, Keep Studying)
 - Study Mode with key concepts before each level (5 study cards per level)
 - Multiple choice questions + Yes/No button cards
 - Quiz session persistence: registered users can leave mid-level and resume where they left off (question order, answers, XP all preserved)
 - Compliance Handbook: searchable reference guide with 11 chapters, expandable sections, critical values tables, "Think About It" scenarios, and quick reference view
+- Leaderboard: all logged-in users can see rankings by XP, accuracy, levels completed, streaks — allows CEO/management to monitor worker engagement
 - Streak system with animated flame icon
 - XP/leveling system
 - Daily goals with progress tracking (reminders toggle is UI-only, no emails sent)
@@ -37,7 +39,7 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 - `shared/questions.ts` - Question bank organized by levels
 - `server/routes.ts` - API endpoints with auth middleware
 - `server/storage.ts` - Database CRUD operations
-- `client/src/pages/` - Auth, Dashboard, Play, Study, Profile, Admin pages
+- `client/src/pages/` - Auth, Dashboard, Play, Study, Profile, Admin, Leaderboard pages
 - `shared/handbook.ts` - Compliance Handbook content (11 chapters with sections, critical values, scenarios)
 - `client/src/pages/handbook-page.tsx` - Handbook UI with search, expandable sections, quick reference
 - `client/src/components/` - SwipeCard, QuizCard, StreakFlame, XpBar, LevelCard, DailyCalendar

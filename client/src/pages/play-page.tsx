@@ -212,7 +212,6 @@ export default function PlayPage() {
 
   if (isComplete) {
     const percentage = Math.round((gameState.correctAnswers / questions.length) * 100);
-    const passed = percentage >= 60;
 
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
@@ -225,25 +224,31 @@ export default function PlayPage() {
           <div className="rounded-2xl bg-card border border-card-border p-8 flex flex-col items-center gap-6">
             <motion.div
               className={`w-24 h-24 rounded-full flex items-center justify-center ${
-                passed ? "bg-chart-1/15" : "bg-chart-4/15"
+                percentage >= 80 ? "bg-chart-1/15" : percentage >= 50 ? "bg-chart-4/15" : "bg-destructive/15"
               }`}
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
             >
-              {passed ? (
+              {percentage >= 80 ? (
                 <Trophy size={48} className="text-chart-1" />
-              ) : (
+              ) : percentage >= 50 ? (
                 <Star size={48} className="text-chart-4" />
+              ) : (
+                <Star size={48} className="text-destructive" />
               )}
             </motion.div>
 
             <div>
               <h2 className="text-2xl font-black" data-testid="text-result-title">
-                {passed ? "Level Complete!" : "Keep Practicing!"}
+                {percentage >= 80 ? "Excellent!" : percentage >= 50 ? "Good Effort!" : "Keep Studying!"}
               </h2>
               <p className="text-muted-foreground mt-1">
-                {passed ? "Great job! You've mastered this level." : "You need 60% to pass. Try again!"}
+                {percentage >= 80
+                  ? "Great job! You really know this material."
+                  : percentage >= 50
+                  ? "You're getting there. Review the study material and try again!"
+                  : "Try studying this section first, then give it another shot!"}
               </p>
             </div>
 

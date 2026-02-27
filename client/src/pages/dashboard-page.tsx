@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, UserPlus, BookOpen, Lock } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, UserPlus, BookOpen, Lock, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -42,16 +42,8 @@ export default function DashboardPage() {
   const progressMap = new Map<string, UserProgress>();
   progress?.forEach((p) => progressMap.set(p.levelId, p));
 
-  const isLevelUnlocked = (levelIndex: number) => {
-    if (isGuest) return true;
-    if (levelIndex === 0) return true;
-    const prevLevel = levels[levelIndex - 1];
-    const prevProgress = progressMap.get(prevLevel.id);
-    if (!prevProgress) return false;
-    const percentage = prevProgress.totalQuestions > 0
-      ? (prevProgress.bestScore / prevProgress.totalQuestions) * 100
-      : 0;
-    return percentage >= levels[levelIndex].requiredScore;
+  const isLevelUnlocked = (_levelIndex: number) => {
+    return true;
   };
 
   const dailyGoal = user?.dailyGoal || 5;
@@ -105,6 +97,14 @@ export default function DashboardPage() {
               </Button>
             ) : (
               <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setLocation("/leaderboard")}
+                  data-testid="button-leaderboard"
+                >
+                  <Trophy size={16} />
+                </Button>
                 {user?.isAdmin && (
                   <Button
                     variant="outline"

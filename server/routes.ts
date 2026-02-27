@@ -379,6 +379,52 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/game/leaderboard", requireAuth, async (req, res) => {
+    try {
+      const allUsers = await storage.getAllUsers();
+      const allStreaks = await storage.getAllStreaks();
+      const allActivities = await storage.getAllActivities();
+      const allProgressData = await Promise.all(
+        allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
+      );
+
+      const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
+      const activitiesByUser = new Map<number, DailyActivity[]>();
+      allActivities.forEach((a) => {
+        const list = activitiesByUser.get(a.userId) || [];
+        list.push(a);
+        activitiesByUser.set(a.userId, list);
+      });
+      const progressByUser = new Map(allProgressData.map((p) => [p.userId, p.progress]));
+
+      const leaderboard = allUsers.map((u) => {
+        const streak = streakMap.get(u.id);
+        const userActivities = activitiesByUser.get(u.id) || [];
+        const userProgress = progressByUser.get(u.id) || [];
+        const questionsAnswered = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
+        const correct = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
+        const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
+        const levelsCompleted = userProgress.filter((p) => p.completed).length;
+
+        return {
+          id: u.id,
+          username: u.username,
+          totalXp: streak?.totalXp || 0,
+          currentStreak: streak?.currentStreak || 0,
+          longestStreak: streak?.longestStreak || 0,
+          questionsAnswered,
+          accuracy,
+          levelsCompleted,
+          lastActive: streak?.lastPlayedDate || null,
+        };
+      }).sort((a, b) => b.totalXp - a.totalXp);
+
+      res.json(leaderboard);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
       const allUsers = await storage.getAllUsers();
