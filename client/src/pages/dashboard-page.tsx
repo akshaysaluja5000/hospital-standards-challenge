@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, UserPlus, BookOpen } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, UserPlus, BookOpen, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -241,27 +241,29 @@ export default function DashboardPage() {
           </>
         )}
 
-        {!isGuest && (
-          <motion.button
-            className="w-full rounded-2xl bg-primary/5 border-2 border-primary/20 p-4 flex items-center gap-4 hover:bg-primary/10 transition-colors text-left"
-            onClick={() => setLocation("/handbook")}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileTap={{ scale: 0.98 }}
-            data-testid="button-handbook"
-          >
-            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-              <BookOpen size={24} className="text-primary" />
-            </div>
-            <div className="flex-1">
-              <h3 className="font-bold text-sm">Compliance Handbook</h3>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Complete reference guide with detailed explanations, critical values, and scenarios
-              </p>
-            </div>
-            <ChevronRight size={18} className="text-muted-foreground" />
-          </motion.button>
-        )}
+        <motion.button
+          className={`w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left ${isGuest ? "bg-muted/30 border-muted opacity-70 cursor-default" : "bg-primary/5 border-primary/20 hover:bg-primary/10"}`}
+          onClick={() => { if (!isGuest) setLocation("/handbook"); }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileTap={isGuest ? {} : { scale: 0.98 }}
+          data-testid="button-handbook"
+        >
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${isGuest ? "bg-muted" : "bg-primary/10"}`}>
+            {isGuest ? <Lock size={22} className="text-muted-foreground" /> : <BookOpen size={24} className="text-primary" />}
+          </div>
+          <div className="flex-1">
+            <h3 className={`font-bold text-sm ${isGuest ? "text-muted-foreground" : ""}`}>Compliance Handbook</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {isGuest
+                ? "Create an account to access the full reference guide"
+                : "Complete reference guide with detailed explanations, critical values, and scenarios"}
+            </p>
+          </div>
+          {isGuest
+            ? <Lock size={16} className="text-muted-foreground flex-shrink-0" />
+            : <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />}
+        </motion.button>
 
         <div>
           <h2 className="text-lg font-black mb-4 flex items-center gap-2">
