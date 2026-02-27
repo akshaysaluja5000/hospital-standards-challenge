@@ -228,6 +228,48 @@ export async function registerRoutes(
     }
   });
 
+  app.patch("/api/auth/username", requireAuth, async (req, res) => {
+    try {
+      const { username } = req.body;
+      if (!username || username.length < 3) {
+        return res.status(400).json({ message: "Username must be at least 3 characters" });
+      }
+      const existing = await storage.getUserByUsername(username);
+      if (existing && existing.id !== req.user!.id) {
+        return res.status(400).json({ message: "Username is already taken" });
+      }
+      const user = await storage.updateUser(req.user!.id, { username });
+      if (!user) return res.status(404).json({ message: "User not found" });
+      const { password: _, ...safeUser } = user;
+      res.json(safeUser);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.patch("/api/auth/password", requireAuth, async (req, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: "Current and new password are required" });
+      }
+      if (newPassword.length < 6) {
+        return res.status(400).json({ message: "New password must be at least 6 characters" });
+      }
+      const fullUser = await storage.getUser(req.user!.id);
+      if (!fullUser) return res.status(404).json({ message: "User not found" });
+      const valid = await comparePassword(currentPassword, fullUser.password);
+      if (!valid) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+      const hashedPassword = await hashPassword(newPassword);
+      await storage.updateUser(req.user!.id, { password: hashedPassword });
+      res.json({ message: "Password updated successfully" });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   app.patch("/api/auth/settings", requireAuth, async (req, res) => {
     try {
       const parsed = settingsSchema.safeParse(req.body);
