@@ -71,10 +71,10 @@ function Router() {
         {() => <ProtectedRoute component={StudyPage} allowGuest />}
       </Route>
       <Route path="/handbook/:levelId">
-        {() => <ProtectedRoute component={HandbookPage} allowGuest />}
+        {() => <ProtectedRoute component={HandbookPage} />}
       </Route>
       <Route path="/handbook">
-        {() => <ProtectedRoute component={HandbookPage} allowGuest />}
+        {() => <ProtectedRoute component={HandbookPage} />}
       </Route>
       <Route path="/profile">
         {() => <ProtectedRoute component={ProfilePage} />}

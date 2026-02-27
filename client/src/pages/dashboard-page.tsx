@@ -241,25 +241,27 @@ export default function DashboardPage() {
           </>
         )}
 
-        <motion.button
-          className="w-full rounded-2xl bg-primary/5 border-2 border-primary/20 p-4 flex items-center gap-4 hover:bg-primary/10 transition-colors text-left"
-          onClick={() => setLocation("/handbook")}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileTap={{ scale: 0.98 }}
-          data-testid="button-handbook"
-        >
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-            <BookOpen size={24} className="text-primary" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-sm">Compliance Handbook</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Complete reference guide with detailed explanations, critical values, and scenarios
-            </p>
-          </div>
-          <ChevronRight size={18} className="text-muted-foreground" />
-        </motion.button>
+        {!isGuest && (
+          <motion.button
+            className="w-full rounded-2xl bg-primary/5 border-2 border-primary/20 p-4 flex items-center gap-4 hover:bg-primary/10 transition-colors text-left"
+            onClick={() => setLocation("/handbook")}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileTap={{ scale: 0.98 }}
+            data-testid="button-handbook"
+          >
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <BookOpen size={24} className="text-primary" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-bold text-sm">Compliance Handbook</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Complete reference guide with detailed explanations, critical values, and scenarios
+              </p>
+            </div>
+            <ChevronRight size={18} className="text-muted-foreground" />
+          </motion.button>
+        )}
 
         <div>
           <h2 className="text-lg font-black mb-4 flex items-center gap-2">
