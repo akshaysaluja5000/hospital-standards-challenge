@@ -2,18 +2,20 @@ import { useState, useCallback, useMemo } from "react";
 import { useRoute, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Trophy, Star, Zap, RotateCcw, Home, ChevronRight } from "lucide-react";
+import { ArrowLeft, Trophy, Star, Zap, RotateCcw, Home, ChevronRight, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SwipeCard } from "@/components/swipe-card";
 import { QuizCard } from "@/components/quiz-card";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/lib/auth";
 import { levels } from "@shared/questions";
 import type { GameState } from "@shared/schema";
 
 export default function PlayPage() {
   const [, params] = useRoute("/play/:levelId");
   const [, setLocation] = useLocation();
+  const { isGuest, exitGuestMode } = useAuth();
   const levelId = params?.levelId;
 
   const level = useMemo(() => levels.find((l) => l.id === levelId), [levelId]);
@@ -68,12 +70,14 @@ export default function PlayPage() {
       if (isLastQuestion) {
         setTimeout(() => {
           setIsComplete(true);
-          submitMutation.mutate({
-            levelId: level.id,
-            score: newState.correctAnswers,
-            totalQuestions: questions.length,
-            xpEarned: newState.xpEarned,
-          });
+          if (!isGuest) {
+            submitMutation.mutate({
+              levelId: level.id,
+              score: newState.correctAnswers,
+              totalQuestions: questions.length,
+              xpEarned: newState.xpEarned,
+            });
+          }
         }, currentQ.isSwipe ? 300 : 100);
       } else {
         setTimeout(() => {
@@ -155,6 +159,24 @@ export default function PlayPage() {
                 <p className="text-xs text-muted-foreground">XP Earned</p>
               </div>
             </div>
+
+            {isGuest && (
+              <div className="w-full rounded-xl bg-primary/5 border border-primary/20 p-3 flex items-center gap-3">
+                <UserPlus size={18} className="text-primary flex-shrink-0" />
+                <p className="text-xs text-muted-foreground flex-1">
+                  This score won't be saved. Create an account to track your progress!
+                </p>
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="text-xs flex-shrink-0"
+                  onClick={() => { exitGuestMode(); setLocation("/auth"); }}
+                  data-testid="button-guest-signup-results"
+                >
+                  Sign Up
+                </Button>
+              </div>
+            )}
 
             <div className="flex gap-3 w-full">
               <Button

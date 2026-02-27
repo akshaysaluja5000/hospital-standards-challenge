@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, ReactNode } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest, getQueryFn } from "./queryClient";
 import type { User } from "@shared/schema";
@@ -7,15 +7,20 @@ type AuthUser = Omit<User, "password">;
 
 interface AuthContextType {
   user: AuthUser | null;
+  isGuest: boolean;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  enterGuestMode: () => void;
+  exitGuestMode: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const [isGuest, setIsGuest] = useState(false);
+
   const { data: user, isLoading } = useQuery<AuthUser | null>({
     queryKey: ["/api/auth/me"],
     queryFn: getQueryFn({ on401: "returnNull" }),
@@ -26,6 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await apiRequest("POST", "/api/auth/login", { username, password });
     },
     onSuccess: () => {
+      setIsGuest(false);
       queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
     },
   });
@@ -35,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await apiRequest("POST", "/api/auth/register", { username, password });
     },
     onSuccess: () => {
+      setIsGuest(false);
       queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
     },
   });
@@ -48,10 +55,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  const enterGuestMode = useCallback(() => setIsGuest(true), []);
+  const exitGuestMode = useCallback(() => setIsGuest(false), []);
+
   return (
     <AuthContext.Provider
       value={{
         user: user ?? null,
+        isGuest,
         isLoading,
         login: async (username, password) => {
           await loginMutation.mutateAsync({ username, password });
@@ -62,6 +73,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         logout: async () => {
           await logoutMutation.mutateAsync();
         },
+        enterGuestMode,
+        exitGuestMode,
       }}
     >
       {children}

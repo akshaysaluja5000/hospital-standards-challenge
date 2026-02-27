@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound } from "lucide-react";
+import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, UserX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -19,7 +19,7 @@ export default function AuthPage() {
   const [view, setView] = useState<AuthView>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, register } = useAuth();
+  const { login, register, enterGuestMode } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
@@ -407,6 +407,32 @@ export default function AuthPage() {
               </motion.div>
             )}
           </AnimatePresence>
+
+          <div className="relative mt-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-background px-3 text-muted-foreground font-medium">or</span>
+            </div>
+          </div>
+
+          <Button
+            variant="outline"
+            className="w-full mt-4"
+            size="lg"
+            onClick={() => {
+              enterGuestMode();
+              setLocation("/");
+            }}
+            data-testid="button-guest-mode"
+          >
+            <UserX size={18} className="mr-2" />
+            Continue as Guest
+          </Button>
+          <p className="text-xs text-muted-foreground text-center mt-2">
+            Play without an account — progress won't be saved
+          </p>
         </div>
       </div>
 

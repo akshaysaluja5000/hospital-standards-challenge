@@ -13,8 +13,8 @@ import AdminPage from "@/pages/admin-page";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 
-function ProtectedRoute({ component: Component }: { component: () => JSX.Element }) {
-  const { user, isLoading } = useAuth();
+function ProtectedRoute({ component: Component, allowGuest }: { component: () => JSX.Element; allowGuest?: boolean }) {
+  const { user, isGuest, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -27,15 +27,19 @@ function ProtectedRoute({ component: Component }: { component: () => JSX.Element
     );
   }
 
-  if (!user) {
+  if (!user && !isGuest) {
     return <Redirect to="/auth" />;
+  }
+
+  if (isGuest && !allowGuest) {
+    return <Redirect to="/" />;
   }
 
   return <Component />;
 }
 
 function AuthRoute() {
-  const { user, isLoading } = useAuth();
+  const { user, isGuest, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -45,7 +49,7 @@ function AuthRoute() {
     );
   }
 
-  if (user) {
+  if (user || isGuest) {
     return <Redirect to="/" />;
   }
 
@@ -57,13 +61,13 @@ function Router() {
     <Switch>
       <Route path="/auth" component={AuthRoute} />
       <Route path="/">
-        {() => <ProtectedRoute component={DashboardPage} />}
+        {() => <ProtectedRoute component={DashboardPage} allowGuest />}
       </Route>
       <Route path="/play/:levelId">
-        {() => <ProtectedRoute component={PlayPage} />}
+        {() => <ProtectedRoute component={PlayPage} allowGuest />}
       </Route>
       <Route path="/study/:levelId">
-        {() => <ProtectedRoute component={StudyPage} />}
+        {() => <ProtectedRoute component={StudyPage} allowGuest />}
       </Route>
       <Route path="/profile">
         {() => <ProtectedRoute component={ProfilePage} />}

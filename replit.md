@@ -12,6 +12,7 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 
 ## Key Features
 - Username/password authentication (no email required)
+- Guest mode: play all levels without an account (progress/streaks/XP not saved)
 - Username-based password reset (forgot password flow)
 - 10 levels based on Joint Commission audit domains (~13-15 questions each, ~140 total)
 - Study Mode with key concepts before each level (5 study cards per level)
