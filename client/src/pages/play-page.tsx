@@ -1,8 +1,8 @@
 import { useState, useCallback, useMemo } from "react";
 import { useRoute, useLocation } from "wouter";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Trophy, Star, Zap, RotateCcw, Home, ChevronRight, UserPlus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Trophy, Star, Zap, RotateCcw, Home, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SwipeCard } from "@/components/swipe-card";
@@ -34,7 +34,6 @@ export default function PlayPage() {
   });
 
   const [isComplete, setIsComplete] = useState(false);
-  const [answering, setAnswering] = useState(false);
 
   const submitMutation = useMutation({
     mutationFn: async (data: { levelId: string; score: number; totalQuestions: number; xpEarned: number }) => {
@@ -48,47 +47,50 @@ export default function PlayPage() {
     },
   });
 
+  const currentQuestionAnswered = gameState.answers.find(
+    (a) => a.questionId === questions[gameState.currentQuestion]?.id
+  );
+  const hasAnswered = !!currentQuestionAnswered;
+
   const handleAnswer = useCallback((selectedIndex: number) => {
-    if (answering || !level) return;
-    setAnswering(true);
+    if (hasAnswered || !level) return;
 
     const currentQ = questions[gameState.currentQuestion];
     const isCorrect = selectedIndex === currentQ.correctIndex;
     const xpGained = isCorrect ? currentQ.xpReward : 0;
 
-    setGameState((prev) => {
-      const newState = {
-        ...prev,
-        score: prev.score + (isCorrect ? 1 : 0),
-        correctAnswers: prev.correctAnswers + (isCorrect ? 1 : 0),
-        xpEarned: prev.xpEarned + xpGained,
-        answers: [...prev.answers, { questionId: currentQ.id, correct: isCorrect, selectedIndex }],
-      };
+    setGameState((prev) => ({
+      ...prev,
+      correctAnswers: prev.correctAnswers + (isCorrect ? 1 : 0),
+      xpEarned: prev.xpEarned + xpGained,
+      answers: [...prev.answers, { questionId: currentQ.id, correct: isCorrect, selectedIndex }],
+    }));
+  }, [hasAnswered, gameState.currentQuestion, questions, level]);
 
-      const isLastQuestion = prev.currentQuestion >= questions.length - 1;
+  const handleNext = useCallback(() => {
+    if (!level) return;
+    const isLastQuestion = gameState.currentQuestion >= questions.length - 1;
 
-      if (isLastQuestion) {
-        setTimeout(() => {
-          setIsComplete(true);
-          if (!isGuest) {
-            submitMutation.mutate({
-              levelId: level.id,
-              score: newState.correctAnswers,
-              totalQuestions: questions.length,
-              xpEarned: newState.xpEarned,
-            });
-          }
-        }, currentQ.isSwipe ? 2600 : 100);
-      } else {
-        setTimeout(() => {
-          setGameState((s) => ({ ...s, currentQuestion: s.currentQuestion + 1 }));
-          setAnswering(false);
-        }, currentQ.isSwipe ? 2800 : 2500);
+    if (isLastQuestion) {
+      setIsComplete(true);
+      if (!isGuest) {
+        submitMutation.mutate({
+          levelId: level.id,
+          score: gameState.correctAnswers,
+          totalQuestions: questions.length,
+          xpEarned: gameState.xpEarned,
+        });
       }
+    } else {
+      setGameState((s) => ({ ...s, currentQuestion: s.currentQuestion + 1 }));
+    }
+  }, [gameState, questions, level, isGuest, submitMutation]);
 
-      return newState;
-    });
-  }, [answering, gameState.currentQuestion, questions, level, submitMutation]);
+  const handlePrevious = useCallback(() => {
+    if (gameState.currentQuestion > 0) {
+      setGameState((s) => ({ ...s, currentQuestion: s.currentQuestion - 1 }));
+    }
+  }, [gameState.currentQuestion]);
 
   if (!level) {
     return (
@@ -98,7 +100,7 @@ export default function PlayPage() {
     );
   }
 
-  const progressPercent = ((gameState.currentQuestion + (isComplete ? 1 : 0)) / questions.length) * 100;
+  const progressPercent = (gameState.answers.length / questions.length) * 100;
   const currentQuestion = questions[gameState.currentQuestion];
 
   if (isComplete) {
@@ -188,7 +190,6 @@ export default function PlayPage() {
                     totalQuestions: questions.length, xpEarned: 0, answers: [],
                   });
                   setIsComplete(false);
-                  setAnswering(false);
                 }}
                 data-testid="button-retry"
               >
@@ -245,7 +246,7 @@ export default function PlayPage() {
       <div className="flex-1 flex items-center justify-center p-4">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentQuestion.id}
+            key={`${currentQuestion.id}-${gameState.currentQuestion}`}
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -50 }}
@@ -256,19 +257,45 @@ export default function PlayPage() {
               <SwipeCard
                 question={currentQuestion}
                 onAnswer={handleAnswer}
-                disabled={answering}
+                disabled={hasAnswered}
                 isGuest={isGuest}
+                previousAnswer={currentQuestionAnswered ? { selectedIndex: currentQuestionAnswered.selectedIndex, correct: currentQuestionAnswered.correct } : null}
               />
             ) : (
               <QuizCard
                 question={currentQuestion}
                 onAnswer={handleAnswer}
-                disabled={answering}
+                disabled={hasAnswered}
                 isGuest={isGuest}
+                previousAnswer={currentQuestionAnswered ? { selectedIndex: currentQuestionAnswered.selectedIndex, correct: currentQuestionAnswered.correct } : null}
               />
             )}
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      <div className="bg-card border-t border-card-border sticky bottom-0 z-50">
+        <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
+          <Button
+            variant="outline"
+            className="flex-1"
+            onClick={handlePrevious}
+            disabled={gameState.currentQuestion === 0}
+            data-testid="button-previous"
+          >
+            <ArrowLeft size={16} className="mr-2" />
+            Previous
+          </Button>
+          <Button
+            className="flex-1"
+            onClick={handleNext}
+            disabled={!hasAnswered}
+            data-testid="button-next"
+          >
+            {gameState.currentQuestion >= questions.length - 1 ? "Finish" : "Next"}
+            <ArrowRight size={16} className="ml-2" />
+          </Button>
+        </div>
       </div>
     </div>
   );

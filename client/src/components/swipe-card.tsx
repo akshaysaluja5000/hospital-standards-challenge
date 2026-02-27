@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
-import { motion, useMotionValue, useTransform, PanInfo, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, Lightbulb } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Question } from "@shared/schema";
 
 interface SwipeCardProps {
@@ -8,141 +9,129 @@ interface SwipeCardProps {
   onAnswer: (selectedIndex: number) => void;
   disabled?: boolean;
   isGuest?: boolean;
+  previousAnswer?: { selectedIndex: number; correct: boolean } | null;
 }
 
-export function SwipeCard({ question, onAnswer, disabled, isGuest }: SwipeCardProps) {
-  const [exitDirection, setExitDirection] = useState<"left" | "right" | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-15, 15]);
-  const leftOpacity = useTransform(x, [-150, -50, 0], [1, 0.5, 0]);
-  const rightOpacity = useTransform(x, [0, 50, 150], [0, 0.5, 1]);
+export function SwipeCard({ question, onAnswer, disabled, isGuest, previousAnswer }: SwipeCardProps) {
+  const [selected, setSelected] = useState<number | null>(previousAnswer?.selectedIndex ?? null);
+  const [showResult, setShowResult] = useState(!!previousAnswer);
 
-  const isCorrect = selectedIndex === question.correctIndex;
+  useEffect(() => {
+    setSelected(previousAnswer?.selectedIndex ?? null);
+    setShowResult(!!previousAnswer);
+  }, [question.id, previousAnswer]);
 
-  const handleDragEnd = useCallback((_: any, info: PanInfo) => {
-    if (disabled || showFeedback) return;
-    const threshold = 100;
-    if (info.offset.x > threshold) {
-      setExitDirection("right");
-      setSelectedIndex(0);
-      setShowFeedback(true);
-      setTimeout(() => onAnswer(0), 2500);
-    } else if (info.offset.x < -threshold) {
-      setExitDirection("left");
-      setSelectedIndex(1);
-      setShowFeedback(true);
-      setTimeout(() => onAnswer(1), 2500);
-    }
-  }, [onAnswer, disabled, showFeedback]);
+  const handleSelect = (index: number) => {
+    if (disabled || showResult) return;
+    setSelected(index);
+    setShowResult(true);
+    onAnswer(index);
+  };
+
+  const isCorrect = selected === question.correctIndex;
 
   return (
-    <div className="w-full max-w-sm mx-auto flex flex-col gap-4">
-      <div className="relative" style={{ height: 380 }}>
-        <div className="absolute inset-x-0 bottom-0 flex justify-between px-8 pb-4">
-          <div className="flex flex-col items-center gap-1 text-destructive/60">
-            <div className="w-12 h-12 rounded-full border-2 border-destructive/30 flex items-center justify-center">
-              <X size={24} />
-            </div>
-            <span className="text-xs font-semibold">{question.options[1]}</span>
+    <motion.div
+      className="w-full max-w-lg mx-auto"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className="rounded-2xl bg-card border border-card-border p-6 flex flex-col gap-5">
+        {question.scenario && (
+          <div className="bg-accent/50 rounded-xl p-4 border border-accent">
+            <p className="text-sm text-muted-foreground italic leading-relaxed" data-testid="text-scenario">
+              {question.scenario}
+            </p>
           </div>
-          <div className="flex flex-col items-center gap-1 text-chart-1/60">
-            <div className="w-12 h-12 rounded-full border-2 border-chart-1/30 flex items-center justify-center">
-              <Check size={24} />
-            </div>
-            <span className="text-xs font-semibold">{question.options[0]}</span>
-          </div>
+        )}
+
+        <h3 className="text-lg font-bold leading-snug text-center" data-testid="text-question">
+          {question.question}
+        </h3>
+
+        <div className="flex gap-3 justify-center">
+          {question.options.map((option, index) => {
+            const isYes = index === 0;
+            let btnStyle = isYes
+              ? "border-chart-1/40 bg-chart-1/5 hover:bg-chart-1/15 text-chart-1"
+              : "border-destructive/40 bg-destructive/5 hover:bg-destructive/15 text-destructive";
+
+            if (showResult) {
+              if (index === question.correctIndex) {
+                btnStyle = "border-chart-1 bg-chart-1/15 text-chart-1 ring-2 ring-chart-1/30";
+              } else if (index === selected && !isCorrect) {
+                btnStyle = "border-destructive bg-destructive/15 text-destructive ring-2 ring-destructive/30";
+              } else {
+                btnStyle = "border-border bg-muted/50 text-muted-foreground opacity-50";
+              }
+            }
+
+            return (
+              <Button
+                key={index}
+                variant="outline"
+                size="lg"
+                className={`flex-1 h-16 text-base font-bold border-2 rounded-xl transition-all ${btnStyle} ${
+                  !showResult && !disabled ? "cursor-pointer" : "cursor-default"
+                }`}
+                onClick={() => handleSelect(index)}
+                disabled={showResult || disabled}
+                data-testid={`button-yesno-${index}`}
+              >
+                <span className="flex items-center gap-2">
+                  {isYes ? <Check size={20} /> : <X size={20} />}
+                  {option}
+                </span>
+              </Button>
+            );
+          })}
         </div>
 
-        {!exitDirection && (
-          <motion.div
-            className="absolute inset-0 cursor-grab active:cursor-grabbing"
-            style={{ x, rotate, touchAction: "none" }}
-            drag={disabled || showFeedback ? false : "x"}
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.8}
-            onDragEnd={handleDragEnd}
-            whileTap={{ scale: disabled ? 1 : 0.98 }}
-            data-testid="swipe-card"
-          >
-            <div className="w-full h-full rounded-2xl bg-card border border-card-border p-6 flex flex-col relative select-none">
-              <motion.div
-                className="absolute top-4 right-4 px-3 py-1 rounded-md bg-chart-1/10 text-chart-1 font-bold text-sm border border-chart-1/20"
-                style={{ opacity: rightOpacity }}
-              >
-                {question.options[0]}
-              </motion.div>
-              <motion.div
-                className="absolute top-4 left-4 px-3 py-1 rounded-md bg-destructive/10 text-destructive font-bold text-sm border border-destructive/20"
-                style={{ opacity: leftOpacity }}
-              >
-                {question.options[1]}
-              </motion.div>
-
-              <div className="flex-1 flex flex-col items-center justify-center text-center gap-4 pt-8">
-                {question.scenario && (
-                  <p className="text-sm text-muted-foreground italic leading-relaxed">
-                    {question.scenario}
-                  </p>
-                )}
-                <h3 className="text-lg font-bold leading-snug" data-testid="text-question">
-                  {question.question}
-                </h3>
-              </div>
-
-              <div className="text-center pb-2">
-                <p className="text-xs text-muted-foreground font-medium">
-                  Swipe right for "{question.options[0]}" or left for "{question.options[1]}"
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </div>
-
-      <AnimatePresence>
-        {showFeedback && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="overflow-hidden"
-          >
-            <div
-              className={`rounded-xl p-4 flex gap-3 ${
-                isCorrect
-                  ? "bg-chart-1/10 border border-chart-1/20"
-                  : "bg-destructive/10 border border-destructive/20"
-              }`}
+        <AnimatePresence>
+          {showResult && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="overflow-hidden"
             >
-              <Lightbulb
-                size={18}
-                className={`flex-shrink-0 mt-0.5 ${isCorrect ? "text-chart-1" : "text-destructive"}`}
-              />
-              <div>
-                <p className={`text-sm font-bold mb-1 ${isCorrect ? "text-chart-1" : "text-destructive"}`}>
-                  {isCorrect ? `Correct! +${question.xpReward} XP` : "Not quite!"}
-                </p>
-                {!isCorrect && (
-                  <p className="text-sm font-semibold mb-1" data-testid="text-correct-answer">
-                    Correct answer: {question.options[question.correctIndex]}
+              <div
+                className={`rounded-xl p-4 flex gap-3 ${
+                  isCorrect
+                    ? "bg-chart-1/10 border border-chart-1/20"
+                    : "bg-destructive/10 border border-destructive/20"
+                }`}
+              >
+                <Lightbulb
+                  size={18}
+                  className={`flex-shrink-0 mt-0.5 ${isCorrect ? "text-chart-1" : "text-destructive"}`}
+                />
+                <div>
+                  <p className={`text-sm font-bold mb-1 ${isCorrect ? "text-chart-1" : "text-destructive"}`}>
+                    {isCorrect ? `Correct! +${question.xpReward} XP` : "Not quite!"}
                   </p>
-                )}
-                {isGuest ? (
-                  <p className="text-xs text-muted-foreground italic" data-testid="text-guest-explanation-prompt">
-                    Create an account to see detailed explanations
-                  </p>
-                ) : (
-                  <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
-                    {question.explanation}
-                  </p>
-                )}
+                  {!isCorrect && (
+                    <p className="text-sm font-semibold mb-1" data-testid="text-correct-answer">
+                      Correct answer: {question.options[question.correctIndex]}
+                    </p>
+                  )}
+                  {isGuest ? (
+                    <p className="text-xs text-muted-foreground italic" data-testid="text-guest-explanation-prompt">
+                      Create an account to see detailed explanations
+                    </p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
+                      {question.explanation}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
   );
 }

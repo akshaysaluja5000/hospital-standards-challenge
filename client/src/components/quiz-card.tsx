@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, Lightbulb } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import type { Question } from "@shared/schema";
 
 interface QuizCardProps {
@@ -9,19 +8,23 @@ interface QuizCardProps {
   onAnswer: (selectedIndex: number) => void;
   disabled?: boolean;
   isGuest?: boolean;
+  previousAnswer?: { selectedIndex: number; correct: boolean } | null;
 }
 
-export function QuizCard({ question, onAnswer, disabled, isGuest }: QuizCardProps) {
-  const [selected, setSelected] = useState<number | null>(null);
-  const [showResult, setShowResult] = useState(false);
+export function QuizCard({ question, onAnswer, disabled, isGuest, previousAnswer }: QuizCardProps) {
+  const [selected, setSelected] = useState<number | null>(previousAnswer?.selectedIndex ?? null);
+  const [showResult, setShowResult] = useState(!!previousAnswer);
+
+  useEffect(() => {
+    setSelected(previousAnswer?.selectedIndex ?? null);
+    setShowResult(!!previousAnswer);
+  }, [question.id, previousAnswer]);
 
   const handleSelect = (index: number) => {
     if (disabled || showResult) return;
     setSelected(index);
     setShowResult(true);
-    setTimeout(() => {
-      onAnswer(index);
-    }, 2200);
+    onAnswer(index);
   };
 
   const isCorrect = selected === question.correctIndex;
