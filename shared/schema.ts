@@ -6,10 +6,7 @@ import { z } from "zod";
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
-  email: text("email").notNull().unique(),
   password: text("password").notNull(),
-  isVerified: boolean("is_verified").notNull().default(false),
-  verificationToken: text("verification_token"),
   isAdmin: boolean("is_admin").notNull().default(false),
   dailyGoal: integer("daily_goal").notNull().default(5),
   reminderEnabled: boolean("reminder_enabled").notNull().default(true),
@@ -47,7 +44,6 @@ export const dailyActivity = pgTable("daily_activity", {
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
-  email: true,
   password: true,
 });
 
@@ -58,12 +54,20 @@ export const loginSchema = z.object({
 
 export const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
-  email: z.string().email("Please enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
+});
+
+export const resetPasswordSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  newPassword: z.string().min(6, "Password must be at least 6 characters"),
+  confirmNewPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+  message: "Passwords don't match",
+  path: ["confirmNewPassword"],
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

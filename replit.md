@@ -11,12 +11,13 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 - **State Management**: TanStack React Query
 
 ## Key Features
-- Username/password authentication with email
+- Username/password authentication (no email required)
+- Username-based password reset (forgot password flow)
 - 6 levels based on Joint Commission audit domains
 - Multiple choice questions + swipe cards for yes/no questions
 - Streak system with animated flame icon
 - XP/leveling system
-- Daily goals with progress tracking
+- Daily goals with progress tracking (reminders toggle is UI-only, no emails sent)
 - Activity calendar
 - Admin dashboard for user tracking
 

@@ -66,7 +66,6 @@ export default function ProfilePage() {
           </div>
           <div className="text-center">
             <h2 className="text-xl font-black" data-testid="text-profile-username">{user?.username}</h2>
-            <p className="text-sm text-muted-foreground">{user?.email}</p>
           </div>
           <StreakFlame streak={streak?.currentStreak || 0} size="lg" />
         </motion.div>

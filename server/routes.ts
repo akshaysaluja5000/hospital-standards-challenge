@@ -9,7 +9,7 @@ import { storage } from "./storage";
 import { format } from "date-fns";
 import connectPgSimple from "connect-pg-simple";
 import { z } from "zod";
-import type { User } from "@shared/schema";
+import type { User, DailyActivity } from "@shared/schema";
 
 const submitSchema = z.object({
   levelId: z.string().min(1),
@@ -21,6 +21,11 @@ const submitSchema = z.object({
 const settingsSchema = z.object({
   dailyGoal: z.number().int().min(1).max(50).optional(),
   reminderEnabled: z.boolean().optional(),
+});
+
+const resetPasswordSchema = z.object({
+  username: z.string().min(3),
+  newPassword: z.string().min(6),
 });
 
 const scryptAsync = promisify(scrypt);
@@ -42,8 +47,6 @@ declare global {
     interface User {
       id: number;
       username: string;
-      email: string;
-      isVerified: boolean;
       isAdmin: boolean;
       dailyGoal: number;
       reminderEnabled: boolean;
@@ -119,7 +122,7 @@ export async function registerRoutes(
     try {
       const user = await storage.getUser(id);
       if (!user) return done(null, false);
-      const { password, verificationToken, ...safeUser } = user;
+      const { password, ...safeUser } = user;
       done(null, safeUser as Express.User);
     } catch (err) {
       done(err);
@@ -128,10 +131,10 @@ export async function registerRoutes(
 
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, email, password } = req.body;
+      const { username, password } = req.body;
 
-      if (!username || !email || !password) {
-        return res.status(400).json({ message: "Username, email, and password are required" });
+      if (!username || !password) {
+        return res.status(400).json({ message: "Username and password are required" });
       }
       if (username.length < 3) {
         return res.status(400).json({ message: "Username must be at least 3 characters" });
@@ -144,25 +147,18 @@ export async function registerRoutes(
       if (existingUsername) {
         return res.status(400).json({ message: "Username already taken" });
       }
-      const existingEmail = await storage.getUserByEmail(email);
-      if (existingEmail) {
-        return res.status(400).json({ message: "Email already registered" });
-      }
 
       const hashedPassword = await hashPassword(password);
       const isFirstUser = (await storage.getAllUsers()).length === 0;
 
       let user = await storage.createUser({
         username,
-        email,
         password: hashedPassword,
       });
 
-      const updates: any = { isVerified: true };
       if (isFirstUser) {
-        updates.isAdmin = true;
+        user = (await storage.updateUser(user.id, { isAdmin: true }))!;
       }
-      user = (await storage.updateUser(user.id, updates))!;
 
       await storage.upsertStreak(user.id, {
         currentStreak: 0,
@@ -172,7 +168,7 @@ export async function registerRoutes(
 
       req.login(user, (err) => {
         if (err) return res.status(500).json({ message: "Login failed after registration" });
-        const { password: _, verificationToken: __, ...safeUser } = user;
+        const { password: _, ...safeUser } = user;
         res.status(201).json(safeUser);
       });
     } catch (err: any) {
@@ -186,7 +182,7 @@ export async function registerRoutes(
       if (!user) return res.status(401).json({ message: info?.message || "Invalid credentials" });
       req.login(user, (err) => {
         if (err) return next(err);
-        const { password: _, verificationToken: __, ...safeUser } = user;
+        const { password: _, ...safeUser } = user;
         res.json(safeUser);
       });
     })(req, res, next);
@@ -206,6 +202,27 @@ export async function registerRoutes(
     res.json(req.user);
   });
 
+  app.post("/api/auth/reset-password", async (req, res) => {
+    try {
+      const parsed = resetPasswordSchema.safeParse(req.body);
+      if (!parsed.success) {
+        return res.status(400).json({ message: "Invalid request data" });
+      }
+
+      const user = await storage.getUserByUsername(parsed.data.username);
+      if (!user) {
+        return res.status(404).json({ message: "Username not found" });
+      }
+
+      const hashedPassword = await hashPassword(parsed.data.newPassword);
+      await storage.updateUser(user.id, { password: hashedPassword });
+
+      res.json({ message: "Password updated successfully" });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   app.patch("/api/auth/settings", requireAuth, async (req, res) => {
     try {
       const parsed = settingsSchema.safeParse(req.body);
@@ -217,7 +234,7 @@ export async function registerRoutes(
       if (parsed.data.reminderEnabled !== undefined) updates.reminderEnabled = parsed.data.reminderEnabled;
       const user = await storage.updateUser(req.user!.id, updates);
       if (!user) return res.status(404).json({ message: "User not found" });
-      const { password: _, verificationToken: __, ...safeUser } = user;
+      const { password: _, ...safeUser } = user;
       res.json(safeUser);
     } catch (err: any) {
       res.status(500).json({ message: err.message });
@@ -357,7 +374,6 @@ export async function registerRoutes(
         return {
           id: u.id,
           username: u.username,
-          email: u.email,
           totalXp: streak?.totalXp || 0,
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,

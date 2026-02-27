@@ -14,7 +14,6 @@ interface AdminStats {
   userList: {
     id: number;
     username: string;
-    email: string;
     totalXp: number;
     currentStreak: number;
     longestStreak: number;
@@ -116,7 +115,6 @@ export default function AdminPage() {
                 <tr className="border-b border-card-border bg-muted/30">
                   <th className="text-left p-3 font-bold text-muted-foreground">#</th>
                   <th className="text-left p-3 font-bold text-muted-foreground">User</th>
-                  <th className="text-left p-3 font-bold text-muted-foreground hidden md:table-cell">Email</th>
                   <th className="text-right p-3 font-bold text-muted-foreground">XP</th>
                   <th className="text-right p-3 font-bold text-muted-foreground">Streak</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Questions</th>
@@ -142,7 +140,6 @@ export default function AdminPage() {
                         <span className="font-bold">{u.username}</span>
                       </div>
                     </td>
-                    <td className="p-3 text-muted-foreground hidden md:table-cell">{u.email}</td>
                     <td className="p-3 text-right font-bold text-chart-4">{u.totalXp}</td>
                     <td className="p-3 text-right font-bold">{u.currentStreak}</td>
                     <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsAnswered}</td>

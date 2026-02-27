@@ -2,18 +2,21 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
-import { loginSchema, registerSchema } from "@shared/schema";
+import { loginSchema, registerSchema, resetPasswordSchema } from "@shared/schema";
+import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from "wouter";
 import { z } from "zod";
 
+type AuthView = "login" | "register" | "forgot";
+
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true);
+  const [view, setView] = useState<AuthView>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, register } = useAuth();
@@ -27,7 +30,12 @@ export default function AuthPage() {
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { username: "", email: "", password: "", confirmPassword: "" },
+    defaultValues: { username: "", password: "", confirmPassword: "" },
+  });
+
+  const resetForm = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { username: "", newPassword: "", confirmNewPassword: "" },
   });
 
   const onLogin = async (data: z.infer<typeof loginSchema>) => {
@@ -49,16 +57,40 @@ export default function AuthPage() {
   const onRegister = async (data: z.infer<typeof registerSchema>) => {
     setIsSubmitting(true);
     try {
-      await register(data.username, data.email, data.password);
+      await register(data.username, data.password);
       toast({
         title: "Account created!",
-        description: "Welcome to ComplianceQuest! Your account has been verified.",
+        description: "Welcome to ComplianceQuest!",
       });
       setLocation("/");
     } catch (error: any) {
       toast({
         title: "Registration failed",
         description: error.message || "Something went wrong",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const onResetPassword = async (data: z.infer<typeof resetPasswordSchema>) => {
+    setIsSubmitting(true);
+    try {
+      await apiRequest("POST", "/api/auth/reset-password", {
+        username: data.username,
+        newPassword: data.newPassword,
+      });
+      toast({
+        title: "Password updated!",
+        description: "You can now sign in with your new password.",
+      });
+      setView("login");
+      resetForm.reset();
+    } catch (error: any) {
+      toast({
+        title: "Reset failed",
+        description: error.message || "Username not found",
         variant: "destructive",
       });
     } finally {
@@ -82,29 +114,31 @@ export default function AuthPage() {
             <p className="text-muted-foreground mt-1">Master Joint Commission standards</p>
           </motion.div>
 
-          <div className="flex rounded-xl bg-muted p-1 mb-6">
-            <button
-              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all ${
-                isLogin ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-              onClick={() => setIsLogin(true)}
-              data-testid="button-login-tab"
-            >
-              Sign In
-            </button>
-            <button
-              className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all ${
-                !isLogin ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
-              }`}
-              onClick={() => setIsLogin(false)}
-              data-testid="button-register-tab"
-            >
-              Create Account
-            </button>
-          </div>
+          {view !== "forgot" && (
+            <div className="flex rounded-xl bg-muted p-1 mb-6">
+              <button
+                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all ${
+                  view === "login" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+                onClick={() => setView("login")}
+                data-testid="button-login-tab"
+              >
+                Sign In
+              </button>
+              <button
+                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-bold transition-all ${
+                  view === "register" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
+                }`}
+                onClick={() => setView("register")}
+                data-testid="button-register-tab"
+              >
+                Create Account
+              </button>
+            </div>
+          )}
 
           <AnimatePresence mode="wait">
-            {isLogin ? (
+            {view === "login" && (
               <motion.div
                 key="login"
                 initial={{ opacity: 0, x: -20 }}
@@ -169,10 +203,20 @@ export default function AuthPage() {
                       {isSubmitting ? <Loader2 className="animate-spin mr-2" size={18} /> : null}
                       Sign In
                     </Button>
+                    <button
+                      type="button"
+                      className="text-sm text-primary font-medium text-center mt-1"
+                      onClick={() => setView("forgot")}
+                      data-testid="button-forgot-password"
+                    >
+                      Forgot your password?
+                    </button>
                   </form>
                 </Form>
               </motion.div>
-            ) : (
+            )}
+
+            {view === "register" && (
               <motion.div
                 key="register"
                 initial={{ opacity: 0, x: 20 }}
@@ -193,24 +237,6 @@ export default function AuthPage() {
                               {...field}
                               placeholder="Choose a username"
                               data-testid="input-register-username"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={registerForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              type="email"
-                              placeholder="your@email.com"
-                              data-testid="input-register-email"
                             />
                           </FormControl>
                           <FormMessage />
@@ -271,6 +297,110 @@ export default function AuthPage() {
                     >
                       {isSubmitting ? <Loader2 className="animate-spin mr-2" size={18} /> : null}
                       Create Account
+                    </Button>
+                  </form>
+                </Form>
+              </motion.div>
+            )}
+
+            {view === "forgot" && (
+              <motion.div
+                key="forgot"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <button
+                    type="button"
+                    className="text-muted-foreground"
+                    onClick={() => setView("login")}
+                    data-testid="button-back-to-login"
+                  >
+                    <ArrowLeft size={20} />
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <KeyRound size={20} className="text-primary" />
+                    <h2 className="font-bold text-lg">Reset Password</h2>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground mb-5">
+                  Enter your username and create a new password.
+                </p>
+                <Form {...resetForm}>
+                  <form onSubmit={resetForm.handleSubmit(onResetPassword)} className="flex flex-col gap-4">
+                    <FormField
+                      control={resetForm.control}
+                      name="username"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Username</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Enter your username"
+                              data-testid="input-reset-username"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={resetForm.control}
+                      name="newPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>New Password</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                {...field}
+                                type={showPassword ? "text" : "password"}
+                                placeholder="At least 6 characters"
+                                data-testid="input-reset-new-password"
+                              />
+                              <button
+                                type="button"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                              </button>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={resetForm.control}
+                      name="confirmNewPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Confirm New Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              type="password"
+                              placeholder="Confirm your new password"
+                              data-testid="input-reset-confirm-password"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      className="w-full mt-2"
+                      size="lg"
+                      disabled={isSubmitting}
+                      data-testid="button-reset-submit"
+                    >
+                      {isSubmitting ? <Loader2 className="animate-spin mr-2" size={18} /> : null}
+                      Reset Password
                     </Button>
                   </form>
                 </Form>
