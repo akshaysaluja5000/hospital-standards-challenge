@@ -104,6 +104,21 @@ export interface Level {
   questions: Question[];
 }
 
+export interface HandbookSection {
+  heading: string;
+  content: string;
+  criticalValues?: { label: string; value: string }[];
+  thinkAboutIt?: string;
+}
+
+export interface HandbookChapter {
+  levelId: string;
+  title: string;
+  overview: string;
+  sections: HandbookSection[];
+  quickReference: { fact: string; detail: string }[];
+}
+
 export interface GameState {
   currentQuestion: number;
   score: number;

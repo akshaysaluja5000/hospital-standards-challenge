@@ -10,6 +10,7 @@ import PlayPage from "@/pages/play-page";
 import StudyPage from "@/pages/study-page";
 import ProfilePage from "@/pages/profile-page";
 import AdminPage from "@/pages/admin-page";
+import HandbookPage from "@/pages/handbook-page";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
 
@@ -68,6 +69,12 @@ function Router() {
       </Route>
       <Route path="/study/:levelId">
         {() => <ProtectedRoute component={StudyPage} allowGuest />}
+      </Route>
+      <Route path="/handbook/:levelId">
+        {() => <ProtectedRoute component={HandbookPage} allowGuest />}
+      </Route>
+      <Route path="/handbook">
+        {() => <ProtectedRoute component={HandbookPage} allowGuest />}
       </Route>
       <Route path="/profile">
         {() => <ProtectedRoute component={ProfilePage} />}
