@@ -51,7 +51,7 @@ export function SwipeCard({ question, onAnswer, disabled, isGuest, previousAnswe
           {question.question}
         </h3>
 
-        <div className="flex gap-3 justify-center">
+        <div className="flex flex-col gap-3">
           {question.options.map((option, index) => {
             const isYes = index === 0;
             let btnStyle = isYes
@@ -69,22 +69,20 @@ export function SwipeCard({ question, onAnswer, disabled, isGuest, previousAnswe
             }
 
             return (
-              <Button
+              <button
                 key={index}
-                variant="outline"
-                size="lg"
-                className={`flex-1 h-16 text-base font-bold border-2 rounded-xl transition-all ${btnStyle} ${
+                className={`w-full text-left px-4 py-3 min-h-[3.5rem] rounded-xl border-2 font-bold transition-all ${btnStyle} ${
                   !showResult && !disabled ? "cursor-pointer" : "cursor-default"
                 }`}
                 onClick={() => handleSelect(index)}
                 disabled={showResult || disabled}
                 data-testid={`button-yesno-${index}`}
               >
-                <span className="flex items-center gap-2">
-                  {isYes ? <Check size={20} /> : <X size={20} />}
-                  {option}
+                <span className="flex items-start gap-2">
+                  <span className="flex-shrink-0 mt-0.5">{isYes ? <Check size={18} /> : <X size={18} />}</span>
+                  <span className="text-sm leading-relaxed whitespace-normal">{option}</span>
                 </span>
-              </Button>
+              </button>
             );
           })}
         </div>
