@@ -9,6 +9,7 @@ interface AuthContextType {
   user: AuthUser | null;
   isGuest: boolean;
   isLoading: boolean;
+  isAuthenticating: boolean;
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -28,21 +29,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async ({ username, password }: { username: string; password: string }) => {
-      await apiRequest("POST", "/api/auth/login", { username, password });
+      const res = await apiRequest("POST", "/api/auth/login", { username, password });
+      return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setIsGuest(false);
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      queryClient.setQueryData(["/api/auth/me"], data);
     },
   });
 
   const registerMutation = useMutation({
     mutationFn: async ({ username, password }: { username: string; password: string }) => {
-      await apiRequest("POST", "/api/auth/register", { username, password });
+      const res = await apiRequest("POST", "/api/auth/register", { username, password });
+      return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       setIsGuest(false);
-      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      queryClient.setQueryData(["/api/auth/me"], data);
     },
   });
 
@@ -64,6 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user: user ?? null,
         isGuest,
         isLoading,
+        isAuthenticating: loginMutation.isPending || registerMutation.isPending,
         login: async (username, password) => {
           await loginMutation.mutateAsync({ username, password });
         },

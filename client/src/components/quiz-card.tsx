@@ -8,9 +8,10 @@ interface QuizCardProps {
   question: Question;
   onAnswer: (selectedIndex: number) => void;
   disabled?: boolean;
+  isGuest?: boolean;
 }
 
-export function QuizCard({ question, onAnswer, disabled }: QuizCardProps) {
+export function QuizCard({ question, onAnswer, disabled, isGuest }: QuizCardProps) {
   const [selected, setSelected] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
 
@@ -109,9 +110,20 @@ export function QuizCard({ question, onAnswer, disabled }: QuizCardProps) {
                   <p className={`text-sm font-bold mb-1 ${isCorrect ? "text-chart-1" : "text-destructive"}`}>
                     {isCorrect ? `Correct! +${question.xpReward} XP` : "Not quite!"}
                   </p>
-                  <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
-                    {question.explanation}
-                  </p>
+                  {!isCorrect && (
+                    <p className="text-sm font-semibold mb-1" data-testid="text-correct-answer">
+                      Correct answer: {question.options[question.correctIndex]}
+                    </p>
+                  )}
+                  {isGuest ? (
+                    <p className="text-xs text-muted-foreground italic" data-testid="text-guest-explanation-prompt">
+                      Create an account to see detailed explanations
+                    </p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
+                      {question.explanation}
+                    </p>
+                  )}
                 </div>
               </div>
             </motion.div>

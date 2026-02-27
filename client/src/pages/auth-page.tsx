@@ -38,15 +38,25 @@ export default function AuthPage() {
     defaultValues: { username: "", newPassword: "", confirmNewPassword: "" },
   });
 
+  function extractErrorMessage(error: any, fallback: string): string {
+    const raw = error?.message || fallback;
+    try {
+      const jsonPart = raw.replace(/^\d+:\s*/, "");
+      const parsed = JSON.parse(jsonPart);
+      return parsed.message || fallback;
+    } catch {
+      return raw;
+    }
+  }
+
   const onLogin = async (data: z.infer<typeof loginSchema>) => {
     setIsSubmitting(true);
     try {
       await login(data.username, data.password);
-      setLocation("/");
     } catch (error: any) {
       toast({
         title: "Login failed",
-        description: error.message || "Invalid credentials",
+        description: extractErrorMessage(error, "Invalid credentials"),
         variant: "destructive",
       });
     } finally {
@@ -62,11 +72,10 @@ export default function AuthPage() {
         title: "Account created!",
         description: "Welcome to ComplianceQuest!",
       });
-      setLocation("/");
     } catch (error: any) {
       toast({
         title: "Registration failed",
-        description: error.message || "Something went wrong",
+        description: extractErrorMessage(error, "Something went wrong"),
         variant: "destructive",
       });
     } finally {
@@ -90,7 +99,7 @@ export default function AuthPage() {
     } catch (error: any) {
       toast({
         title: "Reset failed",
-        description: error.message || "Username not found",
+        description: extractErrorMessage(error, "Username not found"),
         variant: "destructive",
       });
     } finally {

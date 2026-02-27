@@ -78,12 +78,12 @@ export default function PlayPage() {
               xpEarned: newState.xpEarned,
             });
           }
-        }, currentQ.isSwipe ? 300 : 100);
+        }, currentQ.isSwipe ? 2600 : 100);
       } else {
         setTimeout(() => {
           setGameState((s) => ({ ...s, currentQuestion: s.currentQuestion + 1 }));
           setAnswering(false);
-        }, currentQ.isSwipe ? 500 : 2500);
+        }, currentQ.isSwipe ? 2800 : 2500);
       }
 
       return newState;
@@ -257,12 +257,14 @@ export default function PlayPage() {
                 question={currentQuestion}
                 onAnswer={handleAnswer}
                 disabled={answering}
+                isGuest={isGuest}
               />
             ) : (
               <QuizCard
                 question={currentQuestion}
                 onAnswer={handleAnswer}
                 disabled={answering}
+                isGuest={isGuest}
               />
             )}
           </motion.div>
