@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
-import { Lock, CheckCircle2, Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play } from "lucide-react";
+import { Lock, CheckCircle2, Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Level, UserProgress } from "@shared/schema";
 
 const iconMap: Record<string, any> = {
-  Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer,
+  Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck,
 };
 
 interface LevelCardProps {

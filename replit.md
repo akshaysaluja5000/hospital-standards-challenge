@@ -13,7 +13,7 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 ## Key Features
 - Username/password authentication (no email required)
 - Username-based password reset (forgot password flow)
-- 6 levels based on Joint Commission audit domains (~13 questions each, ~80 total)
+- 10 levels based on Joint Commission audit domains (~13-15 questions each, ~140 total)
 - Study Mode with key concepts before each level (5 study cards per level)
 - Multiple choice questions + swipe cards for yes/no questions
 - Streak system with animated flame icon
@@ -40,15 +40,28 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 ## Theme
 - Primary: Vibrant green (Duolingo-inspired)
 - Font: Nunito (rounded, friendly)
-- Color-coded levels: green, blue, purple, orange, pink, teal
+- Color-coded levels: green, blue, purple, orange, pink, teal, yellow, red, emerald, indigo
 
-## Levels
-1. Transport of Instruments
-2. Environment & Surfaces
-3. Clean vs. Dirty
-4. Sterile Storage
-5. Instrument Integrity
-6. Facilities & Equipment
+## Levels (10 total, covering all 7 source PDFs)
+1. Transport of Instruments (14 questions)
+2. Environment & Surfaces (14 questions)
+3. Clean vs. Dirty (14 questions)
+4. Sterile Storage (15 questions)
+5. Instrument Integrity (13 questions)
+6. Facilities & Equipment (15 questions)
+7. SPD & Decontamination (14 questions)
+8. OR & Sterile Technique (13 questions)
+9. Surgical Safety & Consent (13 questions)
+10. Patient Care & Documentation (14 questions)
+
+## Source PDFs Covered
+- Infection Prevention (11 pages)
+- Sterile Processing (6 pages)
+- EOC Rounding (15 pages)
+- Regulatory Rounding Surgery (16 pages)
+- Surgery Comprehensive Documentation (13 pages)
+- Comprehensive Documentation (19 pages)
+- Transport of Instruments (2 pages)
 
 ## Admin
 First registered user automatically becomes admin with access to /admin dashboard.
