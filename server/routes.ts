@@ -342,6 +342,43 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/game/session/:levelId", requireAuth, async (req, res) => {
+    try {
+      const session = await storage.getQuizSession(req.user!.id, req.params.levelId);
+      if (!session) {
+        return res.json(null);
+      }
+      res.json(session);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/game/session/:levelId", requireAuth, async (req, res) => {
+    try {
+      const { questionOrder, answers, currentQuestion, correctAnswers, xpEarned } = req.body;
+      const session = await storage.upsertQuizSession(req.user!.id, req.params.levelId, {
+        questionOrder,
+        answers: JSON.stringify(answers),
+        currentQuestion,
+        correctAnswers,
+        xpEarned,
+      });
+      res.json(session);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.delete("/api/game/session/:levelId", requireAuth, async (req, res) => {
+    try {
+      await storage.deleteQuizSession(req.user!.id, req.params.levelId);
+      res.json({ success: true });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
       const allUsers = await storage.getAllUsers();

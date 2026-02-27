@@ -1,8 +1,8 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { useRoute, useLocation } from "wouter";
-import { useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Trophy, Star, Zap, RotateCcw, Home, UserPlus } from "lucide-react";
+import { ArrowLeft, ArrowRight, Trophy, Star, Zap, RotateCcw, Home, UserPlus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SwipeCard } from "@/components/swipe-card";
@@ -10,30 +10,104 @@ import { QuizCard } from "@/components/quiz-card";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import { levels } from "@shared/questions";
-import type { GameState } from "@shared/schema";
+import type { GameState, QuizSession } from "@shared/schema";
+
+function shuffleWithSeed(arr: any[], seed: string) {
+  const result = [...arr];
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0;
+  }
+  for (let i = result.length - 1; i > 0; i--) {
+    hash = ((hash << 5) - hash) + i;
+    hash |= 0;
+    const j = Math.abs(hash) % (i + 1);
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
 export default function PlayPage() {
   const [, params] = useRoute("/play/:levelId");
   const [, setLocation] = useLocation();
-  const { isGuest, exitGuestMode } = useAuth();
+  const { user, isGuest, exitGuestMode } = useAuth();
   const levelId = params?.levelId;
-
   const level = useMemo(() => levels.find((l) => l.id === levelId), [levelId]);
-  const questions = useMemo(() => {
-    if (!level) return [];
-    return [...level.questions].sort(() => Math.random() - 0.5);
-  }, [level]);
+  const [sessionLoaded, setSessionLoaded] = useState(isGuest);
+  const [isComplete, setIsComplete] = useState(false);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [questionOrder, setQuestionOrder] = useState<string[]>([]);
   const [gameState, setGameState] = useState<GameState>({
     currentQuestion: 0,
     score: 0,
     correctAnswers: 0,
-    totalQuestions: questions.length,
+    totalQuestions: 0,
     xpEarned: 0,
     answers: [],
   });
 
-  const [isComplete, setIsComplete] = useState(false);
+  const { data: savedSession, isFetching: sessionLoading } = useQuery<QuizSession | null>({
+    queryKey: ["/api/game/session", levelId],
+    enabled: !isGuest && !!levelId,
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: "always",
+  });
+
+  useEffect(() => {
+    if (!level) return;
+
+    if (isGuest) {
+      const shuffled = shuffleWithSeed(level.questions, `guest-${level.id}-${Date.now()}`);
+      setQuestionOrder(shuffled.map((q) => q.id));
+      setGameState({ currentQuestion: 0, score: 0, correctAnswers: 0, totalQuestions: level.questions.length, xpEarned: 0, answers: [] });
+      setSessionLoaded(true);
+      return;
+    }
+
+    if (sessionLoading) return;
+    if (sessionLoaded) return;
+
+    if (savedSession && savedSession.questionOrder && savedSession.questionOrder.length > 0) {
+      const savedAnswers: GameState["answers"] = JSON.parse(savedSession.answers || "[]");
+      setQuestionOrder(savedSession.questionOrder);
+      setGameState({
+        currentQuestion: savedSession.currentQuestion,
+        score: 0,
+        correctAnswers: savedSession.correctAnswers,
+        totalQuestions: level.questions.length,
+        xpEarned: savedSession.xpEarned,
+        answers: savedAnswers,
+      });
+    } else {
+      const shuffled = shuffleWithSeed(level.questions, `${user?.id}-${level.id}-${Date.now()}`);
+      setQuestionOrder(shuffled.map((q) => q.id));
+      setGameState({ currentQuestion: 0, score: 0, correctAnswers: 0, totalQuestions: level.questions.length, xpEarned: 0, answers: [] });
+    }
+    setSessionLoaded(true);
+  }, [savedSession, sessionLoading, level, isGuest, sessionLoaded, user?.id]);
+
+  const questions = useMemo(() => {
+    if (!level || questionOrder.length === 0) return [];
+    return questionOrder.map((id) => level.questions.find((q) => q.id === id)).filter(Boolean) as typeof level.questions;
+  }, [level, questionOrder]);
+
+  const saveMutation = useMutation({
+    mutationFn: async (data: { questionOrder: string[]; answers: any[]; currentQuestion: number; correctAnswers: number; xpEarned: number }) => {
+      await apiRequest("POST", `/api/game/session/${levelId}`, data);
+    },
+  });
+
+  const deleteSessionMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest("DELETE", `/api/game/session/${levelId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/game/session", levelId] });
+    },
+  });
 
   const submitMutation = useMutation({
     mutationFn: async (data: { levelId: string; score: number; totalQuestions: number; xpEarned: number }) => {
@@ -47,6 +121,20 @@ export default function PlayPage() {
     },
   });
 
+  const saveSession = useCallback((state: GameState, order: string[]) => {
+    if (isGuest || !levelId) return;
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+      saveMutation.mutate({
+        questionOrder: order,
+        answers: state.answers,
+        currentQuestion: state.currentQuestion,
+        correctAnswers: state.correctAnswers,
+        xpEarned: state.xpEarned,
+      });
+    }, 300);
+  }, [isGuest, levelId, saveMutation]);
+
   const currentQuestionAnswered = gameState.answers.find(
     (a) => a.questionId === questions[gameState.currentQuestion]?.id
   );
@@ -59,13 +147,16 @@ export default function PlayPage() {
     const isCorrect = selectedIndex === currentQ.correctIndex;
     const xpGained = isCorrect ? currentQ.xpReward : 0;
 
-    setGameState((prev) => ({
-      ...prev,
-      correctAnswers: prev.correctAnswers + (isCorrect ? 1 : 0),
-      xpEarned: prev.xpEarned + xpGained,
-      answers: [...prev.answers, { questionId: currentQ.id, correct: isCorrect, selectedIndex }],
-    }));
-  }, [hasAnswered, gameState.currentQuestion, questions, level]);
+    const newState: GameState = {
+      ...gameState,
+      correctAnswers: gameState.correctAnswers + (isCorrect ? 1 : 0),
+      xpEarned: gameState.xpEarned + xpGained,
+      answers: [...gameState.answers, { questionId: currentQ.id, correct: isCorrect, selectedIndex }],
+    };
+
+    setGameState(newState);
+    saveSession(newState, questionOrder);
+  }, [hasAnswered, gameState, questions, level, saveSession, questionOrder]);
 
   const handleNext = useCallback(() => {
     if (!level) return;
@@ -80,22 +171,38 @@ export default function PlayPage() {
           totalQuestions: questions.length,
           xpEarned: gameState.xpEarned,
         });
+        deleteSessionMutation.mutate();
       }
     } else {
-      setGameState((s) => ({ ...s, currentQuestion: s.currentQuestion + 1 }));
+      const newState = { ...gameState, currentQuestion: gameState.currentQuestion + 1 };
+      setGameState(newState);
+      saveSession(newState, questionOrder);
     }
-  }, [gameState, questions, level, isGuest, submitMutation]);
+  }, [gameState, questions, level, isGuest, submitMutation, deleteSessionMutation, saveSession, questionOrder]);
 
   const handlePrevious = useCallback(() => {
     if (gameState.currentQuestion > 0) {
-      setGameState((s) => ({ ...s, currentQuestion: s.currentQuestion - 1 }));
+      const newState = { ...gameState, currentQuestion: gameState.currentQuestion - 1 };
+      setGameState(newState);
+      saveSession(newState, questionOrder);
     }
-  }, [gameState.currentQuestion]);
+  }, [gameState, saveSession, questionOrder]);
 
   if (!level) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Level not found</p>
+      </div>
+    );
+  }
+
+  if (!sessionLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 size={32} className="animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Loading your progress...</p>
+        </div>
       </div>
     );
   }
@@ -185,6 +292,9 @@ export default function PlayPage() {
                 variant="outline"
                 className="flex-1"
                 onClick={() => {
+                  const shuffled = shuffleWithSeed(level.questions, `${user?.id || "guest"}-${level.id}-${Date.now()}`);
+                  const newOrder = shuffled.map((q) => q.id);
+                  setQuestionOrder(newOrder);
                   setGameState({
                     currentQuestion: 0, score: 0, correctAnswers: 0,
                     totalQuestions: questions.length, xpEarned: 0, answers: [],
@@ -207,6 +317,14 @@ export default function PlayPage() {
             </div>
           </div>
         </motion.div>
+      </div>
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-primary" />
       </div>
     );
   }

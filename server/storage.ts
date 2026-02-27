@@ -2,8 +2,8 @@ import { eq, and, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
-  users, userProgress, userStreaks, dailyActivity,
-  type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity,
+  users, userProgress, userStreaks, dailyActivity, quizSessions,
+  type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -28,6 +28,10 @@ export interface IStorage {
   getDailyActivity(userId: number, date: string): Promise<DailyActivity | undefined>;
   getActivities(userId: number): Promise<DailyActivity[]>;
   upsertDailyActivity(userId: number, date: string, questionsAnswered: number, correctAnswers: number, xpEarned: number): Promise<DailyActivity>;
+
+  getQuizSession(userId: number, levelId: string): Promise<QuizSession | undefined>;
+  upsertQuizSession(userId: number, levelId: string, data: Partial<QuizSession>): Promise<QuizSession>;
+  deleteQuizSession(userId: number, levelId: string): Promise<void>;
 
   getAllUsers(): Promise<User[]>;
   getAllStreaks(): Promise<UserStreak[]>;
@@ -146,6 +150,40 @@ export class DatabaseStorage implements IStorage {
       xpEarned,
     }).returning();
     return created;
+  }
+
+  async getQuizSession(userId: number, levelId: string): Promise<QuizSession | undefined> {
+    const [session] = await db.select().from(quizSessions).where(
+      and(eq(quizSessions.userId, userId), eq(quizSessions.levelId, levelId))
+    );
+    return session;
+  }
+
+  async upsertQuizSession(userId: number, levelId: string, data: Partial<QuizSession>): Promise<QuizSession> {
+    const existing = await this.getQuizSession(userId, levelId);
+    if (existing) {
+      const [updated] = await db.update(quizSessions).set({
+        ...data,
+        updatedAt: new Date(),
+      }).where(eq(quizSessions.id, existing.id)).returning();
+      return updated;
+    }
+    const [created] = await db.insert(quizSessions).values({
+      userId,
+      levelId,
+      questionOrder: data.questionOrder || [],
+      answers: data.answers || "[]",
+      currentQuestion: data.currentQuestion || 0,
+      correctAnswers: data.correctAnswers || 0,
+      xpEarned: data.xpEarned || 0,
+    }).returning();
+    return created;
+  }
+
+  async deleteQuizSession(userId: number, levelId: string): Promise<void> {
+    await db.delete(quizSessions).where(
+      and(eq(quizSessions.userId, userId), eq(quizSessions.levelId, levelId))
+    );
   }
 
   async getAllUsers(): Promise<User[]> {

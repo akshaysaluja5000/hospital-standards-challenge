@@ -42,6 +42,20 @@ export const dailyActivity = pgTable("daily_activity", {
   xpEarned: integer("xp_earned").notNull().default(0),
 });
 
+export const quizSessions = pgTable("quiz_sessions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  levelId: text("level_id").notNull(),
+  questionOrder: text("question_order").array().notNull(),
+  answers: text("answers").notNull().default("[]"),
+  currentQuestion: integer("current_question").notNull().default(0),
+  correctAnswers: integer("correct_answers").notNull().default(0),
+  xpEarned: integer("xp_earned").notNull().default(0),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export type QuizSession = typeof quizSessions.$inferSelect;
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,

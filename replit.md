@@ -17,6 +17,7 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 - 11 levels based on Joint Commission audit domains (~13-15 questions each, 153 total)
 - Study Mode with key concepts before each level (5 study cards per level)
 - Multiple choice questions + Yes/No button cards
+- Quiz session persistence: registered users can leave mid-level and resume where they left off (question order, answers, XP all preserved)
 - Compliance Handbook: searchable reference guide with 11 chapters, expandable sections, critical values tables, "Think About It" scenarios, and quick reference view
 - Streak system with animated flame icon
 - XP/leveling system
@@ -28,6 +29,7 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 - `users` - Auth and profile data
 - `user_progress` - Level completion and scores
 - `user_streaks` - Current/longest streaks and total XP
+- `quiz_sessions` - In-progress quiz state (question order, answers, current position) per user per level
 - `daily_activity` - Daily question/answer tracking
 
 ## File Structure
