@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/lib/auth";
 import AuthPage from "@/pages/auth-page";
 import DashboardPage from "@/pages/dashboard-page";
 import PlayPage from "@/pages/play-page";
+import StudyPage from "@/pages/study-page";
 import ProfilePage from "@/pages/profile-page";
 import AdminPage from "@/pages/admin-page";
 import NotFound from "@/pages/not-found";
@@ -60,6 +61,9 @@ function Router() {
       </Route>
       <Route path="/play/:levelId">
         {() => <ProtectedRoute component={PlayPage} />}
+      </Route>
+      <Route path="/study/:levelId">
+        {() => <ProtectedRoute component={StudyPage} />}
       </Route>
       <Route path="/profile">
         {() => <ProtectedRoute component={ProfilePage} />}

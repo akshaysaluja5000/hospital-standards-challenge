@@ -202,7 +202,8 @@ export default function DashboardPage() {
                 progress={progressMap.get(level.id)}
                 isUnlocked={isLevelUnlocked(index)}
                 index={index}
-                onClick={() => setLocation(`/play/${level.id}`)}
+                onPlay={() => setLocation(`/play/${level.id}`)}
+                onStudy={() => setLocation(`/study/${level.id}`)}
               />
             ))}
           </div>

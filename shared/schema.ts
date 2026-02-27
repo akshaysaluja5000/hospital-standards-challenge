@@ -87,6 +87,12 @@ export interface Question {
   isSwipe: boolean;
 }
 
+export interface StudyConcept {
+  title: string;
+  content: string;
+  keyPoint: string;
+}
+
 export interface Level {
   id: string;
   name: string;
@@ -94,6 +100,7 @@ export interface Level {
   icon: string;
   color: string;
   requiredScore: number;
+  studyMaterial: StudyConcept[];
   questions: Question[];
 }
 

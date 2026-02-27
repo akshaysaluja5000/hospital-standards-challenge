@@ -13,7 +13,8 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 ## Key Features
 - Username/password authentication (no email required)
 - Username-based password reset (forgot password flow)
-- 6 levels based on Joint Commission audit domains
+- 6 levels based on Joint Commission audit domains (~13 questions each, ~80 total)
+- Study Mode with key concepts before each level (5 study cards per level)
 - Multiple choice questions + swipe cards for yes/no questions
 - Streak system with animated flame icon
 - XP/leveling system
@@ -32,7 +33,7 @@ A gamified learning app that turns Joint Commission compliance audits into an en
 - `shared/questions.ts` - Question bank organized by levels
 - `server/routes.ts` - API endpoints with auth middleware
 - `server/storage.ts` - Database CRUD operations
-- `client/src/pages/` - Auth, Dashboard, Play, Profile, Admin pages
+- `client/src/pages/` - Auth, Dashboard, Play, Study, Profile, Admin pages
 - `client/src/components/` - SwipeCard, QuizCard, StreakFlame, XpBar, LevelCard, DailyCalendar
 - `client/src/lib/auth.tsx` - Auth context provider
 
