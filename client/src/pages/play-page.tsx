@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { useRoute, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Trophy, Star, Zap, RotateCcw, Home, UserPlus, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Trophy, Star, Zap, RotateCcw, Home, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SwipeCard } from "@/components/swipe-card";
@@ -31,10 +31,10 @@ function shuffleWithSeed(arr: any[], seed: string) {
 export default function PlayPage() {
   const [, params] = useRoute("/play/:levelId");
   const [, setLocation] = useLocation();
-  const { user, isGuest, exitGuestMode } = useAuth();
+  const { user } = useAuth();
   const levelId = params?.levelId;
   const level = useMemo(() => levels.find((l) => l.id === levelId), [levelId]);
-  const [sessionLoaded, setSessionLoaded] = useState(isGuest);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -50,7 +50,7 @@ export default function PlayPage() {
 
   const { data: savedSession, isFetching: sessionLoading } = useQuery<QuizSession | null>({
     queryKey: ["/api/game/session", levelId],
-    enabled: !isGuest && !!levelId,
+    enabled: !!levelId,
     staleTime: 0,
     gcTime: 0,
     refetchOnMount: "always",
@@ -58,15 +58,6 @@ export default function PlayPage() {
 
   useEffect(() => {
     if (!level) return;
-
-    if (isGuest) {
-      const shuffled = shuffleWithSeed(level.questions, `guest-${level.id}-${Date.now()}`);
-      setQuestionOrder(shuffled.map((q) => q.id));
-      setGameState({ currentQuestion: 0, score: 0, correctAnswers: 0, totalQuestions: level.questions.length, xpEarned: 0, answers: [] });
-      setSessionLoaded(true);
-      return;
-    }
-
     if (sessionLoading) return;
     if (sessionLoaded) return;
 
@@ -87,7 +78,7 @@ export default function PlayPage() {
       setGameState({ currentQuestion: 0, score: 0, correctAnswers: 0, totalQuestions: level.questions.length, xpEarned: 0, answers: [] });
     }
     setSessionLoaded(true);
-  }, [savedSession, sessionLoading, level, isGuest, sessionLoaded, user?.id]);
+  }, [savedSession, sessionLoading, level, sessionLoaded, user?.id]);
 
   const questions = useMemo(() => {
     if (!level || questionOrder.length === 0) return [];
@@ -122,7 +113,7 @@ export default function PlayPage() {
   });
 
   const saveSession = useCallback((state: GameState, order: string[]) => {
-    if (isGuest || !levelId) return;
+    if (!levelId) return;
     if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     saveTimeoutRef.current = setTimeout(() => {
       saveMutation.mutate({
@@ -133,7 +124,7 @@ export default function PlayPage() {
         xpEarned: state.xpEarned,
       });
     }, 300);
-  }, [isGuest, levelId, saveMutation]);
+  }, [levelId, saveMutation]);
 
   const currentQuestionAnswered = gameState.answers.find(
     (a) => a.questionId === questions[gameState.currentQuestion]?.id
@@ -164,21 +155,19 @@ export default function PlayPage() {
 
     if (isLastQuestion) {
       setIsComplete(true);
-      if (!isGuest) {
-        submitMutation.mutate({
-          levelId: level.id,
-          score: gameState.correctAnswers,
-          totalQuestions: questions.length,
-          xpEarned: gameState.xpEarned,
-        });
-        deleteSessionMutation.mutate();
-      }
+      submitMutation.mutate({
+        levelId: level.id,
+        score: gameState.correctAnswers,
+        totalQuestions: questions.length,
+        xpEarned: gameState.xpEarned,
+      });
+      deleteSessionMutation.mutate();
     } else {
       const newState = { ...gameState, currentQuestion: gameState.currentQuestion + 1 };
       setGameState(newState);
       saveSession(newState, questionOrder);
     }
-  }, [gameState, questions, level, isGuest, submitMutation, deleteSessionMutation, saveSession, questionOrder]);
+  }, [gameState, questions, level, submitMutation, deleteSessionMutation, saveSession, questionOrder]);
 
   const handlePrevious = useCallback(() => {
     if (gameState.currentQuestion > 0) {
@@ -274,30 +263,12 @@ export default function PlayPage() {
               </div>
             </div>
 
-            {isGuest && (
-              <div className="w-full rounded-xl bg-primary/5 border border-primary/20 p-3 flex items-center gap-3">
-                <UserPlus size={18} className="text-primary flex-shrink-0" />
-                <p className="text-xs text-muted-foreground flex-1">
-                  This score won't be saved. Create an account to track your progress!
-                </p>
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="text-xs flex-shrink-0"
-                  onClick={() => { exitGuestMode(); setLocation("/auth"); }}
-                  data-testid="button-guest-signup-results"
-                >
-                  Sign Up
-                </Button>
-              </div>
-            )}
-
             <div className="flex gap-3 w-full">
               <Button
                 variant="outline"
                 className="flex-1"
                 onClick={() => {
-                  const shuffled = shuffleWithSeed(level.questions, `${user?.id || "guest"}-${level.id}-${Date.now()}`);
+                  const shuffled = shuffleWithSeed(level.questions, `${user?.id}-${level.id}-${Date.now()}`);
                   const newOrder = shuffled.map((q) => q.id);
                   setQuestionOrder(newOrder);
                   setGameState({
@@ -381,7 +352,6 @@ export default function PlayPage() {
                 question={currentQuestion}
                 onAnswer={handleAnswer}
                 disabled={hasAnswered}
-                isGuest={isGuest}
                 previousAnswer={currentQuestionAnswered ? { selectedIndex: currentQuestionAnswered.selectedIndex, correct: currentQuestionAnswered.correct } : null}
               />
             ) : (
@@ -389,7 +359,6 @@ export default function PlayPage() {
                 question={currentQuestion}
                 onAnswer={handleAnswer}
                 disabled={hasAnswered}
-                isGuest={isGuest}
                 previousAnswer={currentQuestionAnswered ? { selectedIndex: currentQuestionAnswered.selectedIndex, correct: currentQuestionAnswered.correct } : null}
               />
             )}

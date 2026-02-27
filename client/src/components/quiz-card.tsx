@@ -7,11 +7,10 @@ interface QuizCardProps {
   question: Question;
   onAnswer: (selectedIndex: number) => void;
   disabled?: boolean;
-  isGuest?: boolean;
   previousAnswer?: { selectedIndex: number; correct: boolean } | null;
 }
 
-export function QuizCard({ question, onAnswer, disabled, isGuest, previousAnswer }: QuizCardProps) {
+export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizCardProps) {
   const [selected, setSelected] = useState<number | null>(previousAnswer?.selectedIndex ?? null);
   const [showResult, setShowResult] = useState(!!previousAnswer);
 
@@ -118,15 +117,9 @@ export function QuizCard({ question, onAnswer, disabled, isGuest, previousAnswer
                       Correct answer: {question.options[question.correctIndex]}
                     </p>
                   )}
-                  {isGuest ? (
-                    <p className="text-xs text-muted-foreground italic" data-testid="text-guest-explanation-prompt">
-                      Create an account to see detailed explanations
-                    </p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
-                      {question.explanation}
-                    </p>
-                  )}
+                  <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
+                    {question.explanation}
+                  </p>
                 </div>
               </div>
             </motion.div>

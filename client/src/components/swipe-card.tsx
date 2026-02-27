@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, X, Lightbulb } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import type { Question } from "@shared/schema";
 
 interface SwipeCardProps {
   question: Question;
   onAnswer: (selectedIndex: number) => void;
   disabled?: boolean;
-  isGuest?: boolean;
   previousAnswer?: { selectedIndex: number; correct: boolean } | null;
 }
 
-export function SwipeCard({ question, onAnswer, disabled, isGuest, previousAnswer }: SwipeCardProps) {
+export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: SwipeCardProps) {
   const [selected, setSelected] = useState<number | null>(previousAnswer?.selectedIndex ?? null);
   const [showResult, setShowResult] = useState(!!previousAnswer);
 
@@ -115,15 +113,9 @@ export function SwipeCard({ question, onAnswer, disabled, isGuest, previousAnswe
                       Correct answer: {question.options[question.correctIndex]}
                     </p>
                   )}
-                  {isGuest ? (
-                    <p className="text-xs text-muted-foreground italic" data-testid="text-guest-explanation-prompt">
-                      Create an account to see detailed explanations
-                    </p>
-                  ) : (
-                    <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
-                      {question.explanation}
-                    </p>
-                  )}
+                  <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
+                    {question.explanation}
+                  </p>
                 </div>
               </div>
             </motion.div>

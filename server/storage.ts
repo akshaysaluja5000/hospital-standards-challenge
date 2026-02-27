@@ -2,8 +2,9 @@ import { eq, and, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
-  users, userProgress, userStreaks, dailyActivity, quizSessions,
+  users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
+  type Facility, type InsertFacility,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -34,8 +35,14 @@ export interface IStorage {
   deleteQuizSession(userId: number, levelId: string): Promise<void>;
 
   getAllUsers(): Promise<User[]>;
+  getUsersByFacility(facilityId: number): Promise<User[]>;
   getAllStreaks(): Promise<UserStreak[]>;
   getAllActivities(): Promise<DailyActivity[]>;
+
+  createFacility(data: InsertFacility): Promise<Facility>;
+  getFacility(id: number): Promise<Facility | undefined>;
+  getFacilityByCode(code: string): Promise<Facility | undefined>;
+  getAllFacilities(): Promise<Facility[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -189,12 +196,35 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(users).orderBy(users.createdAt);
   }
 
+  async getUsersByFacility(facilityId: number): Promise<User[]> {
+    return db.select().from(users).where(eq(users.facilityId, facilityId)).orderBy(users.createdAt);
+  }
+
   async getAllStreaks(): Promise<UserStreak[]> {
     return db.select().from(userStreaks);
   }
 
   async getAllActivities(): Promise<DailyActivity[]> {
     return db.select().from(dailyActivity);
+  }
+
+  async createFacility(data: InsertFacility): Promise<Facility> {
+    const [facility] = await db.insert(facilities).values(data).returning();
+    return facility;
+  }
+
+  async getFacility(id: number): Promise<Facility | undefined> {
+    const [facility] = await db.select().from(facilities).where(eq(facilities.id, id));
+    return facility;
+  }
+
+  async getFacilityByCode(code: string): Promise<Facility | undefined> {
+    const [facility] = await db.select().from(facilities).where(eq(facilities.code, code));
+    return facility;
+  }
+
+  async getAllFacilities(): Promise<Facility[]> {
+    return db.select().from(facilities).orderBy(facilities.name);
   }
 }
 

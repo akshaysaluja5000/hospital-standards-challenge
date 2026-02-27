@@ -131,7 +131,7 @@ export async function registerRoutes(
 
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, firstName, lastName, password } = req.body;
+      const { username, firstName, lastName, facilityCode, password } = req.body;
 
       if (!username || !password) {
         return res.status(400).json({ message: "Username and password are required" });
@@ -151,6 +151,15 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Username already taken" });
       }
 
+      let facilityId: number | null = null;
+      if (facilityCode && facilityCode.trim()) {
+        const facility = await storage.getFacilityByCode(facilityCode.trim().toUpperCase());
+        if (!facility) {
+          return res.status(400).json({ message: "Invalid facility code. Please check with your administrator." });
+        }
+        facilityId = facility.id;
+      }
+
       const hashedPassword = await hashPassword(password);
       const isFirstUser = (await storage.getAllUsers()).length === 0;
 
@@ -159,6 +168,7 @@ export async function registerRoutes(
         firstName: firstName.trim(),
         lastName: lastName.trim(),
         password: hashedPassword,
+        facilityId,
       });
 
       if (isFirstUser) {
@@ -428,7 +438,10 @@ export async function registerRoutes(
 
   app.get("/api/game/leaderboard", requireAuth, async (req, res) => {
     try {
-      const allUsers = await storage.getAllUsers();
+      const userFacilityId = (req.user as any).facilityId;
+      const allUsers = userFacilityId
+        ? await storage.getUsersByFacility(userFacilityId)
+        : await storage.getAllUsers();
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
       const allProgressData = await Promise.all(
@@ -476,7 +489,10 @@ export async function registerRoutes(
 
   app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
-      const allUsers = await storage.getAllUsers();
+      const adminFacilityId = (req.user as any).facilityId;
+      const allUsers = adminFacilityId
+        ? await storage.getUsersByFacility(adminFacilityId)
+        : await storage.getAllUsers();
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
       const today = format(new Date(), "yyyy-MM-dd");
@@ -489,9 +505,11 @@ export async function registerRoutes(
         activitiesByUser.set(a.userId, list);
       });
 
-      const activeToday = allActivities.filter((a) => a.date === today && a.questionsAnswered > 0).length;
-      const totalQuestionsAnswered = allActivities.reduce((sum, a) => sum + a.questionsAnswered, 0);
-      const totalCorrect = allActivities.reduce((sum, a) => sum + a.correctAnswers, 0);
+      const facilityUserIds = new Set(allUsers.map((u) => u.id));
+      const facilityActivities = allActivities.filter((a) => facilityUserIds.has(a.userId));
+      const activeToday = facilityActivities.filter((a) => a.date === today && a.questionsAnswered > 0).length;
+      const totalQuestionsAnswered = facilityActivities.reduce((sum, a) => sum + a.questionsAnswered, 0);
+      const totalCorrect = facilityActivities.reduce((sum, a) => sum + a.correctAnswers, 0);
       const averageAccuracy = totalQuestionsAnswered > 0
         ? Math.round((totalCorrect / totalQuestionsAnswered) * 100)
         : 0;
@@ -526,6 +544,17 @@ export async function registerRoutes(
       res.status(500).json({ message: err.message });
     }
   });
+
+  try {
+    const existing = await storage.getFacilityByCode("SITE486045");
+    if (!existing) {
+      await storage.createFacility({
+        name: "Midwest Orthopedic Specialty Hospital",
+        code: "SITE486045",
+      });
+    }
+  } catch (e) {
+  }
 
   return httpServer;
 }

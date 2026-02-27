@@ -1,0 +1,61 @@
+C. Legal and IP
+Terms of use and license
+
+Put a short terms‑of‑use page and “Not affiliated with The Joint Commission; for educational purposes only” notice.
+
+Clarify: content cannot be resold or reproduced; access is per‑facility license.
+
+Institutional agreements
+
+For hospitals, you’ll likely package this as:
+
+Subscription (SaaS) for X seats/year, or
+
+Site license (unlimited staff at one physical facility) for a fixed annual fee.
+
+Include data‑use language (aggregated stats for quality improvement, no patient data stored).
+
+Branding protection
+
+Use your own product name/branding prominently; avoid Joint Commission logos or verbatim language from their documents in the UI.
+
+2. Monetization models tailored to hospital compliance
+Here are realistic ways to charge:
+
+Model	How it works	Fits your app because…
+Per‑seat subscription	$X per user per month/year	You track users, questions answered, accuracy, streaks. Easy metering.
+Department/site license	Flat annual fee per department or hospital	Simpler for OR leadership; unlimited staff within one site.
+Tiered plans	Basic vs Pro (extra analytics, custom content, SSO)	Admin dashboard and reference guide lend themselves to higher tiers.
+Implementation + training	One‑time setup + on‑site or virtual training	You can run a kickoff, customize question sets, and bill for that.
+White‑labeling	Branded version for a system (logo/colors)	Your UI is already clean; small theme changes can be sold as an add‑on.
+You can combine: e.g., “$3,000/site/year includes up to 100 users, admin dashboard, and reporting; extra sites or custom modules are add‑ons.”
+
+3. Productizing what you already built
+From your screenshots, you already have:
+
+Activity history + streaks → supports “engagement” selling point (“5 questions/day goal”).
+
+Admin dashboard with XP, accuracy, active users → selling point for QI teams and educators.
+
+Levels aligned to tracer domains (Transport of Instruments, Environment & Surfaces, Clean/Dirty Segregation, Sterile Storage, SPD & Decontamination, OR & Sterile, Surgical Safety, Patient Care/Documentation, EOC & Safety).
+
+Compliance handbook / quick reference → can be marketed as “micro‑learning plus just‑in‑time reference.”
+
+Turn these into features on a one‑pager:
+
+“Daily 5‑question micro‑drills to keep staff survey‑ready.”
+
+“Real‑time unit dashboards: accuracy, usage, weak domains.”
+
+“Pre‑built content aligned with Joint Commission tracer methodology.”
+
+4. Minimal next steps technically
+To get to something you can safely demo and charge for:
+
+Lock gameplay behind login and roles.
+
+Ensure all secrets and data storage are not exposed in the Replit UI.
+
+Add a simple facility concept (even hard‑coded for pilot hospitals).
+
+Add a Terms/Privacy page and an “About / Not affiliated” banner.

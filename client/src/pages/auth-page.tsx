@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, UserX } from "lucide-react";
+import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -19,7 +19,7 @@ export default function AuthPage() {
   const [view, setView] = useState<AuthView>("login");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, register, enterGuestMode } = useAuth();
+  const { login, register } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
 
@@ -30,7 +30,7 @@ export default function AuthPage() {
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { username: "", firstName: "", lastName: "", password: "", confirmPassword: "" },
+    defaultValues: { username: "", firstName: "", lastName: "", facilityCode: "", password: "", confirmPassword: "" },
   });
 
   const resetForm = useForm<z.infer<typeof resetPasswordSchema>>({
@@ -67,7 +67,7 @@ export default function AuthPage() {
   const onRegister = async (data: z.infer<typeof registerSchema>) => {
     setIsSubmitting(true);
     try {
-      await register(data.username, data.firstName, data.lastName, data.password);
+      await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode || undefined);
       toast({
         title: "Account created!",
         description: "Welcome to ComplianceQuest!",
@@ -290,6 +290,27 @@ export default function AuthPage() {
                     />
                     <FormField
                       control={registerForm.control}
+                      name="facilityCode"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Facility Code</FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                              <Input
+                                {...field}
+                                placeholder="Enter your facility code (optional)"
+                                className="pl-9"
+                                data-testid="input-register-facility-code"
+                              />
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
                       name="password"
                       render={({ field }) => (
                         <FormItem>
@@ -453,30 +474,8 @@ export default function AuthPage() {
             )}
           </AnimatePresence>
 
-          <div className="relative mt-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-3 text-muted-foreground font-medium">or</span>
-            </div>
-          </div>
-
-          <Button
-            variant="outline"
-            className="w-full mt-4"
-            size="lg"
-            onClick={() => {
-              enterGuestMode();
-              setLocation("/");
-            }}
-            data-testid="button-guest-mode"
-          >
-            <UserX size={18} className="mr-2" />
-            Continue as Guest
-          </Button>
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            Play without an account — progress won't be saved
+          <p className="text-xs text-muted-foreground text-center mt-6">
+            <a href="/terms" className="underline" data-testid="link-terms">Terms & Privacy</a>
           </p>
         </div>
       </div>
