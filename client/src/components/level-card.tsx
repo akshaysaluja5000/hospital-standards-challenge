@@ -72,7 +72,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
             </h3>
             {hasInProgress && (
               <span className="px-2 py-0.5 rounded-full bg-chart-4/15 text-chart-4 text-xs font-bold" data-testid={`badge-in-progress-${level.id}`}>
-                In Progress ({inProgressQuestion}/{totalQuestions})
+                In Progress ({inProgressQuestion + 1}/{totalQuestions})
               </span>
             )}
             {isCompleted && !hasInProgress && (
