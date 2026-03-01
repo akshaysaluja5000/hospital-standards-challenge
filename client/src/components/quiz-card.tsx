@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, Lightbulb } from "lucide-react";
+import { playCorrectSound, playWrongSound } from "@/lib/sounds";
 import type { Question } from "@shared/schema";
 
 interface QuizCardProps {
@@ -23,6 +24,11 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
     if (disabled || showResult) return;
     setSelected(index);
     setShowResult(true);
+    if (index === question.correctIndex) {
+      playCorrectSound();
+    } else {
+      playWrongSound();
+    }
     onAnswer(index);
   };
 
