@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,7 +10,7 @@ import { XpBar } from "@/components/xp-bar";
 import { LevelCard } from "@/components/level-card";
 import { DailyCalendar } from "@/components/daily-calendar";
 import { useAuth } from "@/lib/auth";
-import type { UserStreak, UserProgress, DailyActivity } from "@shared/schema";
+import type { UserStreak, UserProgress, DailyActivity, QuizSession } from "@shared/schema";
 import { levels } from "@shared/questions";
 
 export default function DashboardPage() {
@@ -33,10 +33,17 @@ export default function DashboardPage() {
     queryKey: ["/api/game/today"],
   });
 
+  const { data: savedSessions } = useQuery<QuizSession[]>({
+    queryKey: ["/api/game/sessions"],
+  });
+
   const isLoading = streakLoading || progressLoading || activitiesLoading;
 
   const progressMap = new Map<string, UserProgress>();
   progress?.forEach((p) => progressMap.set(p.levelId, p));
+
+  const sessionsMap = new Map<string, QuizSession>();
+  savedSessions?.forEach((s) => sessionsMap.set(s.levelId, s));
 
   const isLevelUnlocked = (_levelIndex: number) => {
     return true;
@@ -213,16 +220,25 @@ export default function DashboardPage() {
         </motion.button>
 
         <div>
-          <h2 className="text-lg font-black mb-4 flex items-center gap-2">
-            <CalendarIcon size={20} className="text-primary" />
-            Levels
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-black flex items-center gap-2">
+              <CalendarIcon size={20} className="text-primary" />
+              Levels
+            </h2>
+          </div>
+          <div className="flex items-center gap-2 mb-4 px-3 py-2.5 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-shuffle-note">
+            <Shuffle size={14} className="text-primary flex-shrink-0" />
+            <p className="text-xs text-muted-foreground">
+              Questions are <span className="font-semibold text-foreground">shuffled each time</span> you play, so you'll get a different order every session.
+            </p>
+          </div>
           <div className="flex flex-col gap-3">
             {levels.map((level, index) => (
               <LevelCard
                 key={level.id}
                 level={level}
                 progress={progressMap.get(level.id)}
+                savedSession={sessionsMap.get(level.id)}
                 isUnlocked={isLevelUnlocked(index)}
                 index={index}
                 onPlay={() => setLocation(`/play/${level.id}`)}

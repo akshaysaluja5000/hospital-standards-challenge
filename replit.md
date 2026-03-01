@@ -16,11 +16,14 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - Public marketing landing page for unauthenticated visitors (no guest gameplay access)
 - Username-based password reset (forgot password flow)
 - Profile page with username/password change functionality
-- 11 levels based on Joint Commission audit domains (~13-14 questions each) — ALL unlocked from start (no sequential gating)
+- 11 levels based on Joint Commission audit domains (20 questions each, 220 total) — ALL unlocked from start (no sequential gating)
 - No pass/fail threshold — every completion is recorded, with tiered feedback (Excellent 80%+, Good 50%+, Keep Studying)
 - Study Mode with key concepts before each level (5 study cards per level)
-- Multiple choice questions + Yes/No button cards
-- Quiz session persistence: registered users can leave mid-level and resume where they left off (question order, answers, XP all preserved)
+- Multiple choice questions (4 options) + Yes/No swipe cards (2 options)
+- Quiz session persistence: users can leave mid-level and resume where they left off (question order, answers, XP all preserved)
+- Quit dialog during gameplay: Save & Exit, Start Over (new question order), Quit Without Saving, Continue Playing
+- Dashboard level cards show "In Progress" badge with Continue/Start Over buttons when a saved session exists
+- Questions are shuffled each playthrough (randomized order); shuffle note displayed on dashboard and completion screen
 - Compliance Handbook: searchable reference guide with 11 chapters, expandable sections, critical values tables, "Think About It" scenarios, and quick reference view
 - Leaderboard: all logged-in users can see rankings by XP, accuracy, levels completed, streaks — scoped by facility
 - Streak system with animated flame icon

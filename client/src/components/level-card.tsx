@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Level, UserProgress } from "@shared/schema";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { Level, UserProgress, QuizSession } from "@shared/schema";
 
 const iconMap: Record<string, any> = {
   Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck,
@@ -10,23 +11,37 @@ const iconMap: Record<string, any> = {
 interface LevelCardProps {
   level: Level;
   progress?: UserProgress;
+  savedSession?: QuizSession;
   isUnlocked: boolean;
   index: number;
   onPlay: () => void;
   onStudy: () => void;
 }
 
-export function LevelCard({ level, progress, index, onPlay, onStudy }: LevelCardProps) {
+export function LevelCard({ level, progress, savedSession, index, onPlay, onStudy }: LevelCardProps) {
   const Icon = iconMap[level.icon] || Star;
   const isCompleted = progress?.completed;
   const bestScore = progress?.bestScore || 0;
   const totalQuestions = level.questions.length;
   const percentage = totalQuestions > 0 ? Math.round((bestScore / totalQuestions) * 100) : 0;
+  const hasInProgress = !!savedSession;
+  const inProgressQuestion = savedSession?.currentQuestion || 0;
+
+  const handleStartOver = async () => {
+    try {
+      await apiRequest("DELETE", `/api/game/session/${level.id}`);
+      queryClient.invalidateQueries({ queryKey: ["/api/game/sessions"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/game/session", level.id] });
+    } catch (e) {}
+    onPlay();
+  };
 
   return (
     <motion.div
       className={`w-full rounded-2xl border-2 p-5 transition-all ${
-        isCompleted
+        hasInProgress
+          ? "border-chart-4/40 bg-chart-4/5"
+          : isCompleted
           ? "border-chart-1/40 bg-chart-1/5"
           : "border-border bg-card"
       }`}
@@ -55,7 +70,12 @@ export function LevelCard({ level, progress, index, onPlay, onStudy }: LevelCard
             <h3 className="font-bold text-base" data-testid={`text-level-name-${level.id}`}>
               {level.name}
             </h3>
-            {isCompleted && (
+            {hasInProgress && (
+              <span className="px-2 py-0.5 rounded-full bg-chart-4/15 text-chart-4 text-xs font-bold" data-testid={`badge-in-progress-${level.id}`}>
+                In Progress ({inProgressQuestion}/{totalQuestions})
+              </span>
+            )}
+            {isCompleted && !hasInProgress && (
               <span className="px-2 py-0.5 rounded-full bg-chart-1/15 text-chart-1 text-xs font-bold">
                 Complete
               </span>
@@ -82,7 +102,7 @@ export function LevelCard({ level, progress, index, onPlay, onStudy }: LevelCard
             )}
           </div>
 
-          <div className="flex gap-2 mt-3">
+          <div className="flex gap-2 mt-3 flex-wrap">
             <Button
               variant="outline"
               size="sm"
@@ -93,15 +113,39 @@ export function LevelCard({ level, progress, index, onPlay, onStudy }: LevelCard
               <BookOpen size={14} className="mr-1.5" />
               Study First
             </Button>
-            <Button
-              size="sm"
-              className="text-xs"
-              onClick={onPlay}
-              data-testid={`button-level-${level.id}`}
-            >
-              <Play size={14} className="mr-1.5" />
-              Play Quiz
-            </Button>
+            {hasInProgress ? (
+              <>
+                <Button
+                  size="sm"
+                  className="text-xs"
+                  onClick={onPlay}
+                  data-testid={`button-continue-${level.id}`}
+                >
+                  <PlayCircle size={14} className="mr-1.5" />
+                  Continue
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs"
+                  onClick={handleStartOver}
+                  data-testid={`button-restart-${level.id}`}
+                >
+                  <RotateCcw size={14} className="mr-1.5" />
+                  Start Over
+                </Button>
+              </>
+            ) : (
+              <Button
+                size="sm"
+                className="text-xs"
+                onClick={onPlay}
+                data-testid={`button-level-${level.id}`}
+              >
+                <Play size={14} className="mr-1.5" />
+                Play Quiz
+              </Button>
+            )}
           </div>
         </div>
       </div>

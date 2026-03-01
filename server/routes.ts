@@ -399,6 +399,15 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/game/sessions", requireAuth, async (req, res) => {
+    try {
+      const sessions = await storage.getUserQuizSessions(req.user!.id);
+      res.json(sessions);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   app.get("/api/game/session/:levelId", requireAuth, async (req, res) => {
     try {
       const session = await storage.getQuizSession(req.user!.id, req.params.levelId);

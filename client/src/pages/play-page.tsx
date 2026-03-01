@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { useRoute, useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Trophy, Star, Zap, RotateCcw, Home, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Trophy, Star, Zap, RotateCcw, Home, Loader2, X, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SwipeCard } from "@/components/swipe-card";
@@ -36,6 +36,7 @@ export default function PlayPage() {
   const level = useMemo(() => levels.find((l) => l.id === levelId), [levelId]);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [showQuitDialog, setShowQuitDialog] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [questionOrder, setQuestionOrder] = useState<string[]>([]);
@@ -109,6 +110,7 @@ export default function PlayPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/game/progress"] });
       queryClient.invalidateQueries({ queryKey: ["/api/game/activities"] });
       queryClient.invalidateQueries({ queryKey: ["/api/game/today"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/game/sessions"] });
     },
   });
 
@@ -176,6 +178,44 @@ export default function PlayPage() {
       saveSession(newState, questionOrder);
     }
   }, [gameState, saveSession, questionOrder]);
+
+  const handleQuit = useCallback(() => {
+    setShowQuitDialog(true);
+  }, []);
+
+  const handleQuitConfirm = useCallback(async (saveProgress: boolean) => {
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    if (saveProgress && levelId) {
+      try {
+        await apiRequest("POST", `/api/game/session/${levelId}`, {
+          questionOrder,
+          answers: gameState.answers,
+          currentQuestion: gameState.currentQuestion,
+          correctAnswers: gameState.correctAnswers,
+          xpEarned: gameState.xpEarned,
+        });
+      } catch (e) {}
+    }
+    if (!saveProgress && levelId) {
+      deleteSessionMutation.mutate();
+    }
+    queryClient.invalidateQueries({ queryKey: ["/api/game/sessions"] });
+    setShowQuitDialog(false);
+    setLocation("/");
+  }, [levelId, deleteSessionMutation, setLocation, questionOrder, gameState]);
+
+  const handleStartOverInGame = useCallback(() => {
+    if (!level) return;
+    deleteSessionMutation.mutate();
+    const shuffled = shuffleWithSeed(level.questions, `${user?.id}-${level.id}-${Date.now()}`);
+    const newOrder = shuffled.map((q: any) => q.id);
+    setQuestionOrder(newOrder);
+    setGameState({
+      currentQuestion: 0, score: 0, correctAnswers: 0,
+      totalQuestions: level.questions.length, xpEarned: 0, answers: [],
+    });
+    setShowQuitDialog(false);
+  }, [level, user?.id, deleteSessionMutation]);
 
   if (!level) {
     return (
@@ -263,6 +303,13 @@ export default function PlayPage() {
               </div>
             </div>
 
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-replay-shuffle-note">
+              <Shuffle size={14} className="text-primary flex-shrink-0" />
+              <p className="text-xs text-muted-foreground">
+                Play again for a <span className="font-semibold text-foreground">fresh question order</span> each time!
+              </p>
+            </div>
+
             <div className="flex gap-3 w-full">
               <Button
                 variant="outline"
@@ -280,7 +327,7 @@ export default function PlayPage() {
                 data-testid="button-retry"
               >
                 <RotateCcw size={16} className="mr-2" />
-                Retry
+                Play Again
               </Button>
               <Button
                 className="flex-1"
@@ -307,16 +354,64 @@ export default function PlayPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {showQuitDialog && (
+        <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4">
+          <motion.div
+            className="w-full max-w-sm rounded-2xl bg-card border border-card-border p-6 flex flex-col gap-4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+          >
+            <h3 className="font-bold text-lg text-center" data-testid="text-quit-title">Leave this quiz?</h3>
+            <p className="text-sm text-muted-foreground text-center">
+              You're on question {gameState.currentQuestion + 1} of {questions.length}. What would you like to do?
+            </p>
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={() => handleQuitConfirm(true)}
+                data-testid="button-quit-save"
+              >
+                <Home size={16} className="mr-2" />
+                Save & Exit
+              </Button>
+              <Button
+                variant="outline"
+                onClick={handleStartOverInGame}
+                data-testid="button-quit-restart"
+              >
+                <RotateCcw size={16} className="mr-2" />
+                Start Over (New Question Order)
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => handleQuitConfirm(false)}
+                className="text-destructive hover:text-destructive"
+                data-testid="button-quit-discard"
+              >
+                <X size={16} className="mr-2" />
+                Quit Without Saving
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setShowQuitDialog(false)}
+                data-testid="button-quit-cancel"
+              >
+                Continue Playing
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
       <div className="bg-card border-b border-card-border sticky top-0 z-50">
         <div className="max-w-lg mx-auto px-4 py-3 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3">
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setLocation("/")}
-              data-testid="button-back"
+              onClick={handleQuit}
+              data-testid="button-quit"
             >
-              <ArrowLeft size={20} />
+              <X size={20} />
             </Button>
             <div className="flex-1 text-center">
               <h2 className="font-bold text-sm" data-testid="text-level-title" style={{ color: level.color }}>
