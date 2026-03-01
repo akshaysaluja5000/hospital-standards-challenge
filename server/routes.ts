@@ -536,12 +536,15 @@ export async function registerRoutes(
         return {
           id: u.id,
           username: u.username,
+          firstName: u.firstName || "",
+          lastName: u.lastName || "",
           totalXp: streak?.totalXp || 0,
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
           accuracy,
           lastActive: streak?.lastPlayedDate || null,
+          joinedAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
         };
       }).sort((a, b) => b.totalXp - a.totalXp);
 

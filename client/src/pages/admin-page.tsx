@@ -1,26 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
+
+interface AdminUser {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  totalXp: number;
+  currentStreak: number;
+  longestStreak: number;
+  questionsAnswered: number;
+  accuracy: number;
+  lastActive: string | null;
+  joinedAt: string | null;
+}
 
 interface AdminStats {
   totalUsers: number;
   activeToday: number;
   totalQuestionsAnswered: number;
   averageAccuracy: number;
-  userList: {
-    id: number;
-    username: string;
-    totalXp: number;
-    currentStreak: number;
-    longestStreak: number;
-    questionsAnswered: number;
-    accuracy: number;
-    lastActive: string | null;
-  }[];
+  userList: AdminUser[];
 }
 
 export default function AdminPage() {
@@ -59,6 +64,18 @@ export default function AdminPage() {
     );
   }
 
+  const formatDate = (dateStr: string | null) => {
+    if (!dateStr) return "Never";
+    const d = new Date(dateStr);
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  };
+
+  const getDisplayName = (u: AdminUser) => {
+    if (u.firstName && u.lastName) return `${u.firstName} ${u.lastName}`;
+    if (u.firstName) return u.firstName;
+    return u.username;
+  };
+
   return (
     <div className="min-h-screen pb-20">
       <div className="bg-card border-b border-card-border sticky top-0 z-50">
@@ -81,7 +98,7 @@ export default function AdminPage() {
       <div className="max-w-4xl mx-auto px-4 pt-6 flex flex-col gap-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            { label: "Total Users", value: stats?.totalUsers || 0, icon: Users, color: "text-primary" },
+            { label: "Registered Users", value: stats?.totalUsers || 0, icon: UserPlus, color: "text-primary" },
             { label: "Active Today", value: stats?.activeToday || 0, icon: Calendar, color: "text-chart-2" },
             { label: "Questions Answered", value: stats?.totalQuestionsAnswered || 0, icon: Target, color: "text-chart-4" },
             { label: "Avg Accuracy", value: `${stats?.averageAccuracy || 0}%`, icon: TrendingUp, color: "text-chart-1" },
@@ -105,8 +122,8 @@ export default function AdminPage() {
         <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
           <div className="p-5 border-b border-card-border">
             <h3 className="font-bold text-base flex items-center gap-2">
-              <BarChart3 size={18} className="text-primary" />
-              User Leaderboard
+              <Users size={18} className="text-primary" />
+              Registered Users ({stats?.totalUsers || 0})
             </h3>
           </div>
           <div className="overflow-x-auto">
@@ -114,11 +131,13 @@ export default function AdminPage() {
               <thead>
                 <tr className="border-b border-card-border bg-muted/30">
                   <th className="text-left p-3 font-bold text-muted-foreground">#</th>
-                  <th className="text-left p-3 font-bold text-muted-foreground">User</th>
+                  <th className="text-left p-3 font-bold text-muted-foreground">Name</th>
+                  <th className="text-left p-3 font-bold text-muted-foreground hidden sm:table-cell">Username</th>
                   <th className="text-right p-3 font-bold text-muted-foreground">XP</th>
                   <th className="text-right p-3 font-bold text-muted-foreground">Streak</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Questions</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Accuracy</th>
+                  <th className="text-right p-3 font-bold text-muted-foreground hidden lg:table-cell">Joined</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden lg:table-cell">Last Active</th>
                 </tr>
               </thead>
@@ -130,16 +149,20 @@ export default function AdminPage() {
                     data-testid={`row-user-${u.id}`}
                   >
                     <td className="p-3 font-bold">
-                      {i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
+                      {i + 1}
                     </td>
                     <td className="p-3">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                          {u.username.charAt(0).toUpperCase()}
+                          {(u.firstName || u.username).charAt(0).toUpperCase()}
                         </div>
-                        <span className="font-bold">{u.username}</span>
+                        <div className="flex flex-col">
+                          <span className="font-bold" data-testid={`text-name-${u.id}`}>{getDisplayName(u)}</span>
+                          <span className="text-xs text-muted-foreground sm:hidden">{u.username}</span>
+                        </div>
                       </div>
                     </td>
+                    <td className="p-3 text-muted-foreground hidden sm:table-cell" data-testid={`text-username-${u.id}`}>{u.username}</td>
                     <td className="p-3 text-right font-bold text-chart-4">{u.totalXp}</td>
                     <td className="p-3 text-right font-bold">{u.currentStreak}</td>
                     <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsAnswered}</td>
@@ -149,14 +172,17 @@ export default function AdminPage() {
                       </span>
                     </td>
                     <td className="p-3 text-right text-muted-foreground text-xs hidden lg:table-cell">
-                      {u.lastActive || "Never"}
+                      {formatDate(u.joinedAt)}
+                    </td>
+                    <td className="p-3 text-right text-muted-foreground text-xs hidden lg:table-cell">
+                      {formatDate(u.lastActive)}
                     </td>
                   </tr>
                 ))}
                 {(!stats?.userList || stats.userList.length === 0) && (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-muted-foreground">
-                      No users yet. Share the app to get started!
+                    <td colSpan={9} className="p-8 text-center text-muted-foreground">
+                      No users yet. Share the facility code to get started!
                     </td>
                   </tr>
                 )}
