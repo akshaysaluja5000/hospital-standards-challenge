@@ -410,7 +410,8 @@ export async function registerRoutes(
 
   app.get("/api/game/session/:levelId", requireAuth, async (req, res) => {
     try {
-      const session = await storage.getQuizSession(req.user!.id, req.params.levelId);
+      const levelId = req.params.levelId as string;
+      const session = await storage.getQuizSession(req.user!.id, levelId);
       if (!session) {
         return res.json(null);
       }
@@ -422,8 +423,9 @@ export async function registerRoutes(
 
   app.post("/api/game/session/:levelId", requireAuth, async (req, res) => {
     try {
+      const levelId = req.params.levelId as string;
       const { questionOrder, answers, currentQuestion, correctAnswers, xpEarned } = req.body;
-      const session = await storage.upsertQuizSession(req.user!.id, req.params.levelId, {
+      const session = await storage.upsertQuizSession(req.user!.id, levelId, {
         questionOrder,
         answers: JSON.stringify(answers),
         currentQuestion,
@@ -438,7 +440,8 @@ export async function registerRoutes(
 
   app.delete("/api/game/session/:levelId", requireAuth, async (req, res) => {
     try {
-      await storage.deleteQuizSession(req.user!.id, req.params.levelId);
+      const levelId = req.params.levelId as string;
+      await storage.deleteQuizSession(req.user!.id, levelId);
       res.json({ success: true });
     } catch (err: any) {
       res.status(500).json({ message: err.message });
