@@ -73,6 +73,8 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  app.set("trust proxy", 1);
+
   const PgStore = connectPgSimple(session);
 
   app.use(
@@ -561,12 +563,17 @@ export async function registerRoutes(
   });
 
   try {
-    const existing = await storage.getFacilityByCode("SITE486045");
-    if (!existing) {
-      await storage.createFacility({
+    let facility = await storage.getFacilityByCode("SITE486045");
+    if (!facility) {
+      facility = await storage.createFacility({
         name: "Midwest Orthopedic Specialty Hospital",
         code: "SITE486045",
       });
+    }
+
+    const adminUser = await storage.getUserByUsername("akshaysaluja");
+    if (adminUser && (!adminUser.isAdmin || adminUser.facilityId !== facility.id)) {
+      await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
     }
   } catch (e) {
   }
