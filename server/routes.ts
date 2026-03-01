@@ -518,10 +518,7 @@ export async function registerRoutes(
 
   app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
-      const adminFacilityId = (req.user as any).facilityId;
-      const allUsers = adminFacilityId
-        ? await storage.getUsersByFacility(adminFacilityId)
-        : await storage.getAllUsers();
+      const allUsers = await storage.getAllUsers();
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
       const allSessions = await storage.getAllQuizSessions();
@@ -579,18 +576,15 @@ export async function registerRoutes(
         const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
 
         let lastActiveTimestamp: string | null = null;
-        if (streak?.lastPlayedDate) {
-          lastActiveTimestamp = new Date(streak.lastPlayedDate + "T23:59:59Z").toISOString();
-        }
         const latestSession = userSessions.reduce((latest: Date | null, sess) => {
           const d = new Date(sess.updatedAt);
           return !latest || d > latest ? d : latest;
         }, null);
         if (latestSession) {
-          const sessionIso = latestSession.toISOString();
-          if (!lastActiveTimestamp || sessionIso > lastActiveTimestamp) {
-            lastActiveTimestamp = sessionIso;
-          }
+          lastActiveTimestamp = latestSession.toISOString();
+        }
+        if (!lastActiveTimestamp && streak?.lastPlayedDate) {
+          lastActiveTimestamp = new Date(streak.lastPlayedDate + "T12:00:00Z").toISOString();
         }
 
         return {

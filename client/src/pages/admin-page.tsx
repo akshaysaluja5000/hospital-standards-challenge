@@ -75,15 +75,15 @@ export default function AdminPage() {
     const now = new Date();
     const d = new Date(dateStr);
     const diffMs = now.getTime() - d.getTime();
-    const diffSec = Math.floor(diffMs / 1000);
-    const diffMin = Math.floor(diffSec / 60);
+    if (diffMs < 0) return "Just now";
+    const diffMin = Math.floor(diffMs / 60000);
     const diffHr = Math.floor(diffMin / 60);
     const diffDays = Math.floor(diffHr / 24);
 
-    if (diffSec < 60) return `${diffSec}s ago`;
-    if (diffMin < 60) return `${diffMin}m ago`;
-    if (diffHr < 24) return `${diffHr}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffMin < 1) return "Just now";
+    if (diffMin < 60) return `${diffMin} min ago`;
+    if (diffHr < 24) return `${diffHr} hr ago`;
+    if (diffDays < 30) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
     return formatDate(dateStr);
   };
 
