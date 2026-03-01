@@ -426,14 +426,29 @@ export async function registerRoutes(
   app.post("/api/game/session/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId as string;
+      const userId = req.user!.id;
       const { questionOrder, answers, currentQuestion, correctAnswers, xpEarned } = req.body;
-      const session = await storage.upsertQuizSession(req.user!.id, levelId, {
+      const session = await storage.upsertQuizSession(userId, levelId, {
         questionOrder,
         answers: JSON.stringify(answers),
         currentQuestion,
         correctAnswers,
         xpEarned,
       });
+
+      const today = format(new Date(), "yyyy-MM-dd");
+      const streak = await storage.getStreak(userId);
+      if (streak) {
+        await storage.upsertStreak(userId, { lastPlayedDate: today });
+      } else {
+        await storage.upsertStreak(userId, {
+          currentStreak: 0,
+          longestStreak: 0,
+          totalXp: 0,
+          lastPlayedDate: today,
+        });
+      }
+
       res.json(session);
     } catch (err: any) {
       res.status(500).json({ message: err.message });
@@ -509,6 +524,7 @@ export async function registerRoutes(
         : await storage.getAllUsers();
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
+      const allSessions = await storage.getAllQuizSessions();
       const today = format(new Date(), "yyyy-MM-dd");
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
@@ -519,21 +535,63 @@ export async function registerRoutes(
         activitiesByUser.set(a.userId, list);
       });
 
+      const sessionsByUser = new Map<number, typeof allSessions>();
+      allSessions.forEach((s) => {
+        const list = sessionsByUser.get(s.userId) || [];
+        list.push(s);
+        sessionsByUser.set(s.userId, list);
+      });
+
       const facilityUserIds = new Set(allUsers.map((u) => u.id));
       const facilityActivities = allActivities.filter((a) => facilityUserIds.has(a.userId));
-      const activeToday = facilityActivities.filter((a) => a.date === today && a.questionsAnswered > 0).length;
-      const totalQuestionsAnswered = facilityActivities.reduce((sum, a) => sum + a.questionsAnswered, 0);
-      const totalCorrect = facilityActivities.reduce((sum, a) => sum + a.correctAnswers, 0);
+      const facilitySessions = allSessions.filter((s) => facilityUserIds.has(s.userId));
+
+      const completedQuestionsAnswered = facilityActivities.reduce((sum, a) => sum + a.questionsAnswered, 0);
+      const completedCorrect = facilityActivities.reduce((sum, a) => sum + a.correctAnswers, 0);
+      const sessionQuestionsAnswered = facilitySessions.reduce((sum, s) => sum + s.currentQuestion, 0);
+      const sessionCorrect = facilitySessions.reduce((sum, s) => sum + s.correctAnswers, 0);
+      const totalQuestionsAnswered = completedQuestionsAnswered + sessionQuestionsAnswered;
+      const totalCorrect = completedCorrect + sessionCorrect;
       const averageAccuracy = totalQuestionsAnswered > 0
         ? Math.round((totalCorrect / totalQuestionsAnswered) * 100)
         : 0;
 
+      const activeTodayFromActivities = new Set(
+        facilityActivities.filter((a) => a.date === today && a.questionsAnswered > 0).map((a) => a.userId)
+      );
+      const activeTodayFromStreaks = new Set(
+        allStreaks.filter((s) => facilityUserIds.has(s.userId) && s.lastPlayedDate === today).map((s) => s.userId)
+      );
+      const activeTodaySet = new Set(Array.from(activeTodayFromActivities).concat(Array.from(activeTodayFromStreaks)));
+      const activeToday = activeTodaySet.size;
+
       const userList = allUsers.map((u) => {
         const streak = streakMap.get(u.id);
         const userActivities = activitiesByUser.get(u.id) || [];
-        const questionsAnswered = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
-        const correct = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
+        const userSessions = sessionsByUser.get(u.id) || [];
+
+        const completedQ = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
+        const completedC = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
+        const sessionQ = userSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
+        const sessionC = userSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const questionsAnswered = completedQ + sessionQ;
+        const correct = completedC + sessionC;
         const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
+
+        let lastActiveTimestamp: string | null = null;
+        if (streak?.lastPlayedDate) {
+          lastActiveTimestamp = new Date(streak.lastPlayedDate + "T23:59:59Z").toISOString();
+        }
+        const latestSession = userSessions.reduce((latest: Date | null, sess) => {
+          const d = new Date(sess.updatedAt);
+          return !latest || d > latest ? d : latest;
+        }, null);
+        if (latestSession) {
+          const sessionIso = latestSession.toISOString();
+          if (!lastActiveTimestamp || sessionIso > lastActiveTimestamp) {
+            lastActiveTimestamp = sessionIso;
+          }
+        }
 
         return {
           id: u.id,
@@ -545,7 +603,7 @@ export async function registerRoutes(
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
           accuracy,
-          lastActive: streak?.lastPlayedDate || null,
+          lastActive: lastActiveTimestamp,
           joinedAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
         };
       }).sort((a, b) => b.totalXp - a.totalXp);

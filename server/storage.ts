@@ -32,6 +32,7 @@ export interface IStorage {
 
   getQuizSession(userId: number, levelId: string): Promise<QuizSession | undefined>;
   getUserQuizSessions(userId: number): Promise<QuizSession[]>;
+  getAllQuizSessions(): Promise<QuizSession[]>;
   upsertQuizSession(userId: number, levelId: string, data: Partial<QuizSession>): Promise<QuizSession>;
   deleteQuizSession(userId: number, levelId: string): Promise<void>;
 
@@ -168,6 +169,10 @@ export class DatabaseStorage implements IStorage {
 
   async getUserQuizSessions(userId: number): Promise<QuizSession[]> {
     return db.select().from(quizSessions).where(eq(quizSessions.userId, userId));
+  }
+
+  async getAllQuizSessions(): Promise<QuizSession[]> {
+    return db.select().from(quizSessions);
   }
 
   async upsertQuizSession(userId: number, levelId: string, data: Partial<QuizSession>): Promise<QuizSession> {
