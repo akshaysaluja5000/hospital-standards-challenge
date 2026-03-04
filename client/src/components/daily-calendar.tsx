@@ -1,5 +1,6 @@
-import { useMemo } from "react";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, startOfWeek, endOfWeek } from "date-fns";
+import { useMemo, useState } from "react";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, startOfWeek, endOfWeek } from "date-fns";
+import { Zap, CheckCircle2, XCircle, HelpCircle, X } from "lucide-react";
 import type { DailyActivity } from "@shared/schema";
 
 interface DailyCalendarProps {
@@ -9,6 +10,8 @@ interface DailyCalendarProps {
 }
 
 export function DailyCalendar({ activities, dailyGoal, currentMonth = new Date() }: DailyCalendarProps) {
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentMonth));
     const end = endOfWeek(endOfMonth(currentMonth));
@@ -25,6 +28,8 @@ export function DailyCalendar({ activities, dailyGoal, currentMonth = new Date()
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
+
+  const selectedActivity = selectedDate ? activityMap.get(selectedDate) : null;
 
   return (
     <div className="w-full">
@@ -50,13 +55,24 @@ export function DailyCalendar({ activities, dailyGoal, currentMonth = new Date()
           const goalMet = activity && activity.questionsAnswered >= dailyGoal;
           const hasActivity = activity && activity.questionsAnswered > 0;
           const today = isToday(day);
+          const isSelected = selectedDate === dateStr;
 
           return (
-            <div
+            <button
               key={dateStr}
-              className={`aspect-square rounded-lg flex items-center justify-center text-xs font-medium relative ${
+              type="button"
+              onClick={() => {
+                if (isCurrentMonth) {
+                  setSelectedDate(isSelected ? null : dateStr);
+                }
+              }}
+              className={`aspect-square rounded-lg flex items-center justify-center text-xs font-medium relative transition-all ${
                 !isCurrentMonth
-                  ? "text-muted-foreground/30"
+                  ? "text-muted-foreground/30 cursor-default"
+                  : "cursor-pointer hover:ring-2 hover:ring-primary/30"
+              } ${
+                isSelected
+                  ? "ring-2 ring-primary bg-primary/10"
                   : today
                   ? "ring-2 ring-primary ring-offset-1 ring-offset-background"
                   : ""
@@ -73,10 +89,63 @@ export function DailyCalendar({ activities, dailyGoal, currentMonth = new Date()
               {goalMet && (
                 <div className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-chart-1" />
               )}
-            </div>
+            </button>
           );
         })}
       </div>
+
+      {selectedDate && (
+        <div className="mt-4 rounded-xl bg-muted/50 border border-card-border p-4" data-testid="calendar-day-detail">
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="font-bold text-sm">
+              {format(new Date(selectedDate + "T12:00:00"), "EEEE, MMMM d, yyyy")}
+            </h4>
+            <button
+              type="button"
+              onClick={() => setSelectedDate(null)}
+              className="text-muted-foreground hover:text-foreground"
+              data-testid="button-close-day-detail"
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          {selectedActivity && selectedActivity.questionsAnswered > 0 ? (
+            <div className="grid grid-cols-2 gap-3">
+              <div className="flex items-center gap-2 rounded-lg bg-card border border-card-border p-3">
+                <Zap size={16} className="text-chart-4 flex-shrink-0" />
+                <div>
+                  <p className="text-lg font-black" data-testid="text-day-xp">{selectedActivity.xpEarned}</p>
+                  <p className="text-xs text-muted-foreground">XP Earned</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 rounded-lg bg-card border border-card-border p-3">
+                <HelpCircle size={16} className="text-primary flex-shrink-0" />
+                <div>
+                  <p className="text-lg font-black" data-testid="text-day-total">{selectedActivity.questionsAnswered}</p>
+                  <p className="text-xs text-muted-foreground">Total Questions</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 rounded-lg bg-card border border-card-border p-3">
+                <CheckCircle2 size={16} className="text-chart-1 flex-shrink-0" />
+                <div>
+                  <p className="text-lg font-black text-chart-1" data-testid="text-day-correct">{selectedActivity.correctAnswers}</p>
+                  <p className="text-xs text-muted-foreground">Correct</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 rounded-lg bg-card border border-card-border p-3">
+                <XCircle size={16} className="text-destructive flex-shrink-0" />
+                <div>
+                  <p className="text-lg font-black text-destructive" data-testid="text-day-wrong">{selectedActivity.questionsAnswered - selectedActivity.correctAnswers}</p>
+                  <p className="text-xs text-muted-foreground">Wrong</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm text-muted-foreground" data-testid="text-day-no-activity">No activity on this day.</p>
+          )}
+        </div>
+      )}
 
       <div className="flex items-center gap-4 mt-4 justify-center">
         <div className="flex items-center gap-1.5">

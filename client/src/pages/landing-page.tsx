@@ -7,8 +7,8 @@ import { useLocation } from "wouter";
 const features = [
   {
     icon: CalendarCheck,
-    title: "Daily 5-question micro-drills",
-    description: "Quick daily quizzes that fit into any shift schedule",
+    title: "Gamified 20-question levels",
+    description: "Bite-sized quizzes covering real Joint Commission standards, built for busy schedules",
   },
   {
     icon: BarChart3,
