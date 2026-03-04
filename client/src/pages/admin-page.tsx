@@ -16,7 +16,8 @@ interface AdminUser {
   longestStreak: number;
   questionsAnswered: number;
   questionsToday: number;
-  correctAnswers: number;
+  correctTotal: number;
+  correctToday: number;
   accuracy: number;
   lastActive: string | null;
   joinedAt: string | null;
@@ -156,7 +157,8 @@ export default function AdminPage() {
                   <th className="text-right p-3 font-bold text-muted-foreground">Streak</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Total Q's</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Today</th>
-                  <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Correct</th>
+                  <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Correct Total</th>
+                  <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Correct Today</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Accuracy</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden lg:table-cell">Joined</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden lg:table-cell">Last Active</th>
@@ -188,7 +190,8 @@ export default function AdminPage() {
                     <td className="p-3 text-right font-bold">{u.currentStreak}</td>
                     <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsAnswered}</td>
                     <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsToday}</td>
-                    <td className="p-3 text-right font-bold hidden sm:table-cell">{u.correctAnswers}</td>
+                    <td className="p-3 text-right font-bold hidden sm:table-cell">{u.correctTotal}</td>
+                    <td className="p-3 text-right font-bold hidden sm:table-cell">{u.correctToday}</td>
                     <td className="p-3 text-right hidden sm:table-cell">
                       <span className={`font-bold ${u.accuracy >= 80 ? "text-chart-1" : u.accuracy >= 50 ? "text-chart-4" : "text-destructive"}`}>
                         {u.accuracy}%
@@ -204,7 +207,7 @@ export default function AdminPage() {
                 ))}
                 {(!stats?.userList || stats.userList.length === 0) && (
                   <tr>
-                    <td colSpan={11} className="p-8 text-center text-muted-foreground">
+                    <td colSpan={12} className="p-8 text-center text-muted-foreground">
                       No users yet. Share the facility code to get started!
                     </td>
                   </tr>

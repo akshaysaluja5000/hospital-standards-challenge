@@ -589,11 +589,17 @@ export async function registerRoutes(
 
         const todayActivities = userActivities.filter((a) => a.date === today);
         const todayCompletedQ = todayActivities.reduce((s, a) => s + a.questionsAnswered, 0);
+        const todayCompletedC = todayActivities.reduce((s, a) => s + a.correctAnswers, 0);
         const todaySessionQ = userSessions.reduce((s, sess) => {
           const sessDate = sess.updatedAt ? format(new Date(sess.updatedAt), "yyyy-MM-dd") : "";
           return sessDate === today ? s + sess.currentQuestion : s;
         }, 0);
+        const todaySessionC = userSessions.reduce((s, sess) => {
+          const sessDate = sess.updatedAt ? format(new Date(sess.updatedAt), "yyyy-MM-dd") : "";
+          return sessDate === today ? s + sess.correctAnswers : s;
+        }, 0);
         const questionsToday = todayCompletedQ + todaySessionQ;
+        const correctToday = todayCompletedC + todaySessionC;
 
         return {
           id: u.id,
@@ -605,7 +611,8 @@ export async function registerRoutes(
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
           questionsToday,
-          correctAnswers: correct,
+          correctTotal: correct,
+          correctToday,
           accuracy,
           lastActive: lastActiveTimestamp,
           joinedAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
