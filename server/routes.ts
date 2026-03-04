@@ -548,10 +548,12 @@ export async function registerRoutes(
         const userSessions = sessionsByUser.get(u.id) || [];
         const userProgress = progressByUser.get(u.id) || [];
 
-        const completedQ = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
-        const completedC = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
-        const questionsAnswered = completedQ;
-        const correct = completedC;
+        const progressQ = userProgress.reduce((s, p) => s + p.totalQuestions, 0);
+        const progressC = userProgress.reduce((s, p) => s + p.score, 0);
+        const sessionQ = userSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
+        const sessionC = userSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const questionsAnswered = progressQ + sessionQ;
+        const correct = progressC + sessionC;
         const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
         const levelsCompleted = userProgress.filter((p) => p.completed).length;
         const sessionXp = userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
@@ -583,6 +585,9 @@ export async function registerRoutes(
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
       const allSessions = await storage.getAllQuizSessions();
+      const allProgressData = await Promise.all(
+        allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
+      );
       const today = format(new Date(), "yyyy-MM-dd");
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
@@ -599,23 +604,24 @@ export async function registerRoutes(
         list.push(s);
         sessionsByUser.set(s.userId, list);
       });
+      const progressByUser = new Map(allProgressData.map((p) => [p.userId, p.progress]));
 
       const facilityUserIds = new Set(allUsers.map((u) => u.id));
-      const facilityActivities = allActivities.filter((a) => facilityUserIds.has(a.userId));
-      const facilitySessions = allSessions.filter((s) => facilityUserIds.has(s.userId));
 
-      const completedQuestionsAnswered = facilityActivities.reduce((sum, a) => sum + a.questionsAnswered, 0);
-      const completedCorrect = facilityActivities.reduce((sum, a) => sum + a.correctAnswers, 0);
-      const sessionQuestionsAnswered = facilitySessions.reduce((sum, s) => sum + s.currentQuestion, 0);
-      const sessionCorrect = facilitySessions.reduce((sum, s) => sum + s.correctAnswers, 0);
-      const totalQuestionsAnswered = completedQuestionsAnswered + sessionQuestionsAnswered;
-      const totalCorrect = completedCorrect + sessionCorrect;
+      let totalQuestionsAnswered = 0;
+      let totalCorrect = 0;
+      allUsers.forEach((u) => {
+        const up = progressByUser.get(u.id) || [];
+        const us = sessionsByUser.get(u.id) || [];
+        totalQuestionsAnswered += up.reduce((s, p) => s + p.totalQuestions, 0) + us.reduce((s, sess) => s + sess.currentQuestion, 0);
+        totalCorrect += up.reduce((s, p) => s + p.score, 0) + us.reduce((s, sess) => s + sess.correctAnswers, 0);
+      });
       const averageAccuracy = totalQuestionsAnswered > 0
         ? Math.round((totalCorrect / totalQuestionsAnswered) * 100)
         : 0;
 
       const activeTodayFromActivities = new Set(
-        facilityActivities.filter((a) => a.date === today && a.questionsAnswered > 0).map((a) => a.userId)
+        allActivities.filter((a) => facilityUserIds.has(a.userId) && a.date === today && a.questionsAnswered > 0).map((a) => a.userId)
       );
       const activeTodayFromStreaks = new Set(
         allStreaks.filter((s) => facilityUserIds.has(s.userId) && s.lastPlayedDate === today).map((s) => s.userId)
@@ -627,13 +633,14 @@ export async function registerRoutes(
         const streak = streakMap.get(u.id);
         const userActivities = activitiesByUser.get(u.id) || [];
         const userSessions = sessionsByUser.get(u.id) || [];
+        const userProg = progressByUser.get(u.id) || [];
 
-        const completedQ = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
-        const completedC = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
+        const progressQ = userProg.reduce((s, p) => s + p.totalQuestions, 0);
+        const progressC = userProg.reduce((s, p) => s + p.score, 0);
         const sessionQ = userSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
         const sessionC = userSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
-        const questionsAnswered = completedQ + sessionQ;
-        const correct = completedC + sessionC;
+        const questionsAnswered = progressQ + sessionQ;
+        const correct = progressC + sessionC;
         const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
 
         let lastActiveTimestamp: string | null = null;
