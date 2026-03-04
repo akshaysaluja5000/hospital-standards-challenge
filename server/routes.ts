@@ -587,6 +587,14 @@ export async function registerRoutes(
           lastActiveTimestamp = new Date(streak.lastPlayedDate + "T12:00:00Z").toISOString();
         }
 
+        const todayActivities = userActivities.filter((a) => a.date === today);
+        const todayCompletedQ = todayActivities.reduce((s, a) => s + a.questionsAnswered, 0);
+        const todaySessionQ = userSessions.reduce((s, sess) => {
+          const sessDate = sess.updatedAt ? format(new Date(sess.updatedAt), "yyyy-MM-dd") : "";
+          return sessDate === today ? s + sess.currentQuestion : s;
+        }, 0);
+        const questionsToday = todayCompletedQ + todaySessionQ;
+
         return {
           id: u.id,
           username: u.username,
@@ -596,6 +604,8 @@ export async function registerRoutes(
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
+          questionsToday,
+          correctAnswers: correct,
           accuracy,
           lastActive: lastActiveTimestamp,
           joinedAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
