@@ -90,6 +90,7 @@ export default function PlayPage() {
     mutationFn: async (data: { questionOrder: string[]; answers: any[]; currentQuestion: number; correctAnswers: number; xpEarned: number }) => {
       await apiRequest("POST", `/api/game/session/${levelId}`, data);
     },
+    retry: 2,
   });
 
   const deleteSessionMutation = useMutation({
@@ -106,12 +107,15 @@ export default function PlayPage() {
       await apiRequest("POST", "/api/game/submit", data);
     },
     onSuccess: () => {
+      deleteSessionMutation.mutate();
       queryClient.invalidateQueries({ queryKey: ["/api/game/streak"] });
       queryClient.invalidateQueries({ queryKey: ["/api/game/progress"] });
       queryClient.invalidateQueries({ queryKey: ["/api/game/activities"] });
       queryClient.invalidateQueries({ queryKey: ["/api/game/today"] });
       queryClient.invalidateQueries({ queryKey: ["/api/game/sessions"] });
     },
+    retry: 3,
+    retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
   });
 
   const saveSession = useCallback((state: GameState, order: string[]) => {
@@ -156,6 +160,7 @@ export default function PlayPage() {
     const isLastQuestion = gameState.currentQuestion >= questions.length - 1;
 
     if (isLastQuestion) {
+      if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
       setIsComplete(true);
       submitMutation.mutate({
         levelId: level.id,
@@ -163,13 +168,12 @@ export default function PlayPage() {
         totalQuestions: questions.length,
         xpEarned: gameState.xpEarned,
       });
-      deleteSessionMutation.mutate();
     } else {
       const newState = { ...gameState, currentQuestion: gameState.currentQuestion + 1 };
       setGameState(newState);
       saveSession(newState, questionOrder);
     }
-  }, [gameState, questions, level, submitMutation, deleteSessionMutation, saveSession, questionOrder]);
+  }, [gameState, questions, level, submitMutation, saveSession, questionOrder]);
 
   const handlePrevious = useCallback(() => {
     if (gameState.currentQuestion > 0) {
@@ -309,6 +313,33 @@ export default function PlayPage() {
                 Play again for a <span className="font-semibold text-foreground">fresh question order</span> each time!
               </p>
             </div>
+
+            {submitMutation.isPending && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 size={16} className="animate-spin" />
+                <span>Saving your results...</span>
+              </div>
+            )}
+
+            {submitMutation.isError && (
+              <div className="w-full rounded-xl bg-destructive/10 border border-destructive/20 p-3 text-center">
+                <p className="text-sm text-destructive font-medium">Failed to save results. Please try again.</p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-2"
+                  onClick={() => submitMutation.mutate({
+                    levelId: level.id,
+                    score: gameState.correctAnswers,
+                    totalQuestions: questions.length,
+                    xpEarned: gameState.xpEarned,
+                  })}
+                  data-testid="button-retry-submit"
+                >
+                  Retry Save
+                </Button>
+              </div>
+            )}
 
             <div className="flex gap-3 w-full">
               <Button
