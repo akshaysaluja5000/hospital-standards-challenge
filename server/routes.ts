@@ -357,8 +357,19 @@ export async function registerRoutes(
       const userId = req.user!.id;
       const today = format(new Date(), "yyyy-MM-dd");
 
+      const existingSession = await storage.getQuizSession(userId, levelId);
+      const alreadyTrackedQ = existingSession?.currentQuestion || 0;
+      const alreadyTrackedC = existingSession?.correctAnswers || 0;
+      const alreadyTrackedXp = existingSession?.xpEarned || 0;
+
+      const remainingQ = totalQuestions - alreadyTrackedQ;
+      const remainingC = score - alreadyTrackedC;
+      const remainingXp = xpEarned - alreadyTrackedXp;
+
       await storage.upsertProgress(userId, levelId, score, totalQuestions);
-      await storage.upsertDailyActivity(userId, today, totalQuestions, score, xpEarned);
+      if (remainingQ > 0) {
+        await storage.upsertDailyActivity(userId, today, remainingQ, remainingC, remainingXp);
+      }
 
       let streak = await storage.getStreak(userId);
       if (!streak) {
@@ -380,6 +391,8 @@ export async function registerRoutes(
           if (diffDays === 1) {
             newStreak = streak.currentStreak + 1;
           } else if (diffDays > 1) {
+            newStreak = 1;
+          } else if (diffDays === 0 && newStreak === 0) {
             newStreak = 1;
           }
         } else {
@@ -428,6 +441,12 @@ export async function registerRoutes(
       const levelId = req.params.levelId as string;
       const userId = req.user!.id;
       const { questionOrder, answers, currentQuestion, correctAnswers, xpEarned } = req.body;
+
+      const existingSession = await storage.getQuizSession(userId, levelId);
+      const prevQ = existingSession?.currentQuestion || 0;
+      const prevC = existingSession?.correctAnswers || 0;
+      const prevXp = existingSession?.xpEarned || 0;
+
       const session = await storage.upsertQuizSession(userId, levelId, {
         questionOrder,
         answers: JSON.stringify(answers),
@@ -436,15 +455,48 @@ export async function registerRoutes(
         xpEarned,
       });
 
+      const deltaQ = currentQuestion - prevQ;
+      const deltaC = correctAnswers - prevC;
+      const deltaXp = xpEarned - prevXp;
+
       const today = format(new Date(), "yyyy-MM-dd");
-      const streak = await storage.getStreak(userId);
-      if (streak) {
-        await storage.upsertStreak(userId, { lastPlayedDate: today });
-      } else {
-        await storage.upsertStreak(userId, {
-          currentStreak: 0,
-          longestStreak: 0,
+
+      if (deltaQ > 0) {
+        await storage.upsertDailyActivity(userId, today, deltaQ, deltaC, deltaXp);
+      }
+
+      let streak = await storage.getStreak(userId);
+      if (!streak) {
+        streak = await storage.upsertStreak(userId, {
+          currentStreak: 1,
+          longestStreak: 1,
           totalXp: 0,
+          lastPlayedDate: today,
+        });
+      } else {
+        const lastPlayed = streak.lastPlayedDate;
+        let newStreak = streak.currentStreak;
+
+        if (lastPlayed) {
+          const lastDate = new Date(lastPlayed);
+          const todayDate = new Date(today);
+          const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+
+          if (diffDays === 1) {
+            newStreak = streak.currentStreak + 1;
+          } else if (diffDays > 1) {
+            newStreak = 1;
+          } else if (diffDays === 0 && newStreak === 0) {
+            newStreak = 1;
+          }
+        } else {
+          newStreak = 1;
+        }
+
+        const newLongest = Math.max(newStreak, streak.longestStreak);
+        await storage.upsertStreak(userId, {
+          currentStreak: newStreak,
+          longestStreak: newLongest,
           lastPlayedDate: today,
         });
       }
@@ -643,6 +695,13 @@ export async function registerRoutes(
     const adminUser = await storage.getUserByUsername("akshaysaluja");
     if (adminUser && (!adminUser.isAdmin || adminUser.facilityId !== facility.id)) {
       await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
+    }
+
+    const allStreaks = await storage.getAllStreaks();
+    for (const s of allStreaks) {
+      if (s.currentStreak === 0 && s.lastPlayedDate) {
+        await storage.upsertStreak(s.userId, { currentStreak: 1, longestStreak: Math.max(1, s.longestStreak) });
+      }
     }
   } catch (e) {
   }

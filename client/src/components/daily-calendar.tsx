@@ -1,16 +1,16 @@
 import { useMemo, useState } from "react";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, startOfWeek, endOfWeek } from "date-fns";
-import { Zap, CheckCircle2, XCircle, HelpCircle, X } from "lucide-react";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, startOfWeek, endOfWeek, addMonths, subMonths } from "date-fns";
+import { Zap, CheckCircle2, XCircle, HelpCircle, X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { DailyActivity } from "@shared/schema";
 
 interface DailyCalendarProps {
   activities: DailyActivity[];
   dailyGoal: number;
-  currentMonth?: Date;
 }
 
-export function DailyCalendar({ activities, dailyGoal, currentMonth = new Date() }: DailyCalendarProps) {
+export function DailyCalendar({ activities, dailyGoal }: DailyCalendarProps) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const days = useMemo(() => {
     const start = startOfWeek(startOfMonth(currentMonth));
@@ -33,10 +33,26 @@ export function DailyCalendar({ activities, dailyGoal, currentMonth = new Date()
 
   return (
     <div className="w-full">
-      <div className="text-center mb-4">
+      <div className="flex items-center justify-between mb-4">
+        <button
+          type="button"
+          onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+          className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+          data-testid="button-prev-month"
+        >
+          <ChevronLeft size={20} />
+        </button>
         <h3 className="font-bold text-lg" data-testid="text-calendar-month">
           {format(currentMonth, "MMMM yyyy")}
         </h3>
+        <button
+          type="button"
+          onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+          className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+          data-testid="button-next-month"
+        >
+          <ChevronRight size={20} />
+        </button>
       </div>
 
       <div className="grid grid-cols-7 gap-1 mb-2">
