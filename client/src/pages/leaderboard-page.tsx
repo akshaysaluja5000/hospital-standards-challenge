@@ -252,9 +252,12 @@ export default function LeaderboardPage() {
               </div>
               <div className="text-center">
                 <p className="text-xl font-black" data-testid="text-team-avg-accuracy">
-                  {leaderboard.length > 0
-                    ? Math.round(leaderboard.reduce((s, e) => s + e.accuracy, 0) / leaderboard.filter(e => e.questionsAnswered > 0).length || 0)
-                    : 0}%
+                  {(() => {
+                    const active = leaderboard.filter(e => e.questionsAnswered > 0);
+                    return active.length > 0
+                      ? Math.round(active.reduce((s, e) => s + e.accuracy, 0) / active.length)
+                      : 0;
+                  })()}%
                 </p>
                 <p className="text-xs text-muted-foreground">Avg Accuracy</p>
               </div>

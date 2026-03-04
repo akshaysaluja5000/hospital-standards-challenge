@@ -519,12 +519,10 @@ export async function registerRoutes(
 
   app.get("/api/game/leaderboard", requireAuth, async (req, res) => {
     try {
-      const userFacilityId = (req.user as any).facilityId;
-      const allUsers = userFacilityId
-        ? await storage.getUsersByFacility(userFacilityId)
-        : await storage.getAllUsers();
+      const allUsers = await storage.getAllUsers();
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
+      const allSessions = await storage.getAllQuizSessions();
       const allProgressData = await Promise.all(
         allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
       );
@@ -536,23 +534,34 @@ export async function registerRoutes(
         list.push(a);
         activitiesByUser.set(a.userId, list);
       });
+      const sessionsByUser = new Map<number, typeof allSessions>();
+      allSessions.forEach((s) => {
+        const list = sessionsByUser.get(s.userId) || [];
+        list.push(s);
+        sessionsByUser.set(s.userId, list);
+      });
       const progressByUser = new Map(allProgressData.map((p) => [p.userId, p.progress]));
 
       const leaderboard = allUsers.map((u) => {
         const streak = streakMap.get(u.id);
         const userActivities = activitiesByUser.get(u.id) || [];
+        const userSessions = sessionsByUser.get(u.id) || [];
         const userProgress = progressByUser.get(u.id) || [];
-        const questionsAnswered = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
-        const correct = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
+
+        const completedQ = userActivities.reduce((s, a) => s + a.questionsAnswered, 0);
+        const completedC = userActivities.reduce((s, a) => s + a.correctAnswers, 0);
+        const questionsAnswered = completedQ;
+        const correct = completedC;
         const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
         const levelsCompleted = userProgress.filter((p) => p.completed).length;
+        const sessionXp = userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
 
         return {
           id: u.id,
           username: u.username,
           firstName: u.firstName,
           lastName: u.lastName,
-          totalXp: streak?.totalXp || 0,
+          totalXp: (streak?.totalXp || 0) + sessionXp,
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
