@@ -45,12 +45,16 @@ export default function DashboardPage() {
   const sessionsMap = new Map<string, QuizSession>();
   savedSessions?.forEach((s) => sessionsMap.set(s.levelId, s));
 
+  const sessionXp = savedSessions?.reduce((sum, s) => sum + (s.xpEarned || 0), 0) || 0;
+  const displayXp = (streak?.totalXp || 0) + sessionXp;
+
   const isLevelUnlocked = (_levelIndex: number) => {
     return true;
   };
 
+  const sessionQuestionsToday = savedSessions?.reduce((sum, s) => sum + (s.currentQuestion || 0), 0) || 0;
   const dailyGoal = user?.dailyGoal || 5;
-  const todayQuestions = todayActivity?.questionsAnswered || 0;
+  const todayQuestions = (todayActivity?.questionsAnswered || 0) + sessionQuestionsToday;
   const goalProgress = Math.min((todayQuestions / dailyGoal) * 100, 100);
 
   if (isLoading) {
@@ -145,7 +149,7 @@ export default function DashboardPage() {
             <div className="flex items-center gap-1">
               <Zap size={18} className="text-chart-4" fill="currentColor" />
               <span className="text-xl font-black" data-testid="text-total-xp">
-                {streak?.totalXp || 0}
+                {displayXp}
               </span>
             </div>
             <span className="text-xs text-muted-foreground font-medium">Total XP</span>
@@ -197,7 +201,7 @@ export default function DashboardPage() {
           )}
         </motion.div>
 
-        <XpBar currentXp={streak?.totalXp || 0} />
+        <XpBar currentXp={displayXp} />
 
         <motion.button
           className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"

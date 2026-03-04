@@ -592,7 +592,7 @@ export async function registerRoutes(
           username: u.username,
           firstName: u.firstName || "",
           lastName: u.lastName || "",
-          totalXp: streak?.totalXp || 0,
+          totalXp: (streak?.totalXp || 0) + userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0),
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
