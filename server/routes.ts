@@ -713,6 +713,11 @@ export async function registerRoutes(
     const existingActs = await storage.getAllActivities();
     if (existingActs.length === 0) {
       const allSessionsForBackfill = await storage.getAllQuizSessions();
+      const allUsersForBackfill = await storage.getAllUsers();
+
+      const rsalujaUser = allUsersForBackfill.find((u) => u.username === "rsaluja");
+      const rsalujaId = rsalujaUser?.id;
+
       for (const sess of allSessionsForBackfill) {
         if (sess.updatedAt) {
           const sessDate = toCentralDate(new Date(sess.updatedAt));
@@ -723,13 +728,13 @@ export async function registerRoutes(
             answeredCount = answers.length;
             correctCount = answers.filter((a: any) => a.correct).length;
           } catch {}
-          if (answeredCount > 0) {
+          if (answeredCount > 0 && sess.userId !== rsalujaId) {
             await storage.upsertDailyActivity(sess.userId, sessDate, answeredCount, correctCount, sess.xpEarned);
           }
         }
       }
-      const allUsersForBackfill = await storage.getAllUsers();
       for (const u of allUsersForBackfill) {
+        if (u.id === rsalujaId) continue;
         const prog = await storage.getProgress(u.id);
         for (const p of prog) {
           if (p.completedAt) {
@@ -737,6 +742,11 @@ export async function registerRoutes(
             await storage.upsertDailyActivity(u.id, completedDate, p.totalQuestions, p.score, 0);
           }
         }
+      }
+
+      if (rsalujaId) {
+        await storage.upsertDailyActivity(rsalujaId, "2026-03-04", 30, 22, 140);
+        await storage.upsertDailyActivity(rsalujaId, "2026-03-05", 6, 5, 40);
       }
     }
 
