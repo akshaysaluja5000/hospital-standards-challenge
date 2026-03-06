@@ -715,6 +715,23 @@ export async function registerRoutes(
       await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
     }
 
+    const allUsersForBackfill = await storage.getAllUsers();
+    const existingActivities = await storage.getAllActivities();
+    const existingActivityKeys = new Set(existingActivities.map((a) => `${a.userId}-${a.date}`));
+    for (const u of allUsersForBackfill) {
+      const prog = await storage.getProgress(u.id);
+      for (const p of prog) {
+        if (p.completedAt) {
+          const completedDate = format(new Date(p.completedAt), "yyyy-MM-dd");
+          const key = `${u.id}-${completedDate}`;
+          if (!existingActivityKeys.has(key)) {
+            await storage.upsertDailyActivity(u.id, completedDate, p.totalQuestions, p.score, 0);
+            existingActivityKeys.add(key);
+          }
+        }
+      }
+    }
+
     const allStreaks = await storage.getAllStreaks();
     const allActs = await storage.getAllActivities();
     const today = format(new Date(), "yyyy-MM-dd");
