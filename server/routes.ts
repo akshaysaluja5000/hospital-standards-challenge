@@ -747,11 +747,7 @@ export async function registerRoutes(
       for (const p of prog) {
         if (p.completedAt) {
           const completedDate = toCentralDate(new Date(p.completedAt));
-          const key = `${u.id}-${completedDate}`;
-          if (!rebuiltKeys.has(key)) {
-            await storage.upsertDailyActivity(u.id, completedDate, p.totalQuestions, p.score, 0);
-            rebuiltKeys.add(key);
-          }
+          await storage.upsertDailyActivity(u.id, completedDate, p.totalQuestions, p.score, 0);
         }
       }
     }
@@ -762,16 +758,25 @@ export async function registerRoutes(
     for (const s of allStreaks) {
       const userActs = allActs.filter((a) => a.userId === s.userId && a.questionsAnswered > 0);
       const dates = new Set(userActs.map((a) => a.date));
-      if (s.lastPlayedDate) dates.add(s.lastPlayedDate);
       const sortedDates = Array.from(dates).sort();
-      if (sortedDates.length === 0) continue;
+
+      if (sortedDates.length === 0) {
+        if (s.currentStreak !== 0 || s.longestStreak !== 0) {
+          await storage.upsertStreak(s.userId, {
+            currentStreak: 0,
+            longestStreak: 0,
+            lastPlayedDate: null as any,
+          });
+        }
+        continue;
+      }
 
       let bestStreak = 1;
       let runStreak = 1;
       for (let i = 1; i < sortedDates.length; i++) {
-        const prev = new Date(sortedDates[i - 1]);
-        const curr = new Date(sortedDates[i]);
-        const diff = Math.floor((curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
+        const prev = new Date(sortedDates[i - 1] + "T12:00:00");
+        const curr = new Date(sortedDates[i] + "T12:00:00");
+        const diff = Math.round((curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
         if (diff === 1) {
           runStreak++;
         } else {
@@ -781,15 +786,16 @@ export async function registerRoutes(
       }
 
       const mostRecent = sortedDates[sortedDates.length - 1];
-      const daysSinceLast = Math.floor((new Date(today).getTime() - new Date(mostRecent).getTime()) / (1000 * 60 * 60 * 24));
+      const daysSinceLast = Math.round(
+        (new Date(today + "T12:00:00").getTime() - new Date(mostRecent + "T12:00:00").getTime()) / (1000 * 60 * 60 * 24)
+      );
       const correctStreak = daysSinceLast > 1 ? 0 : runStreak;
 
-      if (s.currentStreak !== correctStreak || s.longestStreak !== bestStreak) {
-        await storage.upsertStreak(s.userId, {
-          currentStreak: correctStreak,
-          longestStreak: bestStreak,
-        });
-      }
+      await storage.upsertStreak(s.userId, {
+        currentStreak: correctStreak,
+        longestStreak: bestStreak,
+        lastPlayedDate: mostRecent,
+      });
     }
   } catch (e) {
   }
