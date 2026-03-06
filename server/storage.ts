@@ -40,6 +40,7 @@ export interface IStorage {
   getUsersByFacility(facilityId: number): Promise<User[]>;
   getAllStreaks(): Promise<UserStreak[]>;
   getAllActivities(): Promise<DailyActivity[]>;
+  clearAllActivities(): Promise<void>;
 
   createFacility(data: InsertFacility): Promise<Facility>;
   getFacility(id: number): Promise<Facility | undefined>;
@@ -216,6 +217,10 @@ export class DatabaseStorage implements IStorage {
 
   async getAllActivities(): Promise<DailyActivity[]> {
     return db.select().from(dailyActivity);
+  }
+
+  async clearAllActivities(): Promise<void> {
+    await db.delete(dailyActivity);
   }
 
   async createFacility(data: InsertFacility): Promise<Facility> {

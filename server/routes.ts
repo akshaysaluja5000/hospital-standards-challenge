@@ -11,6 +11,11 @@ import connectPgSimple from "connect-pg-simple";
 import { z } from "zod";
 import type { User, DailyActivity } from "@shared/schema";
 
+function toCentralDate(d: Date | string): string {
+  const date = typeof d === "string" ? new Date(d) : d;
+  return date.toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
+}
+
 const submitSchema = z.object({
   levelId: z.string().min(1),
   score: z.number().int().min(0),
@@ -336,7 +341,7 @@ export async function registerRoutes(
 
   app.get("/api/game/today", requireAuth, async (req, res) => {
     try {
-      const today = format(new Date(), "yyyy-MM-dd");
+      const today = toCentralDate(new Date());
       let activity = await storage.getDailyActivity(req.user!.id, today);
       if (!activity) {
         activity = { id: 0, userId: req.user!.id, date: today, questionsAnswered: 0, correctAnswers: 0, xpEarned: 0 };
@@ -355,7 +360,7 @@ export async function registerRoutes(
       }
       const { levelId, score, totalQuestions, xpEarned } = parsed.data;
       const userId = req.user!.id;
-      const today = format(new Date(), "yyyy-MM-dd");
+      const today = toCentralDate(new Date());
 
       const existingSession = await storage.getQuizSession(userId, levelId);
       const alreadyTrackedQ = existingSession?.currentQuestion || 0;
@@ -462,7 +467,7 @@ export async function registerRoutes(
       const deltaC = correctAnswers - prevC;
       const deltaXp = xpEarned - prevXp;
 
-      const today = format(new Date(), "yyyy-MM-dd");
+      const today = toCentralDate(new Date());
 
       if (deltaQ > 0) {
         await storage.upsertDailyActivity(userId, today, deltaQ, deltaC, deltaXp);
@@ -590,7 +595,7 @@ export async function registerRoutes(
       const allProgressData = await Promise.all(
         allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
       );
-      const today = format(new Date(), "yyyy-MM-dd");
+      const today = toCentralDate(new Date());
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
       const activitiesByUser = new Map<number, DailyActivity[]>();
@@ -661,11 +666,11 @@ export async function registerRoutes(
         const todayCompletedQ = todayActivities.reduce((s, a) => s + a.questionsAnswered, 0);
         const todayCompletedC = todayActivities.reduce((s, a) => s + a.correctAnswers, 0);
         const todaySessionQ = userSessions.reduce((s, sess) => {
-          const sessDate = sess.updatedAt ? format(new Date(sess.updatedAt), "yyyy-MM-dd") : "";
+          const sessDate = sess.updatedAt ? toCentralDate(new Date(sess.updatedAt)) : "";
           return sessDate === today ? s + sess.currentQuestion : s;
         }, 0);
         const todaySessionC = userSessions.reduce((s, sess) => {
-          const sessDate = sess.updatedAt ? format(new Date(sess.updatedAt), "yyyy-MM-dd") : "";
+          const sessDate = sess.updatedAt ? toCentralDate(new Date(sess.updatedAt)) : "";
           return sessDate === today ? s + sess.correctAnswers : s;
         }, 0);
         const questionsToday = todayCompletedQ + todaySessionQ;
@@ -715,40 +720,37 @@ export async function registerRoutes(
       await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
     }
 
-    const allUsersForBackfill = await storage.getAllUsers();
-    const existingActivities = await storage.getAllActivities();
-    const existingActivityKeys = new Set(existingActivities.map((a) => `${a.userId}-${a.date}`));
+    await storage.clearAllActivities();
+    const rebuiltKeys = new Set<string>();
 
     const allSessions = await storage.getAllQuizSessions();
     for (const sess of allSessions) {
       if (sess.updatedAt) {
-        const sessDate = format(new Date(sess.updatedAt), "yyyy-MM-dd");
-        const key = `${sess.userId}-${sessDate}`;
-        if (!existingActivityKeys.has(key)) {
-          let answeredCount = 0;
-          let correctCount = 0;
-          try {
-            const answers = JSON.parse(sess.answers || "[]");
-            answeredCount = answers.length;
-            correctCount = answers.filter((a: any) => a.correct).length;
-          } catch {}
-          if (answeredCount > 0) {
-            await storage.upsertDailyActivity(sess.userId, sessDate, answeredCount, correctCount, sess.xpEarned);
-            existingActivityKeys.add(key);
-          }
+        const sessDate = toCentralDate(new Date(sess.updatedAt));
+        let answeredCount = 0;
+        let correctCount = 0;
+        try {
+          const answers = JSON.parse(sess.answers || "[]");
+          answeredCount = answers.length;
+          correctCount = answers.filter((a: any) => a.correct).length;
+        } catch {}
+        if (answeredCount > 0) {
+          await storage.upsertDailyActivity(sess.userId, sessDate, answeredCount, correctCount, sess.xpEarned);
+          rebuiltKeys.add(`${sess.userId}-${sessDate}`);
         }
       }
     }
 
+    const allUsersForBackfill = await storage.getAllUsers();
     for (const u of allUsersForBackfill) {
       const prog = await storage.getProgress(u.id);
       for (const p of prog) {
         if (p.completedAt) {
-          const completedDate = format(new Date(p.completedAt), "yyyy-MM-dd");
+          const completedDate = toCentralDate(new Date(p.completedAt));
           const key = `${u.id}-${completedDate}`;
-          if (!existingActivityKeys.has(key)) {
+          if (!rebuiltKeys.has(key)) {
             await storage.upsertDailyActivity(u.id, completedDate, p.totalQuestions, p.score, 0);
-            existingActivityKeys.add(key);
+            rebuiltKeys.add(key);
           }
         }
       }
@@ -756,7 +758,7 @@ export async function registerRoutes(
 
     const allStreaks = await storage.getAllStreaks();
     const allActs = await storage.getAllActivities();
-    const today = format(new Date(), "yyyy-MM-dd");
+    const today = toCentralDate(new Date());
     for (const s of allStreaks) {
       const userActs = allActs.filter((a) => a.userId === s.userId && a.questionsAnswered > 0);
       const dates = new Set(userActs.map((a) => a.date));
