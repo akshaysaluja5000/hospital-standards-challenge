@@ -718,6 +718,28 @@ export async function registerRoutes(
     const allUsersForBackfill = await storage.getAllUsers();
     const existingActivities = await storage.getAllActivities();
     const existingActivityKeys = new Set(existingActivities.map((a) => `${a.userId}-${a.date}`));
+
+    const allSessions = await storage.getAllQuizSessions();
+    for (const sess of allSessions) {
+      if (sess.updatedAt) {
+        const sessDate = format(new Date(sess.updatedAt), "yyyy-MM-dd");
+        const key = `${sess.userId}-${sessDate}`;
+        if (!existingActivityKeys.has(key)) {
+          let answeredCount = 0;
+          let correctCount = 0;
+          try {
+            const answers = JSON.parse(sess.answers || "[]");
+            answeredCount = answers.length;
+            correctCount = answers.filter((a: any) => a.correct).length;
+          } catch {}
+          if (answeredCount > 0) {
+            await storage.upsertDailyActivity(sess.userId, sessDate, answeredCount, correctCount, sess.xpEarned);
+            existingActivityKeys.add(key);
+          }
+        }
+      }
+    }
+
     for (const u of allUsersForBackfill) {
       const prog = await storage.getProgress(u.id);
       for (const p of prog) {
