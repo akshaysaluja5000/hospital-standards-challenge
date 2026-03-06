@@ -28,6 +28,15 @@ function shuffleWithSeed(arr: any[], seed: string) {
   return result;
 }
 
+function invalidateDashboardData() {
+  queryClient.invalidateQueries({ queryKey: ["/api/game/streak"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/game/progress"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/game/activities"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/game/today"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/game/sessions"] });
+  queryClient.invalidateQueries({ queryKey: ["/api/game/leaderboard"] });
+}
+
 export default function PlayPage() {
   const [, params] = useRoute("/play/:levelId");
   const [, setLocation] = useLocation();
@@ -108,11 +117,7 @@ export default function PlayPage() {
     },
     onSuccess: () => {
       deleteSessionMutation.mutate();
-      queryClient.invalidateQueries({ queryKey: ["/api/game/streak"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/game/progress"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/game/activities"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/game/today"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/game/sessions"] });
+      invalidateDashboardData();
     },
     retry: 3,
     retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 5000),
@@ -203,7 +208,7 @@ export default function PlayPage() {
     if (!saveProgress && levelId) {
       deleteSessionMutation.mutate();
     }
-    queryClient.invalidateQueries({ queryKey: ["/api/game/sessions"] });
+    invalidateDashboardData();
     setShowQuitDialog(false);
     setLocation("/");
   }, [levelId, deleteSessionMutation, setLocation, questionOrder, gameState]);
@@ -362,7 +367,10 @@ export default function PlayPage() {
               </Button>
               <Button
                 className="flex-1"
-                onClick={() => setLocation("/")}
+                onClick={() => {
+                  invalidateDashboardData();
+                  setLocation("/");
+                }}
                 data-testid="button-home"
               >
                 <Home size={16} className="mr-2" />
