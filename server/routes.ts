@@ -720,36 +720,13 @@ export async function registerRoutes(
       await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
     }
 
-    await storage.clearAllActivities();
-    const rebuiltKeys = new Set<string>();
-
-    const allSessions = await storage.getAllQuizSessions();
-    for (const sess of allSessions) {
-      if (sess.updatedAt) {
-        const sessDate = toCentralDate(new Date(sess.updatedAt));
-        let answeredCount = 0;
-        let correctCount = 0;
-        try {
-          const answers = JSON.parse(sess.answers || "[]");
-          answeredCount = answers.length;
-          correctCount = answers.filter((a: any) => a.correct).length;
-        } catch {}
-        if (answeredCount > 0) {
-          await storage.upsertDailyActivity(sess.userId, sessDate, answeredCount, correctCount, sess.xpEarned);
-          rebuiltKeys.add(`${sess.userId}-${sessDate}`);
-        }
-      }
-    }
-
-    const allUsersForBackfill = await storage.getAllUsers();
-    for (const u of allUsersForBackfill) {
-      const prog = await storage.getProgress(u.id);
-      for (const p of prog) {
-        if (p.completedAt) {
-          const completedDate = toCentralDate(new Date(p.completedAt));
-          await storage.upsertDailyActivity(u.id, completedDate, p.totalQuestions, p.score, 0);
-        }
-      }
+    const existingActs = await storage.getAllActivities();
+    const hasBackfillBadData = existingActs.some((a) => {
+      if (a.userId === 1 && a.date === "2026-03-05" && a.questionsAnswered === 34) return true;
+      return false;
+    });
+    if (hasBackfillBadData || existingActs.some((a) => a.date === "2026-03-06")) {
+      await storage.clearAllActivities();
     }
 
     const allStreaks = await storage.getAllStreaks();
