@@ -722,26 +722,31 @@ export async function registerRoutes(
       const userActs = allActs.filter((a) => a.userId === s.userId && a.questionsAnswered > 0);
       const dates = new Set(userActs.map((a) => a.date));
       if (s.lastPlayedDate) dates.add(s.lastPlayedDate);
-      const sortedDates = Array.from(dates).sort().reverse();
+      const sortedDates = Array.from(dates).sort();
       if (sortedDates.length === 0) continue;
-      let correctStreak = 1;
-      for (let i = 0; i < sortedDates.length - 1; i++) {
+
+      let bestStreak = 1;
+      let runStreak = 1;
+      for (let i = 1; i < sortedDates.length; i++) {
+        const prev = new Date(sortedDates[i - 1]);
         const curr = new Date(sortedDates[i]);
-        const prev = new Date(sortedDates[i + 1]);
         const diff = Math.floor((curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
         if (diff === 1) {
-          correctStreak++;
+          runStreak++;
         } else {
-          break;
+          runStreak = 1;
         }
+        if (runStreak > bestStreak) bestStreak = runStreak;
       }
-      const mostRecent = sortedDates[0];
+
+      const mostRecent = sortedDates[sortedDates.length - 1];
       const daysSinceLast = Math.floor((new Date(today).getTime() - new Date(mostRecent).getTime()) / (1000 * 60 * 60 * 24));
-      if (daysSinceLast > 1) correctStreak = 0;
-      if (s.currentStreak !== correctStreak) {
+      const correctStreak = daysSinceLast > 1 ? 0 : runStreak;
+
+      if (s.currentStreak !== correctStreak || s.longestStreak !== bestStreak) {
         await storage.upsertStreak(s.userId, {
           currentStreak: correctStreak,
-          longestStreak: Math.max(correctStreak, s.longestStreak),
+          longestStreak: bestStreak,
         });
       }
     }
