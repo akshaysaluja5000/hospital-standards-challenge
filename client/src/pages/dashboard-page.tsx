@@ -52,9 +52,8 @@ export default function DashboardPage() {
     return true;
   };
 
-  const sessionQuestionsToday = savedSessions?.reduce((sum, s) => sum + (s.currentQuestion || 0), 0) || 0;
   const dailyGoal = user?.dailyGoal || 5;
-  const todayQuestions = (todayActivity?.questionsAnswered || 0) + sessionQuestionsToday;
+  const todayQuestions = todayActivity?.questionsAnswered || 0;
   const goalProgress = Math.min((todayQuestions / dailyGoal) * 100, 100);
 
   if (isLoading) {
