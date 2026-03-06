@@ -379,7 +379,7 @@ export async function registerRoutes(
           totalXp: xpEarned,
           lastPlayedDate: today,
         });
-      } else {
+      } else if (streak.lastPlayedDate !== today) {
         const lastPlayed = streak.lastPlayedDate;
         let newStreak = streak.currentStreak;
 
@@ -392,19 +392,22 @@ export async function registerRoutes(
             newStreak = streak.currentStreak + 1;
           } else if (diffDays > 1) {
             newStreak = 1;
-          } else if (diffDays === 0 && newStreak === 0) {
-            newStreak = 1;
           }
         } else {
           newStreak = 1;
         }
 
+        if (newStreak === 0) newStreak = 1;
         const newLongest = Math.max(newStreak, streak.longestStreak);
         streak = await storage.upsertStreak(userId, {
           currentStreak: newStreak,
           longestStreak: newLongest,
           totalXp: streak.totalXp + xpEarned,
           lastPlayedDate: today,
+        });
+      } else {
+        streak = await storage.upsertStreak(userId, {
+          totalXp: streak.totalXp + xpEarned,
         });
       }
 
@@ -473,7 +476,7 @@ export async function registerRoutes(
           totalXp: 0,
           lastPlayedDate: today,
         });
-      } else {
+      } else if (streak.lastPlayedDate !== today) {
         const lastPlayed = streak.lastPlayedDate;
         let newStreak = streak.currentStreak;
 
@@ -486,13 +489,12 @@ export async function registerRoutes(
             newStreak = streak.currentStreak + 1;
           } else if (diffDays > 1) {
             newStreak = 1;
-          } else if (diffDays === 0 && newStreak === 0) {
-            newStreak = 1;
           }
         } else {
           newStreak = 1;
         }
 
+        if (newStreak === 0) newStreak = 1;
         const newLongest = Math.max(newStreak, streak.longestStreak);
         await storage.upsertStreak(userId, {
           currentStreak: newStreak,
@@ -714,9 +716,33 @@ export async function registerRoutes(
     }
 
     const allStreaks = await storage.getAllStreaks();
+    const allActs = await storage.getAllActivities();
+    const today = format(new Date(), "yyyy-MM-dd");
     for (const s of allStreaks) {
-      if (s.currentStreak === 0 && s.lastPlayedDate) {
-        await storage.upsertStreak(s.userId, { currentStreak: 1, longestStreak: Math.max(1, s.longestStreak) });
+      const userActs = allActs.filter((a) => a.userId === s.userId && a.questionsAnswered > 0);
+      const dates = new Set(userActs.map((a) => a.date));
+      if (s.lastPlayedDate) dates.add(s.lastPlayedDate);
+      const sortedDates = Array.from(dates).sort().reverse();
+      if (sortedDates.length === 0) continue;
+      let correctStreak = 1;
+      for (let i = 0; i < sortedDates.length - 1; i++) {
+        const curr = new Date(sortedDates[i]);
+        const prev = new Date(sortedDates[i + 1]);
+        const diff = Math.floor((curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
+        if (diff === 1) {
+          correctStreak++;
+        } else {
+          break;
+        }
+      }
+      const mostRecent = sortedDates[0];
+      const daysSinceLast = Math.floor((new Date(today).getTime() - new Date(mostRecent).getTime()) / (1000 * 60 * 60 * 24));
+      if (daysSinceLast > 1) correctStreak = 0;
+      if (s.currentStreak !== correctStreak) {
+        await storage.upsertStreak(s.userId, {
+          currentStreak: correctStreak,
+          longestStreak: Math.max(correctStreak, s.longestStreak),
+        });
       }
     }
   } catch (e) {
