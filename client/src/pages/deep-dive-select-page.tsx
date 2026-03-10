@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, Microscope, ChevronRight, Sparkles, Lock } from "lucide-react";
+import { ArrowLeft, Microscope, ChevronRight, Sparkles } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DeepDiveLevelInfo {
@@ -122,26 +122,6 @@ export default function DeepDiveSelectPage() {
             </motion.button>
           ))}
 
-          <motion.div
-            className="game-card p-5 opacity-50"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 0.5, y: 0 }}
-            transition={{ delay: (levels?.length || 0) * 0.1 }}
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-muted flex-shrink-0">
-                <Lock size={24} className="text-muted-foreground" />
-              </div>
-              <div>
-                <h3 className="font-bold text-sm text-muted-foreground">
-                  More Topics Coming Soon
-                </h3>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  Additional deep dive topics will be added regularly
-                </p>
-              </div>
-            </div>
-          </motion.div>
         </div>
       </div>
     </div>

@@ -33,7 +33,7 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - Admin dashboard for user tracking (facility-scoped)
 - Terms of Use / Privacy / Disclaimer page (public, no auth required)
 - "Not affiliated with The Joint Commission" disclaimer on dashboard and landing page
-- **Deep Dive Tracer**: Branching follow-up question mode — answer a base question correctly to unlock a deeper expert-level follow-up. Earns "Expert XP" for deeper knowledge. Full game flow with shuffled questions, session save/restore, save-and-exit, quit dialog (Save & Exit, Start Over, Quit Without Saving, Continue Playing), and pick-up-where-you-left-off. Topics: Sterile Storage (20 questions), Transport & Decontam (20 questions). Questions randomized each playthrough.
+- **Deep Dive Tracer**: Branching follow-up question mode — answer a base question correctly to unlock a deeper expert-level follow-up. Earns "Expert XP" for deeper knowledge. Full game flow with shuffled questions, session save/restore, save-and-exit, quit dialog (Save & Exit, Start Over, Quit Without Saving, Continue Playing), and pick-up-where-you-left-off. ALL 11 sections covered (20 questions each, 220 total): Transport of Instruments, Environment & Surfaces, Clean/Dirty Segregation, Sterile Storage & Handling, Instruments & Inspection, Facility Safety & Equipment, SPD & Decontamination, OR & Sterile Technique, Surgical Safety & Consent, Patient Care & Documentation, EOC & Safety Compliance. Questions randomized each playthrough.
 - **Visual refresh**: Vivid Professional palette — more saturated primary greens, deeper purples, real shadows (not zero), game-card styling with hover effects, gradient progress bars
 
 ## Database Tables
@@ -51,7 +51,8 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `server/storage.ts` - Database CRUD operations
 - `client/src/pages/` - Landing, Auth, Dashboard, Play, Study, Profile, Admin, Leaderboard, Handbook, Terms, DeepDiveSelect, DeepDive pages
 - `shared/handbook.ts` - Compliance Handbook content (11 chapters with sections, critical values, scenarios)
-- `shared/deep-dive-questions.ts` - Deep Dive branching question content (base + follow-up questions per topic)
+- `shared/deep-dive-questions.ts` - Deep Dive consolidation file (imports and re-exports all 11 sections)
+- `shared/deep-dive-questions-*.ts` - Deep Dive branching question content split across multiple files (transport, sterile, part1, part2, part3a-d)
 - `client/src/components/` - SwipeCard, QuizCard, StreakFlame, XpBar, LevelCard, DailyCalendar
 - `client/src/lib/auth.tsx` - Auth context provider
 
