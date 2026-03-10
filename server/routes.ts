@@ -527,6 +527,60 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/game/deep-dive/session/:levelId", requireAuth, async (req, res) => {
+    try {
+      const levelId = req.params.levelId as string;
+      const session = await storage.getQuizSession(req.user!.id, levelId);
+      if (!session) {
+        return res.json(null);
+      }
+      res.json(session);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  const deepDiveSessionSchema = z.object({
+    questionOrder: z.array(z.string()).min(1),
+    answers: z.string(),
+    currentQuestion: z.number().int().min(0),
+    correctAnswers: z.number().int().min(0),
+    xpEarned: z.number().int().min(0),
+  });
+
+  app.post("/api/game/deep-dive/session/:levelId", requireAuth, async (req, res) => {
+    try {
+      const levelId = req.params.levelId as string;
+      const userId = req.user!.id;
+      const data = deepDiveSessionSchema.parse(req.body);
+
+      const session = await storage.upsertQuizSession(userId, levelId, {
+        questionOrder: data.questionOrder,
+        answers: data.answers,
+        currentQuestion: data.currentQuestion,
+        correctAnswers: data.correctAnswers,
+        xpEarned: data.xpEarned,
+      });
+
+      res.json(session);
+    } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid session data" });
+      }
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.delete("/api/game/deep-dive/session/:levelId", requireAuth, async (req, res) => {
+    try {
+      const levelId = req.params.levelId as string;
+      await storage.deleteQuizSession(req.user!.id, levelId);
+      res.json({ success: true });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   app.get("/api/game/deep-dive/levels", requireAuth, async (_req, res) => {
     try {
       const levelsInfo = deepDiveLevels.map((l) => ({

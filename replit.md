@@ -33,7 +33,7 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - Admin dashboard for user tracking (facility-scoped)
 - Terms of Use / Privacy / Disclaimer page (public, no auth required)
 - "Not affiliated with The Joint Commission" disclaimer on dashboard and landing page
-- **Deep Dive Tracer**: Branching follow-up question mode — answer a base question correctly to unlock a deeper expert-level follow-up. Earns "Expert XP" for deeper knowledge. Pilot topics: Sterile Storage (10 questions), Transport & Decontam (5 questions)
+- **Deep Dive Tracer**: Branching follow-up question mode — answer a base question correctly to unlock a deeper expert-level follow-up. Earns "Expert XP" for deeper knowledge. Full game flow with shuffled questions, session save/restore, save-and-exit, quit dialog (Save & Exit, Start Over, Quit Without Saving, Continue Playing), and pick-up-where-you-left-off. Topics: Sterile Storage (20 questions), Transport & Decontam (20 questions). Questions randomized each playthrough.
 - **Visual refresh**: Vivid Professional palette — more saturated primary greens, deeper purples, real shadows (not zero), game-card styling with hover effects, gradient progress bars
 
 ## Database Tables
