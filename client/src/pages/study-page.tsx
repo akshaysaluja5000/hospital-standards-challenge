@@ -43,7 +43,7 @@ export default function StudyPage() {
             <div className="flex-1 text-center">
               <div className="flex items-center justify-center gap-2">
                 <BookOpen size={16} style={{ color: level.color }} />
-                <h2 className="font-bold text-sm" style={{ color: level.color }} data-testid="text-study-title">
+                <h2 className="font-bold text-base" style={{ color: level.color }} data-testid="text-study-title">
                   Study: {level.name}
                 </h2>
               </div>
@@ -88,30 +88,30 @@ export default function StudyPage() {
             transition={{ duration: 0.25 }}
             className="w-full max-w-lg"
           >
-            <Card className="rounded-2xl border-2 p-6 flex flex-col gap-5" style={{ borderColor: `${level.color}30` }}>
-              <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-wide">
+            <Card className="rounded-2xl border-2 p-7 flex flex-col gap-5 shadow-lg" style={{ borderColor: `${level.color}30` }}>
+              <div className="flex items-center gap-2 text-sm font-bold text-muted-foreground uppercase tracking-wide">
                 <span style={{ color: level.color }}>Concept {currentIndex + 1}</span>
                 <span>of {concepts.length}</span>
               </div>
 
-              <h3 className="text-xl font-black" data-testid="text-concept-title">
+              <h3 className="text-2xl font-black" data-testid="text-concept-title">
                 {currentConcept.title}
               </h3>
 
-              <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-concept-content">
+              <p className="text-base text-foreground/75 leading-relaxed" data-testid="text-concept-content">
                 {currentConcept.content}
               </p>
 
               <div
                 className="rounded-xl p-4 flex gap-3 items-start"
-                style={{ backgroundColor: `${level.color}10` }}
+                style={{ backgroundColor: `${level.color}12` }}
               >
-                <Lightbulb size={20} className="flex-shrink-0 mt-0.5" style={{ color: level.color }} />
+                <Lightbulb size={22} className="flex-shrink-0 mt-0.5" style={{ color: level.color }} />
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: level.color }}>
+                  <p className="text-sm font-bold uppercase tracking-wide mb-1" style={{ color: level.color }}>
                     Key Takeaway
                   </p>
-                  <p className="text-sm font-medium" data-testid="text-concept-keypoint">
+                  <p className="text-base font-semibold" data-testid="text-concept-keypoint">
                     {currentConcept.keyPoint}
                   </p>
                 </div>

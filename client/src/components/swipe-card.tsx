@@ -42,16 +42,16 @@ export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: Swip
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="rounded-2xl bg-card border border-card-border p-6 flex flex-col gap-5">
+      <div className="rounded-2xl bg-card border-2 border-card-border p-6 flex flex-col gap-5 shadow-lg">
         {question.scenario && (
           <div className="bg-accent/50 rounded-xl p-4 border border-accent">
-            <p className="text-sm text-muted-foreground italic leading-relaxed" data-testid="text-scenario">
+            <p className="text-base text-foreground/70 italic leading-relaxed" data-testid="text-scenario">
               {question.scenario}
             </p>
           </div>
         )}
 
-        <h3 className="text-lg font-bold leading-snug text-center" data-testid="text-question">
+        <h3 className="text-xl font-black leading-snug text-center" data-testid="text-question">
           {question.question}
         </h3>
 
@@ -75,7 +75,7 @@ export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: Swip
             return (
               <button
                 key={index}
-                className={`w-full text-left px-4 py-3 min-h-[3.5rem] rounded-xl border-2 font-bold transition-all ${btnStyle} ${
+                className={`w-full text-left px-4 py-3.5 min-h-[3.5rem] rounded-xl border-2 font-bold transition-all ${btnStyle} ${
                   !showResult && !disabled ? "cursor-pointer" : "cursor-default"
                 }`}
                 onClick={() => handleSelect(index)}
@@ -83,8 +83,8 @@ export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: Swip
                 data-testid={`button-yesno-${index}`}
               >
                 <span className="flex items-start gap-2">
-                  <span className="flex-shrink-0 mt-0.5">{isYes ? <Check size={18} /> : <X size={18} />}</span>
-                  <span className="text-sm leading-relaxed whitespace-normal">{option}</span>
+                  <span className="flex-shrink-0 mt-0.5">{isYes ? <Check size={20} /> : <X size={20} />}</span>
+                  <span className="text-base leading-relaxed whitespace-normal">{option}</span>
                 </span>
               </button>
             );
@@ -107,19 +107,19 @@ export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: Swip
                 }`}
               >
                 <Lightbulb
-                  size={18}
+                  size={20}
                   className={`flex-shrink-0 mt-0.5 ${isCorrect ? "text-chart-1" : "text-destructive"}`}
                 />
                 <div>
-                  <p className={`text-sm font-bold mb-1 ${isCorrect ? "text-chart-1" : "text-destructive"}`}>
+                  <p className={`text-base font-bold mb-1 ${isCorrect ? "text-chart-1" : "text-destructive"}`}>
                     {isCorrect ? `Correct! +${question.xpReward} XP` : "Not quite!"}
                   </p>
                   {!isCorrect && (
-                    <p className="text-sm font-semibold mb-1" data-testid="text-correct-answer">
+                    <p className="text-base font-semibold mb-1" data-testid="text-correct-answer">
                       Correct answer: {question.options[question.correctIndex]}
                     </p>
                   )}
-                  <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
+                  <p className="text-base text-foreground/70 leading-relaxed" data-testid="text-explanation">
                     {question.explanation}
                   </p>
                 </div>

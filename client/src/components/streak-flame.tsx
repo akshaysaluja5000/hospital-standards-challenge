@@ -61,7 +61,7 @@ export function StreakFlame({ streak, size = "md" }: StreakFlameProps) {
         data-testid="text-streak-count">
         {streak}
       </span>
-      <span className="text-xs text-muted-foreground font-medium">
+      <span className="text-sm text-muted-foreground font-semibold">
         {streak === 1 ? "day streak" : "day streak"}
       </span>
     </div>

@@ -82,10 +82,10 @@ export default function DashboardPage() {
               </span>
             </div>
             <div className="min-w-0">
-              <h1 className="font-bold text-base truncate" data-testid="text-username">
+              <h1 className="font-bold text-lg truncate" data-testid="text-username">
                 {user?.username}
               </h1>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 Welcome back!
               </p>
             </div>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
                 {displayXp}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground font-medium">Total XP</span>
+            <span className="text-sm text-muted-foreground font-semibold">Total XP</span>
           </motion.div>
 
           <motion.div
@@ -161,12 +161,12 @@ export default function DashboardPage() {
             transition={{ delay: 0.2 }}
           >
             <div className="flex items-center gap-1">
-              <TrendingUp size={18} className="text-chart-3" />
+              <TrendingUp size={20} className="text-chart-3" />
               <span className="text-2xl font-black" data-testid="text-longest-streak">
                 {streak?.longestStreak || 0}
               </span>
             </div>
-            <span className="text-xs text-muted-foreground font-medium">Best Streak</span>
+            <span className="text-sm text-muted-foreground font-semibold">Best Streak</span>
           </motion.div>
         </div>
 
@@ -178,10 +178,10 @@ export default function DashboardPage() {
         >
           <div className="flex items-center justify-between gap-2 mb-3">
             <div className="flex items-center gap-2">
-              <Target size={18} className="text-primary" />
-              <h3 className="font-bold text-sm">Daily Goal</h3>
+              <Target size={20} className="text-primary" />
+              <h3 className="font-bold text-base">Daily Goal</h3>
             </div>
-            <span className="text-xs font-bold text-primary" data-testid="text-daily-progress">
+            <span className="text-sm font-bold text-primary" data-testid="text-daily-progress">
               {todayQuestions}/{dailyGoal} questions
             </span>
           </div>
@@ -214,8 +214,8 @@ export default function DashboardPage() {
             <BookOpen size={24} className="text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-sm">Compliance Handbook</h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <h3 className="font-bold text-base">Compliance Handbook</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">
               Complete reference guide with detailed explanations, critical values, and scenarios
             </p>
           </div>
@@ -235,12 +235,12 @@ export default function DashboardPage() {
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="font-bold text-sm">Deep Dive Tracer</h3>
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">
+              <h3 className="font-bold text-base">Deep Dive Tracer</h3>
+              <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">
                 New
               </span>
             </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-sm text-muted-foreground mt-0.5">
               Branching follow-up questions — earn <span className="font-bold text-secondary">Expert XP</span> for deeper knowledge
             </p>
           </div>
@@ -254,9 +254,9 @@ export default function DashboardPage() {
               Levels
             </h2>
           </div>
-          <div className="flex items-center gap-2 mb-4 px-3 py-2.5 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-shuffle-note">
-            <Shuffle size={14} className="text-primary flex-shrink-0" />
-            <p className="text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 mb-4 px-3 py-3 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-shuffle-note">
+            <Shuffle size={16} className="text-primary flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
               Questions are <span className="font-semibold text-foreground">shuffled each time</span> you play, so you'll get a different order every session.
             </p>
           </div>

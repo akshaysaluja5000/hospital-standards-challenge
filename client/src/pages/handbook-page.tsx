@@ -19,7 +19,7 @@ function SectionCard({ section, levelColor, index }: { section: HandbookSection;
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="rounded-xl border border-card-border bg-card overflow-hidden"
+      className="rounded-xl border-2 border-card-border bg-card overflow-hidden shadow-sm hover:shadow-md transition-shadow"
     >
       <button
         className="w-full text-left p-4 flex items-center gap-3 hover:bg-accent/30 transition-colors"
@@ -27,14 +27,14 @@ function SectionCard({ section, levelColor, index }: { section: HandbookSection;
         data-testid={`button-section-${index}`}
       >
         <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+          className="w-9 h-9 rounded-lg flex items-center justify-center text-white text-base font-bold flex-shrink-0"
           style={{ backgroundColor: levelColor }}
         >
           {index + 1}
         </div>
-        <h3 className="font-bold text-sm flex-1">{section.heading}</h3>
+        <h3 className="font-bold text-base flex-1">{section.heading}</h3>
         <ChevronDown
-          size={18}
+          size={20}
           className={`text-muted-foreground transition-transform ${expanded ? "rotate-180" : ""}`}
         />
       </button>
@@ -48,24 +48,24 @@ function SectionCard({ section, levelColor, index }: { section: HandbookSection;
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 flex flex-col gap-4">
-              <p className="text-sm text-muted-foreground leading-relaxed" data-testid={`text-section-content-${index}`}>
+            <div className="px-5 pb-5 flex flex-col gap-4">
+              <p className="text-base text-foreground/75 leading-relaxed" data-testid={`text-section-content-${index}`}>
                 {section.content}
               </p>
 
               {section.criticalValues && section.criticalValues.length > 0 && (
-                <div className="rounded-lg border border-border overflow-hidden">
-                  <div className="bg-muted/50 px-3 py-2 flex items-center gap-2">
-                    <AlertTriangle size={14} style={{ color: levelColor }} />
-                    <span className="text-xs font-bold uppercase tracking-wide" style={{ color: levelColor }}>
+                <div className="rounded-xl border-2 overflow-hidden shadow-sm" style={{ borderColor: `${levelColor}30` }}>
+                  <div className="px-4 py-3 flex items-center gap-2" style={{ backgroundColor: `${levelColor}10` }}>
+                    <AlertTriangle size={16} style={{ color: levelColor }} />
+                    <span className="text-sm font-bold uppercase tracking-wide" style={{ color: levelColor }}>
                       Critical Values
                     </span>
                   </div>
-                  <div className="divide-y divide-border">
+                  <div className="divide-y divide-border bg-card">
                     {section.criticalValues.map((cv, i) => (
-                      <div key={i} className="px-3 py-2 flex gap-3 text-sm">
-                        <span className="font-semibold text-foreground whitespace-nowrap min-w-[120px]">{cv.label}</span>
-                        <span className="text-muted-foreground">{cv.value}</span>
+                      <div key={i} className="px-4 py-3 flex gap-4 text-base">
+                        <span className="font-bold text-foreground whitespace-nowrap min-w-[120px]">{cv.label}</span>
+                        <span className="text-foreground/70">{cv.value}</span>
                       </div>
                     ))}
                   </div>
@@ -73,13 +73,13 @@ function SectionCard({ section, levelColor, index }: { section: HandbookSection;
               )}
 
               {section.thinkAboutIt && (
-                <div className="rounded-lg p-3 flex gap-3 items-start" style={{ backgroundColor: `${levelColor}10` }}>
-                  <Brain size={16} className="flex-shrink-0 mt-0.5" style={{ color: levelColor }} />
+                <div className="rounded-xl p-4 flex gap-3 items-start border" style={{ backgroundColor: `${levelColor}08`, borderColor: `${levelColor}20` }}>
+                  <Brain size={18} className="flex-shrink-0 mt-0.5" style={{ color: levelColor }} />
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: levelColor }}>
+                    <p className="text-sm font-bold uppercase tracking-wide mb-1.5" style={{ color: levelColor }}>
                       Think About It
                     </p>
-                    <p className="text-sm text-muted-foreground italic leading-relaxed">
+                    <p className="text-base text-foreground/70 italic leading-relaxed">
                       {section.thinkAboutIt}
                     </p>
                   </div>
@@ -108,8 +108,8 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
           </Button>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <BookOpen size={16} style={{ color }} />
-              <h2 className="font-bold text-sm" style={{ color }} data-testid="text-chapter-title">
+              <BookOpen size={18} style={{ color }} />
+              <h2 className="font-bold text-base" style={{ color }} data-testid="text-chapter-title">
                 {chapter.title}
               </h2>
             </div>
@@ -127,8 +127,8 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
       </div>
 
       <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-6 flex flex-col gap-5">
-        <div className="rounded-xl p-4 border-2" style={{ borderColor: `${color}30`, backgroundColor: `${color}05` }}>
-          <p className="text-sm leading-relaxed" data-testid="text-chapter-overview">
+        <div className="rounded-xl p-5 border-2 shadow-sm" style={{ borderColor: `${color}30`, backgroundColor: `${color}08` }}>
+          <p className="text-base leading-relaxed text-foreground/80" data-testid="text-chapter-overview">
             {chapter.overview}
           </p>
         </div>
@@ -162,15 +162,15 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
             animate={{ opacity: 1 }}
             className="rounded-xl border border-card-border bg-card overflow-hidden"
           >
-            <div className="bg-muted/50 px-4 py-3 flex items-center gap-2">
-              <List size={16} style={{ color }} />
-              <h3 className="font-bold text-sm">Quick Reference — {chapter.title}</h3>
+            <div className="px-4 py-3 flex items-center gap-2" style={{ backgroundColor: `${color}10` }}>
+              <List size={18} style={{ color }} />
+              <h3 className="font-bold text-base">Quick Reference — {chapter.title}</h3>
             </div>
             <div className="divide-y divide-border">
               {chapter.quickReference.map((item, i) => (
-                <div key={i} className="px-4 py-3 flex gap-4 text-sm" data-testid={`quickref-item-${i}`}>
+                <div key={i} className="px-4 py-3.5 flex gap-4 text-base" data-testid={`quickref-item-${i}`}>
                   <span className="font-bold text-foreground min-w-[140px] flex-shrink-0">{item.fact}</span>
-                  <span className="text-muted-foreground">{item.detail}</span>
+                  <span className="text-foreground/70">{item.detail}</span>
                 </div>
               ))}
             </div>
@@ -234,9 +234,9 @@ export default function HandbookPage() {
       </div>
 
       <div className="max-w-2xl mx-auto w-full px-4 py-6 flex flex-col gap-5">
-        <div className="rounded-xl bg-primary/5 border border-primary/20 p-4">
-          <h2 className="font-bold text-sm mb-1">Your Complete Reference Guide</h2>
-          <p className="text-xs text-muted-foreground leading-relaxed">
+        <div className="rounded-xl bg-primary/5 border border-primary/20 p-5">
+          <h2 className="font-bold text-base mb-1.5">Your Complete Reference Guide</h2>
+          <p className="text-sm text-foreground/70 leading-relaxed">
             Everything you need to know for Joint Commission compliance — organized by topic with detailed explanations,
             critical values, and real-world scenarios. Use this alongside the quizzes to build deep understanding.
           </p>
@@ -261,24 +261,25 @@ export default function HandbookPage() {
             return (
               <motion.button
                 key={chapter.levelId}
-                className="w-full text-left rounded-xl border border-card-border bg-card p-4 flex items-center gap-4 hover:bg-accent/30 transition-colors"
+                className="w-full text-left rounded-xl border-2 border-card-border bg-card p-4 flex items-center gap-4 hover:bg-accent/30 transition-all shadow-sm hover:shadow-md"
                 onClick={() => setLocation(`/handbook/${chapter.levelId}`)}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 data-testid={`button-chapter-${chapter.levelId}`}
               >
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: `${color}15` }}
+                  style={{ backgroundColor: `${color}20` }}
                 >
                   <BookOpen size={22} style={{ color }} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-sm" style={{ color }}>
+                  <h3 className="font-bold text-base" style={{ color }}>
                     {chapter.title}
                   </h3>
-                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                  <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
                     {chapter.sections.length} sections · {chapter.quickReference.length} quick reference items
                   </p>
                 </div>

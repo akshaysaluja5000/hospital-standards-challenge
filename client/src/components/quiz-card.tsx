@@ -42,20 +42,20 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="rounded-2xl bg-card border border-card-border p-6 flex flex-col gap-5">
+      <div className="rounded-2xl bg-card border-2 border-card-border p-6 flex flex-col gap-5 shadow-lg">
         {question.scenario && (
           <div className="bg-accent/50 rounded-xl p-4 border border-accent">
-            <p className="text-sm text-muted-foreground italic leading-relaxed" data-testid="text-scenario">
+            <p className="text-base text-foreground/70 italic leading-relaxed" data-testid="text-scenario">
               {question.scenario}
             </p>
           </div>
         )}
 
-        <h3 className="text-lg font-bold leading-snug" data-testid="text-question">
+        <h3 className="text-xl font-black leading-snug" data-testid="text-question">
           {question.question}
         </h3>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="flex flex-col gap-3">
           {question.options.map((option, index) => {
             let optionStyle = "border-border bg-background";
             if (showResult) {
@@ -78,16 +78,16 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
                 whileTap={!showResult && !disabled ? { scale: 0.98 } : {}}
                 data-testid={`button-option-${index}`}
               >
-                <div className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-current/20 flex items-center justify-center text-sm font-bold">
+                <div className="flex items-start gap-3">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-current/20 flex items-center justify-center text-sm font-bold mt-0.5">
                     {String.fromCharCode(65 + index)}
                   </span>
-                  <span className="text-sm">{option}</span>
+                  <span className="text-base leading-relaxed">{option}</span>
                   {showResult && index === question.correctIndex && (
-                    <CheckCircle2 size={20} className="ml-auto flex-shrink-0 text-chart-1" />
+                    <CheckCircle2 size={20} className="ml-auto flex-shrink-0 text-chart-1 mt-0.5" />
                   )}
                   {showResult && index === selected && !isCorrect && (
-                    <XCircle size={20} className="ml-auto flex-shrink-0 text-destructive" />
+                    <XCircle size={20} className="ml-auto flex-shrink-0 text-destructive mt-0.5" />
                   )}
                 </div>
               </motion.button>
@@ -111,19 +111,19 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
                 }`}
               >
                 <Lightbulb
-                  size={18}
+                  size={20}
                   className={`flex-shrink-0 mt-0.5 ${isCorrect ? "text-chart-1" : "text-destructive"}`}
                 />
                 <div>
-                  <p className={`text-sm font-bold mb-1 ${isCorrect ? "text-chart-1" : "text-destructive"}`}>
+                  <p className={`text-base font-bold mb-1 ${isCorrect ? "text-chart-1" : "text-destructive"}`}>
                     {isCorrect ? `Correct! +${question.xpReward} XP` : "Not quite!"}
                   </p>
                   {!isCorrect && (
-                    <p className="text-sm font-semibold mb-1" data-testid="text-correct-answer">
+                    <p className="text-base font-semibold mb-1" data-testid="text-correct-answer">
                       Correct answer: {question.options[question.correctIndex]}
                     </p>
                   )}
-                  <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-explanation">
+                  <p className="text-base text-foreground/70 leading-relaxed" data-testid="text-explanation">
                     {question.explanation}
                   </p>
                 </div>
