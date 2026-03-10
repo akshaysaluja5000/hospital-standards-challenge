@@ -33,6 +33,8 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - Admin dashboard for user tracking (facility-scoped)
 - Terms of Use / Privacy / Disclaimer page (public, no auth required)
 - "Not affiliated with The Joint Commission" disclaimer on dashboard and landing page
+- **Deep Dive Tracer**: Branching follow-up question mode — answer a base question correctly to unlock a deeper expert-level follow-up. Earns "Expert XP" for deeper knowledge. Pilot topics: Sterile Storage (10 questions), Transport & Decontam (5 questions)
+- **Visual refresh**: Vivid Professional palette — more saturated primary greens, deeper purples, real shadows (not zero), game-card styling with hover effects, gradient progress bars
 
 ## Database Tables
 - `facilities` - Hospital/facility registry (name, unique code)
@@ -47,8 +49,9 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `shared/questions.ts` - Question bank organized by levels
 - `server/routes.ts` - API endpoints with auth middleware
 - `server/storage.ts` - Database CRUD operations
-- `client/src/pages/` - Landing, Auth, Dashboard, Play, Study, Profile, Admin, Leaderboard, Handbook, Terms pages
+- `client/src/pages/` - Landing, Auth, Dashboard, Play, Study, Profile, Admin, Leaderboard, Handbook, Terms, DeepDiveSelect, DeepDive pages
 - `shared/handbook.ts` - Compliance Handbook content (11 chapters with sections, critical values, scenarios)
+- `shared/deep-dive-questions.ts` - Deep Dive branching question content (base + follow-up questions per topic)
 - `client/src/components/` - SwipeCard, QuizCard, StreakFlame, XpBar, LevelCard, DailyCalendar
 - `client/src/lib/auth.tsx` - Auth context provider
 
@@ -75,6 +78,8 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `/play/:levelId` - Quiz gameplay (auth required)
 - `/study/:levelId` - Study mode (auth required)
 - `/handbook` - Compliance Handbook (auth required)
+- `/deep-dive` - Deep Dive topic selection (auth required)
+- `/deep-dive/:levelId` - Deep Dive gameplay with branching questions (auth required)
 - `/leaderboard` - Rankings (auth required)
 - `/profile` - User profile & settings (auth required)
 - `/admin` - Admin dashboard (admin only)

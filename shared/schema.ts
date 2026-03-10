@@ -164,3 +164,48 @@ export interface GameState {
   xpEarned: number;
   answers: { questionId: string; correct: boolean; selectedIndex: number }[];
 }
+
+export interface DeepDiveFollowUp {
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+  expertXp: number;
+}
+
+export interface DeepDiveQuestion {
+  id: string;
+  baseQuestion: string;
+  baseOptions: string[];
+  baseCorrectIndex: number;
+  baseExplanation: string;
+  baseXp: number;
+  followUp: DeepDiveFollowUp;
+}
+
+export interface DeepDiveLevel {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  color: string;
+  baseLevelId: string;
+  questions: DeepDiveQuestion[];
+}
+
+export interface DeepDiveGameState {
+  currentQuestion: number;
+  totalQuestions: number;
+  phase: "base" | "followUp" | "result";
+  baseCorrect: number;
+  followUpCorrect: number;
+  baseXpEarned: number;
+  expertXpEarned: number;
+  answers: {
+    questionId: string;
+    baseCorrect: boolean;
+    baseSelectedIndex: number;
+    followUpCorrect: boolean | null;
+    followUpSelectedIndex: number | null;
+  }[];
+}

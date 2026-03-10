@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -132,7 +132,7 @@ export default function DashboardPage() {
       <div className="max-w-2xl mx-auto px-4 pt-6 flex flex-col gap-6">
         <div className="grid grid-cols-3 gap-3">
           <motion.div
-            className="rounded-2xl bg-card border border-card-border p-4 flex flex-col items-center justify-center"
+            className="game-card p-4 flex flex-col items-center justify-center"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -140,14 +140,14 @@ export default function DashboardPage() {
           </motion.div>
 
           <motion.div
-            className="rounded-2xl bg-card border border-card-border p-4 flex flex-col items-center justify-center gap-1"
+            className="game-card p-4 flex flex-col items-center justify-center gap-1"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
             <div className="flex items-center gap-1">
               <Zap size={18} className="text-chart-4" fill="currentColor" />
-              <span className="text-xl font-black" data-testid="text-total-xp">
+              <span className="text-2xl font-black" data-testid="text-total-xp">
                 {displayXp}
               </span>
             </div>
@@ -155,14 +155,14 @@ export default function DashboardPage() {
           </motion.div>
 
           <motion.div
-            className="rounded-2xl bg-card border border-card-border p-4 flex flex-col items-center justify-center gap-1"
+            className="game-card p-4 flex flex-col items-center justify-center gap-1"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
             <div className="flex items-center gap-1">
               <TrendingUp size={18} className="text-chart-3" />
-              <span className="text-xl font-black" data-testid="text-longest-streak">
+              <span className="text-2xl font-black" data-testid="text-longest-streak">
                 {streak?.longestStreak || 0}
               </span>
             </div>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
           </div>
           <div className="relative h-4 rounded-full bg-muted overflow-hidden">
             <motion.div
-              className="absolute inset-y-0 left-0 rounded-full bg-primary"
+              className="absolute inset-y-0 left-0 gradient-progress"
               initial={{ width: 0 }}
               animate={{ width: `${goalProgress}%` }}
               transition={{ duration: 0.8, ease: "easeOut" }}
@@ -217,6 +217,31 @@ export default function DashboardPage() {
             <h3 className="font-bold text-sm">Compliance Handbook</h3>
             <p className="text-xs text-muted-foreground mt-0.5">
               Complete reference guide with detailed explanations, critical values, and scenarios
+            </p>
+          </div>
+          <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+        </motion.button>
+
+        <motion.button
+          className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-secondary/5 border-secondary/20 hover:bg-secondary/10"
+          onClick={() => setLocation("/deep-dive")}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileTap={{ scale: 0.98 }}
+          data-testid="button-deep-dive"
+        >
+          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-secondary/10">
+            <Microscope size={24} className="text-secondary" />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-2">
+              <h3 className="font-bold text-sm">Deep Dive Tracer</h3>
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">
+                New
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Branching follow-up questions — earn <span className="font-bold text-secondary">Expert XP</span> for deeper knowledge
             </p>
           </div>
           <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />

@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import connectPgSimple from "connect-pg-simple";
 import { z } from "zod";
 import type { User, DailyActivity } from "@shared/schema";
+import { deepDiveLevels } from "@shared/deep-dive-questions";
 
 function toCentralDate(d: Date | string): string {
   const date = typeof d === "string" ? new Date(d) : d;
@@ -42,7 +43,9 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 async function comparePassword(supplied: string, stored: string): Promise<boolean> {
+  if (!stored || !stored.includes(".")) return false;
   const [hashed, salt] = stored.split(".");
+  if (!hashed || !salt) return false;
   const buf = (await scryptAsync(supplied, salt, 64)) as Buffer;
   return timingSafeEqual(Buffer.from(hashed, "hex"), buf);
 }
@@ -520,6 +523,101 @@ export async function registerRoutes(
       await storage.deleteQuizSession(req.user!.id, levelId);
       res.json({ success: true });
     } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/game/deep-dive/levels", requireAuth, async (_req, res) => {
+    try {
+      const levelsInfo = deepDiveLevels.map((l) => ({
+        id: l.id,
+        name: l.name,
+        description: l.description,
+        icon: l.icon,
+        color: l.color,
+        baseLevelId: l.baseLevelId,
+        questionCount: l.questions.length,
+      }));
+      res.json(levelsInfo);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/game/deep-dive/:levelId", requireAuth, async (req, res) => {
+    try {
+      const level = deepDiveLevels.find((l) => l.id === req.params.levelId);
+      if (!level) {
+        return res.status(404).json({ message: "Deep dive level not found" });
+      }
+      res.json(level);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  const deepDiveSubmitSchema = z.object({
+    levelId: z.string().min(1),
+    baseCorrect: z.number().int().min(0),
+    followUpCorrect: z.number().int().min(0),
+    totalQuestions: z.number().int().min(1),
+    followUpAttempted: z.number().int().min(0),
+    baseXpEarned: z.number().int().min(0),
+    expertXpEarned: z.number().int().min(0),
+  });
+
+  app.post("/api/game/deep-dive/submit", requireAuth, async (req, res) => {
+    try {
+      const data = deepDiveSubmitSchema.parse(req.body);
+      const userId = req.user!.id;
+      const totalXp = data.baseXpEarned + data.expertXpEarned;
+      const totalCorrect = data.baseCorrect + data.followUpCorrect;
+      const totalAnswered = data.totalQuestions + data.followUpAttempted;
+
+      const todayCentral = toCentralDate(new Date());
+      await storage.upsertDailyActivity(userId, todayCentral, totalAnswered, totalCorrect, totalXp);
+
+      let streak = await storage.getStreak(userId);
+      const newTotalXp = (streak?.totalXp || 0) + totalXp;
+
+      if (!streak) {
+        streak = await storage.upsertStreak(userId, {
+          currentStreak: 1,
+          longestStreak: 1,
+          totalXp: newTotalXp,
+          lastPlayedDate: todayCentral,
+        });
+      } else {
+        const lastDate = streak.lastPlayedDate;
+        if (lastDate !== todayCentral) {
+          const lastD = lastDate ? new Date(lastDate + "T12:00:00") : null;
+          const todayD = new Date(todayCentral + "T12:00:00");
+          const diffDays = lastD ? Math.round((todayD.getTime() - lastD.getTime()) / 86400000) : 999;
+          let newStreak = diffDays === 1 ? streak.currentStreak + 1 : 1;
+          const newLongest = Math.max(newStreak, streak.longestStreak);
+          streak = await storage.upsertStreak(userId, {
+            currentStreak: newStreak,
+            longestStreak: newLongest,
+            totalXp: newTotalXp,
+            lastPlayedDate: todayCentral,
+          });
+        } else {
+          streak = await storage.upsertStreak(userId, {
+            totalXp: newTotalXp,
+          });
+        }
+      }
+
+      res.json({
+        success: true,
+        xpEarned: totalXp,
+        baseXp: data.baseXpEarned,
+        expertXp: data.expertXpEarned,
+      });
+    } catch (err: any) {
+      if (err instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid submission data" });
+      }
       res.status(500).json({ message: err.message });
     }
   });
