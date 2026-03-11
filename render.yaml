@@ -2,12 +2,15 @@ services:
   - type: web
     name: hospital-standards-challenge
     runtime: node
-    buildCommand: npm install && npm run build && npm run db:push
+    plan: starter
+    buildCommand: npm install && npm run build
     startCommand: npm run start
     envVars:
-      - key: NODE_ENV
-        value: production
+      - key: NODE_VERSION
+        value: 20
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: compliance-db
+          property: connectionString
       - key: SESSION_SECRET
-        sync: false
+        generateValue: true
