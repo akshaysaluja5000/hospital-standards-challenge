@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: hospital-standards-challenge
+    runtime: node
+    buildCommand: npm install && npm run build && npm run db:push
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
