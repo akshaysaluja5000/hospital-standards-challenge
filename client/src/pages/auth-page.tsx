@@ -493,7 +493,7 @@ export default function AuthPage() {
             transition={{ delay: 0.3 }}
           >
             <h2 className="text-4xl font-black mb-6 leading-tight">
-              Turn compliance training into a{" "}
+              Master hospital standards through a{" "}
               <span className="text-primary">game you'll love</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-10">

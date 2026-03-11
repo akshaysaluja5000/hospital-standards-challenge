@@ -70,7 +70,7 @@ export default function LandingPage() {
               <Shield size={44} className="text-primary-foreground" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl" data-testid="text-hero-title">
-              Turn Joint Commission compliance training into a{" "}
+              Master hospital standards and Joint Commission readiness with a{" "}
               <span className="text-primary">game your staff will love</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl leading-relaxed" data-testid="text-hero-subtitle">
