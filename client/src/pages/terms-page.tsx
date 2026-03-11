@@ -41,15 +41,15 @@ export default function TermsPage() {
             <div className="flex flex-col gap-4 text-sm text-muted-foreground leading-relaxed">
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-educational">Educational Purpose</h3>
-                <p>ComplianceQuest is designed exclusively for educational and training purposes. All content is intended to help healthcare professionals prepare for Joint Commission compliance standards and is not a substitute for official training or certification programs.</p>
+                <p>Hospital Standards Challenge is designed exclusively for educational and training purposes. All content is intended to help healthcare professionals prepare for Joint Commission compliance standards and is not a substitute for official training or certification programs.</p>
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-license">Per-Facility License</h3>
-                <p>Access to ComplianceQuest is provided on a per-facility basis. Each facility receives its own isolated environment for tracking staff compliance training progress. Facility codes are provided by your organization's administrator.</p>
+                <p>Access to Hospital Standards Challenge is provided on a per-facility basis. Each facility receives its own isolated environment for tracking staff compliance training progress. Facility codes are provided by your organization's administrator.</p>
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-content">Content Restrictions</h3>
-                <p>All content within ComplianceQuest, including questions, explanations, handbook materials, and training resources, is proprietary. Content cannot be resold, reproduced, or distributed without prior written authorization.</p>
+                <p>All content within Hospital Standards Challenge, including questions, explanations, handbook materials, and training resources, is proprietary. Content cannot be resold, reproduced, or distributed without prior written authorization.</p>
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-stats">Aggregated Statistics</h3>
@@ -57,7 +57,7 @@ export default function TermsPage() {
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-no-patient">No Patient Data</h3>
-                <p>ComplianceQuest does not store, collect, or process any patient data or protected health information (PHI). The platform is strictly limited to staff training and compliance readiness.</p>
+                <p>Hospital Standards Challenge does not store, collect, or process any patient data or protected health information (PHI). The platform is strictly limited to staff training and compliance readiness.</p>
               </div>
             </div>
           </Card>
@@ -98,7 +98,7 @@ export default function TermsPage() {
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-privacy-not-collected">What We Do NOT Collect</h3>
-                <p>ComplianceQuest explicitly does not collect:</p>
+                <p>Hospital Standards Challenge explicitly does not collect:</p>
                 <ul className="list-disc list-inside mt-1 flex flex-col gap-1">
                   <li>Patient data of any kind</li>
                   <li>Protected Health Information (PHI)</li>
@@ -124,10 +124,10 @@ export default function TermsPage() {
             </div>
             <div className="flex flex-col gap-3 text-sm text-muted-foreground leading-relaxed">
               <p>
-                ComplianceQuest is <span className="font-bold text-foreground">not affiliated with, endorsed by, or sponsored by The Joint Commission</span>. "The Joint Commission" is a registered trademark of The Joint Commission.
+                Hospital Standards Challenge is <span className="font-bold text-foreground">not affiliated with, endorsed by, or sponsored by The Joint Commission</span>. "The Joint Commission" is a registered trademark of The Joint Commission.
               </p>
               <p>
-                All content provided through ComplianceQuest is for educational and training purposes only. It is designed to supplement, not replace, official Joint Commission standards, guidelines, or accreditation processes.
+                All content provided through Hospital Standards Challenge is for educational and training purposes only. It is designed to supplement, not replace, official Joint Commission standards, guidelines, or accreditation processes.
               </p>
               <p>
                 Facility administrators and healthcare professionals should always refer to official Joint Commission publications and resources for authoritative guidance on compliance requirements.

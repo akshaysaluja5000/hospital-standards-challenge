@@ -1,4 +1,4 @@
-# ComplianceQuest - Joint Commission Compliance Training Game
+# Hospital Standards Challenge - Joint Commission Compliance Training Game
 
 ## Overview
 A gamified SaaS learning app that turns Joint Commission compliance audits into an engaging game. Built with a Duolingo-inspired design featuring streaks, XP, levels, and swipeable cards. Designed for per-facility licensing to hospitals.

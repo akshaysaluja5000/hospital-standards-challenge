@@ -70,7 +70,7 @@ export default function AuthPage() {
       await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode || undefined);
       toast({
         title: "Account created!",
-        description: "Welcome to ComplianceQuest!",
+        description: "Welcome to Hospital Standards Challenge!",
       });
     } catch (error: any) {
       toast({
@@ -119,7 +119,7 @@ export default function AuthPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary mb-4">
               <Shield size={32} className="text-primary-foreground" />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">ComplianceQuest</h1>
+            <h1 className="text-3xl font-black tracking-tight">Hospital Standards Challenge</h1>
             <p className="text-muted-foreground mt-1">Master Joint Commission standards</p>
           </motion.div>
 

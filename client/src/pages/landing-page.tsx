@@ -38,7 +38,7 @@ export default function LandingPage() {
             <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
               <Shield size={20} className="text-primary-foreground" />
             </div>
-            <span className="font-black text-lg tracking-tight" data-testid="text-app-name">ComplianceQuest</span>
+            <span className="font-black text-lg tracking-tight" data-testid="text-app-name">Hospital Standards Challenge</span>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -124,7 +124,7 @@ export default function LandingPage() {
       <footer className="border-t border-border py-6 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-xs text-muted-foreground leading-relaxed" data-testid="text-disclaimer">
-            ComplianceQuest is not affiliated with, endorsed by, or sponsored by The Joint Commission.
+            Hospital Standards Challenge is not affiliated with, endorsed by, or sponsored by The Joint Commission.
             All content is for educational and training purposes only.
           </p>
           <p className="text-xs text-muted-foreground mt-2">
