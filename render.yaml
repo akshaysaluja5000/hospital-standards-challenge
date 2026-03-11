@@ -2,15 +2,10 @@ services:
   - type: web
     name: hospital-standards-challenge
     runtime: node
-    plan: starter
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
+    buildCommand: npm install && npm run build && cp server/table.sql dist/table.sql
+    startCommand: node dist/index.js
     envVars:
-      - key: NODE_VERSION
-        value: 20
       - key: DATABASE_URL
         fromDatabase:
-          name: compliance-db
+          name: hospital-db
           property: connectionString
-      - key: SESSION_SECRET
-        generateValue: true
