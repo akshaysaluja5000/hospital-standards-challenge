@@ -14,9 +14,8 @@ VALUES (1, 'Midwest Orthopedic Specialty Hospital', 'SITE486045', '2026-02-27 22
 ON CONFLICT (id) DO NOTHING;
 
 -- 2. Real user (admin)
--- NOTE: password is 'password123' — change it after first login on production!
 INSERT INTO users (id, username, password, is_admin, daily_goal, reminder_enabled, created_at, first_name, last_name, facility_id)
-VALUES (4, 'akshaysaluja', 'password123', true, 5, true, '2026-02-27 16:58:15.585615', '', '', 1)
+VALUES (4, 'akshaysaluja', '8e1ad9b3ec795b57fad2d3ac79ea97ec616f8ee404dd85c5ab0c41c18cd5fc978859189c2e9be251a162ae09bdd973ba39a2900f6df3c36d24bcaa93cef5217c.09cc1e65aa8ed06e0cdd9f8aa03c1dc3', true, 5, true, '2026-02-27 16:58:15.585615', '', '', 1)
 ON CONFLICT (id) DO NOTHING;
 
 -- 3. User progress
