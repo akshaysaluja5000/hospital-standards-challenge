@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle } from "lucide-react";
+import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { Level, UserProgress, QuizSession } from "@shared/schema";
@@ -20,12 +20,12 @@ interface LevelCardProps {
 
 export function LevelCard({ level, progress, savedSession, index, onPlay, onStudy }: LevelCardProps) {
   const Icon = iconMap[level.icon] || Star;
-  const isCompleted = progress?.completed;
   const bestScore = progress?.bestScore || 0;
   const totalQuestions = level.questions.length;
   const percentage = totalQuestions > 0 ? Math.round((bestScore / totalQuestions) * 100) : 0;
   const hasInProgress = !!savedSession;
   const inProgressQuestion = savedSession?.currentQuestion || 0;
+  const hasPlayed = progress && progress.totalQuestions > 0;
 
   const handleStartOver = async () => {
     try {
@@ -41,8 +41,6 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
       className={`w-full rounded-2xl border-2 p-5 transition-all shadow-md hover:shadow-lg ${
         hasInProgress
           ? "border-chart-4/40 bg-chart-4/5"
-          : isCompleted
-          ? "border-chart-1/40 bg-chart-1/5"
           : "border-border bg-card"
       }`}
       initial={{ opacity: 0, y: 20 }}
@@ -59,11 +57,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
             color: level.color,
           }}
         >
-          {isCompleted ? (
-            <CheckCircle2 size={28} className="text-chart-1" />
-          ) : (
-            <Icon size={28} />
-          )}
+          <Icon size={28} />
         </div>
 
         <div className="flex-1 min-w-0">
@@ -76,9 +70,10 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
                 In Progress ({inProgressQuestion + 1}/{totalQuestions})
               </span>
             )}
-            {isCompleted && !hasInProgress && (
-              <span className="px-2 py-0.5 rounded-full bg-chart-1/15 text-chart-1 text-sm font-bold">
-                Complete
+            {hasPlayed && !hasInProgress && (
+              <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center gap-1" data-testid={`badge-best-${level.id}`}>
+                <Trophy size={12} />
+                Best: {percentage}%
               </span>
             )}
           </div>
@@ -93,11 +88,11 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
             <span className="text-sm text-muted-foreground font-semibold">
               {level.studyMaterial.length} study concepts
             </span>
-            {progress && progress.totalQuestions > 0 && (
+            {hasPlayed && (
               <>
-                <span className="text-sm text-muted-foreground">|</span>
-                <span className="text-sm font-bold" style={{ color: level.color }}>
-                  Best: {percentage}%
+                <span className="text-sm text-muted-foreground">•</span>
+                <span className="text-sm text-muted-foreground font-semibold">
+                  Shuffled each play
                 </span>
               </>
             )}
@@ -144,7 +139,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
                 data-testid={`button-level-${level.id}`}
               >
                 <Play size={15} className="mr-1.5" />
-                Play Quiz
+                {hasPlayed ? "Play Again" : "Play Quiz"}
               </Button>
             )}
           </div>
