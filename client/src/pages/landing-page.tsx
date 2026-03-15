@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, Sparkles, CheckCircle2, Users, TrendingUp, Mail } from "lucide-react";
+import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, Sparkles, CheckCircle2, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
@@ -40,7 +40,7 @@ const leaderBullets = [
 
 const steps = [
   "Pick one unit and a champion.",
-  "Invite 20\u201330 staff to play 10\u201315 minutes a week for 4 weeks.",
+  "Invite 10+ staff members to play 10\u201315 minutes a week for 4 weeks.",
   "Review the dashboard to see who\u2019s engaging and where knowledge gaps are.",
   "Use the data to focus your next in\u2011service or mock tracer.",
 ];
@@ -112,13 +112,10 @@ export default function LandingPage() {
               <Button
                 size="lg"
                 variant="outline"
-                asChild
-                data-testid="button-hero-request-trial"
+                onClick={() => setLocation("/auth")}
+                data-testid="button-hero-create-account"
               >
-                <a href="mailto:akshaysaluja1@outlook.com?subject=4-Week%20Trial%20Request">
-                  <Mail size={18} className="mr-2" />
-                  Request a 4&#8209;Week Trial
-                </a>
+                Create Account
               </Button>
             </div>
           </motion.div>
