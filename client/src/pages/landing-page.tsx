@@ -207,7 +207,7 @@ export default function LandingPage() {
           >
             <h2 className="text-2xl font-black tracking-tight">Ready to see the difference?</h2>
             <p className="text-base text-muted-foreground max-w-lg">
-              Sign in to explore the app, or request a trial for your team.
+              Sign in to explore the app, or create an account to get started.
             </p>
             <div className="flex items-center gap-3 flex-wrap justify-center">
               <Button
