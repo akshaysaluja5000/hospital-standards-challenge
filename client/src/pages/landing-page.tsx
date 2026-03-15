@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, Sparkles } from "lucide-react";
+import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, Sparkles, CheckCircle2, Users, TrendingUp, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
@@ -27,13 +27,30 @@ const features = [
   },
   {
     icon: Sparkles,
-    title: "AI‑Enhanced Learning",
+    title: "AI\u2011Enhanced Learning",
     description: "AI tutor that explains missed questions in plain language and bedside scenarios",
   },
 ];
 
+const leaderBullets = [
+  "Aligns with tracer topics: instruments, environment of care, SPD, OR, documentation, EOC, and more.",
+  "Built\u2011in streaks and levels keep staff coming back between surveys.",
+  "AI\u2011powered explanations help staff understand the \u2018why\u2019 behind each standard.",
+];
+
+const steps = [
+  "Pick one unit and a champion.",
+  "Invite 20\u201330 staff to play 10\u201315 minutes a week for 4 weeks.",
+  "Review the dashboard to see who\u2019s engaging and where knowledge gaps are.",
+  "Use the data to focus your next in\u2011service or mock tracer.",
+];
+
 export default function LandingPage() {
   const [, setLocation] = useLocation();
+
+  const scrollToFeatures = () => {
+    document.getElementById("features-section")?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -75,34 +92,88 @@ export default function LandingPage() {
               <Shield size={44} className="text-primary-foreground" />
             </div>
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl" data-testid="text-hero-title">
-              Master hospital standards and Joint Commission readiness with a{" "}
-              <span className="text-primary">game your staff will love</span>
+              Hospital Standards Challenge
             </h1>
-            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed" data-testid="text-hero-subtitle">
-              Swipe, answer, and level up your compliance knowledge. Build streaks, earn XP, and become the expert your team needs.
+            <p className="text-xl md:text-2xl text-foreground/80 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
+              Gamified accreditation training that helps frontline staff feel survey&#8209;ready in 10&#8211;15 minutes a day.
+            </p>
+            <p className="text-base text-muted-foreground max-w-2xl leading-relaxed" data-testid="text-hero-supporting">
+              Built from real standards and tracer scenarios for OR, SPD, and inpatient units&#8212;now with AI&#8209;powered explanations and practice.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
                 size="lg"
-                onClick={() => setLocation("/auth")}
-                data-testid="button-hero-signin"
+                onClick={scrollToFeatures}
+                data-testid="button-hero-how-it-works"
               >
-                Sign In
+                See How It Works
                 <ArrowRight size={18} className="ml-2" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => setLocation("/auth")}
-                data-testid="button-hero-create-account"
+                asChild
+                data-testid="button-hero-request-trial"
               >
-                Create Account
+                <a href="mailto:akshay@hospitalstandardschallenge.com?subject=4-Week%20Trial%20Request">
+                  <Mail size={18} className="mr-2" />
+                  Request a 4&#8209;Week Trial
+                </a>
               </Button>
             </div>
           </motion.div>
         </section>
 
-        <section className="max-w-5xl mx-auto px-4 pb-16 md:pb-24">
+        <section className="bg-accent/30 border-y border-border py-16 md:py-20">
+          <div className="max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Users size={22} className="text-primary" />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight" data-testid="text-leaders-heading">
+                  For Nursing, Quality, and Education Leaders
+                </h2>
+              </div>
+              <p className="text-base text-muted-foreground leading-relaxed max-w-3xl mb-6" data-testid="text-leaders-description">
+                Hospital Standards Challenge turns standards review into short, gamified sessions staff actually complete&#8212;without adding more in&#8209;service time.
+              </p>
+              <ul className="space-y-3 mb-8">
+                {leaderBullets.map((bullet, i) => (
+                  <li key={i} className="flex items-start gap-3" data-testid={`text-leader-bullet-${i}`}>
+                    <CheckCircle2 size={20} className="text-primary flex-shrink-0 mt-0.5" />
+                    <span className="text-base text-foreground/80 leading-relaxed">{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <TrendingUp size={22} className="text-primary" />
+                </div>
+                <h3 className="text-xl font-black tracking-tight" data-testid="text-get-started-heading">
+                  How to Get Started
+                </h3>
+              </div>
+              <ol className="space-y-3">
+                {steps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-3" data-testid={`text-step-${i}`}>
+                    <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span className="text-base text-foreground/80 leading-relaxed">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </motion.div>
+          </div>
+        </section>
+
+        <section id="features-section" className="max-w-5xl mx-auto px-4 py-16 md:py-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {features.map((feature, index) => (
               <motion.div
@@ -123,6 +194,38 @@ export default function LandingPage() {
               </motion.div>
             ))}
           </div>
+        </section>
+
+        <section className="max-w-5xl mx-auto px-4 pb-16 md:pb-24 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="flex flex-col items-center gap-4"
+          >
+            <h2 className="text-2xl font-black tracking-tight">Ready to see the difference?</h2>
+            <p className="text-base text-muted-foreground max-w-lg">
+              Sign in to explore the app, or request a trial for your team.
+            </p>
+            <div className="flex items-center gap-3 flex-wrap justify-center">
+              <Button
+                size="lg"
+                onClick={() => setLocation("/auth")}
+                data-testid="button-bottom-signin"
+              >
+                Sign In
+                <ArrowRight size={18} className="ml-2" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => setLocation("/auth")}
+                data-testid="button-bottom-create-account"
+              >
+                Create Account
+              </Button>
+            </div>
+          </motion.div>
         </section>
       </main>
 
