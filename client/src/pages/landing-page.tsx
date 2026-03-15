@@ -39,6 +39,7 @@ const features = [
 
 const leaderBullets = [
   "Aligns with tracer topics: instruments, environment of care, SPD, OR, documentation, EOC, and more.",
+  "Deep Dive Tracer mode lets staff drill into expert\u2011level follow\u2011ups that mirror real survey questioning.",
   "Built\u2011in streaks and levels keep staff coming back between surveys.",
   "AI\u2011powered explanations help staff understand the \u2018why\u2019 behind each standard.",
 ];
