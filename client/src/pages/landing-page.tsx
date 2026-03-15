@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight } from "lucide-react";
+import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
@@ -24,6 +24,11 @@ const features = [
     icon: BookOpen,
     title: "Compliance Handbook reference guide",
     description: "Comprehensive study materials always at your fingertips",
+  },
+  {
+    icon: Sparkles,
+    title: "AI‑Enhanced Learning",
+    description: "AI tutor that explains missed questions in plain language and bedside scenarios",
   },
 ];
 

@@ -35,6 +35,7 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - "Not affiliated with The Joint Commission" disclaimer on dashboard and landing page
 - **Deep Dive Tracer**: Branching follow-up question mode — answer a base question correctly to unlock a deeper expert-level follow-up. Earns "Expert XP" for deeper knowledge. Full game flow with shuffled questions, session save/restore, save-and-exit, quit dialog (Save & Exit, Start Over, Quit Without Saving, Continue Playing), and pick-up-where-you-left-off. ALL 11 sections covered (20 questions each, 220 total): Transport of Instruments, Environment & Surfaces, Clean/Dirty Segregation, Sterile Storage & Handling, Instruments & Inspection, Facility Safety & Equipment, SPD & Decontamination, OR & Sterile Technique, Surgical Safety & Consent, Patient Care & Documentation, EOC & Safety Compliance. Questions randomized each playthrough.
 - **Visual refresh**: Vivid Professional palette — more saturated primary greens, deeper purples, real shadows (not zero), game-card styling with hover effects, gradient progress bars
+- **AI Tutor**: Anthropic-powered (Claude Haiku) plain-language explanations for quiz questions. "Ask AI Tutor" button appears in feedback cards after answering. Rate-limited to 30 calls/user/hour. Uses Replit AI Integrations (no external API key needed). Disclaimer: "AI‑generated explanation; not a replacement for official policies."
 
 ## Database Tables
 - `facilities` - Hospital/facility registry (name, unique code)
@@ -53,7 +54,8 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `shared/handbook.ts` - Compliance Handbook content (11 chapters with sections, critical values, scenarios)
 - `shared/deep-dive-questions.ts` - Deep Dive consolidation file (imports and re-exports all 11 sections)
 - `shared/deep-dive-questions-*.ts` - Deep Dive branching question content split across multiple files (transport, sterile, part1, part2, part3a-d)
-- `client/src/components/` - SwipeCard, QuizCard, StreakFlame, XpBar, LevelCard, DailyCalendar
+- `client/src/components/` - SwipeCard, QuizCard, AiTutorBox, StreakFlame, XpBar, LevelCard, DailyCalendar
+- `server/replit_integrations/` - Anthropic AI integration (chat routes, batch processing utilities)
 - `client/src/lib/auth.tsx` - Auth context provider
 
 ## Theme

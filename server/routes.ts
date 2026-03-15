@@ -9,8 +9,14 @@ import { storage } from "./storage";
 import { format } from "date-fns";
 import connectPgSimple from "connect-pg-simple";
 import { z } from "zod";
+import Anthropic from "@anthropic-ai/sdk";
 import type { User, DailyActivity } from "@shared/schema";
 import { deepDiveLevels } from "@shared/deep-dive-questions";
+
+const anthropic = new Anthropic({
+  apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY,
+  baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL,
+});
 
 function toCentralDate(d: Date | string): string {
   const date = typeof d === "string" ? new Date(d) : d;
@@ -949,6 +955,63 @@ export async function registerRoutes(
     }
   } catch (e) {
   }
+
+  const aiTutorRateLimit = new Map<number, number[]>();
+  const AI_TUTOR_MAX_CALLS = 30;
+  const AI_TUTOR_WINDOW_MS = 60 * 60 * 1000;
+
+  app.post("/api/ai-tutor", requireAuth, async (req: Request, res: Response) => {
+    const aiTutorSchema = z.object({
+      question: z.string().max(1000),
+      userAnswer: z.string().max(500),
+      correctAnswer: z.string().max(500),
+      explanation: z.string().max(2000),
+    });
+    const parsed = aiTutorSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request data." });
+    }
+
+    const userId = (req.user as User).id;
+    const now = Date.now();
+    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
+    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+      return res.status(429).json({ error: "You've reached the AI Tutor limit. Please try again later." });
+    }
+    userCalls.push(now);
+    aiTutorRateLimit.set(userId, userCalls);
+
+    try {
+      const { question, userAnswer, correctAnswer, explanation } = parsed.data;
+
+      const message = await anthropic.messages.create({
+        model: "claude-haiku-4-5",
+        max_tokens: 8192,
+        messages: [
+          {
+            role: "user",
+            content: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. A staff member just answered a compliance question. Explain the correct answer in plain, conversational language a bedside nurse or SPD tech would understand. Use a brief real-world scenario to illustrate why the correct answer matters. Keep it to 2-3 short paragraphs.
+
+Question: ${question}
+Staff member answered: ${userAnswer}
+Correct answer: ${correctAnswer}
+Standard explanation: ${explanation}
+
+Give a friendly, plain-language explanation with a realistic bedside or department scenario. Do not repeat the question or options verbatim.`,
+          },
+        ],
+      });
+
+      const content = message.content[0];
+      if (!content || content.type !== "text" || !content.text) {
+        return res.status(502).json({ error: "AI Tutor returned an empty response. Please try again." });
+      }
+      res.json({ aiExplanation: content.text });
+    } catch (error: any) {
+      console.error("AI Tutor error:", error);
+      res.status(502).json({ error: "AI Tutor is temporarily unavailable." });
+    }
+  });
 
   return httpServer;
 }

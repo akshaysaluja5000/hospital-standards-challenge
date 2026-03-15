@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, XCircle, Lightbulb } from "lucide-react";
 import { playCorrectSound, playWrongSound } from "@/lib/sounds";
+import { AiTutorBox } from "@/components/ai-tutor-box";
 import type { Question } from "@shared/schema";
 
 interface QuizCardProps {
@@ -126,6 +127,9 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
                   <p className="text-base text-foreground/70 leading-relaxed" data-testid="text-explanation">
                     {question.explanation}
                   </p>
+                  {selected !== null && (
+                    <AiTutorBox question={question} selectedIndex={selected} />
+                  )}
                 </div>
               </div>
             </motion.div>
