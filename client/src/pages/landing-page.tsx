@@ -115,7 +115,7 @@ export default function LandingPage() {
                 asChild
                 data-testid="button-hero-request-trial"
               >
-                <a href="mailto:akshay@hospitalstandardschallenge.com?subject=4-Week%20Trial%20Request">
+                <a href="mailto:akshaysaluja1@outlook.com?subject=4-Week%20Trial%20Request">
                   <Mail size={18} className="mr-2" />
                   Request a 4&#8209;Week Trial
                 </a>
