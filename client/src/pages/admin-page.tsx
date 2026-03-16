@@ -5,6 +5,7 @@ import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus } f
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
+import { AiLeadershipCoach } from "@/components/ai-leadership-coach";
 
 interface AdminUser {
   id: number;
@@ -138,6 +139,8 @@ export default function AdminPage() {
             </motion.div>
           ))}
         </div>
+
+        <AiLeadershipCoach />
 
         <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
           <div className="p-5 border-b border-card-border">

@@ -1013,6 +1013,115 @@ Give a friendly, plain-language explanation with a realistic bedside or departme
     }
   });
 
+  app.post("/api/admin/ai-insights", requireAdmin, async (req: Request, res: Response) => {
+    const userId = (req.user as User).id;
+    const now = Date.now();
+    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
+    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+      return res.status(429).json({ error: "Rate limit reached. Please try again later." });
+    }
+    userCalls.push(now);
+    aiTutorRateLimit.set(userId, userCalls);
+
+    try {
+      const adminUser = req.user as User;
+      const allUsersRaw = await storage.getAllUsers();
+      const allUsers = adminUser.facilityId
+        ? allUsersRaw.filter(u => u.facilityId === adminUser.facilityId)
+        : allUsersRaw;
+      const allProgressData = await Promise.all(
+        allUsers.map(async (u) => ({ userId: u.id, username: u.username, progress: await storage.getProgress(u.id) }))
+      );
+
+      const { levels } = await import("@shared/questions");
+
+      const levelStats: { levelId: string; levelName: string; attempts: number; avgScore: number; totalCorrect: number; totalQuestions: number }[] = [];
+      for (const level of levels) {
+        let totalScore = 0;
+        let totalQ = 0;
+        let attempts = 0;
+        for (const userData of allProgressData) {
+          for (const p of userData.progress) {
+            if (p.levelId === level.id) {
+              totalScore += p.bestScore;
+              totalQ += p.totalQuestions;
+              attempts++;
+            }
+          }
+        }
+        levelStats.push({
+          levelId: level.id,
+          levelName: level.name,
+          attempts,
+          avgScore: attempts > 0 ? Math.round((totalScore / totalQ) * 100) : 0,
+          totalCorrect: totalScore,
+          totalQuestions: totalQ,
+        });
+      }
+
+      const activeUsers = allUsers.length;
+      const usersWithProgress = allProgressData.filter(u => u.progress.length > 0).length;
+
+      const levelSummary = levelStats
+        .filter(l => l.attempts > 0)
+        .map(l => `- ${l.levelName}: ${l.avgScore}% avg accuracy (${l.attempts} attempt${l.attempts > 1 ? "s" : ""})`)
+        .join("\n");
+
+      const unplayedLevels = levelStats
+        .filter(l => l.attempts === 0)
+        .map(l => l.levelName)
+        .join(", ");
+
+      const message = await anthropic.messages.create({
+        model: "claude-haiku-4-5",
+        max_tokens: 8192,
+        messages: [
+          {
+            role: "user",
+            content: `You are a Joint Commission survey preparation coach for hospital leadership (nurse managers, quality directors, CNO). Analyze the following unit-wide quiz performance data and generate actionable leadership insights.
+
+Unit Overview:
+- Total registered staff: ${activeUsers}
+- Staff who have completed at least one level: ${usersWithProgress}
+- Quiz topics with results:
+${levelSummary || "No quiz data available yet."}
+${unplayedLevels ? `- Topics not yet attempted: ${unplayedLevels}` : ""}
+
+Generate a leadership coaching summary with this exact structure:
+
+**Unit Readiness Snapshot**
+2-3 bullets summarizing overall readiness posture (strengths and gaps).
+
+**Priority Focus Areas**
+2-3 specific topics/standards where staff scored lowest or haven't engaged, ranked by risk to survey readiness.
+
+**Recommended Actions**
+2-3 concrete steps: what to cover in next in-service, which topics to assign for focused practice, and any process gaps to address.
+
+**Engagement Insights**
+1-2 bullets about participation rates and suggestions to improve engagement.
+
+Write for a charge nurse, quality director, or CNO. Use plain language. Be specific about which topics need attention and why.`,
+          },
+        ],
+      });
+
+      const content = message.content[0];
+      if (!content || content.type !== "text" || !content.text) {
+        return res.status(502).json({ error: "Unable to generate insights." });
+      }
+      res.json({
+        insights: content.text,
+        levelStats: levelStats.filter(l => l.attempts > 0),
+        totalUsers: activeUsers,
+        usersWithProgress,
+      });
+    } catch (error: any) {
+      console.error("AI Insights error:", error);
+      res.status(502).json({ error: "AI Leadership Coach is temporarily unavailable." });
+    }
+  });
+
   app.post("/api/ai-debrief", requireAuth, async (req: Request, res: Response) => {
     const debriefSchema = z.object({
       levelId: z.string().max(100),

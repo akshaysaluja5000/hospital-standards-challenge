@@ -38,6 +38,7 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - **AI Tutor**: Anthropic-powered (Claude Haiku) plain-language explanations for quiz questions. "Ask AI Tutor" button appears in feedback cards after answering. Provides 2-3 paragraph explanations with bedside scenarios. Rate-limited to 30 calls/user/hour. Uses Replit AI Integrations (no external API key needed).
 - **AI Micro-Debriefs**: After completing a 20-question level, managers can generate an AI debrief summarizing strengths/weaknesses, a suggested huddle topic, and sample huddle questions. "Generate Manager Micro-Debrief" button on completion screen.
 - **AI Handbook Search**: "Ask About Standards" search box on the Handbook page. Users type a question, AI searches curated handbook content and answers with inline references to handbook sections. For education and preparation only.
+- **AI Leadership Coach**: Admin-only feature on the Admin Dashboard. Aggregates per-level quiz performance across all facility staff and generates AI-powered leadership insights: unit readiness snapshot, priority focus areas, recommended actions (in-services, practice assignments), and engagement insights. Facility-scoped (only shows data for admin's facility). Uses shared 30 calls/user/hour rate limit.
 
 ## Database Tables
 - `facilities` - Hospital/facility registry (name, unique code)
