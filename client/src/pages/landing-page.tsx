@@ -45,7 +45,7 @@ const leaderBullets = [
 ];
 
 const steps = [
-  "Pick one unit and a champion.",
+  "Pick one unit to start with.",
   "Invite 10+ staff members to play 10\u201315 minutes a week for 4 weeks.",
   "Review the dashboard to see who\u2019s engaging and where knowledge gaps are.",
   "Use the data to focus your next in\u2011service or mock tracer.",
