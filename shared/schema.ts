@@ -180,7 +180,7 @@ export interface DeepDiveQuestion {
   baseCorrectIndex: number;
   baseExplanation: string;
   baseXp: number;
-  followUp: DeepDiveFollowUp;
+  followUps: DeepDiveFollowUp[];
 }
 
 export interface DeepDiveLevel {
@@ -197,15 +197,16 @@ export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;
   phase: "base" | "followUp" | "result";
+  currentFollowUpIndex: number;
   baseCorrect: number;
   followUpCorrect: number;
+  followUpAttempted: number;
   baseXpEarned: number;
   expertXpEarned: number;
   answers: {
     questionId: string;
     baseCorrect: boolean;
     baseSelectedIndex: number;
-    followUpCorrect: boolean | null;
-    followUpSelectedIndex: number | null;
+    followUpResults: { correct: boolean; selectedIndex: number }[];
   }[];
 }

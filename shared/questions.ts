@@ -48,7 +48,7 @@ export const levels: Level[] = [
       {
         id: "t2",
         question: "A surveyor observes hemostats and clamps locked in the closed position inside a transport bin headed to SPD. What is the concern?",
-        options: ["The instruments should be in the open/unhinged position so all surfaces can be cleaned", "The instruments should be wrapped in blue wrap before transport", "Locked instruments are safer for transport and this is correct", "The instruments need to be autoclaved before transport"],
+        options: ["The instruments should be in the open/unhinged position so all surfaces can be cleaned", "The instruments should be separated and individually wrapped to protect delicate tips during transport", "Locked instruments are preferred for transport to prevent jaw damage and maintain alignment during movement", "The instruments need to be rinsed with sterile water and dried before transport to SPD"],
         correctIndex: 0,
         explanation: "Hinged instruments must be open/unhinged for transport so cleaning solution can reach box locks and jaw areas where bioburden accumulates.",
         xpReward: 10,
@@ -66,7 +66,7 @@ export const levels: Level[] = [
       {
         id: "t4",
         question: "A surveyor asks a tech what PPE the soiled utility room should have available. Which answer demonstrates full compliance?",
-        options: ["Gloves and a gown", "Gloves, gown, and a mask", "Gloves, gown, face shield or goggles, and mask", "Gloves and eye protection"],
+        options: ["Gloves, gown, and eye protection", "Gloves, gown, and a mask", "Gloves, gown, face shield or goggles, and mask", "Gloves, mask, and face shield or goggles"],
         correctIndex: 2,
         explanation: "Full PPE for soiled instrument handling includes gloves, gown, face shield or goggles, AND mask. Missing any element is incomplete.",
         xpReward: 10,
@@ -93,7 +93,7 @@ export const levels: Level[] = [
       {
         id: "t7",
         question: "During a tracer, a surveyor notes that a surgical case ended 10 minutes ago and instruments are sitting untreated on the back table. What is the primary risk?",
-        options: ["The instruments will become unsterile", "Bioburden will dry on the instruments, making decontamination less effective", "The instruments will rust from air exposure", "The OR cannot be turned over for the next case"],
+        options: ["Residual moisture will cause corrosion on the instrument surfaces within minutes", "Bioburden will dry on the instruments, making decontamination less effective", "Airborne contaminants will colonize the exposed instruments, requiring extended sterilization cycles", "The enzymatic spray window will expire, requiring the instruments to be fully soaked at SPD"],
         correctIndex: 1,
         explanation: "The primary concern is bioburden drying on instrument surfaces. Dried-on tissue and blood is much harder for SPD to remove during decontamination.",
         xpReward: 15,
@@ -120,7 +120,7 @@ export const levels: Level[] = [
       {
         id: "t10",
         question: "What is the purpose of enzymatic spray applied at the point of use?",
-        options: ["To sterilize the instruments before transport", "To disinfect the transport container", "To prevent bioburden from drying on instrument surfaces", "To lubricate hinged instruments for easier cleaning"],
+        options: ["To begin high-level disinfection of instruments before they arrive at SPD", "To fully break down bioburden so instruments arrive pre-cleaned at SPD", "To prevent bioburden from drying on instrument surfaces", "To lubricate instrument joints and hinges for easier decontamination in SPD"],
         correctIndex: 2,
         explanation: "Enzymatic spray prevents bioburden from drying and hardening on instrument surfaces. It does NOT sterilize or disinfect — that happens during reprocessing in SPD.",
         xpReward: 10,
@@ -129,7 +129,7 @@ export const levels: Level[] = [
       {
         id: "t11",
         question: "A surveyor asks: 'Who is responsible for point-of-use preparation of instruments after a surgical case?' What is the correct answer?",
-        options: ["The SPD technician who receives the tray", "The OR staff at the point of use", "The charge nurse for the unit", "The surgeon who used the instruments"],
+        options: ["The SPD technician who receives the tray at the decontamination window", "The OR staff at the point of use", "The perioperative services coordinator or unit charge nurse", "The surgeon or proceduralist who performed the case"],
         correctIndex: 1,
         explanation: "OR staff at the point of use are responsible for removing bioburden, opening instruments, applying enzymatic spray, and securing containers for transport.",
         xpReward: 10,
@@ -165,7 +165,7 @@ export const levels: Level[] = [
       {
         id: "t15",
         question: "A scrub tech applies enzymatic pre-cleaner, opens all hinged instruments, secures the lid, and places the container on the soiled corridor floor while she goes to get the transport cart. The container sits on the floor for 2 minutes. What is the compliance concern?",
-        options: ["The enzymatic spray was applied before opening the instruments — the order is wrong", "Placing the container on the floor, even temporarily, creates a contamination risk and violates transport protocol", "Two minutes is too long for enzymatic spray to sit without transport", "There is no concern — the container lid was secured"],
+        options: ["The enzymatic spray was applied before opening the instruments — the order is wrong", "Placing the container on the floor, even temporarily, creates a contamination risk and violates transport protocol", "Enzymatic spray loses effectiveness after 60 seconds of lid closure, requiring reapplication before transport", "The transport cart should have been staged before the case ended, but the container handling itself is acceptable"],
         correctIndex: 1,
         explanation: "Containers must not be placed on the floor during transport staging. Even with a secured lid, floor contact introduces contamination to the container exterior, which staff will then handle. The transport cart should be brought first.",
         xpReward: 15,
@@ -174,7 +174,7 @@ export const levels: Level[] = [
       {
         id: "t16",
         question: "Two surgical cases end simultaneously in adjacent ORs. One tech uses enzymatic spray; the other uses sterile water to keep instruments moist. Both secure lids and use the soiled corridor. Which tech is non-compliant?",
-        options: ["The tech using enzymatic spray — it should only be applied in SPD", "The tech using sterile water — the standard requires enzymatic pre-cleaner, not sterile water, at point of use", "Both are compliant — any moisture prevents bioburden from drying", "Both are non-compliant — instruments should be transported dry"],
+        options: ["The tech using enzymatic spray — enzymatic solutions should only be applied by trained SPD personnel in the decontamination area", "The tech using sterile water — the standard requires enzymatic pre-cleaner, not sterile water, at point of use", "Both are compliant — the key requirement is keeping instruments moist during transport, regardless of solution type", "Both are non-compliant — instruments should be transported dry to prevent dilution of SPD cleaning solutions"],
         correctIndex: 1,
         explanation: "Enzymatic pre-cleaner is required at the point of use, not just any moisture source. Sterile water keeps instruments moist but does not begin the enzymatic breakdown of bioburden. The enzymatic spray tech is compliant; the sterile water tech is not.",
         xpReward: 20,
@@ -183,7 +183,7 @@ export const levels: Level[] = [
       {
         id: "t17",
         question: "A surveyor asks a tech to describe the correct sequence of steps for point-of-use preparation. Which sequence is correct?",
-        options: ["Open instruments → remove bioburden → spray enzymatic → secure lid → transport via soiled corridor", "Remove bioburden → open instruments → spray enzymatic → secure lid → transport via soiled corridor", "Spray enzymatic → remove bioburden → open instruments → secure lid → transport via soiled corridor", "Remove bioburden → spray enzymatic → open instruments → secure lid → transport via soiled corridor"],
+        options: ["Open instruments → remove bioburden → spray enzymatic → secure lid → transport via soiled corridor", "Remove bioburden → open instruments → spray enzymatic → secure lid → transport via soiled corridor", "Apply enzymatic spray → remove loosened bioburden → open instruments → secure lid → transport via soiled corridor", "Remove bioburden → spray enzymatic → open instruments → secure lid → transport via soiled corridor"],
         correctIndex: 1,
         explanation: "The correct sequence is: (1) remove gross bioburden, (2) open/unhinge all instruments, (3) spray with enzymatic pre-cleaner, (4) secure the container lid, (5) transport via the soiled corridor. Bioburden removal comes first, then instruments are opened for solution access.",
         xpReward: 20,
@@ -192,7 +192,7 @@ export const levels: Level[] = [
       {
         id: "t18",
         question: "A tech transports instruments in a sealed red container via the soiled corridor. Midway, she realizes she forgot to apply enzymatic spray. She opens the container in the corridor, sprays the instruments, and re-secures the lid. What is the primary concern?",
-        options: ["Opening a soiled container in the corridor creates an exposure risk and should never be done outside the OR or decon area", "Enzymatic spray cannot be applied after the lid has been closed once", "The instruments are already ruined and need to be discarded", "There is no concern — she corrected the omission promptly"],
+        options: ["Opening a soiled container in the corridor creates an exposure risk and should never be done outside the OR or decon area", "Enzymatic spray loses its effectiveness once the container has been sealed due to temperature changes inside the closed container", "The instruments must be returned to the OR for proper enzymatic spray application under controlled conditions before re-transport", "This is acceptable as long as she was wearing full PPE when she opened the container in the corridor"],
         correctIndex: 0,
         explanation: "Opening soiled instrument containers in the corridor creates an aerosolization and splash risk in a non-controlled environment. If enzymatic spray was missed, the container should continue to SPD where it can be opened safely under proper conditions with full PPE.",
         xpReward: 20,
@@ -265,7 +265,7 @@ export const levels: Level[] = [
       {
         id: "e2",
         question: "A surveyor sees a brown stain on a ceiling tile in the pre-op area. The staff says it's been there for months and is just a 'cosmetic issue.' What is the surveyor's primary concern?",
-        options: ["The tile looks unprofessional for patients", "The stain likely indicates water damage or an active leak above the ceiling", "The brown color means the tile is past its replacement date", "Stained tiles are only a concern in the OR, not pre-op"],
+        options: ["The stain indicates the tile has exceeded its replacement lifecycle and needs routine replacement", "The stain likely indicates water damage or an active leak above the ceiling", "The stain suggests inadequate cleaning by EVS staff and requires a cleaning protocol review", "Stained tiles are only a concern if they are directly above a sterile field or patient bed"],
         correctIndex: 1,
         explanation: "Stained ceiling tiles often indicate water damage or leaks above, which can lead to mold growth. This is an active infection prevention concern regardless of how long it has been present.",
         xpReward: 15,
@@ -301,7 +301,7 @@ export const levels: Level[] = [
       {
         id: "e6",
         question: "During an EOC round, which of these findings would be the MOST serious infection prevention concern?",
-        options: ["A small scuff on the floor tile", "Tape residue near a patient bed", "A cracked ceiling tile above the sterile field in the OR", "A slightly faded wall color"],
+        options: ["Tape residue on the wall near a hand hygiene dispenser", "Visible dust accumulation on an overhead surgical light in an unoccupied OR", "A cracked ceiling tile above the sterile field in the OR", "A minor chip in countertop laminate near the scrub sink"],
         correctIndex: 2,
         explanation: "A cracked ceiling tile above a sterile field is the most serious — it can release dust, mold spores, and debris directly into the surgical field, risking patient infection.",
         xpReward: 20,
@@ -319,7 +319,7 @@ export const levels: Level[] = [
       {
         id: "e8",
         question: "Why must cove base (baseboards) in procedure rooms be intact and sealed?",
-        options: ["To maintain a professional appearance", "To prevent moisture from floor cleaning from seeping behind walls, which promotes mold growth", "To protect the wall from cart damage", "To meet fire code requirements"],
+        options: ["To maintain an impervious surface for terminal cleaning and disinfection of the room", "To prevent moisture from floor cleaning from seeping behind walls, which promotes mold growth", "To prevent pest entry through gaps between the floor and wall junction", "To provide a sealed transition that meets OSHA bloodborne pathogen containment standards"],
         correctIndex: 1,
         explanation: "Damaged cove base allows water from mopping and floor cleaning to seep behind walls, creating hidden moisture that promotes mold growth and structural damage.",
         xpReward: 10,
@@ -373,7 +373,7 @@ export const levels: Level[] = [
       {
         id: "e14",
         question: "A surveyor inspects an OR and finds: intact walls, clean ceiling tiles, no dust on lights, sealed cove base, and a clean floor. However, there is a 2-inch area of grout missing between two floor tiles near the scrub sink. Staff says it's been reported. How many findings are present?",
-        options: ["Zero — a small grout gap near the scrub sink is cosmetic", "One — missing grout creates a non-impervious surface that cannot be properly cleaned and may harbor moisture and pathogens", "Two — the missing grout and the scrub sink proximity are both separate findings", "One — but only because it's near a water source"],
+        options: ["Zero — small grout gaps are addressed during routine facility maintenance and are not an active infection concern", "One — missing grout creates a non-impervious surface that cannot be properly cleaned and may harbor moisture and pathogens", "Two — the missing grout and its proximity to a water source are separate findings requiring independent work orders", "One — but only because it is within 3 feet of a water source, which escalates the severity"],
         correctIndex: 1,
         explanation: "Missing grout creates a gap that traps moisture and microorganisms, making the surface non-impervious. This is an infection prevention concern regardless of location. The work order status does not resolve the active finding.",
         xpReward: 20,
@@ -382,7 +382,7 @@ export const levels: Level[] = [
       {
         id: "e15",
         question: "During EOC rounding, a surveyor finds a procedure room with: (1) a clean intact ceiling tile that is slightly lighter in color than surrounding tiles, (2) a small rust spot on a stainless steel cabinet handle, and (3) tape residue on the wall near the light switch. Which items are findings?",
-        options: ["All three — any imperfection is a finding", "Only the rust spot and tape residue — the lighter ceiling tile is likely a recent replacement and not a concern", "Only the tape residue — rust on stainless steel is acceptable", "Only the rust spot — tape residue is cosmetic"],
+        options: ["All three — any visible change in surface appearance in a procedure room must be documented and corrected", "Only the rust spot and tape residue — the lighter ceiling tile is likely a recent replacement and not a concern", "Only the tape residue — minor surface rust on stainless steel hardware is considered normal wear in humid environments", "Only the rust spot — tape residue on painted surfaces is cosmetic if the underlying wall is undamaged"],
         correctIndex: 1,
         explanation: "The rust spot (compromised surface that can't be sterilized) and tape residue (surface can't be properly disinfected) are both findings. A lighter ceiling tile that is intact and clean is likely a recent replacement — color variation is cosmetic, not an infection risk.",
         xpReward: 20,
@@ -527,7 +527,7 @@ export const levels: Level[] = [
       {
         id: "s7",
         question: "What is the minimum distance items must be stored off the floor?",
-        options: ["2-4 inches", "6-8 inches", "10-12 inches", "18 inches"],
+        options: ["4-6 inches", "6-8 inches", "8-10 inches", "12 inches"],
         correctIndex: 1,
         explanation: "Items must be stored at least 6-8 inches off the floor to allow proper floor cleaning and mopping underneath. This prevents contamination from floor-level moisture.",
         xpReward: 10,
@@ -554,7 +554,7 @@ export const levels: Level[] = [
       {
         id: "s10",
         question: "Without a splash barrier, how far must patient care items be stored from sinks?",
-        options: ["1 foot", "2 feet", "3 feet", "5 feet"],
+        options: ["18 inches", "2 feet", "3 feet", "4 feet"],
         correctIndex: 2,
         explanation: "Patient care items must be stored at least 3 feet from sinks when no splash barrier is in place, to prevent water contamination.",
         xpReward: 10,
@@ -572,7 +572,7 @@ export const levels: Level[] = [
       {
         id: "s12",
         question: "A surveyor asks a tech where patient food refrigerators should be located relative to medication refrigerators. What is the key principle?",
-        options: ["They can share the same refrigerator if different shelves are used", "They must be in separate designated refrigerators with documented temperature logs", "Patient food refrigerators are not required in clinical areas", "Only medication refrigerators need temperature monitoring"],
+        options: ["They can share the same refrigerator if items are clearly labeled and separated by designated shelves", "They must be in separate designated refrigerators with documented temperature logs", "Patient food can be stored in any clean refrigerator as long as it is in sealed containers", "Both refrigerators require monitoring, but only medication refrigerators need daily temperature logs"],
         correctIndex: 1,
         explanation: "Patient food and medications must have separate designated refrigerators. Both require documented temperature logs — medication fridges checked daily (36-46°F).",
         xpReward: 10,
@@ -590,7 +590,7 @@ export const levels: Level[] = [
       {
         id: "s14",
         question: "The clean utility room has supplies on shelving 5 inches off the floor. The soiled utility room across the hall has properly stored items on shelving 8 inches off the floor and PPE available. Which room has the compliance issue?",
-        options: ["The clean utility room — items are below the 6-8 inch minimum", "The soiled utility room — it needs additional equipment", "Both rooms have issues", "Neither room has issues"],
+        options: ["The clean utility room — items are below the 6-8 inch minimum", "The soiled utility room — it is missing a hand hygiene station, which is required", "Both rooms have issues — clean room shelving is too low and soiled room needs a hand hygiene station", "Neither room has issues — 5 inches meets the minimum clearance for floor-level storage"],
         correctIndex: 0,
         explanation: "The clean utility room is non-compliant: supplies are only 5 inches off the floor, below the 6-8 inch minimum. The soiled utility room meets requirements.",
         xpReward: 15,
@@ -599,7 +599,7 @@ export const levels: Level[] = [
       {
         id: "s15",
         question: "A surveyor finds a nurse washing a reusable emesis basin in a handwashing sink, then cleaning the sink with hospital-grade disinfectant, then washing her hands in the same sink. She followed disinfectant dwell time. How many violations occurred?",
-        options: ["None — she disinfected between uses", "One — the emesis basin should not be washed in a handwashing sink", "Two — using the handwashing sink for the basin AND the disinfectant dwell time doesn't change sink designation", "Three — basin in wrong sink, she should have used a different sink to wash hands, and disinfectant shouldn't be used on a handwashing sink"],
+        options: ["None — proper disinfection with adequate dwell time between uses restores the sink's designated function", "One — the emesis basin should not be washed in a handwashing sink", "Two — the emesis basin was improperly cleaned AND she should have used a separate sink to wash hands afterward", "Three — basin in wrong sink, she should have used alcohol-based hand rub instead of the contaminated sink, and the hopper issue should have been escalated"],
         correctIndex: 1,
         explanation: "One violation: handwashing sinks are designated exclusively for hand hygiene. Disinfecting after improper use does not restore the designation or make the initial use acceptable. However, washing her hands afterward in the same (designated handwashing) sink is still correct — that's its purpose.",
         xpReward: 20,
@@ -608,7 +608,7 @@ export const levels: Level[] = [
       {
         id: "s16",
         question: "A clean utility room contains: IV supplies on shelving 7 inches off the floor, a wall-mounted hand sanitizer, a clean linen cart, and a medication refrigerator at 42°F with daily logs. A surveyor also finds a mop and bucket in the corner. What is the finding?",
-        options: ["The shelving height is below the 8-inch minimum for clean utility rooms", "The mop and bucket — cleaning equipment does not belong in a clean utility room", "The medication refrigerator temperature is out of range", "No findings — everything listed is acceptable"],
+        options: ["The shelving height at 7 inches is below the required 8-inch minimum for clean utility rooms", "The mop and bucket — cleaning equipment does not belong in a clean utility room", "The medication refrigerator at 42°F exceeds the 40°F maximum for safe medication storage", "No findings — all items are appropriate for a clean utility room and meet storage requirements"],
         correctIndex: 1,
         explanation: "Cleaning equipment (mop and bucket) does not belong in a clean utility room — it should be in a designated housekeeping closet. The shelving at 7 inches meets the 6-8 inch general standard, and the fridge at 42°F is within the 36-46°F range.",
         xpReward: 20,
@@ -635,7 +635,7 @@ export const levels: Level[] = [
       {
         id: "s19",
         question: "During a tracer, a surveyor identifies three sinks in a procedure area: Sink A is labeled 'Handwashing Only,' Sink B is labeled 'Instrument Cleaning,' and Sink C has no label. A tech says Sink C is used for both handwashing and rinsing equipment depending on what's needed. What should the surveyor cite?",
-        options: ["Only Sink C — unlabeled and dual-use sinks violate sink designation requirements", "Sinks A and C — Sink A shouldn't have a label because all sinks should be multi-purpose", "All three sinks — labels alone don't prove compliance", "Only Sink B — instruments shouldn't be cleaned in procedure areas"],
+        options: ["Only Sink C — unlabeled and dual-use sinks violate sink designation requirements", "Sinks A and C — Sink A's handwashing-only designation is too restrictive, and Sink C needs a label", "All three sinks — each sink needs documented daily cleaning logs and usage tracking to verify compliance", "Only Sink B — instrument cleaning should only occur in the decontamination area, not in a procedure room sink"],
         correctIndex: 0,
         explanation: "Sink C is non-compliant for two reasons: no designation label and dual use. Sinks must have designated purposes and cannot be used interchangeably. Sinks A and B are properly designated and labeled.",
         xpReward: 20,
@@ -644,7 +644,7 @@ export const levels: Level[] = [
       {
         id: "s20",
         question: "A soiled utility room has: PPE available (gloves, gowns, eye protection), covered waste containers, a closed door, and items stored 8 inches off the floor. A surveyor asks: 'What's missing?' What is the correct answer?",
-        options: ["A hand hygiene station", "A sharps container", "An air filtration system", "Nothing — all requirements are met"],
+        options: ["A hand hygiene station", "A biohazard spill kit", "A negative-pressure ventilation system", "Nothing — PPE, waste receptacles, closed door, and proper shelving meet all soiled utility room standards"],
         correctIndex: 0,
         explanation: "Soiled utility rooms require PPE, waste receptacles, AND hand hygiene stations. While gloves, gowns, eye protection, covered waste, closed door, and proper shelving height are all present, the question doesn't mention a hand hygiene station, which is a required element.",
         xpReward: 15,
@@ -753,7 +753,7 @@ export const levels: Level[] = [
       {
         id: "ss8",
         question: "What is the minimum distance the bottom shelf in sterile storage must be from the floor?",
-        options: ["4-6 inches", "6-8 inches", "8-10 inches", "12-18 inches"],
+        options: ["4-6 inches", "6-8 inches", "8-10 inches", "10-12 inches"],
         correctIndex: 2,
         explanation: "The bottom shelf in sterile storage must be at least 8-10 inches off the floor — note this is higher than the general 6-8 inch requirement for non-sterile supply areas.",
         xpReward: 10,
@@ -798,7 +798,7 @@ export const levels: Level[] = [
       {
         id: "ss13",
         question: "A chemical indicator inside a sterile pack has NOT changed color. What does this indicate?",
-        options: ["The item is properly sterilized and the indicator is reading correctly", "The item was not properly exposed to the sterilization process and must not be used", "The indicator has expired and needs to be replaced", "The color change only happens after the package is opened"],
+        options: ["The indicator type does not match the sterilization method used, so the color result is not relevant", "The item was not properly exposed to the sterilization process and must not be used", "The indicator is a slow-reacting type that requires a 24-hour waiting period before reading the final color", "The indicator may have been placed on the wrong side of the packaging, preventing proper sterilant contact"],
         correctIndex: 1,
         explanation: "An unchanged chemical indicator means the package was NOT properly exposed to the sterilization process. The item must not be used and should be reported immediately.",
         xpReward: 15,
@@ -816,7 +816,7 @@ export const levels: Level[] = [
       {
         id: "ss15",
         question: "A sterile storage room has: wire shelving with solid bottom shelves 9 inches off the floor, supplies 19 inches below sprinklers, temperature 73°F, humidity 62%, and no cardboard. How many parameters are out of compliance?",
-        options: ["Zero — all parameters are within range", "One — the humidity exceeds the 20-60% maximum", "Two — the humidity is out of range and the bottom shelf is too low", "One — the temperature is too high"],
+        options: ["Zero — all parameters including humidity are within the acceptable 20-65% range", "One — the humidity exceeds the 20-60% maximum", "Two — the humidity exceeds the maximum and the 19-inch sprinkler clearance does not meet the 24-inch requirement", "One — the temperature at 73°F exceeds the 72°F maximum for sterile storage"],
         correctIndex: 1,
         explanation: "The humidity at 62% exceeds the 20-60% acceptable range. Everything else is compliant: wire shelving with solid bottom (correct), 9 inches off floor (meets 8-10 inch minimum), 19 inches below sprinklers (exceeds 18-inch minimum), 73°F (within 68-75°F), no cardboard.",
         xpReward: 20,
@@ -834,7 +834,7 @@ export const levels: Level[] = [
       {
         id: "ss17",
         question: "A surveyor finds sterile supplies stored on wire shelving that is touching the back wall. The bottom shelf is solid and 10 inches off the floor. Temperature is 70°F and humidity is 45%. What is the finding?",
-        options: ["The bottom shelf at 10 inches is too high", "Items stored touching the wall — supplies must not touch walls in sterile storage", "The humidity is too low for sterile storage", "No findings — all criteria are met"],
+        options: ["The bottom shelf at 10 inches exceeds the 8-9 inch maximum height for sterile storage shelving", "Items stored touching the wall — supplies must not touch walls in sterile storage", "The humidity at 45% is below the minimum 50% threshold for sterile storage environments", "No findings — wire shelving with solid bottom shelf, proper height, and controlled climate meet all requirements"],
         correctIndex: 1,
         explanation: "Sterile supplies must not touch walls. Contact with walls can cause moisture wicking and physical damage to packaging. All other parameters are within acceptable ranges.",
         xpReward: 15,
@@ -843,7 +843,7 @@ export const levels: Level[] = [
       {
         id: "ss18",
         question: "A surveyor finds two issues in sterile storage: (1) a corrugated cardboard divider being used to separate different tray types on a shelf, and (2) peel packs stacked 2 high. Which is the finding?",
-        options: ["Both — corrugated cardboard is prohibited and peel packs can only be stacked 1 high", "Only the cardboard divider — corrugated cardboard in any form is prohibited in sterile storage; peel packs at 2 high are compliant", "Only the peel pack stacking — they should be stored on edge, not stacked flat", "Neither — both practices are acceptable"],
+        options: ["Both — corrugated cardboard is prohibited and peel packs must be stored on edge, not stacked flat", "Only the cardboard divider — corrugated cardboard in any form is prohibited in sterile storage; peel packs at 2 high are compliant", "Only the peel packs — stacking any peel packs creates compression that may compromise seal integrity", "Neither — plastic-coated corrugated dividers are acceptable in sterile storage, and 2-high stacking is within limits"],
         correctIndex: 1,
         explanation: "Corrugated cardboard in ANY form is prohibited in sterile storage — including as dividers. Peel packs stacked 2 high are within the maximum stacking allowance.",
         xpReward: 15,
@@ -852,7 +852,7 @@ export const levels: Level[] = [
       {
         id: "ss19",
         question: "A sterile pack was sterilized 13 months ago. The packaging is completely intact with no visible damage, moisture, or contamination. A tech inspects it, documents the re-inspection, and places it back on the shelf for use. Is this process correct?",
-        options: ["Yes — re-inspection and documentation of intact packaging satisfies the over-1-year requirement", "No — any item stored over 12 months must be automatically reprocessed, not just re-inspected", "No — items cannot be stored for more than 6 months under any circumstances", "Yes — but only if the facility has a written policy allowing extended storage"],
+        options: ["Yes — re-inspection and documentation of intact packaging satisfies the over-1-year requirement", "No — any item stored over 12 months must be automatically reprocessed, not just re-inspected", "No — event-related sterility only applies for the first 12 months; after that, time-based expiration takes effect", "Yes — but only if the item is returned to SPD for biological indicator testing before it can be released for use"],
         correctIndex: 0,
         explanation: "Under event-related sterility, items over 1 year must be re-inspected. If the packaging remains intact with no compromise events, re-inspection with documentation is sufficient. Automatic reprocessing is not required if the package passes inspection.",
         xpReward: 20,
@@ -861,7 +861,7 @@ export const levels: Level[] = [
       {
         id: "ss20",
         question: "The sterile storage room thermometer shows 74°F and 58% humidity. A tech says both are 'borderline but fine.' A surveyor asks what would happen if the temperature rose 2 degrees. What is the correct response?",
-        options: ["Nothing — 76°F is still within the acceptable range", "At 76°F, the room would exceed the 75°F maximum, requiring immediate corrective action and notification", "The humidity would need to be adjusted to compensate for the higher temperature", "A 2-degree rise is within normal fluctuation and doesn't require action"],
+        options: ["Nothing — the acceptable range extends to 78°F for sterile storage areas", "At 76°F, the room would exceed the 75°F maximum, requiring immediate corrective action and notification", "The humidity would need to be reduced below 50% to compensate for the temperature increase", "A 2-degree rise would be documented in the temperature log but would not require corrective action unless it persisted for over 4 hours"],
         correctIndex: 1,
         explanation: "The acceptable temperature range for sterile storage is 68-75°F. At 74°F, the room is within range. A 2-degree rise to 76°F would exceed the 75°F maximum, triggering a need for immediate corrective action. The tech should recognize how close they are to the limit.",
         xpReward: 20,
@@ -925,7 +925,7 @@ export const levels: Level[] = [
       {
         id: "i3",
         question: "What does surface etching on an instrument indicate, and how does it appear?",
-        options: ["Excessive use — appears as shiny, polished areas", "Chemical damage — appears as rough, dull, or frosted areas", "Normal wear — appears as slight darkening", "Sterilization residue — appears as white crystalline deposits"],
+        options: ["Sterilization wear — appears as smooth, thinned areas from repeated autoclave cycles", "Chemical damage — appears as rough, dull, or frosted areas", "Mineral deposit buildup — appears as white or chalky residue from hard water exposure", "Bioburden staining — appears as persistent discoloration from inadequate point-of-use cleaning"],
         correctIndex: 1,
         explanation: "Surface etching indicates chemical damage from improper cleaning solutions. It appears as rough, dull, or frosted areas where bacteria can hide in microscopic irregularities.",
         xpReward: 10,
@@ -1015,7 +1015,7 @@ export const levels: Level[] = [
       {
         id: "i13",
         question: "A hemostat's joints are stiff and difficult to operate. What is the most likely cause?",
-        options: ["The instrument was sterilized at too high a temperature", "Dried bioburden in the box lock area or inadequate lubrication", "The instrument was stored in the closed position too long", "Normal wear requiring routine replacement"],
+        options: ["The instrument was exposed to excessive autoclave temperatures, causing metal expansion in the hinge", "Dried bioburden in the box lock area or inadequate lubrication", "The instrument was stored in the closed position, causing the hinge mechanism to set in a fixed position", "Normal wear from repeated sterilization cycles requiring scheduled replacement per manufacturer lifecycle guidance"],
         correctIndex: 1,
         explanation: "Stiff joints are most commonly caused by dried-on bioburden accumulating in the box lock area or by inadequate lubrication during reprocessing. This indicates a cleaning or maintenance problem.",
         xpReward: 10,
@@ -1033,7 +1033,7 @@ export const levels: Level[] = [
       {
         id: "i15",
         question: "A surveyor examines three instruments from peel packs: Instrument A has a changed indicator and is open. Instrument B has a changed indicator but is closed. Instrument C has an unchanged indicator and is open. Which can be used?",
-        options: ["Only A — the only one meeting all criteria", "A and B — both indicators changed, confirming sterilization", "A and C — both are in the proper open position", "None — all must be returned for reprocessing"],
+        options: ["Only A — the only one meeting all criteria", "A and B — both have changed indicators confirming sterilant exposure, which is the primary sterility verification", "A and C — both are in the proper open position ensuring sterilant reached all surfaces during processing", "None — peel pack instruments from the same lot should all be treated as compromised if any instrument fails criteria"],
         correctIndex: 0,
         explanation: "Only Instrument A meets all requirements: chemical indicator changed (confirming sterilant exposure) AND instrument in the open position (ensuring sterilant reached all surfaces). B fails on position, C fails on indicator. Both B and C must be returned for reprocessing.",
         xpReward: 20,
@@ -1078,7 +1078,7 @@ export const levels: Level[] = [
       {
         id: "i20",
         question: "A tray from SPD contains both single-use (disposable) and reusable instruments processed together. The single-use items are marked for reuse. What is the most serious concern?",
-        options: ["Mixing single-use and reusable in the same sterilization load", "Single-use instruments being reprocessed for reuse in-house — they cannot be reprocessed in-house under any circumstances", "The sterilization parameters may differ for the two types", "Single-use instruments don't require sterilization"],
+        options: ["Mixing single-use and reusable instruments in the same sterilization load compromises cycle validation", "Single-use instruments being reprocessed for reuse in-house — they cannot be reprocessed in-house under any circumstances", "Single-use instruments require different sterilization parameters than reusable instruments, potentially compromising the cycle", "Single-use instruments processed through standard sterilization cycles may release toxic residues not intended for reprocessing"],
         correctIndex: 1,
         explanation: "The most serious issue is in-house reprocessing of single-use instruments for reuse. Only FDA-registered third-party reprocessors may reprocess single-use devices. This is a regulatory violation that puts patients at risk.",
         xpReward: 20,
@@ -1151,7 +1151,7 @@ export const levels: Level[] = [
       {
         id: "f4",
         question: "A surveyor counts 10 full O₂ cylinders and 4 partially full cylinders all stored together in a supply room. What are the compliance issues?",
-        options: ["Only the total count — 14 exceeds the 12-cylinder maximum", "Only the mixing — full and partially full cylinders must be segregated", "Both — the total exceeds 12 AND full must be segregated from partially full cylinders", "No issues — 14 cylinders in a supply room is acceptable"],
+        options: ["Only the total count — 14 cylinders exceeds the 12-cylinder maximum; segregation is recommended but not required", "Only the mixing — full and partially full cylinders must be segregated, but the total of 14 is within the 15-cylinder limit", "Both — the total exceeds 12 AND full must be segregated from partially full cylinders", "No issues — the 12-cylinder limit applies only to flammable gas cylinders, not medical oxygen"],
         correctIndex: 2,
         explanation: "Two violations: (1) Total of 14 exceeds the 12-cylinder maximum for non-hazardous rooms, and (2) full cylinders must be segregated from empty or partially full cylinders.",
         xpReward: 20,
@@ -1169,7 +1169,7 @@ export const levels: Level[] = [
       {
         id: "f6",
         question: "A surveyor finds equipment stored 2 feet in front of an unlocked electrical panel. How many compliance issues are present?",
-        options: ["One — the clearance is insufficient", "Two — insufficient clearance AND the panel must be locked", "None — 2 feet is adequate clearance", "One — the panel must be locked but clearance is fine"],
+        options: ["One — the clearance is insufficient at 2 feet; electrical panels require 3 feet but are not required to be locked if in a restricted area", "Two — insufficient clearance AND the panel must be locked", "None — 2 feet meets the minimum clearance requirement and electrical panels only need to be locked in patient care areas", "One — the panel must be locked, but 2 feet of clearance meets the standard for non-emergency electrical panels"],
         correctIndex: 1,
         explanation: "Two issues: (1) Electrical panels require 3 feet of clearance, not 2 feet, and (2) electrical panels must be kept locked.",
         xpReward: 15,
@@ -1232,7 +1232,7 @@ export const levels: Level[] = [
       {
         id: "f13",
         question: "What is the maximum number of oxygen cylinders allowed in a non-hazardous storage room?",
-        options: ["6", "10", "12", "20"],
+        options: ["8", "10", "12", "15"],
         correctIndex: 2,
         explanation: "A maximum of 12 oxygen cylinders may be stored in any non-hazardous room to limit fire and explosion risk.",
         xpReward: 10,
@@ -1259,7 +1259,7 @@ export const levels: Level[] = [
       {
         id: "f16",
         question: "A surveyor finds a fluid warmer at 109°F with dated fluids. One IV bag has a handwritten date of 3 days ago, but no expiration date is written — just the placement date. The manufacturer expiration is 6 months away. Is this compliant?",
-        options: ["Yes — the fluid is dated when placed and within manufacturer expiration", "No — both the placement date AND expiration must be written on fluids in warmers", "No — fluids in warmers expire after 24 hours regardless of manufacturer dates", "Yes — only the manufacturer expiration matters"],
+        options: ["Yes — the fluid is dated when placed and within manufacturer expiration", "No — both the placement date AND a calculated warmer-specific expiration must be written on fluids in warmers", "No — fluids in warmers must be removed and replaced every 24 hours regardless of manufacturer expiration dates", "Yes — only the manufacturer expiration date matters; the placement date is optional documentation"],
         correctIndex: 0,
         explanation: "Fluids in warmers must be dated when placed and not expired. The manufacturer expiration (6 months away) is valid, and the placement date (3 days ago) shows the fluid was dated when placed. Facilities may have additional policies about warmer duration, but the core requirement is met.",
         xpReward: 15,
@@ -1268,7 +1268,7 @@ export const levels: Level[] = [
       {
         id: "f17",
         question: "A surveyor finds a supply room with: 11 full O₂ cylinders properly secured on one rack, and 3 empty cylinders on a separate rack across the room. Is this compliant?",
-        options: ["Yes — full and empty are segregated, and the total is within limits", "No — the total of 14 cylinders exceeds the 12-cylinder maximum for non-hazardous rooms", "No — empty cylinders should not be stored in the same room as full ones", "Yes — the 12-cylinder limit applies only to full cylinders"],
+        options: ["Yes — full and empty are properly segregated on separate racks, and the 12-cylinder limit applies to each category independently", "No — the total of 14 cylinders exceeds the 12-cylinder maximum for non-hazardous rooms", "No — empty cylinders must be stored in a separate designated room, not just on a separate rack in the same room", "Yes — the 12-cylinder limit applies only to full cylinders; empty cylinders are not counted toward the maximum"],
         correctIndex: 1,
         explanation: "The 12-cylinder maximum applies to the total number of cylinders in a non-hazardous room, not just full ones. While full and empty are properly segregated (correct), the total of 14 exceeds the maximum of 12.",
         xpReward: 20,
@@ -1295,7 +1295,7 @@ export const levels: Level[] = [
       {
         id: "f20",
         question: "An OR has: a blanket warmer at 129°F (blankets only), a fluid warmer at 111°F (dated fluids), medication fridge at 40°F (daily logs), and a code cart on a red outlet. How many findings are present?",
-        options: ["Zero — all equipment is compliant", "One — the fluid warmer exceeds 110°F", "Two — the fluid warmer exceeds 110°F and the blanket warmer is too close to the limit", "One — the medication fridge is too warm"],
+        options: ["Zero — all equipment temperatures are within their respective acceptable ranges", "One — the fluid warmer exceeds 110°F", "Two — the fluid warmer exceeds 110°F and the blanket warmer at 129°F requires immediate adjustment to maintain a safety margin", "One — the medication refrigerator at 40°F is above the 38°F maximum for medication storage"],
         correctIndex: 1,
         explanation: "One finding: the fluid warmer at 111°F exceeds the 110°F maximum. The blanket warmer at 129°F is within the ≤130°F limit (close but compliant). The medication fridge at 40°F is within 36-46°F. The code cart is properly on a red outlet.",
         xpReward: 20,
@@ -1368,7 +1368,7 @@ export const levels: Level[] = [
       {
         id: "spd4",
         question: "A surveyor asks how often biological indicators (BIs) should be included in sterilization loads. What is the correct answer?",
-        options: ["Only in loads containing implants", "In the first and last load of each day", "In every sterilization load", "Weekly, placed in a test load"],
+        options: ["Only in loads containing implants or critical devices", "In the first load of each day and in any load containing implants", "In every sterilization load", "Daily, placed in a designated test pack run separately from patient loads"],
         correctIndex: 2,
         explanation: "Biological indicators must be included in EVERY sterilization load, placed at the most challenging location. This is not limited to implant loads or specific time intervals.",
         xpReward: 15,
@@ -1458,7 +1458,7 @@ export const levels: Level[] = [
       {
         id: "spd14",
         question: "A surveyor asks where biological indicators should be placed within a sterilization load. What is the correct placement?",
-        options: ["At the top of the load for easy retrieval", "At the most challenging location within the load", "In the center of the load", "Attached to the outside of the largest package"],
+        options: ["At the top of the load for easy retrieval and timely incubation", "At the most challenging location within the load", "In the geometric center of the load where sterilant concentration is most uniform", "Inside the largest and densest package in the load"],
         correctIndex: 1,
         explanation: "BIs must be placed at the most challenging location within the load — the area hardest for sterilant to penetrate. This validates that even the most difficult areas achieved sterilization.",
         xpReward: 10,
@@ -1693,7 +1693,7 @@ export const levels: Level[] = [
       {
         id: "or16",
         question: "Skin prep is applied generously to the surgical site and allowed to dry. Excess pooled prep solution is visible under the drape at the patient's side. What is the specific risk?",
-        options: ["Skin irritation from prolonged contact with prep solution", "Fire hazard — pooled alcohol-based prep under drapes near electrocautery creates a surgical fire risk", "The prep solution may compromise the adhesive on the drapes", "Excess prep invalidates the sterile field"],
+        options: ["Chemical burn risk — prolonged alcohol-based prep contact with skin under occlusive draping causes tissue damage", "Fire hazard — pooled alcohol-based prep under drapes near electrocautery creates a surgical fire risk", "The pooled prep will compromise the sterile drape adhesion and create a break in the sterile barrier", "Excess prep solution wicking through the drapes creates a wet strike-through that contaminates the sterile field"],
         correctIndex: 1,
         explanation: "Pooled alcohol-based skin prep under drapes is a serious fire hazard, especially when electrocautery is used. The prep must be allowed to fully dry and any pooling must be addressed before draping to prevent surgical fires.",
         xpReward: 20,
@@ -1711,7 +1711,7 @@ export const levels: Level[] = [
       {
         id: "or18",
         question: "A surgical case is delayed 3 hours after the sterile field was set up. No contamination events have occurred, the room has been secured, and a staff member has been present at all times. Should the field be considered sterile?",
-        options: ["No — sterile fields must be used within 1 hour of setup", "It depends on facility policy — there is no absolute time limit on a sterile field if it has been continuously monitored with no compromise events", "No — any field open more than 2 hours must be broken down", "Yes — sterile fields remain sterile for 24 hours if the room is sealed"],
+        options: ["No — sterile fields must be used within 2 hours of setup per AORN recommended practices", "It depends on facility policy — there is no absolute time limit on a sterile field if it has been continuously monitored with no compromise events", "No — AAMI standards require a sterile field to be broken down and re-established if the case is delayed beyond 1 hour", "Yes — as long as the room's positive-pressure ventilation is functioning, the sterile field is maintained indefinitely without monitoring"],
         correctIndex: 1,
         explanation: "There is no absolute time limit specified for a sterile field. The key factors are continuous monitoring, no contamination events, and room security. Facility policy should address prolonged open sterile fields, but if properly monitored with no compromise, the field can remain sterile.",
         xpReward: 20,
@@ -1829,7 +1829,7 @@ export const levels: Level[] = [
       {
         id: "up7",
         question: "During the Time-Out, which of the following is NOT a required verification element?",
-        options: ["Fire risk score", "The patient's insurance status", "Antibiotics confirmed", "Implants discussed"],
+        options: ["Fire risk assessment score", "The patient's insurance status", "Prophylactic antibiotic timing confirmed", "Implant availability and specifications discussed"],
         correctIndex: 1,
         explanation: "Insurance status is NOT a Time-Out element. Required elements include: patient identity, correct site, consent, antibiotics, implants, equipment, X-rays, fire risk score, and special needs.",
         xpReward: 10,
@@ -2010,7 +2010,7 @@ export const levels: Level[] = [
       {
         id: "pc3",
         question: "A nurse applies a non-pharmacologic pain intervention (ice pack). When should she reassess pain?",
-        options: ["30 minutes", "1 hour", "2 hours", "4 hours"],
+        options: ["1 hour", "2 hours", "3 hours", "4 hours"],
         correctIndex: 3,
         explanation: "Non-pharmacologic intervention reassessment is at 4 hours. This is longer than IV (1 hour) or oral (2 hours) because non-pharmacologic interventions may take longer to produce effects.",
         xpReward: 10,
@@ -2100,7 +2100,7 @@ export const levels: Level[] = [
       {
         id: "pc13",
         question: "How often must intake and output (I&O) be documented at minimum?",
-        options: ["Every 4 hours", "Every 8 hours", "Every 12 hours", "Once per 24-hour period"],
+        options: ["Every 4 hours", "Every 8 hours", "Every 12 hours", "Once per shift, documented at shift change"],
         correctIndex: 1,
         explanation: "Intake and output must be documented at a minimum of every 8 hours per documentation standards.",
         xpReward: 10,
@@ -2127,7 +2127,7 @@ export const levels: Level[] = [
       {
         id: "pc16",
         question: "A post-anesthesia evaluation documents: respiratory function, cardiovascular function, mental status, pain, nausea/vomiting, and hydration status. It was completed 40 hours after surgery. What is missing or incorrect?",
-        options: ["Nothing — all elements are present and within the 48-hour window", "The evaluation is missing temperature assessment — all 7 required elements must be documented", "The 40-hour timeframe is too late — it must be done within 24 hours", "The evaluation should have been done within 2 hours"],
+        options: ["Nothing — the six documented elements represent a complete post-anesthesia evaluation within the required timeframe", "The evaluation is missing temperature assessment — all 7 required elements must be documented", "The 40-hour timeframe exceeds the 24-hour maximum for post-anesthesia evaluations", "The evaluation must be completed within the PACU discharge timeframe, not 40 hours post-procedure"],
         correctIndex: 1,
         explanation: "The post-anesthesia evaluation requires 7 elements: respiratory function, cardiovascular function, mental status, TEMPERATURE, pain, nausea/vomiting, and hydration. Temperature is missing. The 40-hour timeframe is within the 48-hour requirement.",
         xpReward: 20,
@@ -2145,7 +2145,7 @@ export const levels: Level[] = [
       {
         id: "pc18",
         question: "An immediate post-op note includes: surgeon name, findings, procedures performed, specimens removed, and post-op diagnosis. It is signed and dated. What required element is missing?",
-        options: ["Assistant names", "Estimated blood loss (EBL)", "The time of authentication", "Both assistants and EBL and time"],
+        options: ["Assistant names only — all other required elements are present", "Estimated blood loss (EBL) only — assistants are optional on immediate post-op notes", "The time of authentication only — assistant names are included in the operative report separately", "Both assistants and EBL and time"],
         correctIndex: 3,
         explanation: "The immediate post-op note requires: surgeon name, assistants, findings, procedures, specimens AND disposition, EBL, post-op diagnosis, and authentication (signed, DATED, AND TIMED). Missing: assistant names, EBL, specimen disposition, and time of authentication.",
         xpReward: 20,
@@ -2272,7 +2272,7 @@ export const levels: Level[] = [
       {
         id: "eoc8",
         question: "A pill cutter has no visible medication residue and appears clean. When was the last time it should have been cleaned?",
-        options: ["At the beginning of the shift", "Between each use — pill cutters must be clean and free of residue between patients", "Once daily at the end of the day", "Weekly during deep cleaning"],
+        options: ["At the beginning of each shift and documented on the cleaning log", "Between each use — pill cutters must be clean and free of residue between patients", "Once daily during medication room cleaning per EVS protocol", "After every 5 uses or at the end of the shift, whichever comes first"],
         correctIndex: 1,
         explanation: "Pill cutters and crushers must be cleaned and free of medication residue between uses to prevent cross-contamination between different patients' medications.",
         xpReward: 10,
@@ -2380,7 +2380,7 @@ export const levels: Level[] = [
       {
         id: "eoc20",
         question: "A surveyor identifies the following in an ED: (1) EMTALA signage posted at the entrance, (2) a sharps container above the fill line, (3) an eyewash station with a box partially blocking access, (4) a fire extinguisher with 3-foot clearance, and (5) a locked EVS closet. How many findings are present?",
-        options: ["One — only the sharps container", "Two — the sharps container and the blocked eyewash", "Three — the sharps container, blocked eyewash, and the EVS closet should be open during shifts", "Two — the sharps container and missing OB EMTALA signage"],
+        options: ["One — only the sharps container above the fill line; the box near the eyewash does not fully block access", "Two — the sharps container and the blocked eyewash", "Three — the sharps container, blocked eyewash, and EMTALA signage is incomplete because it must also be posted in OB areas", "Two — the sharps container and the fire extinguisher, which requires clearance verification beyond the front 3 feet"],
         correctIndex: 1,
         explanation: "Two findings: (1) sharps container above the fill line must be replaced immediately, and (2) the eyewash station must be accessible and unobstructed. The EMTALA signage, fire extinguisher clearance, and locked EVS closet are all compliant.",
         xpReward: 20,

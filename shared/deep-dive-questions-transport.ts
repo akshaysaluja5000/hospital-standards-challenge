@@ -15,18 +15,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 0,
       baseExplanation: "This is correct procedure: enzymatic spray at point of use, closed container, soiled corridor transport.",
       baseXp: 15,
-      followUp: {
-        question: "The same scrub tech transported the container 15 minutes after the case ended. During those 15 minutes, the instruments sat open on the back table with no enzymatic spray. Does the eventual correct transport make up for the delay?",
-        options: [
-          "Yes — as long as enzymatic spray is applied before transport, timing doesn't matter",
-          "No — bioburden begins drying within minutes; delayed point-of-use treatment means harder decontamination and potential instrument damage from dried-on organic material",
-          "It depends on room temperature — cold ORs slow drying",
-          "15 minutes is within the acceptable window"
-        ],
-        correctIndex: 1,
-        explanation: "Point-of-use treatment must happen immediately after the case. Blood, tissue, and bone fragments begin drying on instruments within minutes, making later removal significantly harder and potentially damaging delicate instrument surfaces. There is no 'acceptable window' — sooner is always better.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "The same scrub tech transported the container 15 minutes after the case ended. During those 15 minutes, the instruments sat open on the back table with no enzymatic spray. Does the eventual correct transport make up for the delay?",
+          options: [
+            "Yes — as long as enzymatic spray is applied before transport, timing doesn't matter",
+            "No — bioburden begins drying within minutes; delayed point-of-use treatment means harder decontamination and potential instrument damage from dried-on organic material",
+            "It depends on room temperature — cold ORs slow drying",
+            "15 minutes is within the acceptable window"
+          ],
+          correctIndex: 1,
+          explanation: "Point-of-use treatment must happen immediately after the case. Blood, tissue, and bone fragments begin drying on instruments within minutes, making later removal significantly harder and potentially damaging delicate instrument surfaces. There is no 'acceptable window' — sooner is always better.",
+          expertXp: 25
+        },
+        {
+          question: "During a Joint Commission tracer, the surveyor reviews six months of SPD receiving logs and finds that 40% of trays from a particular service line arrive with dried-on bioburden despite the facility's point-of-use treatment policy. The OR manager states that the scrub techs 'know the policy.' What systemic failure does the surveyor identify?",
+          options: [
+            "The facility needs a stronger enzymatic spray product that works on dried bioburden",
+            "Knowledge of a policy is insufficient — the facility lacks a competency validation program, direct observation audits, and a feedback loop between SPD receiving documentation and OR accountability",
+            "The SPD receiving logs are overly strict in their documentation criteria",
+            "The 40% rate is within normal variance for a busy surgical service line"
+          ],
+          correctIndex: 1,
+          explanation: "A Joint Commission surveyor would identify a gap between policy and practice. Having a written policy and staff who 'know' it is insufficient. The facility must demonstrate competency validation (observed skill checks), ongoing compliance monitoring (direct observation audits), a closed-loop feedback system where SPD receiving data triggers OR corrective action, and accountability through quality metrics reported at the perioperative committee.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor deepens the tracer and discovers the facility has no standardized point-of-use treatment kit in the OR rooms — scrub techs must leave the sterile field to obtain enzymatic spray from a supply closet down the hall. The facility's corrective action plan proposes adding enzymatic spray to each OR room's standard stock. The surveyor asks what additional system redesign is needed. What is the best answer?",
+          options: [
+            "No additional redesign is needed — making the spray available in each room solves the root cause",
+            "The facility should also implement a standardized point-of-use treatment kit (spray, moistened towels, containment basin) stocked in every OR, integrate point-of-use treatment into the end-of-case checklist as a mandatory step, assign accountability to the circulator for verification, and add SPD receiving condition as a key performance indicator on the OR dashboard",
+            "The facility should switch to pre-treated instrument trays that don't require point-of-use spray",
+            "The facility should hire dedicated transport staff who apply enzymatic spray during pickup"
+          ],
+          correctIndex: 1,
+          explanation: "Simply making spray available doesn't change behavior or create accountability. A comprehensive system redesign includes standardized kits (reducing barriers), integration into existing workflows (end-of-case checklist), role-specific accountability (circulator verification), and visible performance metrics (dashboard KPI). This approach addresses availability, workflow integration, accountability, and measurement — the four pillars of sustainable process improvement.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr2",
@@ -35,18 +61,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Soiled instruments must never be transported through clean cores or patient care areas regardless of circumstances. Alternative soiled pathways must be established during construction.",
       baseXp: 15,
-      followUp: {
-        question: "The facility says they filed an ICRA (Infection Control Risk Assessment) for the construction project but it didn't address alternative soiled transport pathways. What does this reveal about their ICRA process?",
-        options: [
-          "The ICRA is fine — transport pathways are a facilities issue, not infection control",
-          "The ICRA is incomplete — it should have identified the disruption to soiled transport flow and established alternative pathways before construction began",
-          "ICRAs only cover patient areas, not back-of-house corridors",
-          "The ICRA team should have halted the construction project"
-        ],
-        correctIndex: 1,
-        explanation: "An ICRA must assess ALL infection control impacts of construction, including disruption to established traffic patterns for soiled and clean materials. Alternative pathways must be planned BEFORE construction begins. An ICRA that misses this is incomplete and represents a systemic gap in the facility's infection prevention planning.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "The facility says they filed an ICRA (Infection Control Risk Assessment) for the construction project but it didn't address alternative soiled transport pathways. What does this reveal about their ICRA process?",
+          options: [
+            "The ICRA is fine — transport pathways are a facilities issue, not infection control",
+            "The ICRA is incomplete — it should have identified the disruption to soiled transport flow and established alternative pathways before construction began",
+            "ICRAs only cover patient areas, not back-of-house corridors",
+            "The ICRA team should have halted the construction project"
+          ],
+          correctIndex: 1,
+          explanation: "An ICRA must assess ALL infection control impacts of construction, including disruption to established traffic patterns for soiled and clean materials. Alternative pathways must be planned BEFORE construction begins. An ICRA that misses this is incomplete and represents a systemic gap in the facility's infection prevention planning.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor reviews the facility's ICRA committee membership and finds it includes Facilities, Infection Prevention, and Safety — but no representative from SPD or Perioperative Services. The committee approved three construction projects in the past year that all disrupted instrument transport flow. What governance failure does this represent?",
+          options: [
+            "The committee membership is adequate — SPD is an operational department, not a planning department",
+            "The ICRA committee lacks representation from departments directly impacted by transport flow disruptions; multidisciplinary membership must include SPD, Perioperative Services, and any department whose workflow involves movement of materials through affected areas",
+            "The committee just needs better communication with SPD after decisions are made",
+            "ICRA committees are only required to include Infection Prevention and Facilities per Joint Commission standards"
+          ],
+          correctIndex: 1,
+          explanation: "ICRA committees must include multidisciplinary representation from all departments whose workflows may be impacted by construction. Three consecutive projects disrupting instrument transport flow demonstrates a systemic governance gap — the people who understand transport workflows were excluded from the planning process. Joint Commission expects ICRAs to reflect input from all affected stakeholders, not just Facilities and IP.",
+          expertXp: 30
+        },
+        {
+          question: "During a follow-up tracer six months later, the surveyor finds the facility has added SPD to the ICRA committee but discovers that the current construction project's alternative soiled transport route passes through a stairwell that is also used for patient evacuation and public access. The route was approved by the ICRA committee. What critical risk was missed?",
+          options: [
+            "Using a stairwell for soiled transport is acceptable as long as containers are sealed",
+            "The alternative route creates multiple risks: public/patient exposure to soiled transport, ADA accessibility issues for heavy carts on stairs, ergonomic injury risk to transport staff, and potential obstruction of an evacuation route — the ICRA must evaluate not just infection control but also life safety, ergonomics, and regulatory compliance across all domains",
+            "The stairwell route is acceptable if transport is limited to off-peak hours",
+            "The committee should have chosen an elevator route instead, which would resolve all concerns"
+          ],
+          correctIndex: 1,
+          explanation: "An ICRA must evaluate impacts across multiple domains — not just infection control. Using a stairwell for soiled transport creates life safety risks (evacuation route obstruction), ergonomic hazards (heavy carts on stairs), regulatory exposure (public corridors), and ADA compliance issues. A comprehensive ICRA evaluates infection prevention, life safety, occupational health, patient experience, and regulatory compliance. An elevator route alone doesn't solve public exposure concerns without time-of-day restrictions and signage.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr3",
@@ -55,18 +107,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Full PPE including face protection is required during manual cleaning of instruments due to splash and aerosol risk from contaminated water.",
       baseXp: 15,
-      followUp: {
-        question: "The tech argues she's cleaning under water level so there's no splash risk. Her supervisor agrees. A surveyor observes and disagrees. Who is correct and why?",
-        options: [
-          "The tech and supervisor — submerged cleaning eliminates splash",
-          "The surveyor — even submerged cleaning creates aerosols when instruments are lifted, brushes break the surface, and water streams can splash; PPE requirements are not based on individual risk assessment but on standard precautions",
-          "The surveyor — but only because the tech might forget and lift instruments above water",
-          "All three are partially correct — it depends on the instrument type"
-        ],
-        correctIndex: 1,
-        explanation: "The surveyor is correct. Standard precautions require full PPE during instrument decontamination regardless of technique. Even submerged cleaning produces aerosols and splash when instruments are moved, brushes agitate water, and items enter/exit the basin. PPE requirements are based on the activity classification, not individual judgment of splash likelihood.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "The tech argues she's cleaning under water level so there's no splash risk. Her supervisor agrees. A surveyor observes and disagrees. Who is correct and why?",
+          options: [
+            "The tech and supervisor — submerged cleaning eliminates splash",
+            "The surveyor — even submerged cleaning creates aerosols when instruments are lifted, brushes break the surface, and water streams can splash; PPE requirements are not based on individual risk assessment but on standard precautions",
+            "The surveyor — but only because the tech might forget and lift instruments above water",
+            "All three are partially correct — it depends on the instrument type"
+          ],
+          correctIndex: 1,
+          explanation: "The surveyor is correct. Standard precautions require full PPE during instrument decontamination regardless of technique. Even submerged cleaning produces aerosols and splash when instruments are moved, brushes agitate water, and items enter/exit the basin. PPE requirements are based on the activity classification, not individual judgment of splash likelihood.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor extends the tracer to review the facility's PPE compliance monitoring program for the decontamination area. The SPD manager shows a monthly self-audit checklist completed by the decontamination lead tech. The surveyor identifies a concern. What is the most significant issue?",
+          options: [
+            "Monthly audits are insufficient — daily audits are required by Joint Commission",
+            "Self-audits by the area lead lack objectivity — compliance monitoring should include unannounced direct observation audits by Infection Prevention or Quality staff independent of the department being evaluated",
+            "The checklist format is acceptable as long as it includes all PPE elements",
+            "The audit frequency is adequate but should be signed by the SPD manager"
+          ],
+          correctIndex: 1,
+          explanation: "Self-audits by departmental staff inherently lack objectivity and are subject to observer bias. Joint Commission expects compliance monitoring to include independent, unannounced direct observation by parties outside the department — typically Infection Prevention or Quality/Safety staff. This provides objective data on actual practice rather than self-reported compliance, which is consistently higher than observed compliance in published studies.",
+          expertXp: 30
+        },
+        {
+          question: "The facility implements independent PPE audits and discovers that compliance drops to 45% during the overnight shift when no supervisors are present. The overnight decontamination staff state they were never formally trained on PPE requirements — they learned by watching day-shift colleagues. The surveyor asks what regulatory standard this violates. What is the most comprehensive answer?",
+          options: [
+            "OSHA Bloodborne Pathogen Standard — employers must provide annual training on PPE use for all employees with occupational exposure, including documentation of training content, trainer qualifications, and individual attendance for every shift and every employee",
+            "Joint Commission HR standards — employees must demonstrate competency, but annual training is not specifically required",
+            "CMS Conditions of Participation — but only if a bloodborne pathogen exposure actually occurs",
+            "No specific regulatory standard is violated — PPE training is a best practice recommendation"
+          ],
+          correctIndex: 0,
+          explanation: "OSHA's Bloodborne Pathogen Standard (29 CFR 1910.1030) requires employers to provide training at the time of initial assignment and at least annually thereafter for ALL employees with occupational exposure — regardless of shift. Training must cover PPE selection, use, limitations, and proper donning/doffing. Documentation must include dates, content, trainer name, and attendee signatures. Failure to train overnight staff represents both an OSHA violation and a Joint Commission finding for inadequate orientation and competency assessment.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr4",
@@ -78,18 +156,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Instruments received in the locked/closed position represent a process deviation that should be documented and communicated back to the OR for corrective action.",
       baseXp: 15,
-      followUp: {
-        question: "This is the third time this week instruments from OR 4 have arrived with locked hemostats. The SPD manager has sent emails to the OR charge nurse each time. What systematic approach should replace individual notifications?",
-        options: [
-          "Send the emails to the OR director instead of the charge nurse",
-          "Implement a formal nonconformance tracking system, trend the data by OR room/team, present findings at the perioperative quality committee, and develop targeted re-education",
-          "Stop accepting instruments from OR 4 until they fix the problem",
-          "Add a checklist to the transport container"
-        ],
-        correctIndex: 1,
-        explanation: "Recurring process deviations require systematic quality improvement, not just repeated notifications. Formal nonconformance tracking allows trending by room, shift, and team. Presenting data at the perioperative quality committee creates accountability and enables targeted education. A checklist (option D) could be part of the solution but alone doesn't address the quality loop.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "This is the third time this week instruments from OR 4 have arrived with locked hemostats. The SPD manager has sent emails to the OR charge nurse each time. What systematic approach should replace individual notifications?",
+          options: [
+            "Send the emails to the OR director instead of the charge nurse",
+            "Implement a formal nonconformance tracking system, trend the data by OR room/team, present findings at the perioperative quality committee, and develop targeted re-education",
+            "Stop accepting instruments from OR 4 until they fix the problem",
+            "Add a checklist to the transport container"
+          ],
+          correctIndex: 1,
+          explanation: "Recurring process deviations require systematic quality improvement, not just repeated notifications. Formal nonconformance tracking allows trending by room, shift, and team. Presenting data at the perioperative quality committee creates accountability and enables targeted education. A checklist (option D) could be part of the solution but alone doesn't address the quality loop.",
+          expertXp: 30
+        },
+        {
+          question: "Six months after implementing the nonconformance tracking system, the perioperative quality committee reviews the data. Locked instruments have decreased overall by 70%, but OR 4 still accounts for 80% of remaining occurrences, all during evening shift turnover. The committee has provided re-education twice. What should the next intervention be?",
+          options: [
+            "Provide a third round of re-education with stronger language about accountability",
+            "Conduct a focused workflow analysis of OR 4's evening turnover process — observe the actual workflow to identify environmental or process barriers (staffing ratios, time pressure, tray configuration, lack of visual cues) that make proper instrument preparation difficult during high-pressure turnover",
+            "Reassign the evening shift staff from OR 4 to other rooms",
+            "Accept the improvement and set a lower compliance target for evening shifts"
+          ],
+          correctIndex: 1,
+          explanation: "When education fails to resolve a persistent issue concentrated in a specific location and shift, the problem is likely process-based, not knowledge-based. A focused workflow observation (gemba walk) can reveal system barriers: insufficient time between cases, inadequate staffing during turnover, poor tray layout that makes instrument inspection difficult, or competing priorities. Effective quality improvement addresses system barriers rather than repeating education.",
+          expertXp: 30
+        },
+        {
+          question: "The workflow analysis reveals that OR 4's evening scrub techs are handling simultaneous room turnovers and have an average of 4 minutes to break down instruments — half the time allocated to day shift. The OR director proposes staggering evening cases to allow adequate turnover time but the surgeon objects, stating it will reduce his case volume. The surveyor asks how this conflict should be resolved. What is the correct governance approach?",
+          options: [
+            "The surgeon's preference takes priority as the revenue-generating stakeholder",
+            "SPD should adapt by adding receiving inspection staff to catch locked instruments",
+            "The conflict must be escalated to the Medical Executive Committee or equivalent body where patient safety concerns (improper instrument processing) are weighed against operational preferences, with documented risk analysis and a decision that prioritizes safe reprocessing as a non-negotiable standard of care",
+            "Compromise by staggering every other case to partially accommodate both concerns"
+          ],
+          correctIndex: 2,
+          explanation: "When operational preferences conflict with patient safety standards, governance structures must adjudicate. The Medical Executive Committee (or equivalent) is the appropriate body to evaluate the risk of inadequate instrument processing against scheduling preferences. Joint Commission expects facilities to demonstrate that patient safety is prioritized over convenience or volume, with documented risk analysis supporting the decision. Instrument reprocessing quality is a non-negotiable element of safe surgical care.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr5",
@@ -101,18 +205,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Sharps must be segregated in puncture-resistant containers to prevent needlestick/sharps injuries to SPD staff during decontamination. Loose sharps in transport bins are a safety violation.",
       baseXp: 15,
-      followUp: {
-        question: "SPD reports 2 needlestick injuries in the past quarter from loose sharps in transport containers. The safety officer implements a new policy requiring OR teams to use sharps holders. After 1 month, compliance is 60%. What's the next step?",
-        options: [
-          "Terminate non-compliant staff",
-          "Accept 60% as a reasonable starting point and wait for improvement",
-          "Conduct a root cause analysis of the non-compliance, identify barriers (availability of holders, workflow integration, education gaps), address barriers, and re-measure in 30 days",
-          "Switch to a different sharps holder brand"
-        ],
-        correctIndex: 2,
-        explanation: "60% compliance on a safety-critical process requires immediate root cause analysis. Common barriers: sharps holders not readily available in every OR, workflow not integrated into end-of-case routine, lack of hands-on training. Address barriers, provide education, and re-measure. The goal is sustained high compliance, not punishment.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "SPD reports 2 needlestick injuries in the past quarter from loose sharps in transport containers. The safety officer implements a new policy requiring OR teams to use sharps holders. After 1 month, compliance is 60%. What's the next step?",
+          options: [
+            "Terminate non-compliant staff",
+            "Accept 60% as a reasonable starting point and wait for improvement",
+            "Conduct a root cause analysis of the non-compliance, identify barriers (availability of holders, workflow integration, education gaps), address barriers, and re-measure in 30 days",
+            "Switch to a different sharps holder brand"
+          ],
+          correctIndex: 2,
+          explanation: "60% compliance on a safety-critical process requires immediate root cause analysis. Common barriers: sharps holders not readily available in every OR, workflow not integrated into end-of-case routine, lack of hands-on training. Address barriers, provide education, and re-measure. The goal is sustained high compliance, not punishment.",
+          expertXp: 25
+        },
+        {
+          question: "After addressing barriers, compliance reaches 92%. However, a third needlestick occurs — this time from a suture needle hidden inside a folded surgical towel that was placed in the transport container. The existing sharps holder policy doesn't address sharps concealed in linens. What does this event reveal about the facility's sharps safety program?",
+          options: [
+            "The 92% compliance rate shows the program is effective — this is an isolated incident",
+            "The facility's sharps safety program focused narrowly on visible, segregated sharps but did not address the full scope of sharps injury risk, including a requirement to inspect linens and sponges before placing them in transport containers and a comprehensive end-of-case sharps accountability process",
+            "The towel should have been discarded in the linen hamper, which would have prevented the injury",
+            "This type of injury is unpreventable and should be accepted as an occupational hazard"
+          ],
+          correctIndex: 1,
+          explanation: "Effective sharps safety programs must address all mechanisms of injury, not just the most obvious ones. A comprehensive program includes sharps accountability counts (matching sharps dispensed to sharps collected), inspection of linens and sponges before disposal or transport, neutral passing zones during surgery, and engineering controls. A narrow focus on sharps holders alone leaves gaps in the safety system.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor reviews the facility's OSHA 300 log and discovers that only 1 of the 3 SPD needlestick injuries was recorded. The SPD manager states the other two employees 'declined to report' and were treated by Employee Health. The surveyor identifies multiple violations. What is the most comprehensive finding?",
+          options: [
+            "Employee Health should have recorded the injuries even without formal reports from the employees",
+            "The facility violated OSHA recordkeeping requirements (all work-related needlestick injuries must be recorded on the OSHA 300 log regardless of employee preference), failed to maintain an accurate Sharps Injury Log as required by the Needlestick Safety and Prevention Act, and demonstrated a culture that does not support non-punitive reporting — the three findings together indicate a systemic failure in occupational safety governance",
+            "The two unreported injuries don't need to be on the OSHA 300 log since they were treated by Employee Health and documented in medical records",
+            "Only the most recent injury needs to be recorded since the first two occurred before the new sharps policy was implemented"
+          ],
+          correctIndex: 1,
+          explanation: "OSHA requires ALL work-related needlestick/sharps injuries to be recorded on the OSHA 300 log regardless of employee preference to 'not report.' The Needlestick Safety and Prevention Act additionally requires a separate Sharps Injury Log with details about each incident. Employees declining to report suggests a culture that may discourage reporting — possibly fear of blame or retaliation. Together, these represent recordkeeping violations, regulatory non-compliance, and a culture-of-safety concern that Joint Commission would flag as requiring immediate corrective action.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr6",
@@ -121,18 +251,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Wire brushes can damage the internal lining of flexible endoscopic lumens, creating scratches where biofilm can form. Manufacturer IFUs specify the correct brush type and diameter for each instrument's lumen.",
       baseXp: 15,
-      followUp: {
-        question: "The tech switches to the correct brush but uses it for three consecutive instruments without cleaning or replacing the brush between uses. What risk does this introduce?",
-        options: [
-          "No risk — the brush is being used in a decontamination environment anyway",
-          "Cross-contamination between instruments — brushes must be cleaned or replaced between each use to prevent transferring bioburden from one instrument's lumen to another",
-          "The brush will wear out faster but there is no contamination risk",
-          "This is only a concern if the instruments are from different patients"
-        ],
-        correctIndex: 1,
-        explanation: "Using the same brush on multiple instruments without cleaning transfers bioburden between instruments, defeating the purpose of individual decontamination. Brushes must be cleaned or replaced between each instrument, and brushes themselves must be single-use or undergo decontamination and sterilization if reusable.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "The tech switches to the correct brush but uses it for three consecutive instruments without cleaning or replacing the brush between uses. What risk does this introduce?",
+          options: [
+            "No risk — the brush is being used in a decontamination environment anyway",
+            "Cross-contamination between instruments — brushes must be cleaned or replaced between each use to prevent transferring bioburden from one instrument's lumen to another",
+            "The brush will wear out faster but there is no contamination risk",
+            "This is only a concern if the instruments are from different patients"
+          ],
+          correctIndex: 1,
+          explanation: "Using the same brush on multiple instruments without cleaning transfers bioburden between instruments, defeating the purpose of individual decontamination. Brushes must be cleaned or replaced between each instrument, and brushes themselves must be single-use or undergo decontamination and sterilization if reusable.",
+          expertXp: 25
+        },
+        {
+          question: "A surveyor asks the SPD manager to demonstrate the facility's brush management program. The manager shows a drawer of assorted cleaning brushes of various sizes and brands, stating 'the techs know which brush to use for which scope.' The surveyor identifies a finding. What is the core deficiency?",
+          options: [
+            "The drawer should be organized by brush size for easier access",
+            "The facility lacks a brush-to-device matching system — there should be a documented cross-reference linking each endoscope model to its manufacturer-specified brush type and size, with brushes organized and labeled accordingly, and staff competency validated on proper brush selection",
+            "The brushes should be stored in a separate cabinet to prevent contamination",
+            "The brush inventory is adequate as long as the techs can demonstrate correct selection when asked"
+          ],
+          correctIndex: 1,
+          explanation: "Relying on individual tech knowledge for brush selection is a system vulnerability. A robust brush management program includes a documented cross-reference matrix (device model to brush specifications), organized and labeled brush storage, a process for verifying brush-to-device compatibility before use, and documented staff competency validation. This ensures correct brush selection regardless of which tech is working and survives staff turnover.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor then asks how the facility tracks brush condition and replacement. The manager states brushes are replaced 'when they look worn.' The surveyor reviews three endoscope reprocessing failures in the past year and finds that two involved lumens with residual bioburden. Brush condition was not evaluated as a contributing factor in either investigation. What systemic gap does this reveal?",
+          options: [
+            "Brush replacement by visual inspection is an acceptable industry practice",
+            "The facility lacks integration between reprocessing failure investigations and cleaning tool management — brush use-life should be defined per manufacturer guidelines (single-use or maximum number of uses), tracked with a usage log or color-coded dating system, included as a mandatory element in reprocessing failure root cause analyses, and subject to regular quality verification testing",
+            "The reprocessing failures were likely caused by washer malfunction, not brush condition",
+            "The facility should switch entirely to single-use brushes to eliminate the tracking requirement"
+          ],
+          correctIndex: 1,
+          explanation: "Brush degradation is a known contributor to reprocessing failures. Visual inspection alone cannot detect microscopic bristle damage that reduces cleaning efficacy. A comprehensive program includes manufacturer-defined use-life limits, tracking systems (usage logs, color-coded expiration), inclusion of brush condition in all reprocessing failure investigations, and periodic quality verification. Failure to connect reprocessing outcomes to cleaning tool condition represents a gap in the facility's quality investigation methodology.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr7",
@@ -141,18 +297,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Instrument decontamination sinks must be separate from hand washing sinks. Hand washing sinks must be readily accessible and dedicated to hand hygiene. Using a decontamination sink for hand washing creates a cross-contamination risk.",
       baseXp: 15,
-      followUp: {
-        question: "The facility installs a separate hand washing sink but places it inside the decontamination room, 3 feet from the instrument cleaning sinks. During manual cleaning, splash from instrument scrubbing can reach the hand washing sink. Is this arrangement adequate?",
-        options: [
-          "Yes — having a separate sink meets the requirement regardless of placement",
-          "No — the hand washing sink must be positioned to avoid splash contamination from decontamination activities, or a splash guard must be installed between them",
-          "Yes — splash only matters if it's visible to the eye",
-          "No — the hand washing sink must be outside the decontamination room entirely"
-        ],
-        correctIndex: 1,
-        explanation: "While separate sinks are required, placement matters. A hand washing sink within splash range of instrument decontamination activities can become contaminated, compromising hand hygiene. The sink should be relocated beyond splash range or a physical barrier installed between decontamination and hand hygiene areas.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "The facility installs a separate hand washing sink but places it inside the decontamination room, 3 feet from the instrument cleaning sinks. During manual cleaning, splash from instrument scrubbing can reach the hand washing sink. Is this arrangement adequate?",
+          options: [
+            "Yes — having a separate sink meets the requirement regardless of placement",
+            "No — the hand washing sink must be positioned to avoid splash contamination from decontamination activities, or a splash guard must be installed between them",
+            "Yes — splash only matters if it's visible to the eye",
+            "No — the hand washing sink must be outside the decontamination room entirely"
+          ],
+          correctIndex: 1,
+          explanation: "While separate sinks are required, placement matters. A hand washing sink within splash range of instrument decontamination activities can become contaminated, compromising hand hygiene. The sink should be relocated beyond splash range or a physical barrier installed between decontamination and hand hygiene areas.",
+          expertXp: 25
+        },
+        {
+          question: "The surveyor continues the decontamination area tracer and observes that the hand washing sink has no soap dispenser — only a bottle of antimicrobial hand soap sitting on the sink ledge, partially submerged in standing water from splash. The soap bottle exterior is visibly soiled. What infection prevention concern does this present?",
+          options: [
+            "No concern — the soap inside the bottle is antimicrobial and therefore self-sterilizing",
+            "Contaminated soap dispensers and bottles are a documented source of healthcare-associated infections — the soiled bottle exterior can harbor gram-negative organisms, standing water promotes bacterial growth, and open or refillable soap containers can become reservoirs for pathogens including Pseudomonas and Serratia species",
+            "The concern is cosmetic only — the soap's antimicrobial properties are not affected by external contamination",
+            "The bottle should be replaced weekly to prevent contamination buildup"
+          ],
+          correctIndex: 1,
+          explanation: "Contaminated soap dispensers are a well-documented source of HAIs. Gram-negative bacteria (particularly Pseudomonas and Serratia) can colonize soap bottle exteriors, standing water around dispensers, and refillable soap containers. The facility should use wall-mounted, sealed, disposable soap cartridge dispensers positioned above splash zones. Bulk refilling of soap dispensers is specifically warned against in CDC hand hygiene guidelines due to contamination risk.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor expands the tracer to review the facility's water management program as it relates to the decontamination area. The facility has a water management plan per ASHRAE 188 but it does not include the SPD decontamination sinks, rinse stations, or eyewash stations in its sampling and monitoring schedule. The Infection Preventionist states those areas 'use city water and don't need separate monitoring.' What is the surveyor's finding?",
+          options: [
+            "The Infection Preventionist is correct — municipal water systems are regulated by the EPA and don't require facility-level monitoring",
+            "The facility's water management program is incomplete — ASHRAE 188 and Joint Commission require that ALL water sources in patient care and instrument processing areas be included in the water management plan, including supplemental monitoring for Legionella and waterborne pathogens at points of use where aerosols are generated during instrument decontamination",
+            "Only the final rinse water for endoscope reprocessing requires monitoring, not general decontamination sinks",
+            "The water management plan only needs to cover potable water outlets in patient rooms and ice machines"
+          ],
+          correctIndex: 1,
+          explanation: "Joint Commission's water management requirements (aligned with ASHRAE 188 and CMS) mandate that facilities include ALL water systems in their water management program, including those in SPD. Decontamination sinks generate aerosols that can expose staff to waterborne pathogens. Eyewash stations with stagnant water are particularly high-risk. The program must include risk assessment of all water sources, routine monitoring, remediation protocols, and documentation. Excluding SPD from the water management plan represents a significant gap.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr8",
@@ -161,18 +343,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "A cycle that fails to reach required parameters means thermal disinfection was not achieved. The instruments must be held, the failure documented, and the washer investigated immediately — not after more loads are run through a potentially malfunctioning machine.",
       baseXp: 15,
-      followUp: {
-        question: "Investigation reveals the washer's heating element is degrading and inconsistently reaches target temperature. It passes 3 out of 4 test cycles. The maintenance team says it's 'mostly working' and replacement parts are on a 2-week backorder. What should the facility do?",
-        options: [
-          "Continue using the washer and manually verify temperature each cycle",
-          "Remove the washer from service until repaired; implement manual cleaning and thermal disinfection procedures as a validated backup; document the contingency plan and all manually processed loads",
-          "Use the washer for non-critical items only",
-          "Run every load twice to ensure the temperature is reached at least once"
-        ],
-        correctIndex: 1,
-        explanation: "An unreliable washer/disinfector must be removed from service. The facility must implement validated manual cleaning and disinfection procedures as a backup, document the contingency plan, track all loads processed manually, and expedite the repair. 'Mostly working' is not acceptable for medical device reprocessing equipment.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "Investigation reveals the washer's heating element is degrading and inconsistently reaches target temperature. It passes 3 out of 4 test cycles. The maintenance team says it's 'mostly working' and replacement parts are on a 2-week backorder. What should the facility do?",
+          options: [
+            "Continue using the washer and manually verify temperature each cycle",
+            "Remove the washer from service until repaired; implement manual cleaning and thermal disinfection procedures as a validated backup; document the contingency plan and all manually processed loads",
+            "Use the washer for non-critical items only",
+            "Run every load twice to ensure the temperature is reached at least once"
+          ],
+          correctIndex: 1,
+          explanation: "An unreliable washer/disinfector must be removed from service. The facility must implement validated manual cleaning and disinfection procedures as a backup, document the contingency plan, track all loads processed manually, and expedite the repair. 'Mostly working' is not acceptable for medical device reprocessing equipment.",
+          expertXp: 30
+        },
+        {
+          question: "During the two weeks the washer is down, the surveyor reviews the facility's contingency plan and finds that manual cleaning is being performed by two techs who were trained on automated processing but have never been competency-validated on manual cleaning and thermal disinfection procedures. What regulatory concern does this raise?",
+          options: [
+            "No concern — manual cleaning is a simpler process that any trained decontamination tech can perform",
+            "The techs need additional supervision but formal competency validation can wait until the washer is repaired",
+            "Staff performing manual reprocessing must have documented competency validation specific to manual cleaning techniques, thermal disinfection parameters, and the specific instruments being processed — performing reprocessing without validated competency puts patient safety at risk and violates Joint Commission HR and IC standards",
+            "The concern is only valid if the techs are processing critical devices; semi-critical devices can be manually processed without specific competency validation"
+          ],
+          correctIndex: 2,
+          explanation: "Joint Commission requires documented competency validation for all staff performing instrument reprocessing, specific to the methods they are using. Automated and manual reprocessing are fundamentally different skills. Manual cleaning requires knowledge of brush selection, cleaning verification, thermal disinfection time-temperature parameters, and technique. Processing instruments without validated competency on the specific method being used represents a patient safety risk and a regulatory violation regardless of device classification.",
+          expertXp: 30
+        },
+        {
+          question: "The washer is repaired and returned to service. The surveyor asks to see the facility's requalification protocol before resuming automated processing. The biomedical engineering tech shows the repair invoice and states 'the technician said it's working fine.' What is missing from the return-to-service process?",
+          options: [
+            "The repair invoice and technician verbal confirmation are sufficient for return to service",
+            "The facility needs to run one test cycle with a temperature verification strip before resuming normal operations",
+            "The facility must execute a documented return-to-service protocol that includes installation qualification (IQ) verifying the repair, operational qualification (OQ) with multiple test cycles confirming consistent parameter achievement across all cycle types, performance qualification (PQ) with commercial soil test devices confirming cleaning efficacy, review and approval by the designated reprocessing authority, and documented sign-off before any patient instruments are processed",
+            "The facility should contact the washer manufacturer for a letter confirming the repair was adequate"
+          ],
+          correctIndex: 2,
+          explanation: "Return to service after repair requires a formal requalification protocol, not just a repair technician's verbal assurance. IQ confirms the repair was properly completed, OQ verifies consistent parameter achievement across multiple cycles and all cycle types, and PQ confirms actual cleaning performance using commercial soil test devices. This protocol must be documented and approved by the facility's designated reprocessing authority before any patient instruments are processed. This mirrors the original installation qualification process.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr9",
@@ -181,18 +389,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Scalpel blades must be removed using a mechanical device (needle holder, blade remover, or forceps) — never with fingers, even gloved. This is a fundamental sharps safety practice to prevent needlestick/sharps injuries in SPD.",
       baseXp: 15,
-      followUp: {
-        question: "This is the fourth tray this month received with blades still attached. The SPD manager wants to address this with the OR. What data-driven approach should be used?",
-        options: [
-          "Send an angry email to the OR director listing every occurrence",
-          "Track the occurrences by OR room number, surgical team, time of day, and case type; present the trending data at the perioperative safety committee with a proposed PDCA improvement cycle and measurable compliance targets",
-          "Refuse to accept trays from the OR until blades are removed",
-          "Post a sign in the OR reminding staff to remove blades"
-        ],
-        correctIndex: 1,
-        explanation: "Effective quality improvement requires data collection (trending by variables), presentation to the appropriate committee, a structured improvement cycle (Plan-Do-Check-Act), and measurable targets. Single interventions like signs or emails rarely produce sustained behavior change. A collaborative, data-driven approach engages both departments.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "This is the fourth tray this month received with blades still attached. The SPD manager wants to address this with the OR. What data-driven approach should be used?",
+          options: [
+            "Send an angry email to the OR director listing every occurrence",
+            "Track the occurrences by OR room number, surgical team, time of day, and case type; present the trending data at the perioperative safety committee with a proposed PDCA improvement cycle and measurable compliance targets",
+            "Refuse to accept trays from the OR until blades are removed",
+            "Post a sign in the OR reminding staff to remove blades"
+          ],
+          correctIndex: 1,
+          explanation: "Effective quality improvement requires data collection (trending by variables), presentation to the appropriate committee, a structured improvement cycle (Plan-Do-Check-Act), and measurable targets. Single interventions like signs or emails rarely produce sustained behavior change. A collaborative, data-driven approach engages both departments.",
+          expertXp: 25
+        },
+        {
+          question: "The perioperative safety committee implements a PDCA cycle. During the 'Check' phase, compliance improves to 95% for blade removal — but the committee discovers a new issue: OR teams are now removing blades but disposing of them in the room's general sharps container, and the blades are not being counted as part of the surgical count. Two near-miss discrepancies in sharps counts have occurred. What does this unintended consequence reveal?",
+          options: [
+            "The blade removal initiative is successful — sharps counting is a separate issue",
+            "The improvement initiative created a process gap by addressing blade removal in isolation without considering its integration with the surgical count process — effective PDCA must evaluate downstream effects of process changes and modify related workflows simultaneously",
+            "Blades disposed of in the room sharps container don't need to be part of the surgical count",
+            "The near-misses are acceptable since the blades were successfully removed before transport"
+          ],
+          correctIndex: 1,
+          explanation: "Process improvements implemented in isolation can create unintended consequences in connected workflows. The blade removal initiative changed the disposal location without updating the surgical count procedure to account for the change. Effective PDCA requires mapping all connected processes before implementing changes, evaluating the impact on adjacent workflows, and modifying related procedures simultaneously. The near-miss sharps count discrepancies could have escalated to unnecessary patient X-rays or retained foreign body events.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor reviews the facility's complete sharps safety program and discovers that the Exposure Control Plan was last updated 3 years ago, the annual sharps device evaluation required by the Needlestick Safety and Prevention Act has not been conducted in 2 years, and frontline SPD staff were not included in the evaluation of safer sharps devices. What cumulative regulatory exposure does the facility face?",
+          options: [
+            "These are documentation issues that can be corrected with updated paperwork and backdated reviews",
+            "The facility is out of compliance with OSHA's Bloodborne Pathogen Standard (annual Exposure Control Plan review), the Needlestick Safety and Prevention Act (annual evaluation of safer sharps devices with frontline employee input), and potentially Joint Commission EC and IC standards — these combined deficiencies demonstrate a systemic failure in occupational safety program management that requires a comprehensive corrective action plan with defined timelines, responsible parties, and board-level reporting",
+            "Only the Exposure Control Plan update is required annually — the sharps device evaluation is optional",
+            "These requirements only apply to facilities with more than 50 employees"
+          ],
+          correctIndex: 1,
+          explanation: "The facility faces multiple overlapping regulatory violations. OSHA requires annual review and update of the Exposure Control Plan. The Needlestick Safety and Prevention Act requires annual evaluation of safer sharps devices with documented input from frontline employees who use them. Joint Commission standards require compliance with applicable laws and regulations. These combined deficiencies indicate not isolated documentation gaps but a systemic failure in occupational safety governance requiring comprehensive corrective action, leadership accountability, and potentially board notification.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr10",
@@ -201,18 +435,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Water temperature for manual cleaning should follow the enzymatic detergent manufacturer's IFU, typically between 80-110°F. Water that is too hot can coagulate proteins, making bioburden harder to remove. Water that is too cold reduces enzymatic effectiveness.",
       baseXp: 15,
-      followUp: {
-        question: "A new tech uses hot tap water (approximately 140°F) to clean instruments because she believes hotter water cleans better. The instruments appear visually clean after scrubbing. Has she effectively decontaminated the instruments?",
-        options: [
-          "Yes — the instruments look clean and hot water kills bacteria",
-          "No — hot water above 140°F coagulates blood proteins, baking them onto instrument surfaces; visually clean instruments may still have fixed protein residue that interferes with sterilization and creates a nidus for biofilm formation",
-          "Yes — but only if she also used enzymatic detergent",
-          "It depends on how long she scrubbed"
-        ],
-        correctIndex: 1,
-        explanation: "Water above approximately 140°F coagulates (denatures) blood proteins, essentially baking them onto instrument surfaces. These fixed proteins may not be visible but create microscopic residue that harbors microorganisms and can interfere with sterilization. Visual cleanliness does not equal decontamination. Proper water temperature per the detergent IFU is essential.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "A new tech uses hot tap water (approximately 140°F) to clean instruments because she believes hotter water cleans better. The instruments appear visually clean after scrubbing. Has she effectively decontaminated the instruments?",
+          options: [
+            "Yes — the instruments look clean and hot water kills bacteria",
+            "No — hot water above 140°F coagulates blood proteins, baking them onto instrument surfaces; visually clean instruments may still have fixed protein residue that interferes with sterilization and creates a nidus for biofilm formation",
+            "Yes — but only if she also used enzymatic detergent",
+            "It depends on how long she scrubbed"
+          ],
+          correctIndex: 1,
+          explanation: "Water above approximately 140°F coagulates (denatures) blood proteins, essentially baking them onto instrument surfaces. These fixed proteins may not be visible but create microscopic residue that harbors microorganisms and can interfere with sterilization. Visual cleanliness does not equal decontamination. Proper water temperature per the detergent IFU is essential.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor asks the SPD manager how water temperature at the decontamination sinks is monitored and controlled. The manager states that the building maintenance team sets the hot water heater to 120°F and 'that's close enough.' There is no thermometer at the sinks and no temperature verification log. What is the surveyor's concern?",
+          options: [
+            "Setting the hot water heater to 120°F is adequate since it's within the 80-110°F range after temperature loss through the pipes",
+            "Water temperature at the point of use can differ significantly from the hot water heater setting due to pipe length, mixing valve calibration, and seasonal ambient temperature variations — the facility must have a calibrated thermometer at each decontamination sink, verify and document water temperature at the beginning of each shift and when solutions are changed, and have a process to adjust temperature to meet the enzymatic detergent manufacturer's IFU specifications",
+            "Temperature monitoring is only required for automated washers, not manual sinks",
+            "As long as the water 'feels warm' to the tech, the temperature is acceptable"
+          ],
+          correctIndex: 1,
+          explanation: "Water temperature at the point of use is affected by many variables beyond the hot water heater setting. Pipe distance, mixing valve calibration, ambient temperature, and simultaneous demand from other areas all affect delivered temperature. Without point-of-use verification, the facility cannot demonstrate that enzymatic detergent IFU temperature requirements are met. Temperature verification must be documented and traceable to calibrated measuring devices.",
+          expertXp: 30
+        },
+        {
+          question: "Following the temperature monitoring finding, the surveyor asks about the facility's overall chemical management program for the decontamination area. The investigation reveals: enzymatic detergent is purchased from three different vendors based on lowest bid, staff do not consistently verify that the detergent they're using matches the IFU posted at the sink, and one vendor's product requires 90°F water while another requires 105°F. No adjustment is made when products change. What systemic failure does this represent?",
+          options: [
+            "Using multiple vendors is a good purchasing practice that reduces costs",
+            "The facility has a fragmented chemical management program — standardization on a single enzymatic detergent (or documented management of multiple products) is essential, with IFU-specific parameters posted for the product currently in use, staff training on each product's specific requirements, verification that water temperature and dilution match the current product's IFU, and a change management process that triggers workflow updates when products are substituted",
+            "As long as all three products are FDA-cleared enzymatic detergents, they can be used interchangeably",
+            "The purchasing department should be notified to maintain consistency, but the operational impact is minimal"
+          ],
+          correctIndex: 1,
+          explanation: "Using interchangeable enzymatic detergents with different IFU requirements without a change management process creates a high-risk situation where established parameters (temperature, dilution, contact time) may not match the product in use. This is a systemic failure spanning purchasing, education, and quality management. The facility must either standardize on a single product or implement a robust change management process that ensures every product substitution triggers updated IFUs, staff notification, parameter adjustment, and competency verification.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr11",
@@ -221,18 +481,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Powered instruments must be disassembled per manufacturer IFU before cleaning. Internal surfaces, chuck mechanisms, and blade attachment points harbor bioburden that cannot be reached when assembled. The decontamination tech must know how to properly disassemble each device.",
       baseXp: 15,
-      followUp: {
-        question: "The tech disassembles the power drill but realizes she has never seen this model before and cannot find the manufacturer IFU in the department's reference files. A colleague says 'just clean it like the other drills.' What is the correct action?",
-        options: [
-          "Follow the colleague's advice — most power drills clean the same way",
-          "Stop processing the instrument, obtain the manufacturer's IFU (contact the manufacturer, check their website, or contact the vendor rep), and do not proceed until the correct reprocessing instructions are available",
-          "Clean it to the best of her ability and sterilize it normally",
-          "Return it to the OR and tell them to clean it themselves"
-        ],
-        correctIndex: 1,
-        explanation: "Processing any instrument without the manufacturer's validated IFU is a compliance violation. Different models — even from the same manufacturer — may have different disassembly, cleaning, lubrication, and sterilization requirements. The instrument must be held until the correct IFU is obtained. 'Clean it like the others' is never an acceptable substitute for validated instructions.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "The tech disassembles the power drill but realizes she has never seen this model before and cannot find the manufacturer IFU in the department's reference files. A colleague says 'just clean it like the other drills.' What is the correct action?",
+          options: [
+            "Follow the colleague's advice — most power drills clean the same way",
+            "Stop processing the instrument, obtain the manufacturer's IFU (contact the manufacturer, check their website, or contact the vendor rep), and do not proceed until the correct reprocessing instructions are available",
+            "Clean it to the best of her ability and sterilize it normally",
+            "Return it to the OR and tell them to clean it themselves"
+          ],
+          correctIndex: 1,
+          explanation: "Processing any instrument without the manufacturer's validated IFU is a compliance violation. Different models — even from the same manufacturer — may have different disassembly, cleaning, lubrication, and sterilization requirements. The instrument must be held until the correct IFU is obtained. 'Clean it like the others' is never an acceptable substitute for validated instructions.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor asks the SPD manager to show the department's IFU management system. The manager opens a file cabinet containing hundreds of paper IFUs in folders organized alphabetically by manufacturer. Some are highlighted and annotated. The surveyor asks when the IFUs were last verified as current versions. The manager says 'we add new ones when we get new instruments, but we don't routinely verify existing ones.' What is the finding?",
+          options: [
+            "Paper-based IFU filing is acceptable as long as the documents are organized and accessible",
+            "The facility has no process for verifying that IFUs on file are the current manufacturer-issued versions — manufacturers periodically update reprocessing instructions, and using outdated IFUs means the facility may be following superseded procedures that are no longer validated; the facility needs a systematic IFU management program with periodic verification of current versions",
+            "IFU verification is the manufacturer's responsibility — they should notify facilities of updates",
+            "As long as the IFUs were current when originally filed, they remain valid"
+          ],
+          correctIndex: 1,
+          explanation: "Manufacturers regularly update reprocessing IFUs based on new evidence, FDA requirements, or design changes. Using outdated IFUs means the facility may be following procedures that are no longer validated by the manufacturer. A systematic IFU management program must include periodic verification of current versions (at least annually), a process for receiving and implementing manufacturer updates, and removal of superseded versions. Many facilities are transitioning to electronic IFU management systems that provide automatic update notifications.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor deepens the tracer and selects a specific powered instrument — a high-speed orthopedic drill system that was purchased 18 months ago. The current manufacturer IFU (updated 6 months ago) now requires a specific enzymatic detergent brand and an extended ultrasonic cleaning cycle that the facility's ultrasonic cleaner cannot achieve. The facility has been processing the drill using the original IFU parameters. What is the most critical implication?",
+          options: [
+            "The facility can continue using the original IFU parameters since the drill was purchased under those specifications",
+            "The facility should contact the manufacturer to request an exception to the updated IFU",
+            "Every drill system processed since the IFU update may not have been adequately reprocessed — the facility must immediately implement the updated IFU requirements (including procuring the specified detergent and evaluating ultrasonic cleaner capability), conduct a risk assessment of instruments processed under the outdated IFU, notify the infection preventionist, and potentially initiate a patient notification process if the risk assessment indicates possible reprocessing failures",
+            "The updated IFU is a recommendation, not a requirement — the original validated parameters remain acceptable"
+          ],
+          correctIndex: 2,
+          explanation: "When a manufacturer updates reprocessing IFUs, the previous instructions are no longer validated. Every instrument processed under outdated parameters represents a potential reprocessing failure. The facility must immediately adopt the current IFU, assess whether existing equipment can meet new requirements, conduct a risk assessment of previously processed instruments, involve Infection Prevention, and consider patient notification if the risk assessment warrants it. This scenario also highlights the critical need for the IFU verification program identified in the previous finding.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr12",
@@ -241,18 +527,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Even without visible spillage, a dropped container requires inspection of the drop site for any contamination, examination of the container for cracks or seal compromise, and documentation. The container can continue to SPD if integrity is confirmed, but the corridor area should be cleaned as a precaution.",
       baseXp: 15,
-      followUp: {
-        question: "Upon arrival at SPD, the decontamination tech opens the dropped container and finds that two delicate microsurgical instruments inside are visibly bent. The OR team says they were fine before transport. Who is responsible, and what should happen?",
-        options: [
-          "SPD is responsible since the damage happened during their transport",
-          "The OR is responsible since they loaded the container",
-          "Responsibility determination requires investigation, but the immediate actions are: document the damage with photos, remove damaged instruments from service, notify the OR and management, investigate root cause (improper loading, missing protective padding, container type), and implement corrective action to prevent recurrence",
-          "File an insurance claim and order new instruments"
-        ],
-        correctIndex: 2,
-        explanation: "Instrument damage investigation requires documentation, root cause analysis, and corrective action — not blame assignment. The investigation should examine loading technique (were instruments properly padded and secured?), container suitability, and transport procedures. Damaged instruments must be removed from service and evaluated for repair or replacement.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "Upon arrival at SPD, the decontamination tech opens the dropped container and finds that two delicate microsurgical instruments inside are visibly bent. The OR team says they were fine before transport. Who is responsible, and what should happen?",
+          options: [
+            "SPD is responsible since the damage happened during their transport",
+            "The OR is responsible since they loaded the container",
+            "Responsibility determination requires investigation, but the immediate actions are: document the damage with photos, remove damaged instruments from service, notify the OR and management, investigate root cause (improper loading, missing protective padding, container type), and implement corrective action to prevent recurrence",
+            "File an insurance claim and order new instruments"
+          ],
+          correctIndex: 2,
+          explanation: "Instrument damage investigation requires documentation, root cause analysis, and corrective action — not blame assignment. The investigation should examine loading technique (were instruments properly padded and secured?), container suitability, and transport procedures. Damaged instruments must be removed from service and evaluated for repair or replacement.",
+          expertXp: 25
+        },
+        {
+          question: "The root cause investigation reveals that microsurgical instruments were placed loose in a general-purpose rigid transport container with no instrument-specific protective inserts. The OR states they 'always transport micros this way' and have never had damage before. The surveyor asks about the facility's instrument transport packaging standards. What should exist but likely doesn't?",
+          options: [
+            "General-purpose containers are acceptable for all instrument types as long as the lid is secure",
+            "The facility should have instrument-category-specific transport packaging standards that define protective requirements based on instrument fragility, including dedicated microsurgical transport cases with silicone mats or instrument-specific inserts, validated by the instrument manufacturer's transport recommendations",
+            "The OR should wrap microsurgical instruments in towels for padding during transport",
+            "Microsurgical instruments should be hand-carried to SPD rather than placed in transport containers"
+          ],
+          correctIndex: 1,
+          explanation: "Instrument transport packaging should be risk-stratified based on instrument fragility and value. Microsurgical instruments require dedicated transport cases with instrument-specific protective inserts (silicone mats, pin mats, or custom holders) that prevent contact between instruments and with container surfaces. General-purpose containers are inappropriate for delicate instruments. The manufacturer's transport recommendations should inform the facility's packaging standards.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor asks the facility to quantify instrument damage and repair costs over the past 12 months. The SPD manager states that damaged instruments are sent for repair but there is no centralized tracking system — repairs are managed by individual service line coordinators, costs are buried in departmental supply budgets, and there is no correlation analysis between damage events and transport/handling practices. What strategic management gap does this reveal?",
+          options: [
+            "Instrument repair tracking is an accounting function, not a quality management function",
+            "Individual service line management of repairs is appropriate since each specialty knows its own instruments",
+            "The facility lacks an instrument lifecycle management program that integrates damage tracking, repair costs, root cause analysis, transport/handling practice correlation, and total cost of ownership data — this data is essential for justifying investments in protective transport packaging, staff education, and handling procedure improvements through demonstrated ROI",
+            "The facility should outsource instrument repair management to a third-party vendor"
+          ],
+          correctIndex: 2,
+          explanation: "Instrument damage, repair, and replacement represent significant costs that are often invisible when distributed across departmental budgets. A centralized instrument lifecycle management program connects damage events to handling and transport practices, quantifies the true cost of inadequate protection, and provides the ROI justification for protective packaging investments, transport procedure improvements, and staff education. Without this data, the facility cannot make informed decisions about instrument care investments or demonstrate the financial impact of handling practice deficiencies.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr13",
@@ -261,18 +573,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Rigid containers used for soiled transport become contaminated and must go through the full decontamination and inspection process. Gaskets and filters must be inspected for integrity, and the container must be clean and dry before being returned to service.",
       baseXp: 15,
-      followUp: {
-        question: "During inspection, a tech notices that the disposable filter on a rigid container has a small tear. She has no replacement filters in stock but has five cases waiting for containers. She considers using the container without a filter 'just this once.' What are the implications?",
-        options: [
-          "A single use without a filter is acceptable in an emergency",
-          "Using a container with a damaged or missing filter means the contents cannot be considered sterile after sterilization — the filter is an integral part of the sterile barrier system; the container must not be used until a proper filter is installed",
-          "She can tape over the tear as a temporary fix",
-          "The filter is only important during steam sterilization, not during transport"
-        ],
-        correctIndex: 1,
-        explanation: "The disposable filter in a rigid sterilization container is a critical component of the sterile barrier system. It allows steam penetration during sterilization while filtering out microorganisms during cooling and storage. A damaged or missing filter means the contents cannot achieve or maintain sterility. No workaround is acceptable — the container must have a proper filter.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "During inspection, a tech notices that the disposable filter on a rigid container has a small tear. She has no replacement filters in stock but has five cases waiting for containers. She considers using the container without a filter 'just this once.' What are the implications?",
+          options: [
+            "A single use without a filter is acceptable in an emergency",
+            "Using a container with a damaged or missing filter means the contents cannot be considered sterile after sterilization — the filter is an integral part of the sterile barrier system; the container must not be used until a proper filter is installed",
+            "She can tape over the tear as a temporary fix",
+            "The filter is only important during steam sterilization, not during transport"
+          ],
+          correctIndex: 1,
+          explanation: "The disposable filter in a rigid sterilization container is a critical component of the sterile barrier system. It allows steam penetration during sterilization while filtering out microorganisms during cooling and storage. A damaged or missing filter means the contents cannot achieve or maintain sterility. No workaround is acceptable — the container must have a proper filter.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor reviews the facility's container management program and finds that filter inventory has run out three times in the past six months, each time resulting in containers being held out of service for 1-2 days while emergency orders are placed. The SPD manager attributes this to 'unpredictable filter usage.' What does this pattern indicate about inventory management?",
+          options: [
+            "Filter usage is inherently unpredictable and stockouts are unavoidable",
+            "The facility lacks a par-level inventory system for critical consumables — filter usage can be calculated based on container cycle volume, usage rates should be tracked, minimum reorder points established with automatic reordering, and safety stock maintained for critical items that directly impact the sterile barrier system",
+            "The facility should switch to containers that don't require disposable filters",
+            "The purchasing department should be responsible for monitoring filter inventory, not SPD"
+          ],
+          correctIndex: 1,
+          explanation: "Filter usage is predictable based on container processing volume. Three stockouts in six months indicates a failure of basic supply chain management for a critical consumable. A par-level system with calculated reorder points, automatic reordering triggers, and safety stock for critical items is fundamental to ensuring uninterrupted sterile processing operations. Filter availability directly impacts patient care — no filter means no sterile container, which means delayed surgical cases.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor asks the facility to demonstrate their rigid container preventive maintenance program. The SPD manager shows a log where containers are 'inspected at each use' but there is no scheduled preventive maintenance, no container lifecycle tracking, no gasket replacement schedule, and no retirement criteria. Some containers have been in service for over 10 years. The manufacturer recommends gasket replacement every 500 cycles and container retirement after 10 years or 5,000 cycles. What is the comprehensive finding?",
+          options: [
+            "Visual inspection at each use is the manufacturer's primary recommendation and is sufficient",
+            "Containers are durable medical devices and don't require preventive maintenance beyond use-point inspection",
+            "The facility has no container lifecycle management program — each container should be uniquely identified, cycle-counted, maintained on a preventive maintenance schedule aligned with manufacturer recommendations (gasket replacement intervals, maximum service life), and retired per manufacturer criteria; containers exceeding recommended service life without documented maintenance represent an unquantified risk to the sterile barrier system",
+            "The manufacturer's recommendations are guidelines, not requirements — containers can be used as long as they pass visual inspection"
+          ],
+          correctIndex: 2,
+          explanation: "Rigid sterilization containers are reusable medical devices with defined service lives and maintenance requirements. Without unique identification, cycle counting, preventive maintenance schedules, and retirement criteria, the facility cannot demonstrate that containers reliably maintain the sterile barrier. Containers exceeding manufacturer-recommended service life without proper maintenance may have degraded gaskets, warped lids, or compromised locking mechanisms that are not detectable by visual inspection alone. This is a significant sterile processing quality concern.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr14",
@@ -281,18 +619,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 0,
       baseExplanation: "The decontamination area must maintain negative pressure relative to adjacent clean areas. This ensures that air flows FROM clean areas INTO the decontamination area, preventing aerosolized contaminants from migrating to clean assembly and sterile storage spaces.",
       baseXp: 15,
-      followUp: {
-        question: "The facility's SPD has a pass-through window between decontamination and the clean side for transferring instrument sets. A surveyor notices that when the window is opened, there is no perceptible airflow direction. What does this suggest?",
-        options: [
-          "The pass-through window is functioning correctly as a physical barrier",
-          "The negative pressure differential may be insufficient — when the window opens, air should visibly flow from clean to dirty side; lack of directional airflow suggests the HVAC system may not be maintaining adequate pressure differential, risking contamination of the clean side",
-          "Airflow through a small window is not detectable and this is normal",
-          "The window should never be opened — only the pass-through doors should be used"
-        ],
-        correctIndex: 1,
-        explanation: "When a barrier between the decontamination and clean areas is opened, the negative pressure differential should create perceptible airflow from clean to dirty. No detectable airflow suggests the pressure differential is inadequate, which means contaminated aerosols from decontamination could migrate to the clean side. HVAC evaluation and adjustment is needed.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "The facility's SPD has a pass-through window between decontamination and the clean side for transferring instrument sets. A surveyor notices that when the window is opened, there is no perceptible airflow direction. What does this suggest?",
+          options: [
+            "The pass-through window is functioning correctly as a physical barrier",
+            "The negative pressure differential may be insufficient — when the window opens, air should visibly flow from clean to dirty side; lack of directional airflow suggests the HVAC system may not be maintaining adequate pressure differential, risking contamination of the clean side",
+            "Airflow through a small window is not detectable and this is normal",
+            "The window should never be opened — only the pass-through doors should be used"
+          ],
+          correctIndex: 1,
+          explanation: "When a barrier between the decontamination and clean areas is opened, the negative pressure differential should create perceptible airflow from clean to dirty. No detectable airflow suggests the pressure differential is inadequate, which means contaminated aerosols from decontamination could migrate to the clean side. HVAC evaluation and adjustment is needed.",
+          expertXp: 30
+        },
+        {
+          question: "The HVAC team measures the pressure differential and confirms it is below the recommended range. They adjust the system and achieve the target differential. However, the surveyor asks to see the facility's ongoing environmental monitoring program for SPD. The facility has no routine pressure differential monitoring — they only check when a problem is reported. What is the expected standard?",
+          options: [
+            "Pressure differential monitoring is only required during initial HVAC commissioning and after repairs",
+            "The facility should have a documented environmental monitoring program that includes daily pressure differential verification (using permanently installed differential pressure monitors or daily manual readings), temperature and humidity monitoring, air exchange rate verification at defined intervals, and documented corrective action protocols when parameters fall outside specifications",
+            "Annual pressure differential testing during the facility's preventive maintenance program is sufficient",
+            "HVAC monitoring is the responsibility of the Facilities department and does not need to involve SPD"
+          ],
+          correctIndex: 1,
+          explanation: "SPD environmental conditions directly impact reprocessing quality and must be continuously monitored. AAMI ST79 and Joint Commission expect ongoing verification of pressure differentials, temperature, humidity, and air exchange rates. Many facilities install permanently mounted differential pressure monitors with visual or audible alarms. Relying on reactive monitoring (checking only when problems are reported) means the facility may operate with inadequate environmental controls for extended periods without knowing.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor expands the environmental tracer to the sterile storage area adjacent to the clean assembly room. Temperature is 78°F and humidity is 65%. The storage area has no environmental monitoring equipment. Sterile packages are stored on open shelving. The facility states they 'keep the thermostat at 72°F' and have never monitored humidity. What compound risk does this environment present to sterile package integrity?",
+          options: [
+            "Temperature and humidity in sterile storage are comfort parameters for staff and do not affect sterile package integrity",
+            "The temperature is slightly high but within acceptable range, and humidity monitoring is not required for sterile storage",
+            "Elevated temperature (above 75°F) and humidity (above 60%) accelerate sterile barrier degradation in wrapped packages, promote microbial growth on package surfaces, can cause condensation inside sealed containers, and compromise adhesive integrity on self-seal pouches — the facility must install calibrated temperature and humidity monitoring with defined action limits, implement corrective action protocols, and evaluate whether stored packages may have been compromised during periods of unmonitored elevated conditions",
+            "The facility should install a dehumidifier but temperature monitoring is not necessary"
+          ],
+          correctIndex: 2,
+          explanation: "Sterile storage environmental conditions directly affect sterile package shelf life and integrity. AAMI ST79 recommends temperature not exceed 75°F and humidity remain below 60% in sterile storage areas. Elevated conditions degrade wrapping materials, weaken heat seals, promote microbial growth, and can cause condensation inside rigid containers. Without monitoring, the facility cannot demonstrate that sterile packages have been stored under conditions that maintain sterility. A retrospective risk assessment of stored items may be warranted.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr15",
@@ -301,18 +665,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Sterilization does not replace cleaning. Residual bioburden on instruments shields microorganisms from the sterilant and can result in failed sterilization. The instrument must be returned for additional manual cleaning until visually clean under magnification.",
       baseXp: 15,
-      followUp: {
-        question: "This is the third consecutive load from the automated washer that has produced instruments with residual bioburden in box locks. Previous loads from last week were clean. What systematic issue should be investigated?",
-        options: [
-          "The tech's inspection standards are too strict",
-          "The washer's cleaning efficacy has likely degraded — investigate detergent concentration, spray arm function, water temperature, cycle parameters, loading technique, and perform manufacturer-recommended performance verification testing",
-          "Box locks always retain some bioburden and this is normal",
-          "The OR is sending dirtier instruments than usual"
-        ],
-        correctIndex: 1,
-        explanation: "A pattern of residual bioburden from the automated washer indicates a systematic equipment or process issue. Investigation should include: detergent concentration and expiration, spray arm rotation and nozzle blockage, water temperature verification, cycle parameter review, loading technique assessment, and performance verification testing per the washer manufacturer's guidelines.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "This is the third consecutive load from the automated washer that has produced instruments with residual bioburden in box locks. Previous loads from last week were clean. What systematic issue should be investigated?",
+          options: [
+            "The tech's inspection standards are too strict",
+            "The washer's cleaning efficacy has likely degraded — investigate detergent concentration, spray arm function, water temperature, cycle parameters, loading technique, and perform manufacturer-recommended performance verification testing",
+            "Box locks always retain some bioburden and this is normal",
+            "The OR is sending dirtier instruments than usual"
+          ],
+          correctIndex: 1,
+          explanation: "A pattern of residual bioburden from the automated washer indicates a systematic equipment or process issue. Investigation should include: detergent concentration and expiration, spray arm rotation and nozzle blockage, water temperature verification, cycle parameter review, loading technique assessment, and performance verification testing per the washer manufacturer's guidelines.",
+          expertXp: 30
+        },
+        {
+          question: "Investigation reveals the washer's spray arms are rotating properly, detergent is correctly concentrated, and cycle parameters are met — but the loading rack configuration was changed two weeks ago when a new instrument set was added to the department. The new set's tray is taller and blocks spray coverage to the lower rack. What quality management principle was violated?",
+          options: [
+            "The loading rack change is unrelated to cleaning efficacy",
+            "New instrument sets should be processed manually for the first month to verify cleaning",
+            "The facility failed to apply change management principles — any modification to an established process (including loading configurations) should trigger a validation step to confirm that the change does not adversely affect outcomes for existing processes; the new tray configuration should have been evaluated for spray coverage impact before routine use",
+            "The SPD tech loading the washer should have noticed the spray blockage"
+          ],
+          correctIndex: 2,
+          explanation: "Change management is a core quality principle. Adding a new instrument set changed the loading configuration, which altered spray dynamics inside the washer. Without a validation step to confirm that the modified loading pattern still achieves adequate cleaning for ALL items in the load, the facility introduced an uncontrolled variable. Effective change management requires prospective evaluation of any process modification, not retrospective investigation after failures occur.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor asks the facility to describe their overall cleaning verification program beyond visual inspection. The facility performs visual inspection only and does not use any commercial cleaning verification products (ATP testing, protein residual testing, or hemoglobin detection). The SPD manager states that 'visual inspection is the gold standard.' What is the surveyor's assessment?",
+          options: [
+            "The SPD manager is correct — visual inspection under magnification is the recognized standard for cleaning verification",
+            "Visual inspection is a necessary component but is insufficient as the sole cleaning verification method — AAMI ST79 and Joint Commission expect facilities to supplement visual inspection with objective, measurable cleaning verification methods (such as ATP bioluminescence, protein residual testing, or hemoglobin detection) applied on a routine schedule and after process changes, equipment repairs, or cleaning failures to provide quantitative data that visual inspection cannot deliver",
+            "Commercial cleaning verification products are optional and only required for flexible endoscopes",
+            "ATP testing is unreliable in decontamination environments and should not be used"
+          ],
+          correctIndex: 1,
+          explanation: "While visual inspection remains important, it cannot detect microscopic residual contamination. AAMI ST79 recommends supplementing visual inspection with objective cleaning verification methods. ATP bioluminescence, protein residual testing, and hemoglobin detection provide quantitative, reproducible data that supports quality monitoring, trending, and compliance documentation. These methods are particularly valuable for verifying cleaning of lumens, hinges, and other areas where visual inspection is limited. A comprehensive cleaning verification program combines visual and objective methods.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr16",
@@ -321,18 +711,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Enzymatic detergents are formulated to work at specific concentrations. Over-concentration wastes product, can leave residue on instruments that interferes with sterilization, and does not improve cleaning effectiveness. Under-concentration is equally problematic as it reduces efficacy.",
       baseXp: 15,
-      followUp: {
-        question: "The same tech has been making the solution by eye rather than using the measuring device provided. When asked, she says the experienced techs all do it that way. A quality check reveals solutions vary from 50% to 200% of recommended concentration. What corrective actions are needed?",
-        options: [
-          "No action — slight variations in concentration are expected",
-          "Standardize the process: retrain ALL staff on proper dilution measurement, post dilution instructions at every sink, implement automated dilution dispensers if possible, and add solution concentration verification to the quality monitoring program",
-          "Only retrain the new tech since she is the one making errors",
-          "Switch to pre-mixed detergent solutions to eliminate measuring"
-        ],
-        correctIndex: 1,
-        explanation: "A 50-200% concentration range represents a systemic process failure, not an individual training issue. Corrective action must address the process: standardized measurement tools, posted instructions, consideration of automated dispensers, staff competency re-evaluation for ALL staff (not just the new tech), and ongoing quality monitoring. If pre-mixed solutions are available and cost-effective, they can reduce variability.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "The same tech has been making the solution by eye rather than using the measuring device provided. When asked, she says the experienced techs all do it that way. A quality check reveals solutions vary from 50% to 200% of recommended concentration. What corrective actions are needed?",
+          options: [
+            "No action — slight variations in concentration are expected",
+            "Standardize the process: retrain ALL staff on proper dilution measurement, post dilution instructions at every sink, implement automated dilution dispensers if possible, and add solution concentration verification to the quality monitoring program",
+            "Only retrain the new tech since she is the one making errors",
+            "Switch to pre-mixed detergent solutions to eliminate measuring"
+          ],
+          correctIndex: 1,
+          explanation: "A 50-200% concentration range represents a systemic process failure, not an individual training issue. Corrective action must address the process: standardized measurement tools, posted instructions, consideration of automated dispensers, staff competency re-evaluation for ALL staff (not just the new tech), and ongoing quality monitoring. If pre-mixed solutions are available and cost-effective, they can reduce variability.",
+          expertXp: 25
+        },
+        {
+          question: "The facility implements automated dilution dispensers. Three months later, a surveyor tests the dispensed solution concentration during a tracer and finds it is 70% of the manufacturer's recommended concentration. The SPD manager states the dispensers were calibrated at installation and have not been checked since. What quality control process is missing?",
+          options: [
+            "Automated dispensers are factory-calibrated and do not require ongoing verification",
+            "The dispensers should be checked annually during the facility's preventive maintenance cycle",
+            "Automated dilution dispensers require periodic calibration verification per the dispenser manufacturer's recommendations, documented with calibration dates, measured concentrations, and corrective actions — the frequency should be determined by the manufacturer's IFU and the facility's quality data, and verification should also occur whenever detergent lots or products change",
+            "The 70% concentration is within acceptable tolerance for automated systems"
+          ],
+          correctIndex: 2,
+          explanation: "Automated dispensers provide consistency but are not maintenance-free. Pumps wear, tubing degrades, and concentrate viscosity varies between lots. Calibration verification must follow the dispenser manufacturer's recommended schedule, typically monthly or quarterly, with documentation of measured concentrations. Verification should also occur when detergent lots change, as viscosity differences between lots can affect dispensing accuracy. A 70% concentration represents a significant under-dilution that compromises cleaning efficacy.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor broadens the chemical management tracer and discovers that the facility's enzymatic detergent is stored in the decontamination room at ambient temperature (78°F) next to the ultrasonic cleaner, which generates heat. The detergent manufacturer's IFU states 'store between 59-77°F' and 'do not expose to temperatures above 80°F as enzymatic activity may be permanently reduced.' The facility has no temperature monitoring in the storage area. What is the compound risk?",
+          options: [
+            "A 1-degree exceedance above the storage range is clinically insignificant",
+            "The detergent should be moved to a cooler location but the current stock is likely still effective",
+            "The facility faces a compound risk: detergent stored above manufacturer specifications may have degraded enzymatic activity, meaning that even correctly diluted solutions may have reduced cleaning efficacy; every instrument cleaned with potentially degraded detergent may not have been adequately decontaminated — the facility must relocate the detergent to a compliant storage area, implement temperature monitoring, evaluate the current stock's efficacy (or replace it), and conduct a risk assessment of instruments processed with potentially degraded detergent",
+            "Enzymatic detergents are chemically stable and temperature storage requirements are overly conservative"
+          ],
+          correctIndex: 2,
+          explanation: "Enzymatic detergents contain biological enzymes (proteases, lipases, amylases) that are temperature-sensitive proteins. Storage above recommended temperatures can permanently denature these enzymes, reducing cleaning efficacy even when properly diluted. This creates a compound risk: degraded detergent + proper dilution = inadequate cleaning. The facility must address storage conditions, evaluate current stock, and assess risk to previously processed instruments. Temperature monitoring in chemical storage areas is an essential quality control measure.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr17",
@@ -341,18 +757,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Daily cavitation testing verifies that the ultrasonic cleaner produces adequate cavitation energy, but comprehensive quality monitoring also requires verification of degassing cycle completion, water temperature, cycle duration, and periodic cleaning efficacy testing using commercially available soil test devices.",
       baseXp: 15,
-      followUp: {
-        question: "The ultrasonic cleaner's cavitation test shows uneven foil erosion — one half of the foil is heavily eroded while the other half shows minimal effect. The cleaner still passes the manufacturer's minimum threshold overall. Should the unit remain in service?",
-        options: [
-          "Yes — it passes the minimum threshold",
-          "No — uneven cavitation means the transducers may be failing asymmetrically, creating dead zones where instruments won't be adequately cleaned; the unit needs service even though it meets minimum overall threshold",
-          "Yes — just rotate instruments halfway through the cycle",
-          "Run the test again to see if results are consistent"
-        ],
-        correctIndex: 1,
-        explanation: "Uneven cavitation indicates failing or malfunctioning transducers, creating zones within the tank where cleaning is inadequate. Instruments placed in dead zones won't receive proper ultrasonic cleaning. The unit should be serviced to restore uniform cavitation across the entire tank, even if the overall energy meets minimum thresholds.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "The ultrasonic cleaner's cavitation test shows uneven foil erosion — one half of the foil is heavily eroded while the other half shows minimal effect. The cleaner still passes the manufacturer's minimum threshold overall. Should the unit remain in service?",
+          options: [
+            "Yes — it passes the minimum threshold",
+            "No — uneven cavitation means the transducers may be failing asymmetrically, creating dead zones where instruments won't be adequately cleaned; the unit needs service even though it meets minimum overall threshold",
+            "Yes — just rotate instruments halfway through the cycle",
+            "Run the test again to see if results are consistent"
+          ],
+          correctIndex: 1,
+          explanation: "Uneven cavitation indicates failing or malfunctioning transducers, creating zones within the tank where cleaning is inadequate. Instruments placed in dead zones won't receive proper ultrasonic cleaning. The unit should be serviced to restore uniform cavitation across the entire tank, even if the overall energy meets minimum thresholds.",
+          expertXp: 30
+        },
+        {
+          question: "The ultrasonic cleaner is serviced and passes cavitation testing uniformly. The surveyor then asks how the facility validates that the ultrasonic cleaning cycle actually removes bioburden from instruments — not just that the machine produces cavitation energy. The staff cannot answer. What distinction is the surveyor making?",
+          options: [
+            "Cavitation testing and cleaning efficacy testing are the same thing",
+            "The surveyor is distinguishing between process verification (does the machine produce energy?) and outcome verification (does the process actually clean instruments?) — cleaning efficacy must be verified separately using commercially available soil test devices (such as TOSI tests) that confirm bioburden removal under actual operating conditions",
+            "Cleaning efficacy is verified by visual inspection after ultrasonic cleaning, not by separate testing",
+            "The machine manufacturer's validation at installation is sufficient to confirm cleaning efficacy indefinitely"
+          ],
+          correctIndex: 1,
+          explanation: "Cavitation testing only confirms that the ultrasonic cleaner produces adequate energy — it does not confirm that instruments are actually being cleaned. Cleaning efficacy testing uses standardized soil test devices (e.g., TOSI — Test Object Surgical Instruments) placed in the ultrasonic cleaner to verify that the combination of energy, detergent, temperature, and cycle time actually removes standardized test soil. This outcome-based testing should be performed regularly and after any equipment service or parameter changes.",
+          expertXp: 30
+        },
+        {
+          question: "The facility implements cleaning efficacy testing with TOSI devices. After one month of daily testing, results show that the ultrasonic cleaner passes TOSI tests when loaded at 50% capacity but fails when loaded at 80% or higher capacity. The SPD manager's initial response is to limit loading to 50% capacity. The surveyor asks what additional investigation is needed before accepting this as the permanent solution. What is the most thorough answer?",
+          options: [
+            "Limiting to 50% capacity is a reasonable and sufficient corrective action",
+            "The 50% capacity limit may be appropriate but requires validation — the facility should determine the actual maximum loading capacity that consistently passes efficacy testing across multiple load configurations, document this as the validated maximum load, update standard operating procedures, train staff on loading limits, implement a verification method to prevent overloading, and evaluate whether the reduced capacity creates throughput bottlenecks that could pressure staff to overload",
+            "The cleaner needs more powerful transducers to handle full-capacity loads",
+            "The TOSI test devices may be overly sensitive at higher loading densities"
+          ],
+          correctIndex: 1,
+          explanation: "Simply limiting capacity without thorough validation leaves questions unanswered. The facility must determine the actual validated maximum load through systematic testing at various capacities and configurations, document the validated loading parameters, update SOPs, train staff, implement controls to prevent overloading (such as loading guides or maximum instrument count limits), and critically evaluate whether reduced capacity creates operational pressure to overload. A capacity restriction that creates throughput bottlenecks may not be sustainable and could lead to policy workarounds under production pressure.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr18",
@@ -361,18 +803,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "PPE requirements in the decontamination area are based on the zone classification, not the specific task. As long as contaminated instruments are present and decontamination activities are ongoing, full PPE (including face protection) must be worn by all personnel in the area.",
       baseXp: 15,
-      followUp: {
-        question: "The SPD manager installs a wall-mounted phone outside the decontamination room so staff can step out to take calls. A surveyor notices that staff exit through the decontamination room door still wearing contaminated gloves to answer the phone, then re-enter. What is the concern?",
-        options: [
-          "No concern — they are just briefly stepping out",
-          "Contaminated gloves touching the phone, door handles, and surfaces outside decontamination spread bioburden to clean areas; proper doffing and donning protocols must be followed when exiting and re-entering the decontamination zone",
-          "The only concern is that they should use the speakerphone feature",
-          "Staff should not be allowed to take phone calls during shifts"
-        ],
-        correctIndex: 1,
-        explanation: "Exiting the decontamination zone with contaminated gloves transfers bioburden to door handles, phones, and other surfaces outside the controlled environment. Staff must follow proper doffing protocol (remove contaminated PPE) before exiting and don fresh PPE upon re-entering. This is a fundamental principle of contamination containment zones.",
-        expertXp: 25
-      }
+      followUps: [
+        {
+          question: "The SPD manager installs a wall-mounted phone outside the decontamination room so staff can step out to take calls. A surveyor notices that staff exit through the decontamination room door still wearing contaminated gloves to answer the phone, then re-enter. What is the concern?",
+          options: [
+            "No concern — they are just briefly stepping out",
+            "Contaminated gloves touching the phone, door handles, and surfaces outside decontamination spread bioburden to clean areas; proper doffing and donning protocols must be followed when exiting and re-entering the decontamination zone",
+            "The only concern is that they should use the speakerphone feature",
+            "Staff should not be allowed to take phone calls during shifts"
+          ],
+          correctIndex: 1,
+          explanation: "Exiting the decontamination zone with contaminated gloves transfers bioburden to door handles, phones, and other surfaces outside the controlled environment. Staff must follow proper doffing protocol (remove contaminated PPE) before exiting and don fresh PPE upon re-entering. This is a fundamental principle of contamination containment zones.",
+          expertXp: 25
+        },
+        {
+          question: "The surveyor asks to see the facility's written procedure for decontamination zone entry and exit, including PPE donning and doffing sequence. No written procedure exists — staff were 'shown how to do it during orientation.' The surveyor observes three staff members doff PPE in three different sequences, and one removes her gown before her gloves, potentially contaminating her scrubs. What finding does this support?",
+          options: [
+            "Minor variation in doffing sequence is acceptable as long as all PPE is removed",
+            "The facility lacks a standardized, written PPE donning and doffing procedure specific to the decontamination area, staff have not been competency-validated on the correct sequence, and the observed variation demonstrates that verbal-only training does not produce consistent practice — the facility must develop written procedures, post visual aids showing correct sequence, validate staff competency through observed demonstrations, and document ongoing compliance monitoring",
+            "PPE doffing sequence is a CDC recommendation for clinical areas but does not apply to SPD",
+            "The gown-before-gloves error is minor since the gown was contaminated on the outside only"
+          ],
+          correctIndex: 1,
+          explanation: "PPE doffing sequence matters because incorrect removal can transfer contamination to skin and clothing. CDC-recommended doffing sequence (gloves first, then gown, then face protection, then hand hygiene) minimizes self-contamination risk. Without a written procedure, visual aids, competency validation, and monitoring, each staff member develops their own habits — some of which introduce risk. This finding bridges IC standards (infection prevention practices) and HR standards (competency validation and ongoing education).",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor completes the decontamination zone PPE tracer by reviewing the facility's PPE-related injury and exposure data. In the past 12 months, there have been 4 splash exposures to the face during decontamination activities. Investigation reports for all 4 events state 'employee was not wearing face protection at time of exposure.' The corrective action for each event was 'employee counseled on PPE requirements.' The surveyor identifies a pattern of inadequate corrective action. What should the facility's response have included?",
+          options: [
+            "Individual counseling is the appropriate corrective action for PPE non-compliance",
+            "The employees should have been formally disciplined for violating PPE policy",
+            "Four identical exposures with identical root causes and identical corrective actions demonstrate that individual counseling is ineffective — the facility should have escalated to systemic interventions after the second event: implementing a just culture analysis to distinguish system failures from individual accountability, evaluating environmental and workflow barriers to PPE compliance, installing engineering controls (splash guards, enclosed washers), conducting peer observation programs, and reporting the pattern to leadership as evidence that the current approach is failing",
+            "The exposure events should be reported to OSHA but no additional corrective action beyond counseling is required"
+          ],
+          correctIndex: 2,
+          explanation: "Repeating the same ineffective corrective action for recurring identical events is a hallmark of a failed quality improvement process. After the second identical event, the facility should have recognized that individual counseling was insufficient and escalated to systemic interventions. A just culture framework helps distinguish between system failures (PPE not accessible, workflow barriers) and individual behavioral choices. Engineering controls (splash guards, enclosed washing systems) provide passive protection that doesn't rely on individual compliance. Reporting the pattern to leadership creates accountability for the effectiveness of corrective actions.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr19",
@@ -381,18 +849,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Processing different device types in the same decontamination area is possible but requires careful workflow design. Flexible endoscope reprocessing has specific requirements that must be met, and cross-contamination between device types must be prevented through physical separation, dedicated sinks/equipment, and staff training.",
       baseXp: 15,
-      followUp: {
-        question: "A surveyor discovers that the facility's flexible endoscope reprocessing area shares rinse water supply lines with the general instrument washer. The endoscope manufacturer IFU requires bacteria-free final rinse water. The general instrument washer does not have the same water quality requirement. Is the shared water supply acceptable?",
-        options: [
-          "Yes — all water in a healthcare facility meets safety standards",
-          "No — endoscope reprocessing may require specific water quality (filtered, treated, or sterile) for the final rinse that exceeds standard tap water quality; shared supply lines may not deliver the required water quality if the endoscope reprocessor's filtration is downstream of the shared line",
-          "Yes — the endoscope reprocessor has its own internal filter",
-          "It depends on the municipality's water quality report"
-        ],
-        correctIndex: 1,
-        explanation: "Flexible endoscope reprocessing often requires bacteria-free final rinse water per manufacturer IFUs. Water quality requirements for endoscope reprocessing typically exceed those for general instrument washing. The facility must verify that the water supply to endoscope reprocessing equipment meets manufacturer specifications, including filtration, bacterial testing, and documentation of water quality monitoring.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "A surveyor discovers that the facility's flexible endoscope reprocessing area shares rinse water supply lines with the general instrument washer. The endoscope manufacturer IFU requires bacteria-free final rinse water. The general instrument washer does not have the same water quality requirement. Is the shared water supply acceptable?",
+          options: [
+            "Yes — all water in a healthcare facility meets safety standards",
+            "No — endoscope reprocessing may require specific water quality (filtered, treated, or sterile) for the final rinse that exceeds standard tap water quality; shared supply lines may not deliver the required water quality if the endoscope reprocessor's filtration is downstream of the shared line",
+            "Yes — the endoscope reprocessor has its own internal filter",
+            "It depends on the municipality's water quality report"
+          ],
+          correctIndex: 1,
+          explanation: "Flexible endoscope reprocessing often requires bacteria-free final rinse water per manufacturer IFUs. Water quality requirements for endoscope reprocessing typically exceed those for general instrument washing. The facility must verify that the water supply to endoscope reprocessing equipment meets manufacturer specifications, including filtration, bacterial testing, and documentation of water quality monitoring.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor asks for documentation of water quality testing for the endoscope reprocessing final rinse water. The facility has bacterial culture results from 6 months ago showing acceptable water quality. Current testing is not available. The endoscope reprocessor manufacturer IFU requires monthly water quality testing. What is the finding?",
+          options: [
+            "Semi-annual testing is reasonable given the initial acceptable results",
+            "The facility is non-compliant with the endoscope reprocessor manufacturer's IFU for water quality monitoring — monthly testing is required and the 6-month gap means the facility cannot demonstrate that rinse water has consistently met bacteria-free requirements during this period; all endoscopes processed during the monitoring gap may have been exposed to rinse water of unknown quality",
+            "Water quality testing is a recommendation, not a requirement, from the manufacturer",
+            "The facility can resume monthly testing going forward without concern about the gap period"
+          ],
+          correctIndex: 1,
+          explanation: "Manufacturer IFU requirements for water quality testing frequency are not optional. A 6-month gap in monthly testing means the facility cannot demonstrate continuous water quality compliance. During this period, biofilm could have developed in water lines, filters could have degraded, or water quality could have changed without detection. The facility must resume testing immediately, evaluate the water system for biofilm, and conduct a risk assessment of endoscopes processed during the monitoring gap.",
+          expertXp: 30
+        },
+        {
+          question: "The surveyor's endoscope reprocessing tracer reveals one final concern: the facility's two automated endoscope reprocessors (AERs) are different brands with different cycle parameters, different channel connector configurations, and different approved compatible endoscope lists. Staff use whichever AER is available, and the facility has a single generic reprocessing procedure posted for both machines. The surveyor identifies this as a high-risk finding. Why?",
+          options: [
+            "Using two AER brands is acceptable as long as both are FDA-cleared for the endoscopes being processed",
+            "A single generic procedure is efficient and reduces confusion for staff",
+            "Each AER has manufacturer-specific operating parameters, connector configurations, and validated endoscope compatibility lists — using a generic procedure risks processing an endoscope in an AER that is not validated for that specific endoscope model, using incorrect connectors that fail to perfuse all channels, or applying cycle parameters that do not meet the endoscope manufacturer's reprocessing requirements; the facility must have AER-specific procedures, validated endoscope-to-AER compatibility matrices, and staff competency on each specific AER",
+            "The risk is limited to potential equipment damage and does not affect patient safety"
+          ],
+          correctIndex: 2,
+          explanation: "AER-endoscope compatibility is a critical patient safety issue. Different AERs have different channel connector configurations — using incorrect connectors can result in channels that are not perfused during reprocessing, leaving residual bioburden and creating infection risk. Cycle parameters (temperature, chemical concentration, exposure time) vary between AER brands and must match both the AER manufacturer's and the endoscope manufacturer's validated requirements. A generic procedure cannot adequately address model-specific requirements. This finding has direct patient safety implications and represents one of the highest-risk scenarios in endoscope reprocessing.",
+          expertXp: 35
+        }
+      ]
     },
     {
       id: "dd-tr20",
@@ -401,18 +895,44 @@ export const ddTransportLevel: DeepDiveLevel = {
       baseCorrectIndex: 1,
       baseExplanation: "Clean supply carts and soiled transport carts must be dedicated to their respective functions. Using a clean supply cart for soiled transport contaminates the cart, which will then contaminate clean supplies on its next use. Separate, dedicated transport equipment is required.",
       baseXp: 15,
-      followUp: {
-        question: "The facility has 4 soiled transport carts for 12 ORs. During peak turnover times, all carts are frequently in use, causing delays and leading to the workaround described above. The SPD manager requests 4 additional carts but administration says the budget doesn't allow it. How should this be escalated?",
-        options: [
-          "Accept the budget limitation and continue with workarounds",
-          "Frame the request as a patient safety and regulatory compliance issue: document instances of clean/soiled transport mixing, quantify the regulatory risk and potential infection prevention implications, present to the infection prevention committee and hospital leadership as a compliance gap requiring resolution",
-          "Have SPD staff come to the ORs to pick up instruments instead",
-          "Use bags instead of carts for soiled transport during peak times"
-        ],
-        correctIndex: 1,
-        explanation: "Equipment shortages that force workarounds compromising infection prevention must be escalated as safety and compliance issues, not budget requests. Documentation of workaround instances, regulatory citation risk, and potential patient safety implications creates a compelling case for leadership. Infection prevention committee involvement elevates the issue above departmental budget negotiations.",
-        expertXp: 30
-      }
+      followUps: [
+        {
+          question: "The facility has 4 soiled transport carts for 12 ORs. During peak turnover times, all carts are frequently in use, causing delays and leading to the workaround described above. The SPD manager requests 4 additional carts but administration says the budget doesn't allow it. How should this be escalated?",
+          options: [
+            "Accept the budget limitation and continue with workarounds",
+            "Frame the request as a patient safety and regulatory compliance issue: document instances of clean/soiled transport mixing, quantify the regulatory risk and potential infection prevention implications, present to the infection prevention committee and hospital leadership as a compliance gap requiring resolution",
+            "Have SPD staff come to the ORs to pick up instruments instead",
+            "Use bags instead of carts for soiled transport during peak times"
+          ],
+          correctIndex: 1,
+          explanation: "Equipment shortages that force workarounds compromising infection prevention must be escalated as safety and compliance issues, not budget requests. Documentation of workaround instances, regulatory citation risk, and potential patient safety implications creates a compelling case for leadership. Infection prevention committee involvement elevates the issue above departmental budget negotiations.",
+          expertXp: 30
+        },
+        {
+          question: "Administration approves 4 additional carts but requires that clean and soiled carts be 'visually identical to maintain a professional appearance in corridors.' The SPD manager is concerned. What specific risk does this create, and what is the evidence-based solution?",
+          options: [
+            "Visual appearance is a valid concern — carts can be identical as long as staff know which is which",
+            "Identical carts create a high risk of misidentification — clean and soiled transport carts must be clearly and permanently distinguished through color coding (e.g., red for soiled, green/blue for clean), prominent labeling visible from all angles, and physical design differences that prevent accidental misuse; evidence from human factors research demonstrates that relying on staff memory for equipment identification leads to errors, especially during high-volume, time-pressured situations like OR turnover",
+            "Adding a small label to each cart is sufficient differentiation",
+            "Clean and soiled carts should be stored in different locations, which eliminates the need for visual differentiation"
+          ],
+          correctIndex: 1,
+          explanation: "Human factors engineering principles require that safety-critical equipment be visually and physically distinct to prevent use errors. Color coding, prominent labeling, and ideally physical design differences (different cart styles, dedicated soiled cart features like sealed compartments) create multiple redundant identification cues. Small labels are insufficient — they can be obscured, removed, or overlooked in fast-paced environments. Separate storage reduces but does not eliminate misidentification risk, especially when carts are in transit.",
+          expertXp: 30
+        },
+        {
+          question: "Six months after implementing the expanded cart fleet with color coding, the surveyor returns and asks the facility to demonstrate their complete transport equipment management program. The facility can show the carts and color coding but cannot produce documentation for: cart cleaning and decontamination schedules, cleaning verification records, preventive maintenance logs, or a process for removing damaged carts from service. What systemic program element is the facility missing?",
+          options: [
+            "Transport carts are simple equipment that don't require a formal management program",
+            "The cleaning schedule is the only missing element — maintenance and damage tracking are not required for transport carts",
+            "The facility lacks a transport equipment management program — soiled transport carts are contaminated medical equipment that require scheduled decontamination between uses, documented cleaning verification, preventive maintenance (wheel function, structural integrity, latch mechanisms), defined damage criteria for removal from service, and a replacement cycle; clean supply carts similarly require documented cleaning schedules and integrity verification to ensure they do not become vectors for cross-contamination",
+            "Cart management should be delegated to the Environmental Services department since they manage other cleaning equipment"
+          ],
+          correctIndex: 2,
+          explanation: "Transport carts — both soiled and clean — are integral components of the infection prevention system. Soiled carts become heavily contaminated and require decontamination between uses. Clean carts must be maintained in a condition that prevents contamination of sterile and clean supplies. Both require preventive maintenance to ensure structural integrity and functional reliability. A transport equipment management program with documented schedules, verification records, maintenance logs, and replacement criteria is essential. This program should be owned by SPD with support from Facilities for maintenance, not delegated to Environmental Services.",
+          expertXp: 35
+        }
+      ]
     }
   ]
 };
