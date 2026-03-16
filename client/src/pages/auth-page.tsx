@@ -497,7 +497,7 @@ export default function AuthPage() {
               <span className="text-primary">game you'll love</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-10">
-              Swipe, answer, and level up your Joint Commission knowledge. Build streaks, earn XP, and become the compliance expert your team needs.
+              Answer, challenge yourself, and level up your Joint Commission knowledge. Build streaks, earn XP, and become the compliance expert your team needs.
             </p>
           </motion.div>
 
