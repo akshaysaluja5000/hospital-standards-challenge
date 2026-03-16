@@ -1013,5 +1013,152 @@ Give a friendly, plain-language explanation with a realistic bedside or departme
     }
   });
 
+  app.post("/api/ai-debrief", requireAuth, async (req: Request, res: Response) => {
+    const debriefSchema = z.object({
+      levelId: z.string().max(100),
+      levelTitle: z.string().max(200),
+      totalQuestions: z.number(),
+      correctAnswers: z.number(),
+      missedQuestions: z.array(z.object({
+        question: z.string().max(1000),
+        correctAnswer: z.string().max(500),
+      })).max(20),
+    });
+    const parsed = debriefSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request data." });
+    }
+
+    const userId = (req.user as User).id;
+    const now = Date.now();
+    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
+    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+      return res.status(429).json({ error: "Rate limit reached. Please try again later." });
+    }
+    userCalls.push(now);
+    aiTutorRateLimit.set(userId, userCalls);
+
+    try {
+      const { levelTitle, totalQuestions, correctAnswers, missedQuestions } = parsed.data;
+      const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+
+      const missedSummary = missedQuestions.length > 0
+        ? missedQuestions.map((q, i) => `${i + 1}. "${q.question}" — correct answer: "${q.correctAnswer}"`).join("\n")
+        : "No missed questions — perfect score!";
+
+      const message = await anthropic.messages.create({
+        model: "claude-haiku-4-5",
+        max_tokens: 8192,
+        messages: [
+          {
+            role: "user",
+            content: `You are a Joint Commission survey preparation coach for hospital unit leaders. A staff member just completed a 20-question compliance quiz on "${levelTitle}". Score: ${correctAnswers}/${totalQuestions} (${percentage}%).
+
+Missed questions:
+${missedSummary}
+
+Generate a short manager-facing micro-debrief with exactly this structure:
+1. "Performance Summary" — 2-3 bullet points: what the unit did well and where they struggled, based on the missed topics.
+2. "Suggested Huddle Topic" — 1 specific topic for the next huddle or in-service based on the weakest area.
+3. "Sample Huddle Questions" — 1-2 questions the manager can ask staff at huddle to reinforce the weak areas.
+
+Keep it concise, practical, and written for a charge nurse or unit manager — not for the individual staff member. Use plain language.`,
+          },
+        ],
+      });
+
+      const content = message.content[0];
+      if (!content || content.type !== "text" || !content.text) {
+        return res.status(502).json({ error: "Unable to generate debrief." });
+      }
+      res.json({ debrief: content.text });
+    } catch (error: any) {
+      console.error("AI Debrief error:", error);
+      res.status(502).json({ error: "AI Debrief is temporarily unavailable." });
+    }
+  });
+
+  app.post("/api/ai-handbook", requireAuth, async (req: Request, res: Response) => {
+    const handbookSchema = z.object({
+      query: z.string().min(3).max(500),
+    });
+    const parsed = handbookSchema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Please enter a question (at least 3 characters)." });
+    }
+
+    const userId = (req.user as User).id;
+    const now = Date.now();
+    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
+    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+      return res.status(429).json({ error: "Rate limit reached. Please try again later." });
+    }
+    userCalls.push(now);
+    aiTutorRateLimit.set(userId, userCalls);
+
+    try {
+      const { query } = parsed.data;
+
+      const { handbook } = await import("@shared/handbook");
+      const queryLower = query.toLowerCase();
+      const relevantSections: string[] = [];
+
+      for (const chapter of handbook) {
+        for (const section of chapter.sections) {
+          if (
+            section.heading.toLowerCase().includes(queryLower) ||
+            section.content.toLowerCase().includes(queryLower) ||
+            chapter.title.toLowerCase().includes(queryLower) ||
+            section.criticalValues?.some(cv => cv.label.toLowerCase().includes(queryLower) || cv.value.toLowerCase().includes(queryLower))
+          ) {
+            let sectionText = `[${chapter.title} > ${section.heading}]\n${section.content}`;
+            if (section.criticalValues) {
+              sectionText += "\nCritical Values: " + section.criticalValues.map(cv => `${cv.label}: ${cv.value}`).join("; ");
+            }
+            relevantSections.push(sectionText);
+          }
+        }
+        for (const qr of chapter.quickReference) {
+          if (qr.fact.toLowerCase().includes(queryLower) || qr.detail.toLowerCase().includes(queryLower)) {
+            relevantSections.push(`[${chapter.title} > Quick Reference]\n${qr.fact}: ${qr.detail}`);
+          }
+        }
+      }
+
+      const contextText = relevantSections.length > 0
+        ? relevantSections.slice(0, 8).join("\n\n---\n\n")
+        : "No directly matching sections found. Answer based on general Joint Commission compliance knowledge relevant to the question.";
+
+      const message = await anthropic.messages.create({
+        model: "claude-haiku-4-5",
+        max_tokens: 8192,
+        messages: [
+          {
+            role: "user",
+            content: `You are a compliance handbook assistant for hospital staff preparing for Joint Commission surveys. A staff member is asking about standards and compliance topics.
+
+Their question: "${query}"
+
+Here is relevant content from the compliance handbook:
+${contextText}
+
+Answer in 1 short paragraph using only the handbook content above. After your answer, add references in the format "See: [Chapter Title > Section Name]" pointing to the relevant handbook sections. If the handbook content doesn't directly address the question, say so and give a general answer based on Joint Commission standards knowledge, noting it's general guidance.
+
+Keep it concise and practical.`,
+          },
+        ],
+      });
+
+      const content = message.content[0];
+      if (!content || content.type !== "text" || !content.text) {
+        return res.status(502).json({ error: "Unable to generate answer." });
+      }
+      res.json({ answer: content.text });
+    } catch (error: any) {
+      console.error("AI Handbook error:", error);
+      res.status(502).json({ error: "AI Handbook search is temporarily unavailable." });
+    }
+  });
+
   return httpServer;
 }

@@ -78,7 +78,7 @@ export function AiTutorBox({ question, selectedIndex }: AiTutorBoxProps) {
                 {aiExplanation}
               </div>
               <p className="text-xs text-muted-foreground mt-3 italic" data-testid="text-ai-disclaimer">
-                AI‑generated explanation; not a replacement for official policies.
+                Check your organization's policies; this is a learning aid, not clinical guidance.
               </p>
             </div>
           </motion.div>

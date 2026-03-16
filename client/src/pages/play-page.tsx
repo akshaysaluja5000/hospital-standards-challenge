@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { SwipeCard } from "@/components/swipe-card";
 import { QuizCard } from "@/components/quiz-card";
+import { AiDebriefBox } from "@/components/ai-debrief-box";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import { levels } from "@shared/questions";
@@ -318,6 +319,22 @@ export default function PlayPage() {
                 Play again for a <span className="font-semibold text-foreground">fresh question order</span> each time!
               </p>
             </div>
+
+            <AiDebriefBox
+              levelId={level.id}
+              levelTitle={level.name}
+              totalQuestions={questions.length}
+              correctAnswers={gameState.correctAnswers}
+              missedQuestions={
+                gameState.answers
+                  .filter(a => !a.correct)
+                  .map(a => {
+                    const q = questions.find(q => q.id === a.questionId);
+                    return q ? { question: q.question, correctAnswer: q.options[q.correctIndex] } : null;
+                  })
+                  .filter(Boolean) as { question: string; correctAnswer: string }[]
+              }
+            />
 
             {submitMutation.isPending && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">

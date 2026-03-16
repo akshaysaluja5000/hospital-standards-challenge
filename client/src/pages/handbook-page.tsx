@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AiHandbookSearch } from "@/components/ai-handbook-search";
 import { handbook } from "@shared/handbook";
 import { levels } from "@shared/questions";
 import type { HandbookChapter, HandbookSection } from "@shared/schema";
@@ -241,6 +242,8 @@ export default function HandbookPage() {
             critical values, and real-world scenarios. Use this alongside the quizzes to build deep understanding.
           </p>
         </div>
+
+        <AiHandbookSearch />
 
         <div className="relative">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
