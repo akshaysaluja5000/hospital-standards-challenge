@@ -13,10 +13,12 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { User, DailyActivity } from "@shared/schema";
 import { deepDiveLevels } from "@shared/deep-dive-questions";
 
-const anthropic = new Anthropic({
-  apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL,
-});
+function getAnthropicClient() {
+  return new Anthropic({
+    apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY,
+    baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL,
+  });
+}
 
 function toCentralDate(d: Date | string): string {
   const date = typeof d === "string" ? new Date(d) : d;
@@ -984,7 +986,7 @@ export async function registerRoutes(
     try {
       const { question, userAnswer, correctAnswer, explanation } = parsed.data;
 
-      const message = await anthropic.messages.create({
+      const message = await getAnthropicClient().messages.create({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [
@@ -1008,7 +1010,7 @@ Give a friendly, plain-language explanation with a realistic bedside or departme
       }
       res.json({ aiExplanation: content.text });
     } catch (error: any) {
-      console.error("AI Tutor error:", error);
+      console.error("AI Tutor error:", error?.status, error?.message, error?.error?.type);
       res.status(502).json({ error: "AI Tutor is temporarily unavailable." });
     }
   });
@@ -1072,7 +1074,7 @@ Give a friendly, plain-language explanation with a realistic bedside or departme
         .map(l => l.levelName)
         .join(", ");
 
-      const message = await anthropic.messages.create({
+      const message = await getAnthropicClient().messages.create({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [
@@ -1117,7 +1119,7 @@ Write for a charge nurse, quality director, or CNO. Use plain language. Be speci
         usersWithProgress,
       });
     } catch (error: any) {
-      console.error("AI Insights error:", error);
+      console.error("AI Insights error:", error?.status, error?.message, error?.error?.type);
       res.status(502).json({ error: "AI Leadership Coach is temporarily unavailable." });
     }
   });
@@ -1155,7 +1157,7 @@ Write for a charge nurse, quality director, or CNO. Use plain language. Be speci
         ? missedQuestions.map((q, i) => `${i + 1}. "${q.question}" — correct answer: "${q.correctAnswer}"`).join("\n")
         : "No missed questions — perfect score!";
 
-      const message = await anthropic.messages.create({
+      const message = await getAnthropicClient().messages.create({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [
@@ -1182,7 +1184,7 @@ Keep it concise, practical, and written for a charge nurse or unit manager — n
       }
       res.json({ debrief: content.text });
     } catch (error: any) {
-      console.error("AI Debrief error:", error);
+      console.error("AI Debrief error:", error?.status, error?.message, error?.error?.type);
       res.status(502).json({ error: "AI Debrief is temporarily unavailable." });
     }
   });
@@ -1238,7 +1240,7 @@ Keep it concise, practical, and written for a charge nurse or unit manager — n
         ? relevantSections.slice(0, 8).join("\n\n---\n\n")
         : "No directly matching sections found. Answer based on general Joint Commission compliance knowledge relevant to the question.";
 
-      const message = await anthropic.messages.create({
+      const message = await getAnthropicClient().messages.create({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [
@@ -1264,7 +1266,7 @@ Keep it concise and practical.`,
       }
       res.json({ answer: content.text });
     } catch (error: any) {
-      console.error("AI Handbook error:", error);
+      console.error("AI Handbook error:", error?.status, error?.message, error?.error?.type);
       res.status(502).json({ error: "AI Handbook search is temporarily unavailable." });
     }
   });
