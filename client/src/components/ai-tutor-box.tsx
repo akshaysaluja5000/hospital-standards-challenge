@@ -96,7 +96,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
 
   return (
     <div className="mt-3">
-      {currentDepth === 0 && !loading && (
+      {currentDepth === 0 && !loading && !error && (
         <Button
           variant="outline"
           size="sm"
@@ -184,7 +184,22 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
       )}
 
       {error && (
-        <p className="text-sm text-destructive mt-2" data-testid="ai-tutor-error">{error}</p>
+        <div className="mt-2" data-testid="ai-tutor-error">
+          <p className="text-sm text-destructive mb-2">{error}</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setError(null);
+              handleAskTutor(currentDepth === 0 ? 1 : currentDepth + 1);
+            }}
+            className="gap-2 text-sm"
+            data-testid="button-retry-ai-tutor"
+          >
+            <Sparkles size={16} />
+            Try Again
+          </Button>
+        </div>
       )}
     </div>
   );

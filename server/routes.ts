@@ -14,10 +14,20 @@ import type { User, DailyActivity } from "@shared/schema";
 import { deepDiveLevels } from "@shared/deep-dive-questions";
 
 function getAnthropicClient() {
-  return new Anthropic({
-    apiKey: process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY,
-    baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL,
-  });
+  const apiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY;
+  const baseURL = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL;
+  if (!apiKey) {
+    throw new Error("Anthropic API key not configured. AI_INTEGRATIONS_ANTHROPIC_API_KEY and ANTHROPIC_API_KEY are both missing.");
+  }
+  const opts: ConstructorParameters<typeof Anthropic>[0] = {
+    apiKey,
+    maxRetries: 2,
+    timeout: 30000,
+  };
+  if (baseURL) {
+    opts.baseURL = baseURL;
+  }
+  return new Anthropic(opts);
 }
 
 function toCentralDate(d: Date | string): string {
@@ -1059,7 +1069,8 @@ Do not repeat any previously covered information. This is the expert masterclass
       const errType = error?.error?.type || error?.type || "";
       const errMsg = error?.message || "";
       const errStatus = error?.status || 500;
-      console.error("AI Tutor error:", errStatus, errMsg, errType, error?.error?.message);
+      const errInfo = { status: errStatus, message: errMsg, type: errType, detail: error?.error?.message, name: error?.name, code: error?.code };
+      console.log("[AI Tutor ERROR]", JSON.stringify(errInfo));
       if (errStatus === 401 || errType === "authentication_error") {
         res.status(502).json({ error: "AI service configuration error. Please contact your administrator." });
       } else if (errStatus === 429) {

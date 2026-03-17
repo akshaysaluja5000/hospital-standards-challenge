@@ -98,6 +98,9 @@ app.use((req, res, next) => {
     },
     () => {
       log(`serving on port ${port}`);
+      const aiBaseUrl = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL || 'not set';
+      const aiKeySet = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY ? 'set' : 'missing';
+      log(`AI config: baseURL=${aiBaseUrl}, apiKey=${aiKeySet}`);
     },
   );
 })();
