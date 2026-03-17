@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BrainCircuit, Loader2, TrendingUp } from "lucide-react";
+import { BrainCircuit, Loader2, TrendingUp, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -16,6 +16,45 @@ export function AiLeadershipCoach() {
   const [levelStats, setLevelStats] = useState<LevelStat[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const handleSpeak = useCallback((text: string) => {
+    if (!window.speechSynthesis) return;
+
+    if (isSpeaking) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 0.95;
+    utterance.pitch = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+    const preferred = voices.find(v => v.lang.startsWith("en") && v.name.includes("Google"))
+      || voices.find(v => v.lang.startsWith("en-US"))
+      || voices.find(v => v.lang.startsWith("en"));
+    if (preferred) utterance.voice = preferred;
+
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+
+    synthRef.current = utterance;
+    setIsSpeaking(true);
+    window.speechSynthesis.speak(utterance);
+  }, [isSpeaking]);
 
   const handleGenerate = async () => {
     setLoading(true);
@@ -94,9 +133,22 @@ export function AiLeadershipCoach() {
               )}
 
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-4" data-testid="ai-insights-response">
-                <div className="flex items-center gap-2 mb-3">
-                  <BrainCircuit size={16} className="text-primary" />
-                  <span className="text-sm font-bold text-primary">AI Leadership Insights</span>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <BrainCircuit size={16} className="text-primary" />
+                    <span className="text-sm font-bold text-primary">AI Leadership Insights</span>
+                  </div>
+                  {typeof window !== "undefined" && window.speechSynthesis && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleSpeak(insights)}
+                      className={`h-8 w-8 p-0 ${isSpeaking ? "text-primary" : "text-muted-foreground"}`}
+                      data-testid="button-speak-insights"
+                    >
+                      {isSpeaking ? <VolumeX size={16} /> : <Volume2 size={16} />}
+                    </Button>
+                  )}
                 </div>
                 <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">
                   {insights}
