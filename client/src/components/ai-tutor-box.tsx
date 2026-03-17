@@ -51,7 +51,12 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
       if (msg.includes("429")) {
         setError("You've reached the AI Tutor limit. Please try again later.");
       } else {
-        setError("AI Tutor is temporarily unavailable. Please try again.");
+        try {
+          const parsed = JSON.parse(msg.substring(msg.indexOf("{")));
+          setError(parsed.error || "AI Tutor is temporarily unavailable. Please try again.");
+        } catch {
+          setError("AI Tutor is temporarily unavailable. Please try again.");
+        }
       }
     } finally {
       setLoading(false);

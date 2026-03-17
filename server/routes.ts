@@ -1056,8 +1056,19 @@ Do not repeat any previously covered information. This is the expert masterclass
       }
       res.json({ aiExplanation: content.text });
     } catch (error: any) {
-      console.error("AI Tutor error:", error?.status, error?.message, error?.error?.type);
-      res.status(502).json({ error: "AI Tutor is temporarily unavailable." });
+      const errType = error?.error?.type || error?.type || "";
+      const errMsg = error?.message || "";
+      const errStatus = error?.status || 500;
+      console.error("AI Tutor error:", errStatus, errMsg, errType, error?.error?.message);
+      if (errStatus === 401 || errType === "authentication_error") {
+        res.status(502).json({ error: "AI service configuration error. Please contact your administrator." });
+      } else if (errStatus === 429) {
+        res.status(429).json({ error: "AI service is busy. Please try again in a moment." });
+      } else if (errStatus === 529 || errType === "overloaded_error") {
+        res.status(503).json({ error: "AI service is temporarily overloaded. Please try again in a moment." });
+      } else {
+        res.status(502).json({ error: "AI Tutor is temporarily unavailable. Please try again." });
+      }
     }
   });
 
