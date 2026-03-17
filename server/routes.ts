@@ -1044,54 +1044,37 @@ export async function registerRoutes(
       const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations } = parsed.data;
 
       const depthPrompts: Record<number, string> = {
-        1: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. A staff member just answered a compliance question.
-
-Keep it SHORT: 3-4 sentences max. Be concise and practical. Cover:
-- Why the correct answer matters day-to-day
-- One quick real-world example
-- A practical tip they can use right away
+        1: `Hospital compliance tutor. Staff answered a question wrong. Explain why the correct answer matters in 2 sentences. No headers, no bullet points, no markdown. Plain conversational text only.
 
 Question: ${question}
-Staff member answered: ${userAnswer}
+They answered: ${userAnswer}
 Correct answer: ${correctAnswer}
-Standard explanation: ${explanation}
+Why: ${explanation}
 
-Use plain, friendly language. Do not repeat the question or options.`,
+Reply in exactly 2 sentences. First sentence: why it matters practically. Second sentence: a quick tip. No formatting.`,
 
-        2: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. The staff member wants to go deeper.
+        2: `Hospital compliance tutor follow-up. Give ONE new insight the staff member should know, in 2-3 sentences. No headers, no bullets, no markdown. Plain text only.
 
-Previously covered:
-${(previousExplanations || []).join("\n---\n")}
+Already covered: ${(previousExplanations || []).join(" ")}
 
-Keep it SHORT: 4-5 sentences max. Cover NEW ground only:
-- How surveyors evaluate this during tracers
-- Common citations and how to avoid them
-- One related standard worth knowing
-
-Question context: ${question}
+Topic: ${question}
 Correct answer: ${correctAnswer}
 
-Do not repeat anything already covered. Be specific and concise.`,
+Focus on how surveyors check this or a common citation to avoid. Do not repeat anything already said. No formatting, just plain sentences.`,
 
-        3: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. Expert-level detail requested.
+        3: `Hospital compliance tutor — final expert tip. Give ONE actionable takeaway in 2 sentences. No headers, no bullets, no markdown. Plain text only.
 
-Previously covered:
-${(previousExplanations || []).join("\n---\n")}
+Already covered: ${(previousExplanations || []).join(" ")}
 
-Keep it SHORT: 4-5 sentences max. Cover NEW ground only:
-- Connection to patient safety outcomes
-- What a perfect survey score looks like for this topic
-- One actionable leadership tip
-
-Question context: ${question}
+Topic: ${question}
 Correct answer: ${correctAnswer}
 
-Do not repeat anything already covered. Be direct and actionable.`,
+Focus on what great hospitals do differently for this standard. No formatting, just plain sentences.`,
       };
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 512,
+        max_tokens: 200,
         messages: [
           {
             role: "user",
@@ -1183,34 +1166,16 @@ Do not repeat anything already covered. Be direct and actionable.`,
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 768,
+        max_tokens: 350,
         messages: [
           {
             role: "user",
-            content: `You are a Joint Commission survey preparation coach for hospital leadership (nurse managers, quality directors, CNO). Analyze the following unit-wide quiz performance data and generate actionable leadership insights.
+            content: `Unit readiness summary for hospital leadership. ${activeUsers} staff registered, ${usersWithProgress} have completed quizzes.
 
-Unit Overview:
-- Total registered staff: ${activeUsers}
-- Staff who have completed at least one level: ${usersWithProgress}
-- Quiz topics with results:
-${levelSummary || "No quiz data available yet."}
-${unplayedLevels ? `- Topics not yet attempted: ${unplayedLevels}` : ""}
+Results: ${levelSummary || "No data yet."}
+${unplayedLevels ? `Not yet attempted: ${unplayedLevels}` : ""}
 
-Generate a leadership coaching summary with this exact structure:
-
-**Unit Readiness Snapshot**
-2-3 bullets summarizing overall readiness posture (strengths and gaps).
-
-**Priority Focus Areas**
-2-3 specific topics/standards where staff scored lowest or haven't engaged, ranked by risk to survey readiness.
-
-**Recommended Actions**
-2-3 concrete steps: what to cover in next in-service, which topics to assign for focused practice, and any process gaps to address.
-
-**Engagement Insights**
-1-2 bullets about participation rates and suggestions to improve engagement.
-
-Write for a charge nurse, quality director, or CNO. Use plain language. Be specific about which topics need attention and why.`,
+Write a 5-6 sentence plain-text summary. Cover: overall readiness, the #1 priority topic to focus on, one concrete next step, and a note on participation. No headers, no bullets, no markdown — just plain sentences. Be specific about which topics need work.`,
           },
         ],
       });
@@ -1266,21 +1231,15 @@ Write for a charge nurse, quality director, or CNO. Use plain language. Be speci
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 768,
+        max_tokens: 300,
         messages: [
           {
             role: "user",
-            content: `You are a Joint Commission survey preparation coach for hospital unit leaders. A staff member just completed a 20-question compliance quiz on "${levelTitle}". Score: ${correctAnswers}/${totalQuestions} (${percentage}%).
+            content: `Quiz debrief for a unit manager. "${levelTitle}" — score: ${correctAnswers}/${totalQuestions} (${percentage}%).
 
-Missed questions:
-${missedSummary}
+Missed: ${missedSummary}
 
-Generate a short manager-facing micro-debrief with exactly this structure:
-1. "Performance Summary" — 2-3 bullet points: what the unit did well and where they struggled, based on the missed topics.
-2. "Suggested Huddle Topic" — 1 specific topic for the next huddle or in-service based on the weakest area.
-3. "Sample Huddle Questions" — 1-2 questions the manager can ask staff at huddle to reinforce the weak areas.
-
-Keep it concise, practical, and written for a charge nurse or unit manager — not for the individual staff member. Use plain language.`,
+Write a 4-5 sentence plain-text debrief for the manager. Include: what went well, the #1 weak area to focus on, and one huddle question to ask staff. No headers, no bullets, no markdown — just plain sentences.`,
           },
         ],
       });
@@ -1349,20 +1308,17 @@ Keep it concise, practical, and written for a charge nurse or unit manager — n
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 512,
+        max_tokens: 200,
         messages: [
           {
             role: "user",
-            content: `You are a compliance handbook assistant for hospital staff preparing for Joint Commission surveys. A staff member is asking about standards and compliance topics.
+            content: `Answer this hospital compliance question in 2-3 sentences. No headers, no bullets, no markdown. Plain text only.
 
-Their question: "${query}"
+Question: "${query}"
 
-Here is relevant content from the compliance handbook:
-${contextText}
+Reference material: ${contextText}
 
-Answer in 1 short paragraph using only the handbook content above. After your answer, add references in the format "See: [Chapter Title > Section Name]" pointing to the relevant handbook sections. If the handbook content doesn't directly address the question, say so and give a general answer based on Joint Commission standards knowledge, noting it's general guidance.
-
-Keep it concise and practical.`,
+After your answer, add one line: "See: [source]" with the relevant handbook section. If no match, say it's general guidance. Keep it short.`,
           },
         ],
       });
