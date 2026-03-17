@@ -1044,59 +1044,54 @@ export async function registerRoutes(
       const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations } = parsed.data;
 
       const depthPrompts: Record<number, string> = {
-        1: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. A staff member just answered a compliance question. Explain the correct answer in plain, conversational language a bedside nurse or SPD tech would understand.
+        1: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. A staff member just answered a compliance question.
 
-Your response must be exactly 7-8 sentences. Cover:
-- Why the correct answer matters in daily practice
-- A brief real-world scenario showing what could go wrong
-- The specific Joint Commission standard or principle behind this
-- A practical tip staff can use immediately
+Keep it SHORT: 3-4 sentences max. Be concise and practical. Cover:
+- Why the correct answer matters day-to-day
+- One quick real-world example
+- A practical tip they can use right away
 
 Question: ${question}
 Staff member answered: ${userAnswer}
 Correct answer: ${correctAnswer}
 Standard explanation: ${explanation}
 
-Give a friendly, plain-language explanation. Do not repeat the question or options verbatim.`,
+Use plain, friendly language. Do not repeat the question or options.`,
 
-        2: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. The staff member wants to go deeper on a compliance topic they just learned about.
+        2: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. The staff member wants to go deeper.
 
-Here's what was already covered:
+Previously covered:
 ${(previousExplanations || []).join("\n---\n")}
 
-Now go deeper. Your response must be exactly 7-8 sentences. Cover:
-- The regulatory history or rationale behind this standard
-- How Joint Commission surveyors specifically evaluate this during tracers
+Keep it SHORT: 4-5 sentences max. Cover NEW ground only:
+- How surveyors evaluate this during tracers
 - Common citations and how to avoid them
-- Cross-references to related standards that staff should also know
-- A more complex scenario showing how this standard interacts with other requirements
+- One related standard worth knowing
 
 Question context: ${question}
 Correct answer: ${correctAnswer}
 
-Do not repeat information already provided. Build on it with expert-level detail.`,
+Do not repeat anything already covered. Be specific and concise.`,
 
-        3: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. The staff member wants the deepest level of detail on this compliance topic.
+        3: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. Expert-level detail requested.
 
-Here's what was already covered:
+Previously covered:
 ${(previousExplanations || []).join("\n---\n")}
 
-Now provide the most advanced analysis. Your response must be exactly 7-8 sentences. Cover:
-- How this standard connects to patient safety outcomes and sentinel event data
-- Best practices from high-performing hospitals
-- Leadership and culture dimensions — how management can reinforce compliance
-- What a perfect score looks like during a real Joint Commission survey
-- Actionable steps for the staff member to champion this standard on their unit
+Keep it SHORT: 4-5 sentences max. Cover NEW ground only:
+- Connection to patient safety outcomes
+- What a perfect survey score looks like for this topic
+- One actionable leadership tip
 
 Question context: ${question}
 Correct answer: ${correctAnswer}
 
-Do not repeat any previously covered information. This is the expert masterclass level.`,
+Do not repeat anything already covered. Be direct and actionable.`,
       };
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 8192,
+        max_tokens: 512,
         messages: [
           {
             role: "user",
@@ -1188,7 +1183,7 @@ Do not repeat any previously covered information. This is the expert masterclass
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 8192,
+        max_tokens: 768,
         messages: [
           {
             role: "user",
@@ -1271,7 +1266,7 @@ Write for a charge nurse, quality director, or CNO. Use plain language. Be speci
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 8192,
+        max_tokens: 768,
         messages: [
           {
             role: "user",
@@ -1354,7 +1349,7 @@ Keep it concise, practical, and written for a charge nurse or unit manager — n
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 8192,
+        max_tokens: 512,
         messages: [
           {
             role: "user",
