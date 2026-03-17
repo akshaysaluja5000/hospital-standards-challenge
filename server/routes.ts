@@ -14,11 +14,8 @@ import type { User, DailyActivity } from "@shared/schema";
 import { deepDiveLevels } from "@shared/deep-dive-questions";
 
 function getAnthropicClient() {
-  const apiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY || "replit-ai-integration";
   const baseURL = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL;
-  if (!apiKey) {
-    throw new Error("Anthropic API key not configured. AI_INTEGRATIONS_ANTHROPIC_API_KEY and ANTHROPIC_API_KEY are both missing.");
-  }
   const opts: ConstructorParameters<typeof Anthropic>[0] = {
     apiKey,
     maxRetries: 3,
@@ -995,6 +992,11 @@ export async function registerRoutes(
   }
 
   app.get("/api/ai-health", requireAuth, async (req: Request, res: Response) => {
+    const envInfo = {
+      baseURL: process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL || "not set",
+      apiKeyLength: (process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || "").length,
+      fallbackKeyLength: (process.env.ANTHROPIC_API_KEY || "").length,
+    };
     try {
       const start = Date.now();
       const message = await callAnthropicWithRetry({
@@ -1004,10 +1006,10 @@ export async function registerRoutes(
       });
       const elapsed = Date.now() - start;
       const text = message.content[0]?.type === "text" ? message.content[0].text : "";
-      res.json({ status: "ok", elapsed, response: text, model: message.model });
+      res.json({ status: "ok", elapsed, response: text, model: message.model, env: envInfo });
     } catch (error: any) {
       console.error("[AI Health ERROR]", JSON.stringify({ message: error?.message, status: error?.status, code: error?.code, name: error?.name, cause: error?.cause?.message }));
-      res.status(500).json({ status: "error", message: error?.message, code: error?.code, name: error?.name });
+      res.status(500).json({ status: "error", message: error?.message, code: error?.code, name: error?.name, env: envInfo });
     }
   });
 
