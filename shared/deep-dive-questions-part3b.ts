@@ -87,10 +87,10 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "During an intraoperative time-out for an added procedure, the circulating nurse asks whether the original consent covers the new procedure. The surgeon states the consent includes 'and any additional procedures deemed necessary.' Is this sufficient per Joint Commission standards?",
           options: [
-          "Yes — blanket consent language covering additional procedures is standard and acceptable",
-          "No — the added procedure requires specific informed consent unless it constitutes a life-threatening",
-          "No — all add-on procedures require a new written consent signed by the patient regardless of circumstances",
-          "Yes — as long as the surgeon documents the medical necessity in the operative note afterward"
+          "Blanket consent language covering additional procedures is standard and acceptable",
+          "The added procedure requires specific informed consent unless it constitutes a life-threatening",
+          "All add-on procedures require a new written consent signed by the patient regardless of circumstances",
+          "As long as the surgeon documents the medical necessity in the operative note afterward"
         ],
         correctIndex: 1,
           explanation: "Joint Commission RI.01.03.01 requires informed consent for each specific procedure. Blanket consent language does not meet the standard for informed consent because the patient was not informed of the specific risks, benefits, and alternatives of the additional procedure. The exception is a true emergency where obtaining consent is impossible and delay would endanger the patient's life.",
@@ -138,10 +138,10 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "A hospital's policy allows a physician assistant (PA) to mark the surgical site under the surgeon's delegation. During a JC tracer, the surveyor discovers the PA marked the site but the surgeon never independently verified the mark before the time-out. Is the facility compliant?",
           options: [
-          "No — only the operating surgeon may mark the site under any circumstances",
-          "Yes — the PA is a licensed practitioner and delegation alone satisfies the requirement",
-          "Yes — verification of the mark happens during the time-out which is a separate step",
-          "No — when site marking is delegated"
+          "Only the operating surgeon may mark the site under any circumstances",
+          "The PA is a licensed practitioner and delegation alone satisfies the requirement",
+          "Verification of the mark happens during the time-out which is a separate step",
+          "When site marking is delegated"
         ],
         correctIndex: 3,
           explanation: "Joint Commission UP.01.02.01 allows delegation of site marking to a licensed individual per hospital policy, but the operating practitioner retains ultimate responsibility for verifying the mark's accuracy. The delegation policy must include a verification step by the surgeon. The time-out serves as an additional checkpoint but does not replace the surgeon's responsibility to verify the delegated mark.",
@@ -240,10 +240,10 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "A patient is scheduled for excision of a lesion on the right fourth finger. During pre-procedure verification, the surgeon marks the right hand but does not specifically identify the fourth finger. Is this compliant with Joint Commission standards?",
           options: [
-          "No — each finger on the hand must be individually marked to show which ones are NOT being operated on",
-          "Yes — marking the correct hand is sufficient for hand procedures",
-          "Yes — the specific finger will be identified during the time-out verbally",
-          "No — procedures involving multiple structures (fingers) require marking at or near the"
+          "Each finger on the hand must be individually marked to show which ones are NOT being operated on",
+          "Marking the correct hand is sufficient for hand procedures",
+          "The specific finger will be identified during the time-out verbally",
+          "Procedures involving multiple structures (fingers) require marking at or near the"
         ],
         correctIndex: 3,
           explanation: "Joint Commission UP.01.02.01 specifically addresses procedures involving multiple structures such as fingers and toes. The mark must be placed at or near the specific structure (the fourth finger) to prevent wrong-structure surgery. Marking only the hand creates ambiguity about which finger is the operative site.",
@@ -966,10 +966,10 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "A JC surveyor reviews the facility's site marking refusal policy and finds it states: 'If a patient refuses site marking, the surgeon will confirm laterality verbally during the time-out.' There is no documentation requirement, no alternative marking method, and no additional verification steps beyond the standard time-out. Is this policy adequate?",
           options: [
-          "Yes — as long as the time-out includes laterality verification, no additional steps are needed for refusal cases",
-          "Yes — verbal confirmation during the time-out is the standard practice and is sufficient",
-          "No — the policy should simply state that surgery cannot proceed if the patient refuses marking",
-          "No — the policy is insufficiently robust"
+          "As long as the time-out includes laterality verification, no additional steps are needed for refusal cases",
+          "Verbal confirmation during the time-out is the standard practice and is sufficient",
+          "The policy should simply state that surgery cannot proceed if the patient refuses marking",
+          "The policy is insufficiently robust"
         ],
         correctIndex: 3,
           explanation: "Joint Commission expects that alternative processes for patients who refuse marking provide verification that is at least equivalent in reliability to standard site marking. A policy that simply relies on verbal confirmation during the standard time-out does not add any safety barrier beyond what already exists — it effectively waives the marking requirement without substituting an alternative. The policy must include documentation of the refusal, specific alternative verification methods, communication to the entire team, and evidence that the alternative process has been validated to prevent wrong-site events.",

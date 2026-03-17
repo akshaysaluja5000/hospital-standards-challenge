@@ -24,9 +24,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "The EVS manager argues that their EPA-registered disinfectant maintains kill concentration even after one room. Lab testing confirms the chemical concentration is still above the minimum effective level. Does this change the requirement?",
           options: [
-          "Yes — but only if the rooms had the same type of procedure performed, since AORN Guideline 3.2.1 specifies that cross-contamination risk is classified by procedure category, and rooms within the same contamination classification tier share compatible bioburden profiles, meaning the solution retains effective cleaning capability across same-category procedures without requiring a full change between rooms",
-          "Yes — if the chemical is still at effective concentration, EPA registration protocol 6180-4 establishes that the antimicrobial activity of the solution is the primary determinant of cleaning efficacy, and lab-confirmed concentration above the minimum inhibitory level demonstrates the solution can achieve the required 3-log reduction regardless of prior room exposure",
-          "No — even though the chemical may still be at effective concentration, the solution carries organic matter and bioburden from the previous room which can be deposited in the next room; fresh solution is required for each room",
+          "But only if the rooms had the same type of procedure performed, since AORN Guideline 3.2.1 specifies that cross-contamination risk is classified by procedure category, and rooms within the same contamination classification tier share compatible bioburden profiles, meaning the solution retains effective cleaning capability across same-category procedures without requiring a full change between rooms",
+          "If the chemical is still at effective concentration, EPA registration protocol 6180-4 establishes that the antimicrobial activity of the solution is the primary determinant of cleaning efficacy, and lab-confirmed concentration above the minimum inhibitory level demonstrates the solution can achieve the required 3-log reduction regardless of prior room exposure",
+          "Even though the chemical may still be at effective concentration, the solution carries organic matter and bioburden from the previous room which can be deposited in the next room; fresh solution is required for each room",
           "It depends on the volume of the mop bucket and the dilution ratio — OSHA Technical Manual Section VI specifies that mop solution volumes above 3.5 gallons maintain adequate dilution capacity for up to three standard-sized rooms, and the key factor is whether the total organic load exceeds the solution's buffering capacity, which can be verified through chemical test strip validation at the point of use"
         ],
         correctIndex: 2,
@@ -107,10 +107,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env3",
         baseQuestion: "A surveyor finds that an OR has been terminally cleaned at the end of the day, but the anesthesia cart drawers were not opened and their interiors were not wiped. Is the terminal cleaning complete?",
         baseOptions: [
-        "Yes — terminal cleaning covers floors, walls, and exposed horizontal surfaces only; cart interiors are weekly tasks",
-        "No — but only anesthesia carts used during cases involving confirmed infectious patients require interior cleaning",
-        "No — terminal cleaning includes all surfaces in the room, including the interior of drawers, carts, and equipment",
-        "Yes — as long as the exterior surfaces of all carts and equipment in the room have been thoroughly disinfected"
+        "Terminal cleaning covers floors, walls, and exposed horizontal surfaces only; cart interiors are weekly tasks",
+        "But only anesthesia carts used during cases involving confirmed infectious patients require interior cleaning",
+        "Terminal cleaning includes all surfaces in the room, including the interior of drawers, carts, and equipment",
+        "As long as the exterior surfaces of all carts and equipment in the room have been thoroughly disinfected"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Terminal cleaning requires cleaning and disinfecting all surfaces in the room, including inside drawers, carts, and equipment. Anesthesia cart drawers are frequently touched during cases and can harbor pathogens.",
@@ -154,10 +154,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env4",
         baseQuestion: "A blood spill occurs on the floor of a patient room. A nurse covers it with paper towels and calls EVS. The EVS tech arrives 10 minutes later. Was the nurse's initial response appropriate?",
         baseOptions: [
-        "No — the nurse should have immediately cleaned it up herself using the blood spill kit",
-        "Yes — covering the spill and calling trained EVS personnel is the correct first response",
-        "No — she should have immediately applied disinfectant spray over the spill without covering it",
-        "Yes — but only if the EVS response time is documented under fifteen minutes per facility policy"
+        "The nurse should have immediately cleaned it up herself using the blood spill kit",
+        "Covering the spill and calling trained EVS personnel is the correct first response",
+        "She should have immediately applied disinfectant spray over the spill without covering it",
+        "But only if the EVS response time is documented under fifteen minutes per facility policy"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Blood spills must be cleaned up immediately by available trained staff, not simply covered and left for EVS. All clinical staff should be trained on blood spill cleanup procedures. Delays in cleanup increase exposure risk to patients, staff, and visitors.",
@@ -201,10 +201,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env5",
         baseQuestion: "A surveyor observes that high-touch surfaces in patient rooms (bed rails, call buttons, light switches, door handles) are cleaned once per day during the morning shift. Is this frequency adequate?",
         baseOptions: [
-        "No — high-touch surfaces require a minimum of three cleanings per day regardless of patient precaution status",
+        "High-touch surfaces require a minimum of three cleanings per day regardless of patient precaution status",
         "It depends — high-touch surfaces in patient rooms may require more frequent cleaning, especially for patients on contact precautions",
         "It depends — but only intensive care unit rooms require more than once-daily high-touch surface cleaning protocols",
-        "Yes — once-daily cleaning with an EPA-registered disinfectant meets CDC guidelines for standard patient care rooms"
+        "Once-daily cleaning with an EPA-registered disinfectant meets CDC guidelines for standard patient care rooms"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "High-touch surface cleaning frequency should be risk-based. Standard patient rooms may require at minimum twice-daily cleaning of high-touch surfaces, while rooms with patients on contact precautions or with known multidrug-resistant organisms may require more frequent cleaning throughout the day.",
@@ -295,10 +295,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env7",
         baseQuestion: "During a renovation, a surveyor notices that an adjacent patient care area has visible drywall dust on surfaces despite an ICRA barrier being in place. Is the ICRA barrier functioning properly?",
         baseOptions: [
-        "Yes — some minor dust migration is expected during active renovation and does not indicate barrier failure",
-        "No — visible dust in the patient care area indicates the ICRA barrier has been breached or is inadequate",
-        "Yes — as long as airborne particulate counts remain below the established action threshold for that area",
-        "No — but only if the adjacent area houses immunocompromised patients or is classified as a protected zone"
+        "Some minor dust migration is expected during active renovation and does not indicate barrier failure",
+        "Visible dust in the patient care area indicates the ICRA barrier has been breached or is inadequate",
+        "As long as airborne particulate counts remain below the established action threshold for that area",
+        "But only if the adjacent area houses immunocompromised patients or is classified as a protected zone"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "The purpose of ICRA barriers is to prevent construction dust, debris, and airborne contaminants from reaching patient care areas. Visible dust migration indicates the barrier is failing and must be immediately assessed and reinforced.",
@@ -389,10 +389,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env9",
         baseQuestion: "A surveyor observes environmental services performing a C. difficile room discharge cleaning using a quaternary ammonium disinfectant. Is this the appropriate disinfectant?",
         baseOptions: [
-        "No — C. difficile requires a sporicidal agent such as sodium hypochlorite (bleach) because quaternary ammonium products do not kill C. difficile spores",
-        "Yes — quaternary ammonium disinfectants are effective against C. difficile when the full contact time is met",
-        "No — but hydrogen peroxide products are preferred over bleach as the first-line sporicidal agent for C. difficile",
-        "Yes — but only if the quaternary ammonium product is applied at double the standard use-dilution concentration"
+        "C. difficile requires a sporicidal agent such as sodium hypochlorite (bleach) because quaternary ammonium products do not kill C. difficile spores",
+        "Quaternary ammonium disinfectants are effective against C. difficile when the full contact time is met",
+        "But hydrogen peroxide products are preferred over bleach as the first-line sporicidal agent for C. difficile",
+        "But only if the quaternary ammonium product is applied at double the standard use-dilution concentration"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "C. difficile spores are resistant to most common disinfectants including quaternary ammonium compounds. Sporicidal agents such as sodium hypochlorite (bleach) at the appropriate concentration or EPA-registered products with C. difficile kill claims are required.",
@@ -436,10 +436,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env10",
         baseQuestion: "A surveyor notices that the facility uses UV-C disinfection robots as a supplement to manual cleaning in OR suites. Can UV-C technology replace manual cleaning?",
         baseOptions: [
-        "No — UV-C technology is not yet validated for healthcare environments and should only be used in research settings",
-        "Yes — UV-C robots achieve higher log reduction than manual cleaning and can fully replace human cleaning efforts",
-        "No — UV-C technology supplements but does not replace manual cleaning; surfaces must be physically cleaned to remove organic matter before UV-C can be effective",
-        "Yes — but only in operating rooms and procedural areas where surface contamination matches UV-C efficacy profiles"
+        "UV-C technology is not yet validated for healthcare environments and should only be used in research settings",
+        "UV-C robots achieve higher log reduction than manual cleaning and can fully replace human cleaning efforts",
+        "UV-C technology supplements but does not replace manual cleaning; surfaces must be physically cleaned to remove organic matter before UV-C can be effective",
+        "But only in operating rooms and procedural areas where surface contamination matches UV-C efficacy profiles"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "UV-C disinfection is an adjunct to, not a replacement for, manual cleaning. UV-C light is blocked by organic matter (soil, blood, body fluids) and only disinfects surfaces in direct line-of-sight. Physical cleaning must remove organic material first for UV-C to be effective against remaining microorganisms.",
@@ -483,10 +483,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env11",
         baseQuestion: "A surveyor examines the EVS department's disinfectant preparation area and finds that the automatic dilution system has not been calibrated in 6 months. The manufacturer recommends quarterly calibration. Is this a finding?",
         baseOptions: [
-        "Yes — an uncalibrated dilution system may produce solutions at incorrect concentrations, compromising disinfection effectiveness",
-        "No — quarterly calibration is a manufacturer recommendation only, not a regulatory or accreditation requirement",
-        "No — modern automated dilution systems maintain accurate output concentration regardless of calibration status",
-        "Yes — but only if the system has been producing visible color or consistency changes in the dispensed solution"
+        "An uncalibrated dilution system may produce solutions at incorrect concentrations, compromising disinfection effectiveness",
+        "Quarterly calibration is a manufacturer recommendation only, not a regulatory or accreditation requirement",
+        "Modern automated dilution systems maintain accurate output concentration regardless of calibration status",
+        "But only if the system has been producing visible color or consistency changes in the dispensed solution"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Automatic dilution systems must be calibrated per the manufacturer's recommended schedule. An uncalibrated system can produce solutions that are too dilute (ineffective) or too concentrated (wasteful, potentially harmful to surfaces and staff). Quarterly calibration is a minimum standard.",
@@ -630,10 +630,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env14",
         baseQuestion: "A surveyor asks the facility about their environmental monitoring process for construction areas adjacent to patient care. The facility shows a log of daily visual inspections of the ICRA barrier. Is this sufficient monitoring?",
         baseOptions: [
-        "No — but additional monitoring is only required for Class IV ICRA construction projects",
-        "Yes — daily visual inspections of the barrier are adequate",
-        "No — environmental monitoring during construction should include",
-        "Yes — but only if a designated infection preventionist performs the barrier inspections"
+        "But additional monitoring is only required for Class IV ICRA construction projects",
+        "Daily visual inspections of the barrier are adequate",
+        "Environmental monitoring during construction should include",
+        "But only if a designated infection preventionist performs the barrier inspections"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Comprehensive ICRA monitoring includes air particle count monitoring, pressure differential measurement and documentation, barrier integrity inspection, and environmental surveillance. Visual inspection alone does not detect airborne particulate migration that can occur even with intact barriers.",
@@ -679,10 +679,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env15",
         baseQuestion: "A water leak from a pipe above the ceiling has stained several ceiling tiles in a medication room. Maintenance replaces the tiles but does not address the leak because it is 'slow and intermittent.' Is this resolution adequate?",
         baseOptions: [
-        "Yes — as long as maintenance submits a work order to monitor the leak on a quarterly basis",
-        "Yes — replacing the stained tiles resolves the environmental concern",
-        "No — but only if the leak is located directly above a patient care or sterile area",
-        "No — replacing tiles without repairing the leak ensures the problem will"
+        "As long as maintenance submits a work order to monitor the leak on a quarterly basis",
+        "Replacing the stained tiles resolves the environmental concern",
+        "But only if the leak is located directly above a patient care or sterile area",
+        "Replacing tiles without repairing the leak ensures the problem will"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Replacing stained tiles is a cosmetic fix. The underlying leak must be repaired to prevent continued moisture intrusion, which promotes mold growth in the plenum space above the tiles. Mold in the plenum can release spores into patient care areas through tile gaps and HVAC systems.",
@@ -875,9 +875,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env19",
         baseQuestion: "A surveyor notices that the operating room has a portable HEPA air filtration unit running in the corner. The OR has its own dedicated HVAC with HEPA filtration. Is the portable unit necessary?",
         baseOptions: [
-        "Yes — extra filtration is always beneficial",
+        "Extra filtration is always beneficial",
         "Not necessarily — portable units should be removed before each surgical case",
-        "Yes — but only during cases involving immunocompromised patients",
+        "But only during cases involving immunocompromised patients",
         "Not necessarily — if the OR HVAC system is"
       ],
       baseCorrectIndex: 3,
@@ -924,10 +924,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-env20",
         baseQuestion: "A surveyor asks the facility to describe their process for cleaning and disinfecting a room after a patient with active pulmonary tuberculosis is discharged. The staff describe standard discharge cleaning. Is this adequate?",
         baseOptions: [
-        "Yes — standard discharge cleaning is sufficient for TB rooms",
-        "No — but only the bed and immediate patient contact surfaces need sporicidal treatment",
-        "No — TB rooms require additional measures including extended room",
-        "Yes — but staff should wear surgical masks during the standard cleaning procedure"
+        "Standard discharge cleaning is sufficient for TB rooms",
+        "But only the bed and immediate patient contact surfaces need sporicidal treatment",
+        "TB rooms require additional measures including extended room",
+        "But staff should wear surgical masks during the standard cleaning procedure"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Rooms housing patients with active pulmonary TB require airborne infection isolation room (AIIR) procedures after discharge: the room must remain vacant with the door closed for a calculated period (based on air changes per hour) to allow adequate clearance of airborne droplet nuclei before EVS enters for cleaning. Staff entering must wear N95 respirators.",
@@ -935,8 +935,8 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "The EVS tech assigned to clean the TB discharge room has not been fit-tested for an N95 respirator in 18 months. She says her last fit test was for a model the facility no longer stocks. Can she clean the room?",
           options: [
-          "Yes — she had a prior fit test so she knows how to wear one",
-          "No — she cannot enter the room until she is fit-tested on the",
+          "She had a prior fit test so she knows how to wear one",
+          "She cannot enter the room until she is fit-tested on the",
           "She can use any available N95 as long as she performs a user seal check",
           "She can use a surgical mask instead"
         ],
@@ -994,10 +994,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "The facility argues that they thoroughly clean the corridor between soiled and clean traffic times. Environmental cultures taken from the corridor walls and floor after cleaning show no significant pathogen growth. Does this data support their time-separation approach?",
           options: [
-          "No — point-in-time cultures do not guarantee ongoing cleanliness throughout the clean traffic period; surfaces can be re-contaminated by personnel, air currents, or residual moisture; physical separation is a systemic control that does not rely on the consistency of cleaning performance",
+          "Point-in-time cultures do not guarantee ongoing cleanliness throughout the clean traffic period; surfaces can be re-contaminated by personnel, air currents, or residual moisture; physical separation is a systemic control that does not rely on the consistency of cleaning performance",
           "The cultures are irrelevant to the compliance determination — AAMI ST79 Section 4.2 establishes that traffic separation is fundamentally about workflow segregation and human factors error prevention rather than surface contamination levels; even a perfectly sterile corridor still creates procedural confusion and cross-traffic behavioral risks that compromise instrument integrity",
-          "Yes — the CDC Environmental Infection Control Guidelines specifically state that validated environmental surface cultures demonstrating fewer than 5 CFU per contact plate can be used to justify alternative traffic management approaches when physical separation is not architecturally feasible in facilities built before 2010",
-          "Yes — continuous environmental monitoring programs with quarterly trending and documented culture results satisfy Joint Commission EC.02.06.01 requirements for alternative corridor management strategies; the facility should formalize this into a monthly sampling protocol with 12-month trending and present results to the infection prevention committee"
+          "The CDC Environmental Infection Control Guidelines specifically state that validated environmental surface cultures demonstrating fewer than 5 CFU per contact plate can be used to justify alternative traffic management approaches when physical separation is not architecturally feasible in facilities built before 2010",
+          "Continuous environmental monitoring programs with quarterly trending and documented culture results satisfy Joint Commission EC.02.06.01 requirements for alternative corridor management strategies; the facility should formalize this into a monthly sampling protocol with 12-month trending and present results to the infection prevention committee"
         ],
         correctIndex: 0,
           explanation: "Environmental cultures provide only a snapshot in time and do not guarantee sustained cleanliness. Physical separation is an engineering control that provides consistent protection regardless of cleaning performance variability. The hierarchy of controls places engineering controls (physical separation) above administrative controls (scheduling and cleaning). Time-based separation introduces human error risk that physical separation eliminates.",
@@ -1032,7 +1032,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-seg2",
         baseQuestion: "A surveyor follows the flow of sterile instruments from SPD to the OR. The instruments travel through a clean corridor, but the corridor also has access doors to soiled utility rooms along its length. Are these access points a concern?",
         baseOptions: [
-        "Yes — soiled utility room doors opening into clean corridors can introduce contaminated air and create cross-traffic opportunities",
+        "Soiled utility room doors opening into clean corridors can introduce contaminated air and create cross-traffic opportunities",
         "No concern — negative pressure in the soiled utility rooms prevents meaningful air exchange when self-closing doors remain closed during operations",
         "Concerning only if the soiled utility rooms lack proper waste containment and sealed refuse receptacles per OSHA bloodborne pathogen standards",
         "No concern if the soiled utility room doors are kept locked and accessed only by authorized EVS staff with badge-controlled entry"
@@ -1044,8 +1044,8 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
           question: "The facility cannot relocate the soiled utility rooms due to structural limitations. They propose installing self-closing doors with negative pressure in the soiled rooms. Is this an acceptable mitigation?",
           options: [
           "This is a reasonable mitigation if: the self-closing mechanism is reliable and regularly tested, negative pressure is continuously monitored and documented, doors have adequate seals, the corridor is not the primary clean transport route, and an ICRA evaluates the ongoing risk",
-          "Yes — ASHRAE Standard 170-2017 Section 7.2.3 confirms that self-closing doors with a maximum 3-second close time provide an adequate contamination barrier between soiled utility rooms and adjacent clean corridors; the self-closing mechanism alone is sufficient to meet Joint Commission EC.02.06.01 requirements without the need for additional negative pressure verification",
-          "No — Joint Commission Standard EC.02.06.01 EP 14 requires that soiled utility rooms must maintain a minimum 25-foot physical separation from any designated clean transport corridor; when structural limitations prevent this distance, the rooms must be physically relocated regardless of capital cost, as no engineering mitigation can adequately replace spatial separation in preventing cross-contamination",
+          "ASHRAE Standard 170-2017 Section 7.2.3 confirms that self-closing doors with a maximum 3-second close time provide an adequate contamination barrier between soiled utility rooms and adjacent clean corridors; the self-closing mechanism alone is sufficient to meet Joint Commission EC.02.06.01 requirements without the need for additional negative pressure verification",
+          "Joint Commission Standard EC.02.06.01 EP 14 requires that soiled utility rooms must maintain a minimum 25-foot physical separation from any designated clean transport corridor; when structural limitations prevent this distance, the rooms must be physically relocated regardless of capital cost, as no engineering mitigation can adequately replace spatial separation in preventing cross-contamination",
           "Only if the doors are additionally equipped with vestibule-style airlock anterooms meeting ASHRAE 170 Class 3 specifications with independent air handling, because self-closing doors with negative pressure alone cannot prevent the bolus of contaminated air released during each door opening cycle from reaching clean transport areas"
         ],
         correctIndex: 0,
@@ -1153,10 +1153,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         {
           question: "After installing a satellite break station near SPD, a surveyor notes that the break station is separated from the clean assembly area by only a partial partition and an open doorway — no door. Crumbs and beverage condensation are visible on the floor near the partition opening. The SPD manager says the break station meets the 'separate from processing areas' requirement. Is the surveyor likely to agree?",
           options: [
-          "No — effective separation requires a physical barrier with a closed door to prevent migration of food particles, pest attraction pathways, and environmental contamination into the clean core; an open doorway with a partial partition does not constitute a separate space and creates a direct contamination vector between the break area and instrument assembly",
-          "Yes — provided the facility increases cleaning frequency of the break station area to every 2 hours using EPA-registered disinfectant wipes and implements a documented crumb containment protocol with covered waste receptacles; AAMI ST79 Section 3.4.2 specifies that break area cleanliness standards can substitute for full physical separation when the area is maintained at clinical-grade cleanliness levels with documented verification",
+          "Effective separation requires a physical barrier with a closed door to prevent migration of food particles, pest attraction pathways, and environmental contamination into the clean core; an open doorway with a partial partition does not constitute a separate space and creates a direct contamination vector between the break area and instrument assembly",
+          "Provided the facility increases cleaning frequency of the break station area to every 2 hours using EPA-registered disinfectant wipes and implements a documented crumb containment protocol with covered waste receptacles; AAMI ST79 Section 3.4.2 specifies that break area cleanliness standards can substitute for full physical separation when the area is maintained at clinical-grade cleanliness levels with documented verification",
           "It depends on whether the break station has its own dedicated ventilation system with a minimum of 6 air changes per hour exhausted directly to the outside; ASHRAE Standard 170 Table 7.1 specifies that food preparation and consumption areas adjacent to clean processing environments require independent exhaust ventilation to prevent particulate and odor migration across the partition boundary",
-          "Yes — a partial partition with a minimum height of 60 inches provides adequate visual and physical separation between the break area and the clean core per AAMI ST79 recommendations; the partition creates a defined boundary that satisfies Joint Commission EC.02.06.01 requirements for separating ancillary staff functions from processing activities in SPD environments"
+          "A partial partition with a minimum height of 60 inches provides adequate visual and physical separation between the break area and the clean core per AAMI ST79 recommendations; the partition creates a defined boundary that satisfies Joint Commission EC.02.06.01 requirements for separating ancillary staff functions from processing activities in SPD environments"
         ],
         correctIndex: 0,
           explanation: "Separation between food areas and clean processing zones requires complete physical barriers including walls and doors. A partial partition with an open doorway allows airborne particles, pest pathways, and physical debris migration into the clean core. The visible crumbs near the opening demonstrate that the contamination pathway is active. Effective separation means a fully enclosed room with a closable door, adequate distance from processing areas, and ideally separate ventilation to prevent food odors and particles from reaching the clean environment.",
@@ -1426,7 +1426,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         baseOptions: [
         "No concern because the sterilization process eliminates all contamination making cross-access between clean and sterile zones irrelevant",
         "No concern — AAMI ST79 confirms sterilizer loading areas are classified as transitional zones and dual-access is the standard configuration",
-        "Yes — the sterilizer area must have controlled access to prevent unsterilized items from entering the sterile storage side and sterile items from being contaminated by traffic from the clean assembly area",
+        "The sterilizer area must have controlled access to prevent unsterilized items from entering the sterile storage side and sterile items from being contaminated by traffic from the clean assembly area",
         "A concern only if pass-through sterilizers are not used — pass-through design inherently prevents cross-zone traffic contamination issues"
       ],
       baseCorrectIndex: 2,
@@ -1435,10 +1435,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "The facility has pass-through sterilizers that load from the clean side and unload from the sterile side. A tech on the sterile side opens the sterilizer door, finds the load is still in its cooling phase, and closes the door. She then handles sterile items from the storage shelves with the same gloves. Is this sequence acceptable?",
           options: [
-          "Yes — the sterilizer door on the sterile storage side is classified as sterile-side equipment per AAMI ST79 Section 5.3.1 and is subject to the same environmental controls as the sterile storage shelving; the door handle undergoes thermal decontamination during each sterilization cycle as residual heat from the chamber reaches the external hardware, making it safe to handle without glove changes between sterilizer and storage activities",
-          "No — the sterilizer door handle on the sterile side can be contaminated by steam, condensation, and thermal residue from the sterilization process; touching the sterilizer and then handling stored sterile items without changing gloves can transfer contaminants to sterile packaging",
+          "The sterilizer door on the sterile storage side is classified as sterile-side equipment per AAMI ST79 Section 5.3.1 and is subject to the same environmental controls as the sterile storage shelving; the door handle undergoes thermal decontamination during each sterilization cycle as residual heat from the chamber reaches the external hardware, making it safe to handle without glove changes between sterilizer and storage activities",
+          "The sterilizer door handle on the sterile side can be contaminated by steam, condensation, and thermal residue from the sterilization process; touching the sterilizer and then handling stored sterile items without changing gloves can transfer contaminants to sterile packaging",
           "Only a concern if the load was identified as a wet pack during the post-cycle inspection, which indicates a sterilization process failure with residual moisture that can harbor viable microorganisms; AAMI ST79 Section 5.4.2 specifies that sterilizer door contact is only considered a contamination event when moisture is visibly present on the door seal or handle, as dry heat from a completed cycle provides adequate surface decontamination of the door hardware",
-          "Yes — as long as the sterilizer load passed all required chemical indicator verification including Class 5 integrating indicators in every package and Class 1 external process indicators on every wrapped item; chemical indicator passage confirms the sterilization parameters were achieved throughout the load, which validates the sterile integrity of both the load contents and the sterilizer's external contact surfaces per AAMI ST79 monitoring requirements"
+          "As long as the sterilizer load passed all required chemical indicator verification including Class 5 integrating indicators in every package and Class 1 external process indicators on every wrapped item; chemical indicator passage confirms the sterilization parameters were achieved throughout the load, which validates the sterile integrity of both the load contents and the sterilizer's external contact surfaces per AAMI ST79 monitoring requirements"
         ],
         correctIndex: 1,
           explanation: "Sterilizer door handles and exterior surfaces are not sterile — they are exposed to steam, condensation, and environmental contaminants. Touching the sterilizer door and then handling sterile stored items without changing gloves transfers potential contaminants to sterile packaging. Staff must perform hand hygiene and change gloves between equipment handling and sterile item handling.",
@@ -1669,9 +1669,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-seg15",
         baseQuestion: "A facility has a clean supply room and a soiled utility room on the same unit. A surveyor notices they share a common wall and a shared ventilation return duct. Is the shared ductwork a concern?",
         baseOptions: [
-        "No — the duct system filters all air before recirculation so shared ductwork presents no cross-contamination risk",
+        "The duct system filters all air before recirculation so shared ductwork presents no cross-contamination risk",
         "A concern only if the soiled utility room generates aerosolized contaminants from active hopper use or waste processing",
-        "Yes — shared return air ductwork between clean and soiled rooms creates a pathway for airborne contaminant transfer",
+        "Shared return air ductwork between clean and soiled rooms creates a pathway for airborne contaminant transfer",
         "No concern if the return air system includes MERV-14 filtration at the main air handling unit before recirculation to spaces"
       ],
       baseCorrectIndex: 2,
@@ -1680,10 +1680,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "The facilities engineer says separating the ductwork would require opening walls and ceilings and cost $50,000. He proposes installing a HEPA filter in the shared duct between the two rooms as a less expensive alternative. Is this an acceptable solution?",
           options: [
-          "Yes — HEPA filtration removes 99.97% of particles",
-          "No — only complete duct separation is acceptable",
+          "HEPA filtration removes 99.97% of particles",
+          "Only complete duct separation is acceptable",
           "A HEPA filter in the duct is an improvement but not a",
-          "Yes — but only if the filter is changed monthly"
+          "But only if the filter is changed monthly"
         ],
         correctIndex: 2,
           explanation: "A HEPA filter addresses particulate contamination but not gaseous contaminants or odors. It introduces a maintenance dependency — if the filter is not changed on schedule, it can become a source of contamination itself. As an interim measure with documented monitoring and a long-term remediation plan, it may be acceptable. The permanent solution should include dedicated exhaust for the soiled room discharging directly to the outside.",
@@ -1729,10 +1729,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "In the single-door OR, a surveyor observes that during room turnover, soiled instruments are being removed through the door at the same time the EVS team is bringing in cleaning equipment. The incoming cleaning supplies pass within inches of the outgoing soiled instrument container. Is this managed workflow?",
           options: [
-          "Yes — as long as nothing touches",
+          "As long as nothing touches",
           "This is acceptable during turnover because speed is important for case scheduling",
-          "No — managed workflow in a single-door OR requires sequential",
-          "Yes — EVS equipment and soiled instruments are both 'dirty' so there is no conflict"
+          "Managed workflow in a single-door OR requires sequential",
+          "EVS equipment and soiled instruments are both 'dirty' so there is no conflict"
         ],
         correctIndex: 2,
           explanation: "Managed workflow in a single-door OR means strict sequential traffic: (1) all soiled items and waste exit, (2) the doorway and threshold are cleaned, (3) cleaning equipment and supplies enter, (4) after cleaning, fresh clean supplies and sterile instruments enter. Simultaneous bidirectional traffic — regardless of what is passing — negates the managed flow concept. Speed does not justify cross-contamination risk.",
@@ -1767,9 +1767,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-seg17",
         baseQuestion: "A surveyor sees a nurse carrying a clean wound care supply kit into a patient room where contact precautions are in effect. She dons her PPE (gown and gloves) before entering. After dressing the wound, she exits the room still carrying unused clean supplies from the kit. Can these unused supplies be returned to the clean supply area?",
         baseOptions: [
-        "No — any supplies that enter a contact precaution room are considered potentially contaminated even if packaging appears intact",
-        "No — but only for supplies that were in the room longer than thirty minutes as brief exposure does not result in contamination",
-        "Yes — they were sealed and unused so the sterile barrier of the packaging was not compromised during the patient care visit",
+        "Any supplies that enter a contact precaution room are considered potentially contaminated even if packaging appears intact",
+        "But only for supplies that were in the room longer than thirty minutes as brief exposure does not result in contamination",
+        "They were sealed and unused so the sterile barrier of the packaging was not compromised during the patient care visit",
         "Yes if the outer packaging shows no visible contamination and the supplies were not within three feet of the patient at any time"
       ],
       baseCorrectIndex: 0,
@@ -1827,9 +1827,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "After installation, staff drill a small hole through the sealed window frame to pass a communication cable through to a two-way intercom. They seal the cable entry with silicone caulk. Is this modification acceptable?",
           options: [
-          "No — any penetration through the contamination",
-          "Yes — as long as the caulk is reapplied annually",
-          "Yes — the hole is sealed with caulk",
+          "Any penetration through the contamination",
+          "As long as the caulk is reapplied annually",
+          "The hole is sealed with caulk",
           "Only if the hole is less than 1 inch in diameter"
         ],
         correctIndex: 0,
@@ -1840,9 +1840,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
           question: "During construction of the new SPD, the general contractor installs the sealed observation window. However, the window glazing compound requires 72 hours to fully cure before achieving its rated airtight seal. The project manager wants to begin using the clean assembly area for instrument processing immediately because the temporary SPD space is at capacity. Should the clean assembly area be activated before the window seal has fully cured?",
           options: [
           "Activate the clean assembly area but restrict decontamination activities until the seal cures",
-          "Yes — the window seal is largely effective even before full cure and the operational need is urgent",
-          "Yes — if the decontamination room is not yet operational, there is no contamination source",
-          "No — activating the clean assembly area before the contamination barrier is fully functional defeats the"
+          "The window seal is largely effective even before full cure and the operational need is urgent",
+          "If the decontamination room is not yet operational, there is no contamination source",
+          "Activating the clean assembly area before the contamination barrier is fully functional defeats the"
         ],
         correctIndex: 3,
           explanation: "Barrier integrity must be verified and complete before activating a clean processing environment. An uncured window seal means the contamination barrier between decontamination and clean assembly is not functional. Starting operations with a compromised barrier creates immediate contamination risk and signals an organizational tolerance for incomplete safety infrastructure. The operational pressure must be managed through alternative processing arrangements, not by shortcutting barrier commissioning. Construction commissioning verification should include documented confirmation of all barrier elements before the space is released for clinical use.",
@@ -1915,9 +1915,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         baseQuestion: "A surveyor asks a facilities engineer to demonstrate the pressure relationship between the OR suite, the central sterile corridor, and the adjacent patient care unit. The engineer shows that the OR suite has positive pressure relative to the corridor, but the corridor has equal pressure relative to the patient care unit. Is this adequate?",
         baseOptions: [
         "Not ideal — a pressure cascade should exist so the OR pushes air into the corridor which pushes air into general patient areas",
-        "Yes — equal pressure between the corridor and patient care unit is acceptable since the OR positive pressure is the primary barrier",
+        "Equal pressure between the corridor and patient care unit is acceptable since the OR positive pressure is the primary barrier",
         "Not ideal only if the patient care unit houses immunocompromised patients — standard units do not require a pressure differential",
-        "Yes — the OR positive pressure relative to the corridor is the critical relationship and corridor-to-unit pressure is not required"
+        "The OR positive pressure relative to the corridor is the critical relationship and corridor-to-unit pressure is not required"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Pressure relationships should form a cascade from cleanest to least clean areas. The OR suite (highest positive pressure) should push air into the sterile corridor (intermediate pressure), which should push air into general patient areas (lowest pressure). Equal pressure between the corridor and patient unit means air can flow in either direction, potentially bringing contamination into the sterile corridor.",
@@ -1925,10 +1925,10 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         followUps: [{
           question: "The facilities engineer says achieving a full pressure cascade would require significant HVAC modifications costing over $200,000. He proposes installing vestibule airlocks at the transition points between the sterile corridor and the patient care unit instead. Is this an acceptable alternative?",
           options: [
-          "No — only a full pressure cascade is acceptable",
+          "Only a full pressure cascade is acceptable",
           "Just install HEPA filters in the corridor instead",
           "Vestibule airlocks can be an effective alternative if",
-          "Yes — airlocks are always superior to pressure cascades"
+          "Airlocks are always superior to pressure cascades"
         ],
         correctIndex: 2,
           explanation: "Vestibule airlocks are a recognized engineering solution for creating zone separation when a continuous pressure cascade is not feasible. They must be properly designed with independent ventilation, self-closing doors (ideally interlocked), and appropriate pressure relative to both adjacent zones. The design should be developed collaboratively between facilities engineering, infection prevention, and potentially an HVAC consultant, with post-installation air quality validation.",

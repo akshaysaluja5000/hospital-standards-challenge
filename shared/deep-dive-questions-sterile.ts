@@ -99,10 +99,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "A new rigid container system is purchased that uses disposable single-use filters. The SPD manager creates a policy requiring visual inspection of filters before each use but does not include a step to verify the filter lot number matches the container model. During a tracer, a surveyor discovers that a tech placed a filter rated for a different container model into a tray. The BI from that load passed. Is this a finding?",
           options: [
-          "No — the BI passed, confirming sterilization was effective regardless of the filter used",
-          "Yes — using an incorrect filter violates the manufacturer's IFU",
-          "Yes — but only because disposable filters cost more than reusable ones and the facility is wasting money",
-          "No — disposable filters are universal and interchangeable across rigid container brands"
+          "The BI passed, confirming sterilization was effective regardless of the filter used",
+          "Using an incorrect filter violates the manufacturer's IFU",
+          "But only because disposable filters cost more than reusable ones and the facility is wasting money",
+          "Disposable filters are universal and interchangeable across rigid container brands"
         ],
         correctIndex: 1,
           explanation: "Sterilization validation is specific to the container-filter combination specified in the manufacturer's IFU. Using an incorrect filter — even if the BI passes — means the sterilization process was performed outside validated parameters. A passing BI for one load does not validate an unapproved configuration. Joint Commission requires strict adherence to manufacturer IFUs per LD.04.01.01, and the facility's policy must include filter-to-container model verification as a mandatory step.",
@@ -126,10 +126,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "During a tracer, a surveyor notices that while sterile supplies are 18+ inches below sprinklers, a tall cardboard shipping box (empty, used for returns) is leaning against the shelf and reaches within 12 inches of the sprinkler. Is this a finding?",
           options: [
-          "No — only sterile supplies need the 18-inch clearance",
-          "Yes — but only because cardboard is a fire hazard",
-          "Yes — ALL items must maintain 18-inch clearance",
-          "No — cardboard is not a stored item"
+          "Only sterile supplies need the 18-inch clearance",
+          "But only because cardboard is a fire hazard",
+          "ALL items must maintain 18-inch clearance",
+          "Cardboard is not a stored item"
         ],
         correctIndex: 2,
           explanation: "The 18-inch clearance rule below sprinkler heads applies to ALL items, not just sterile supplies. This is a fire safety requirement ensuring proper sprinkler spray distribution. Any object — sterile or not — that violates this clearance is a finding.",
@@ -138,10 +138,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility removes the cardboard and ensures 18-inch clearance. However, the surveyor then notices the sterile storage room has a mix of upright sprinklers and sidewall sprinklers. The 18-inch clearance is maintained below upright sprinklers, but shelving is positioned only 10 inches from a sidewall sprinkler head. Is this compliant?",
           options: [
-          "No — clearance requirements apply to all sprinkler types",
-          "Yes — the 18-inch rule only applies to overhead sprinklers, not sidewall heads",
-          "Yes — sidewall sprinklers spray horizontally, so vertical clearance below them is irrelevant",
-          "No — but only if the sidewall sprinkler is within 5 feet of sterile supplies"
+          "Clearance requirements apply to all sprinkler types",
+          "The 18-inch rule only applies to overhead sprinklers, not sidewall heads",
+          "Sidewall sprinklers spray horizontally, so vertical clearance below them is irrelevant",
+          "But only if the sidewall sprinkler is within 5 feet of sterile supplies"
         ],
         correctIndex: 0,
           explanation: "NFPA 13 and Joint Commission EC.02.03.05 require clearance from ALL sprinkler types to ensure unobstructed spray patterns. Sidewall sprinklers have specific lateral clearance requirements, and storing items too close obstructs the designed spray pattern, reducing fire suppression effectiveness. Clearance requirements are based on sprinkler type and must be verified against NFPA 13 specifications for each head type in the space.",
@@ -165,10 +165,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss4",
       baseQuestion: "A sterile processing tech notices that event-related sterile packages in storage show no signs of damage, moisture, or contamination but have no expiration dates printed on them. Should she pull them from service?",
       baseOptions: [
-        "Yes — items without dates violate Joint Commission labeling rules",
-        "Yes — all sterile items must have an expiration date printed",
-        "No — event-related sterility means packages remain sterile",
-        "No — but only if a visual inspection log is documented daily"
+        "Items without dates violate Joint Commission labeling rules",
+        "All sterile items must have an expiration date printed",
+        "Event-related sterility means packages remain sterile",
+        "But only if a visual inspection log is documented daily"
       ],
       baseCorrectIndex: 2,
       baseExplanation: "Under event-related sterility, items remain sterile until an event compromises package integrity (moisture, tears, soil, etc.). No expiration date is needed — the package integrity is what matters.",
@@ -189,10 +189,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility uses event-related sterility for in-house wrapped trays but also stocks manufacturer-sealed, pre-sterilized disposable items that bear printed expiration dates. A tech finds a manufacturer-sealed item past its printed expiration date but with fully intact packaging. Can the item be used under the facility's event-related sterility policy?",
           options: [
-          "No — but only if the item expired more than 6 months ago",
-          "Yes — FDA allows facilities to extend manufacturer expiration dates at their discretion",
-          "Yes — the facility's event-related sterility policy overrides manufacturer expiration dates as long as packaging is intact",
-          "No — manufacturer-assigned expiration dates are validated through product-specific shelf-life"
+          "But only if the item expired more than 6 months ago",
+          "FDA allows facilities to extend manufacturer expiration dates at their discretion",
+          "The facility's event-related sterility policy overrides manufacturer expiration dates as long as packaging is intact",
+          "Manufacturer-assigned expiration dates are validated through product-specific shelf-life"
         ],
         correctIndex: 3,
           explanation: "Event-related sterility applies to items sterilized by the facility using validated wrapping and processes. Manufacturer-sealed items with printed expiration dates have undergone product-specific shelf-life validation testing under controlled conditions. The manufacturer's expiration date reflects validated packaging performance and must be honored. A facility's event-related sterility policy cannot override manufacturer-established expiration dates. The expired item must be removed from service.",
@@ -201,10 +201,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "A Joint Commission surveyor challenges the facility's event-related sterility program by asking: 'What evidence do you have that your packaging materials maintain barrier integrity indefinitely under your specific storage conditions?' The facility points to their AAMI ST79 policy but has no facility-specific packaging validation data. Is the surveyor's concern valid?",
           options: [
-          "Yes — while event-related sterility is the accepted standard",
-          "No — packaging manufacturers validate barrier integrity, so the facility does not need its own data",
-          "Yes — the facility must perform its own accelerated aging studies on every packaging material used",
-          "No — AAMI ST79 endorses event-related sterility, which means no further facility-level validation is required"
+          "While event-related sterility is the accepted standard",
+          "Packaging manufacturers validate barrier integrity, so the facility does not need its own data",
+          "The facility must perform its own accelerated aging studies on every packaging material used",
+          "AAMI ST79 endorses event-related sterility, which means no further facility-level validation is required"
         ],
         correctIndex: 0,
           explanation: "The surveyor is raising a legitimate performance improvement question. While AAMI ST79 supports event-related sterility, facilities should be able to demonstrate that their storage environment supports the principle. This means correlating packaging manufacturer performance data with the facility's documented environmental conditions (temperature logs, humidity records, handling protocols). Facilities don't need to conduct independent accelerated aging studies, but they should have packaging manufacturer specifications on file and demonstrate their environment falls within those validated parameters.",
@@ -240,10 +240,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "After implementing continuous monitoring, the system shows that humidity regularly drops to 15% RH during winter months when the heating system runs heavily. Temperature remains within range. Staff have not noticed any issues with sterile items. Should this be addressed?",
           options: [
-          "No — the acceptable range is 20-60% but 15% is close enough and no visible issues have occurred",
-          "No — low humidity is not a concern; only high humidity compromises sterile packaging",
-          "Yes — but only if biological indicators start failing",
-          "Yes — humidity below 20% can cause static charge buildup that attracts particulates to"
+          "The acceptable range is 20-60% but 15% is close enough and no visible issues have occurred",
+          "Low humidity is not a concern; only high humidity compromises sterile packaging",
+          "But only if biological indicators start failing",
+          "Humidity below 20% can cause static charge buildup that attracts particulates to"
         ],
         correctIndex: 3,
           explanation: "The AAMI-recommended humidity range of 20-60% exists for reasons at both ends. Excessively low humidity (below 20%) causes static electricity buildup that attracts airborne particulates to sterile packaging, can desiccate and crack certain packaging materials (especially paper-based wraps), and creates uncomfortable working conditions. The facility must implement humidification controls to maintain humidity within the validated range year-round.",
@@ -278,10 +278,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The recalled load contains implantable devices (orthopedic screws). The Bowie-Dick is now run and passes. The biological indicator from the original load also passes. Can the implants be released for use?",
           options: [
-          "Yes — but only after a 24-hour quarantine period",
-          "Yes — both the Bowie-Dick and BI passed, so the load is verified",
-          "No — implants can never be re-sterilized once recalled",
-          "No — implantable items require the BI result BEFORE the load"
+          "But only after a 24-hour quarantine period",
+          "Both the Bowie-Dick and BI passed, so the load is verified",
+          "Implants can never be re-sterilized once recalled",
+          "Implantable items require the BI result BEFORE the load"
         ],
         correctIndex: 3,
           explanation: "For implantable devices, biological indicator results must be obtained BEFORE the items are released for use (unless there's an urgent patient need documented by a surgeon). The Bowie-Dick skip was a process failure that invalidates confidence in the cycle. The implants must be re-processed with proper Bowie-Dick → load → BI sequence.",
@@ -290,10 +290,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "After reprocessing the implants correctly, the tech runs a Bowie-Dick test that shows a faint but visible color change in one corner of the test sheet while the rest of the sheet passes uniformly. The tech considers this a pass since 'most of the sheet changed.' Is this interpretation correct?",
           options: [
-          "Yes — corner artifacts are common in prevacuum sterilizers and are not clinically significant",
-          "No — but the tech can re-run the test once, and if the second test passes uniformly, the sterilizer can be used",
-          "No — the Bowie-Dick test must show uniform color change across the entire sheet",
-          "Yes — Bowie-Dick tests allow for minor non-uniformity as long as the majority of the sheet shows adequate color change"
+          "Corner artifacts are common in prevacuum sterilizers and are not clinically significant",
+          "But the tech can re-run the test once, and if the second test passes uniformly, the sterilizer can be used",
+          "The Bowie-Dick test must show uniform color change across the entire sheet",
+          "Bowie-Dick tests allow for minor non-uniformity as long as the majority of the sheet shows adequate color change"
         ],
         correctIndex: 2,
           explanation: "A Bowie-Dick test must demonstrate uniform color change across the entire test sheet. Any non-uniformity — including a single corner — indicates inadequate air removal from the sterilizer chamber. This is a failed test. The sterilizer must be taken out of service, inspected by a qualified technician, and must pass subsequent Bowie-Dick testing before returning to service. Partial passes do not exist for Bowie-Dick tests per AAMI ST79.",
@@ -329,10 +329,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "A new tech removes a dust cover to retrieve a tray and sets the cover on top of an adjacent stack of sterile peel packs while she works. She replaces it 10 minutes later. Has she potentially compromised anything?",
           options: [
-          "Yes — but only if the room ventilation was off during those 10 minutes",
-          "No — the peel packs are individually sealed so a cover on top doesn't matter",
-          "No — 10 minutes of dust exposure is negligible",
-          "Yes — placing a used dust cover (which collects environmental"
+          "But only if the room ventilation was off during those 10 minutes",
+          "The peel packs are individually sealed so a cover on top doesn't matter",
+          "10 minutes of dust exposure is negligible",
+          "Placing a used dust cover (which collects environmental"
         ],
         correctIndex: 3,
           explanation: "Dust covers accumulate environmental contaminants by design — that's their purpose. Placing a used dust cover directly on sterile peel packs transfers those contaminants to packaging surfaces. Staff should be trained to handle dust covers carefully and never place them on or against sterile items.",
@@ -341,10 +341,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility implements dust cover handling training. During a follow-up tracer, the surveyor inspects the dust covers themselves and finds they are fabric covers that appear stained and have not been laundered in an unknown period. The facility has no policy on dust cover maintenance. Is this a finding?",
           options: [
-          "Yes — dust covers must be included in the facility's environmental cleaning and maintenance",
-          "No — dust covers are not medical devices and do not require a maintenance policy",
-          "No — the purpose of dust covers is to get dirty so the sterile items don't; staining is expected",
-          "Yes — but only if the stains test positive for biological contamination"
+          "Dust covers must be included in the facility's environmental cleaning and maintenance",
+          "Dust covers are not medical devices and do not require a maintenance policy",
+          "The purpose of dust covers is to get dirty so the sterile items don't; staining is expected",
+          "But only if the stains test positive for biological contamination"
         ],
         correctIndex: 0,
           explanation: "Dust covers that are excessively soiled transition from protective barriers to contamination reservoirs. Per infection prevention principles and Joint Commission IC standards, any item used to protect sterile supplies must itself be maintained in a clean state. The facility must have a policy defining the cleaning or replacement frequency of dust covers, and staff must be trained on visual inspection criteria for when covers need to be changed.",
@@ -368,10 +368,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss8",
       baseQuestion: "A surveyor asks to see the sterile storage area's environmental monitoring log. The facility shows daily temperature and humidity readings taken at 7 AM. Is once-daily monitoring sufficient?",
       baseOptions: [
-        "No — monitoring must be continuous or at minimum twice daily",
-        "No — readings are required every four hours per AAMI ST79",
-        "Yes — daily monitoring meets the standard",
-        "Yes — but only if readings are taken at peak occupancy hours"
+        "Monitoring must be continuous or at minimum twice daily",
+        "Readings are required every four hours per AAMI ST79",
+        "Daily monitoring meets the standard",
+        "But only if readings are taken at peak occupancy hours"
       ],
       baseCorrectIndex: 2,
       baseExplanation: "Daily monitoring of temperature and humidity in sterile storage areas meets Joint Commission requirements. The readings should be documented and any out-of-range values acted upon promptly.",
@@ -392,10 +392,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility installs continuous electronic monitoring. During calibration review, the surveyor discovers that the temperature sensor was last calibrated 3 years ago. The manufacturer recommends annual calibration. The facility says the readings 'look right' compared to a wall thermometer. Is this acceptable?",
           options: [
-          "No — but the facility can perform a one-point check against an ice bath to verify accuracy",
-          "Yes — electronic sensors are factory-calibrated and do not drift significantly over 3 years",
-          "Yes — comparison with a wall thermometer is an acceptable calibration verification method",
-          "No — monitoring equipment must be calibrated per manufacturer recommendations"
+          "But the facility can perform a one-point check against an ice bath to verify accuracy",
+          "Electronic sensors are factory-calibrated and do not drift significantly over 3 years",
+          "Comparison with a wall thermometer is an acceptable calibration verification method",
+          "Monitoring equipment must be calibrated per manufacturer recommendations"
         ],
         correctIndex: 3,
           explanation: "Environmental monitoring equipment must be maintained and calibrated per manufacturer specifications. An uncalibrated sensor's readings are unreliable, which means the facility cannot demonstrate that environmental conditions have been maintained within required parameters since the last valid calibration. Per Joint Commission EC.02.06.01, monitoring equipment must be maintained per manufacturer IFU, including calibration schedules. A wall thermometer comparison is not a traceable calibration.",
@@ -419,10 +419,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss9",
       baseQuestion: "Chemical indicators (internal and external) on a sterilized tray have changed color appropriately. Can the tray be considered sterile?",
       baseOptions: [
-        "No — chemical indicators only confirm exposure to sterilization",
-        "No — chemical indicators are unreliable and should not be used",
-        "Yes — chemical indicator color change confirms sterility",
-        "Yes — if both internal and external indicators pass together"
+        "Chemical indicators only confirm exposure to sterilization",
+        "Chemical indicators are unreliable and should not be used",
+        "Chemical indicator color change confirms sterility",
+        "If both internal and external indicators pass together"
       ],
       baseCorrectIndex: 0,
       baseExplanation: "Chemical indicators only verify that items were exposed to one or more sterilization parameters (time, temperature, steam). They do NOT confirm sterility. Biological indicators are the gold standard for confirming sterilization effectiveness.",
@@ -432,9 +432,9 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           question: "A tech argues: 'We have passing chemical indicators AND a passing biological indicator from this load. So these instruments are definitely sterile.' Is this statement fully accurate?",
           options: [
           "Almost — but sterility also depends on packaging",
-          "Yes — passing CI + BI = confirmed sterility",
-          "No — you also need a Bowie-Dick test for every load",
-          "No — biological indicators have a 20% false-negative rate"
+          "Passing CI + BI = confirmed sterility",
+          "You also need a Bowie-Dick test for every load",
+          "Biological indicators have a 20% false-negative rate"
         ],
         correctIndex: 0,
           explanation: "Passing CIs and BIs confirm the sterilization PROCESS was effective. However, sterility is maintained only if packaging integrity is preserved through storage, handling, and transport. A perfectly sterilized item can become non-sterile through package compromise. Sterility is a chain — processing is one link.",
@@ -483,9 +483,9 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           question: "The manager installs an automatic door closer. However, during the tracer the surveyor notices the room has positive pressure (air flows OUT when the door opens). The manager says this proves the room is protected even when briefly open. Is the manager's reasoning correct?",
           options: [
           "Partially — positive pressure does help prevent contamination ingress",
-          "No — positive pressure has nothing to do with sterile storage",
-          "Yes — positive pressure means contaminants can't enter even with the door open",
-          "No — sterile storage should have negative pressure"
+          "Positive pressure has nothing to do with sterile storage",
+          "Positive pressure means contaminants can't enter even with the door open",
+          "Sterile storage should have negative pressure"
         ],
         correctIndex: 0,
           explanation: "The manager is partially correct. Positive pressure in sterile storage is a design feature that pushes clean air out when doors open, preventing contaminated corridor air from entering. However, this protection works for brief openings. Prolonged or very frequent door openings can overwhelm the HVAC system's ability to maintain the pressure differential, allowing temperature, humidity, and particulate shifts.",
@@ -521,10 +521,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss11",
       baseQuestion: "A sterile processing tech notices a tiny pinhole in the corner of a peel pack containing a laparoscopic grasper. The rest of the packaging appears intact. Can this instrument be used?",
       baseOptions: [
-        "No — but the instrument can be flash sterilized for immediate use",
-        "Yes — as long as the pinhole is away from the sterile seal area",
-        "No — any breach in packaging integrity means the item is no",
-        "Yes — the pinhole is too small to allow contamination"
+        "But the instrument can be flash sterilized for immediate use",
+        "As long as the pinhole is away from the sterile seal area",
+        "Any breach in packaging integrity means the item is no",
+        "The pinhole is too small to allow contamination"
       ],
       baseCorrectIndex: 2,
       baseExplanation: "Under event-related sterility, any compromise to packaging integrity — no matter how small — renders the item non-sterile. A pinhole is a breach that allows microorganism entry.",
@@ -584,10 +584,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility argues that the alcove was approved during their last renovation ICRA and that environmental monitoring shows acceptable temperature and humidity. Does the ICRA approval make the location compliant?",
           options: [
-          "Yes — ICRA approval validates the location for sterile storage",
+          "ICRA approval validates the location for sterile storage",
           "It depends on how many trays are stored there",
-          "Yes — as long as the curtain is antimicrobial fabric",
-          "No — an ICRA evaluates construction risk"
+          "As long as the curtain is antimicrobial fabric",
+          "An ICRA evaluates construction risk"
         ],
         correctIndex: 3,
           explanation: "ICRA approval addresses infection control risks during construction and renovation. It does not certify that a location meets the ongoing operational standards for sterile storage. The storage location must independently satisfy requirements for enclosure, access control, environmental monitoring, and protection from contamination.",
@@ -596,10 +596,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility proposes converting the alcove into a proper enclosed storage room by adding a door and walls during a weekend renovation. They plan to move sterile supplies back in Monday morning. The infection preventionist asks whether an ICRA is needed for this small renovation. What is the correct answer?",
           options: [
-          "No — ICRA is only required for projects that involve the main OR suites, not adjacent alcoves",
-          "No — adding a door and walls is a minor maintenance task, not a renovation requiring ICRA",
-          "Yes — any construction or renovation activity adjacent to or within areas where sterile",
-          "Yes — but only if the renovation takes more than 48 hours"
+          "ICRA is only required for projects that involve the main OR suites, not adjacent alcoves",
+          "Adding a door and walls is a minor maintenance task, not a renovation requiring ICRA",
+          "Any construction or renovation activity adjacent to or within areas where sterile",
+          "But only if the renovation takes more than 48 hours"
         ],
         correctIndex: 2,
           explanation: "Per Joint Commission IC.02.02.01, an Infection Control Risk Assessment is required for ALL construction, renovation, and maintenance activities in or near patient care areas and areas where sterile supplies are stored. Even 'minor' work like adding walls and a door generates dust, debris, and vibration that can contaminate nearby sterile supplies and patient care spaces. The ICRA must be performed before work begins and must define containment measures, negative pressure requirements, traffic patterns, and monitoring during construction.",
@@ -608,10 +608,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The renovation is completed with proper ICRA. The new enclosed room has a door, walls, temperature/humidity monitoring, and controlled access. However, the surveyor notes that the room was built using the existing hallway HVAC zone — meaning the room does not have independent ventilation control or filtration separate from the public hallway. The facility argues that the door creates an adequate barrier. Is this arrangement compliant for long-term sterile storage?",
           options: [
-          "Yes — as long as temperature and humidity readings are within range, the source of the air supply is irrelevant",
-          "No — but only if the hallway has carpet, which harbors more contaminants",
-          "Yes — the door separates the room from the hallway, and the HVAC system provides filtered air regardless of zoning",
-          "No — sterile storage areas sharing an HVAC zone with public corridors cannot independently maintain required"
+          "As long as temperature and humidity readings are within range, the source of the air supply is irrelevant",
+          "But only if the hallway has carpet, which harbors more contaminants",
+          "The door separates the room from the hallway, and the HVAC system provides filtered air regardless of zoning",
+          "Sterile storage areas sharing an HVAC zone with public corridors cannot independently maintain required"
         ],
         correctIndex: 3,
           explanation: "Sharing an HVAC zone with a public corridor means the sterile storage room cannot independently control temperature, humidity, pressure relationship, filtration, or air changes. Public hallway HVAC is designed for occupant comfort, not sterile storage requirements. The room needs its own HVAC zone (or at minimum, a dedicated branch with appropriate filtration, pressure control, and independent thermostat/humidistat) to reliably maintain the 68-75°F, 20-60% RH, positive pressure environment required for sterile storage. Per ASHRAE 170 and Joint Commission EC standards, the ventilation design must match the room's intended function.",
@@ -623,10 +623,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss13",
       baseQuestion: "A tech removes a sterilized tray from the autoclave and notices a wet spot on the outside of the wrap. The chemical indicator inside has changed color appropriately. Can the tray be stored as sterile?",
       baseOptions: [
-        "No — a wet pack is considered contaminated and must be re-processed",
-        "No — but it may be used if dried under a laminar flow hood first",
-        "Yes — if the moisture is limited to the outer layer of wrapping only",
-        "Yes — the chemical indicator confirms successful sterilization"
+        "A wet pack is considered contaminated and must be re-processed",
+        "But it may be used if dried under a laminar flow hood first",
+        "If the moisture is limited to the outer layer of wrapping only",
+        "The chemical indicator confirms successful sterilization"
       ],
       baseCorrectIndex: 0,
       baseExplanation: "A wet pack is considered contaminated because moisture wicks bacteria through packaging material. Wet packs must be re-processed regardless of chemical indicator results. The cause of the wet pack (overloading, improper loading, sterilizer malfunction) must also be investigated.",
@@ -635,9 +635,9 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "Investigation reveals the wet pack was caused by the tech overloading the sterilizer chamber. The other 5 trays in the same load appear dry. Should the dry trays from the same load be released for storage?",
           options: [
-          "Yes — but only after running a biological indicator on one of the dry trays",
-          "No — the entire load must be reprocessed",
-          "Yes — the dry trays are fine since only the wet one was compromised",
+          "But only after running a biological indicator on one of the dry trays",
+          "The entire load must be reprocessed",
+          "The dry trays are fine since only the wet one was compromised",
           "Release the dry trays but quarantine them until the BI from the load incubates"
         ],
         correctIndex: 1,
@@ -674,10 +674,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss14",
       baseQuestion: "A facility uses color-coded labels on sterile packs: green for Monday, blue for Tuesday, etc. They rotate stock using these colors to ensure oldest items are used first. Is this a compliant practice?",
       baseOptions: [
-        "Yes — FIFO (first in, first out) rotation is a best practice for sterile storage",
-        "No — color-coded rotation implies time-related sterility, which contradicts event-related sterility principles",
-        "Yes — color coding adds a visual management layer that supports organized and efficient stock retrieval",
-        "No — color-coded labels may cause staff to confuse sterile items with non-sterile items on the shelf"
+        "FIFO (first in, first out) rotation is a best practice for sterile storage",
+        "Color-coded rotation implies time-related sterility, which contradicts event-related sterility principles",
+        "Color coding adds a visual management layer that supports organized and efficient stock retrieval",
+        "Color-coded labels may cause staff to confuse sterile items with non-sterile items on the shelf"
       ],
       baseCorrectIndex: 1,
       baseExplanation: "Under event-related sterility, items remain sterile based on packaging integrity, not age. Color-coded day-of-week rotation implies items have a shelf life, which contradicts event-related sterility. Stock rotation based on time is unnecessary and can create confusion.",
@@ -686,10 +686,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The SPD manager argues that FIFO rotation reduces waste by ensuring older stock is used before newer stock, even under event-related sterility. Is there any valid reason to maintain stock rotation in an event-related sterility system?",
           options: [
-          "No — the FDA prohibits stock rotation for sterile items",
-          "Yes — but only for items sterilized with ethylene oxide",
-          "No — event-related sterility eliminates any need for stock rotation",
-          "Yes — while sterility is event-related"
+          "The FDA prohibits stock rotation for sterile items",
+          "But only for items sterilized with ethylene oxide",
+          "Event-related sterility eliminates any need for stock rotation",
+          "While sterility is event-related"
         ],
         correctIndex: 3,
           explanation: "While event-related sterility means items don't expire based on time, reasonable stock management is still prudent. Items stored longer have more opportunity for packaging damage from repeated handling, environmental exposure, and adhesive degradation. Rotation ensures items are periodically inspected and that the oldest packaging is used while integrity is most reliably intact.",
@@ -698,10 +698,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility removes the day-of-week color-coded labels. However, a surveyor notices they have replaced them with labels that include the sterilization date and a 'use by' date of 6 months. The facility says this is their compromise between event-related and time-related sterility. Is this compliant?",
           options: [
-          "Yes — adding a 'use by' date is a reasonable quality measure that doesn't conflict with event-related sterility",
-          "No — printing a 'use by' date on event-related sterility packages creates a contradictory policy",
-          "Yes — facilities can choose either event-related or time-related sterility and this facility chose time-related",
-          "No — 6 months is too short; if using time-related sterility, the minimum shelf life must be 12 months"
+          "Adding a 'use by' date is a reasonable quality measure that doesn't conflict with event-related sterility",
+          "Printing a 'use by' date on event-related sterility packages creates a contradictory policy",
+          "Facilities can choose either event-related or time-related sterility and this facility chose time-related",
+          "6 months is too short; if using time-related sterility, the minimum shelf life must be 12 months"
         ],
         correctIndex: 1,
           explanation: "A facility must commit to either event-related or time-related sterility — not both simultaneously on the same items. Putting a 'use by' date on event-related packages creates dangerous confusion: staff may discard perfectly sterile items past the date (waste) or assume items within the date are safe without checking packaging (risk). Under event-related sterility, the sterilization date is acceptable for traceability, but no expiration or 'use by' date should appear. If the facility prefers time-related sterility, it must be implemented as a complete system with validated shelf-life parameters.",
@@ -737,9 +737,9 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The facility separates the chemicals to another room. However, the sterile storage room shares a ventilation system with the adjacent housekeeping chemical storage closet. Is this arrangement acceptable?",
           options: [
-          "Yes — the chemicals are now in a separate room",
-          "No — shared ventilation can transfer chemical vapors",
-          "Yes — modern HVAC systems filter chemical vapors",
+          "The chemicals are now in a separate room",
+          "Shared ventilation can transfer chemical vapors",
+          "Modern HVAC systems filter chemical vapors",
           "It depends on the types of chemicals stored next door"
         ],
         correctIndex: 1,
@@ -749,10 +749,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "After separating ventilation systems, the surveyor conducts a broader review and discovers that while bulk cleaning chemicals are now properly separated, individual spray bottles of surface disinfectant are kept on a small shelf inside the sterile storage room for 'quick wipe-downs' of shelving. Staff say they only use EPA-registered hospital-grade disinfectants. Is this acceptable?",
           options: [
-          "No — even small quantities of disinfectants stored in the sterile storage room create risk from",
-          "Yes — small quantities of disinfectant in spray bottles are different from bulk chemical storage",
-          "No — but only if the disinfectants contain bleach or phenolics",
-          "Yes — EPA-registered hospital-grade disinfectants are safe to use and store around sterile supplies"
+          "Even small quantities of disinfectants stored in the sterile storage room create risk from",
+          "Small quantities of disinfectant in spray bottles are different from bulk chemical storage",
+          "But only if the disinfectants contain bleach or phenolics",
+          "EPA-registered hospital-grade disinfectants are safe to use and store around sterile supplies"
         ],
         correctIndex: 0,
           explanation: "The prohibition on storing chemicals with sterile supplies applies regardless of quantity or chemical type. Even hospital-grade disinfectants in spray bottles off-gas volatile compounds that can degrade packaging over time, and accidental spraying or spills can directly contaminate sterile items. The correct practice is to bring cleaning supplies into the sterile storage room only when actively cleaning, then remove them immediately after. No cleaning chemicals should be stored in the space, per Joint Commission IC and EC standards.",
@@ -800,10 +800,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "During the investigation of the positive BI, the facility discovers that the BI was placed in the center of a tightly packed load rather than in the most challenging location for steam penetration. The sterilizer manufacturer's manual specifies BI placement in the front-bottom of the chamber near the drain. Could the BI placement explain the positive result, and does this change the response?",
           options: [
-          "Yes — the incorrect placement explains the positive result, so the load can be considered properly sterilized and the recall can be reversed",
+          "The incorrect placement explains the positive result, so the load can be considered properly sterilized and the recall can be reversed",
           "The incorrect placement may have contributed to the positive result by placing the BI in a location with poor steam access; however",
-          "Yes — since the BI was misplaced, the result should be discarded and a new BI run in the correct location to get a valid result",
-          "No — BI placement location does not affect results; BIs respond to temperature regardless of steam penetration"
+          "Since the BI was misplaced, the result should be discarded and a new BI run in the correct location to get a valid result",
+          "BI placement location does not affect results; BIs respond to temperature regardless of steam penetration"
         ],
         correctIndex: 1,
           explanation: "Incorrect BI placement is a significant finding that may have contributed to the positive result, but it does not invalidate the result. A positive BI means sterilization conditions were not achieved at that location in the chamber — regardless of whether the placement was correct. This actually reveals two problems: (1) a potential sterilization failure requiring full investigation, and (2) a competency/training gap in BI placement. Both must be addressed. The recall and sterilizer shutdown remain in effect until root cause analysis is complete and three consecutive empty-chamber BIs pass with correct placement.",
@@ -827,10 +827,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss17",
       baseQuestion: "A surveyor asks to see the facility's written policy on handling manufacturer Instructions for Use (IFU) for reprocessing surgical instruments. The facility has IFUs on file but admits they haven't been reviewed in 3 years. Is this compliant?",
       baseOptions: [
-        "Yes — unless the manufacturer has issued a safety recall",
-        "Yes — having IFUs on file meets the requirement",
-        "No — IFUs must be periodically reviewed and updated",
-        "No — IFUs older than one year must be discarded entirely"
+        "Unless the manufacturer has issued a safety recall",
+        "Having IFUs on file meets the requirement",
+        "IFUs must be periodically reviewed and updated",
+        "IFUs older than one year must be discarded entirely"
       ],
       baseCorrectIndex: 2,
       baseExplanation: "Facilities must not only have IFUs on file but must also have a process for periodically reviewing and updating them. Manufacturers frequently update reprocessing instructions, and using outdated IFUs may result in improper sterilization.",
@@ -878,10 +878,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss18",
       baseQuestion: "A facility stores some sterile trays in closed cabinets and others on open shelving with dust covers. A surveyor asks why there are two different storage methods. The manager says it's due to space constraints. Is mixed storage methodology acceptable?",
       baseOptions: [
-        "Yes — both closed cabinets and covered open shelving are acceptable methods for sterile storage",
-        "No — mixed methods create inconsistent environmental controls across storage areas",
-        "No — a facility must choose one storage method and use it consistently",
-        "Yes — provided that the open shelving areas maintain a higher air change rate than cabinets"
+        "Both closed cabinets and covered open shelving are acceptable methods for sterile storage",
+        "Mixed methods create inconsistent environmental controls across storage areas",
+        "A facility must choose one storage method and use it consistently",
+        "Provided that the open shelving areas maintain a higher air change rate than cabinets"
       ],
       baseCorrectIndex: 0,
       baseExplanation: "Both closed cabinets and covered open shelving are acceptable sterile storage methods. Using both in the same facility is permitted as long as each method meets all applicable standards for environmental protection.",
@@ -891,9 +891,9 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           question: "The surveyor then notices that the open shelving with dust covers is located directly beneath an HVAC supply vent. The dust covers are in place. Is this arrangement acceptable?",
           options: [
           "It depends on whether the vent has a HEPA filter",
-          "Yes — the dust covers protect the items from airflow",
-          "No — direct airflow from HVAC vents onto sterile",
-          "Yes — HVAC air is filtered and clean"
+          "The dust covers protect the items from airflow",
+          "Direct airflow from HVAC vents onto sterile",
+          "HVAC air is filtered and clean"
         ],
         correctIndex: 2,
           explanation: "Sterile items should not be stored directly beneath HVAC supply vents. Even filtered air creates direct airflow that can dislodge dust covers, deposit particulates on packaging, and create localized temperature and humidity variations. Shelving should be repositioned away from direct vent airflow.",
@@ -929,10 +929,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss19",
       baseQuestion: "A sterile processing department uses a commercial tracking system that scans and logs every sterilized tray from processing through distribution and return. A surveyor asks if manual log books are still needed. What is the correct answer?",
       baseOptions: [
-        "Yes — electronic systems alone are not accepted by surveyors",
-        "Yes — manual logs are always required as a backup",
-        "No — an electronic tracking system that captures all",
-        "No — but the system must print a daily summary for review"
+        "Electronic systems alone are not accepted by surveyors",
+        "Manual logs are always required as a backup",
+        "An electronic tracking system that captures all",
+        "But the system must print a daily summary for review"
       ],
       baseCorrectIndex: 2,
       baseExplanation: "Electronic tracking systems can replace manual logs if they capture all required data elements (sterilizer number, cycle number, load contents, date, operator, BI results, etc.) and provide reliable data retrieval. A backup/disaster recovery plan should exist.",
@@ -953,10 +953,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "After the tracking system is restored, the IT department discovers that data from 2 of the 4 hours of downtime cannot be reconstructed because the system's cache was overwritten. The SPD manager tries to recreate records from memory and asks techs to recall which trays they processed. Is this an acceptable approach to filling the data gap?",
           options: [
-          "Yes — staff recollection is a valid source of documentation when electronic systems fail",
-          "No — but the facility can waive documentation requirements for items processed during system downtime as a one-time exception",
-          "Yes — as long as the reconstructed records are clearly marked as 'estimated' in the system",
-          "No — retrospectively created records based on staff memory are unreliable and do not constitute valid sterilization"
+          "Staff recollection is a valid source of documentation when electronic systems fail",
+          "But the facility can waive documentation requirements for items processed during system downtime as a one-time exception",
+          "As long as the reconstructed records are clearly marked as 'estimated' in the system",
+          "Retrospectively created records based on staff memory are unreliable and do not constitute valid sterilization"
         ],
         correctIndex: 3,
           explanation: "Sterilization documentation must be created contemporaneously with the process to be valid. Records reconstructed from memory hours or days later are inherently unreliable and would not withstand regulatory scrutiny. The facility must: (1) determine which items from the 2-hour gap are untraceable, (2) check if any parallel documentation exists (sterilizer printouts, cycle records from the sterilizer itself), (3) perform a risk assessment on untraceable items, (4) potentially recall items that cannot be verified, and (5) implement the manual backup procedure going forward to prevent recurrence.",
@@ -980,10 +980,10 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
       id: "dd-ss20",
       baseQuestion: "A facility has a satellite sterile storage area in the OR suite that is restocked daily from the main SPD. The satellite area has no independent temperature or humidity monitoring — it relies on the OR suite's general HVAC system. Is this compliant?",
       baseOptions: [
-        "No — satellite areas also need their own sterilization equipment",
-        "No — satellite sterile storage areas must have independent",
-        "Yes — brief storage times make monitoring unnecessary here",
-        "Yes — the OR HVAC system maintains the same conditions"
+        "Satellite areas also need their own sterilization equipment",
+        "Satellite sterile storage areas must have independent",
+        "Brief storage times make monitoring unnecessary here",
+        "The OR HVAC system maintains the same conditions"
       ],
       baseCorrectIndex: 1,
       baseExplanation: "Satellite sterile storage areas must have their own environmental monitoring (temperature and humidity) documented. Relying on the general OR suite HVAC system does not verify that the specific storage area maintains required conditions, especially since OR temperature is often set lower than sterile storage requirements.",

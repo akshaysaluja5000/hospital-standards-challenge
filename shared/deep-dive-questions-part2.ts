@@ -154,10 +154,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins4",
         baseQuestion: "An electrosurgical instrument (bovie pencil tip) is being inspected before sterilization. The tech checks the tip for debris but does not test the insulation. Is this inspection complete?",
         baseOptions: [
-        "No — electrosurgical instruments require insulation integrity testing in addition to visual inspection",
-        "Yes — visual tip inspection under standard lighting is the primary method for electrosurgical instruments",
-        "Yes — insulation testing is only required if visible damage to the coating is identified during processing",
-        "No — but only if the instrument has been flagged by the surgeon for performance concerns in a prior case"
+        "Electrosurgical instruments require insulation integrity testing in addition to visual inspection",
+        "Visual tip inspection under standard lighting is the primary method for electrosurgical instruments",
+        "Insulation testing is only required if visible damage to the coating is identified during processing",
+        "But only if the instrument has been flagged by the surgeon for performance concerns in a prior case"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Electrosurgical instruments must have their insulation tested for cracks, pinholes, or defects that could cause unintended burns or electrical arcing. Visual tip inspection alone is insufficient. Insulation testing devices are used to verify the integrity of the insulating coating along the entire shaft.",
@@ -201,10 +201,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins5",
         baseQuestion: "A surgeon complains that a pair of Metzenbaum scissors 'doesn't cut well anymore.' The SPD tech tests the scissors by cutting through a thin latex glove and the scissors cut cleanly. Should the scissors be returned to service?",
         baseOptions: [
-        "Yes — but document the surgeon's concern and schedule a follow-up check after the next sterilization cycle",
-        "Yes — the scissors passed the cutting test by cleanly cutting a latex glove, confirming adequate sharpness",
-        "No — any surgeon complaint requires the instrument to be permanently retired from service immediately",
-        "No — the cutting test should use standardized test material, and the surgeon's concern warrants further evaluation"
+        "But document the surgeon's concern and schedule a follow-up check after the next sterilization cycle",
+        "The scissors passed the cutting test by cleanly cutting a latex glove, confirming adequate sharpness",
+        "Any surgeon complaint requires the instrument to be permanently retired from service immediately",
+        "The cutting test should use standardized test material, and the surgeon's concern warrants further evaluation"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Sharpness testing should use standardized materials appropriate for the instrument type. Cutting a latex glove is not a validated sharpness test. The surgeon's clinical concern about cutting performance should be taken seriously and the instrument evaluated using proper testing methods or sent to an instrument repair specialist.",
@@ -270,9 +270,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         }, {
           question: "The facility processes the loaner instruments through SPD but discovers that the manufacturer's instructions for use (IFU) were not included with the loaner set. The vendor rep verbally describes the cleaning and sterilization parameters. Can the instruments be processed based on verbal instructions?",
           options: [
-          "Yes — per AAMI ST79 Section 12.2.3, if the loaner instruments are substantially similar in design, materials, and construction to instruments the facility already processes with validated IFUs on file, the facility may apply the existing processing parameters from the most closely matched instrument set, provided the vendor rep confirms material compatibility and the processing deviation is documented in the loaner instrument log",
-          "No — instruments cannot be processed without written manufacturer IFU; verbal instructions are not acceptable because they cannot be verified, may be inaccurate, and provide no documentation trail for compliance; the facility must obtain the written IFU before processing or contact the manufacturer directly",
-          "Yes — the vendor representative is an authorized agent of the manufacturer per the vendor credentialing agreement VC-3.1 and is qualified to provide processing instructions on behalf of the manufacturer; verbal instructions given by credentialed vendor representatives carry the same regulatory weight as written IFU per the FDA's Guidance on Reprocessing Medical Devices Section 7.4.2, provided the instructions are documented by SPD staff during the verbal briefing",
+          "Per AAMI ST79 Section 12.2.3, if the loaner instruments are substantially similar in design, materials, and construction to instruments the facility already processes with validated IFUs on file, the facility may apply the existing processing parameters from the most closely matched instrument set, provided the vendor rep confirms material compatibility and the processing deviation is documented in the loaner instrument log",
+          "Instruments cannot be processed without written manufacturer IFU; verbal instructions are not acceptable because they cannot be verified, may be inaccurate, and provide no documentation trail for compliance; the facility must obtain the written IFU before processing or contact the manufacturer directly",
+          "The vendor representative is an authorized agent of the manufacturer per the vendor credentialing agreement VC-3.1 and is qualified to provide processing instructions on behalf of the manufacturer; verbal instructions given by credentialed vendor representatives carry the same regulatory weight as written IFU per the FDA's Guidance on Reprocessing Medical Devices Section 7.4.2, provided the instructions are documented by SPD staff during the verbal briefing",
           "The facility can apply standardized universal sterilization parameters of 270°F prevacuum for 4 minutes for standard stainless steel instruments per AAMI ST79 Table 7, since these parameters achieve a Sterility Assurance Level of 10⁻⁶ for all conventional surgical-grade stainless steel alloys regardless of manufacturer-specific IFU variations, and the generic parameters provide adequate margin for instruments without device-specific processing documentation"
         ],
         correctIndex: 1,
@@ -295,10 +295,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins7",
         baseQuestion: "A tech notices that a ratcheted instrument (Kelly clamp) does not hold at the first ratchet position but locks at the second and third. Should this instrument be included in the tray?",
         baseOptions: [
-        "No — unless the instrument is designated for a non-vascular case where lower clamping force is acceptable",
-        "No — ratcheted instruments must hold securely at all ratchet positions to be considered functional",
-        "Yes — holding at second and third positions is functionally acceptable since surgeons rarely use the first click",
-        "Yes — but only if the tech documents the first-position failure and attaches a note to the instrument tray"
+        "Unless the instrument is designated for a non-vascular case where lower clamping force is acceptable",
+        "Ratcheted instruments must hold securely at all ratchet positions to be considered functional",
+        "Holding at second and third positions is functionally acceptable since surgeons rarely use the first click",
+        "But only if the tech documents the first-position failure and attaches a note to the instrument tray"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Ratcheted instruments must engage and hold at every ratchet position. Failure at the first position indicates worn ratchet teeth or misaligned jaws. This instrument could slip during a procedure, potentially losing a clamp on a vessel, and must be removed for repair.",
@@ -306,7 +306,7 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         followUps: [{
           question: "The tech tests the ratchet by clicking it and shaking the instrument gently. Is this an adequate ratchet functionality test?",
           options: [
-          "Yes — if it holds while shaking, the ratchet is functional",
+          "If it holds while shaking, the ratchet is functional",
           "The test should include engaging each ratchet position individually",
           "Ratchets only need to be tested annually during preventive maintenance",
           "Only the surgeon should test ratcheted instruments"
@@ -342,10 +342,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins8",
         baseQuestion: "During a tray assembly, the tech notices a box lock (pivot point) on a hemostat has visible lateral play — the jaws wobble side to side when closed. The instrument still opens and closes smoothly. Can it be used?",
         baseOptions: [
-        "Yes — smooth opening and closing action is the primary criterion and minor lateral play is normal tolerance",
-        "No — unless biomedical engineering confirms the lateral play is within the manufacturer's specified tolerance",
-        "Yes — but tag the instrument for evaluation at the next scheduled preventive maintenance cycle review",
-        "No — lateral play at the box lock indicates a loose or worn pivot, which affects jaw alignment and clamping precision"
+        "Smooth opening and closing action is the primary criterion and minor lateral play is normal tolerance",
+        "Unless biomedical engineering confirms the lateral play is within the manufacturer's specified tolerance",
+        "But tag the instrument for evaluation at the next scheduled preventive maintenance cycle review",
+        "Lateral play at the box lock indicates a loose or worn pivot, which affects jaw alignment and clamping precision"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Lateral play at the box lock means the pivot pin is worn or loose. This causes jaw misalignment, reducing clamping effectiveness and potentially allowing the instrument to slip off tissue or vessels during use. The instrument must be removed for repair.",
@@ -389,10 +389,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins9",
         baseQuestion: "A tech is inspecting a Kerrison rongeur and notices that the footplate (the piece that slides in and out) has a small nick on its cutting edge. The instrument still bites and cuts tissue test material. Should it be used?",
         baseOptions: [
-        "Yes — but document the nick and schedule the instrument for sharpening after the next scheduled case",
-        "Yes — if the rongeur passes functional bite testing with clean cuts through test material, minor nicks are acceptable",
-        "No — any damage to cutting edges of instruments used near the spinal cord requires removal from service, as even small nicks can tear tissue or create bone fragments",
-        "No — but only for spinal cases; the same nick on a general orthopedic rongeur would be within tolerance"
+        "But document the nick and schedule the instrument for sharpening after the next scheduled case",
+        "If the rongeur passes functional bite testing with clean cuts through test material, minor nicks are acceptable",
+        "Any damage to cutting edges of instruments used near the spinal cord requires removal from service, as even small nicks can tear tissue or create bone fragments",
+        "But only for spinal cases; the same nick on a general orthopedic rongeur would be within tolerance"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Kerrison rongeurs are used in spinal surgery where precision is critical. A nicked cutting edge can tear dura, create bone fragments, or produce an uneven bite. Given the proximity to the spinal cord, any cutting edge defect requires removal from service for sharpening or replacement.",
@@ -530,10 +530,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins12",
         baseQuestion: "During instrument inspection, a tech notices a fine crack in the ceramic insert of a bipolar forceps tip. The forceps still conduct electricity when tested. Should it remain in service?",
         baseOptions: [
-        "Yes — the forceps passed conductivity testing, so the ceramic crack is cosmetic and does not affect function",
-        "No — cracked ceramic inserts can cause current leakage, unintended tissue damage, and unpredictable energy delivery",
-        "No — unless biomedical engineering performs an isolation resistance test and certifies the crack is non-critical",
-        "Yes — but apply medical-grade adhesive to seal the crack and retest conductivity before returning to service"
+        "The forceps passed conductivity testing, so the ceramic crack is cosmetic and does not affect function",
+        "Cracked ceramic inserts can cause current leakage, unintended tissue damage, and unpredictable energy delivery",
+        "Unless biomedical engineering performs an isolation resistance test and certifies the crack is non-critical",
+        "But apply medical-grade adhesive to seal the crack and retest conductivity before returning to service"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Ceramic inserts in bipolar forceps provide precise energy delivery to tissue. A cracked insert can alter current pathways, cause energy to leak to unintended areas, and result in unpredictable tissue effects. The instrument must be removed for repair or replacement regardless of basic conductivity testing.",
@@ -577,10 +577,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins13",
         baseQuestion: "A preventive maintenance (PM) schedule shows that microsurgical instruments are due for PM every 6 months. The last PM was completed 8 months ago. Is this a compliance concern?",
         baseOptions: [
-        "No — as long as the instruments pass routine post-use visual inspection after each surgical case",
-        "No — a 2-month delay is within an acceptable grace period for non-critical instruments",
-        "Yes — but only if the instruments are used in high-risk procedures such as neurosurgery or cardiac cases",
-        "Yes — preventive maintenance must be performed on schedule"
+        "As long as the instruments pass routine post-use visual inspection after each surgical case",
+        "A 2-month delay is within an acceptable grace period for non-critical instruments",
+        "But only if the instruments are used in high-risk procedures such as neurosurgery or cardiac cases",
+        "Preventive maintenance must be performed on schedule"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Preventive maintenance schedules are based on manufacturer recommendations and risk assessment. Overdue PM means instruments have not been evaluated for wear, alignment, or function degradation within the validated interval. This is a compliance finding that could be cited during a survey.",
@@ -601,7 +601,7 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
           options: [
           "PM can be eliminated if post-use inspection is documented every time",
           "Only the manufacturer can decide whether PM is needed",
-          "Yes — post-use inspection after every case is more frequent and therefore superior to periodic PM",
+          "Post-use inspection after every case is more frequent and therefore superior to periodic PM",
           "Post-use inspection and preventive maintenance serve different purposes"
         ],
         correctIndex: 3,
@@ -624,10 +624,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins14",
         baseQuestion: "A tech discovers that a rigid laparoscope has internal fogging that does not clear after cleaning and drying. The scope still transmits an image. Can it be returned to service?",
         baseOptions: [
-        "Yes — it still provides a usable image and minor fogging does not affect clinical visualization",
-        "No — internal fogging indicates a seal failure allowing moisture into the optical cavity",
-        "Yes — but run the scope through an additional high-temperature sterilization cycle to evaporate moisture",
-        "No — unless the scope is designated for non-critical procedures where image clarity is less important"
+        "It still provides a usable image and minor fogging does not affect clinical visualization",
+        "Internal fogging indicates a seal failure allowing moisture into the optical cavity",
+        "But run the scope through an additional high-temperature sterilization cycle to evaporate moisture",
+        "Unless the scope is designated for non-critical procedures where image clarity is less important"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Internal fogging in a rigid scope indicates the hermetic seal has failed, allowing moisture to enter the optical cavity. This moisture cannot be cleaned or sterilized between the internal lenses and will progressively worsen. The scope must be sent for professional repair.",
@@ -671,10 +671,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins15",
         baseQuestion: "An instrument tracking system shows that a particular set of retractors has been processed 847 times over 3 years. There is no documented inspection beyond routine post-use checks. Is additional evaluation warranted?",
         baseOptions: [
-        "Yes — high-cycle instruments should undergo periodic comprehensive evaluation beyond routine checks",
-        "No — cycle count alone does not determine instrument condition if post-use inspections are documented",
-        "No — routine inspection after each use is sufficient to detect all forms of instrument degradation",
-        "Yes — but only if the manufacturer specifies a maximum cycle count in the instructions for use"
+        "High-cycle instruments should undergo periodic comprehensive evaluation beyond routine checks",
+        "Cycle count alone does not determine instrument condition if post-use inspections are documented",
+        "Routine inspection after each use is sufficient to detect all forms of instrument degradation",
+        "But only if the manufacturer specifies a maximum cycle count in the instructions for use"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Instruments with high cycle counts accumulate stress from repeated sterilization, mechanical use, and chemical exposure. Beyond routine post-use inspection, periodic comprehensive evaluations should assess for metal fatigue, joint wear, surface pitting, and functional degradation that may not be apparent during quick routine checks.",
@@ -718,10 +718,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins16",
         baseQuestion: "A tech notices that the tip of a laparoscopic needle holder has a misaligned jaw — one side sits slightly higher than the other when closed. The instrument still grasps a needle. Should it be used?",
         baseOptions: [
-        "Yes — but notify the surgeon before the case so they can decide whether the alignment is acceptable",
-        "Yes — it still holds a needle and minor jaw misalignment does not affect suturing performance",
-        "No — misaligned jaws on a needle holder compromise secure grasping and precise suture placement",
-        "No — unless the misalignment is less than 1mm, which falls within standard manufacturing tolerance"
+        "But notify the surgeon before the case so they can decide whether the alignment is acceptable",
+        "It still holds a needle and minor jaw misalignment does not affect suturing performance",
+        "Misaligned jaws on a needle holder compromise secure grasping and precise suture placement",
+        "Unless the misalignment is less than 1mm, which falls within standard manufacturing tolerance"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Needle holder jaw alignment is critical for secure needle grasping during suturing. Misaligned jaws allow the needle to rotate or wobble, which can result in imprecise suturing, tissue damage, or a lost needle in a minimally invasive surgical field. The instrument must be sent for repair.",
@@ -740,9 +740,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         }, {
           question: "A tech inspects a needle holder and notices the tungsten carbide (TC) inserts appear smooth and shiny in certain areas where the cross-hatch pattern has worn away. The ratchet still holds and the jaws align properly. Should this instrument remain in service?",
           options: [
-          "Yes — the ratchet and alignment are the primary functional criteria",
-          "Yes — TC inserts are cosmetic and do not affect function",
-          "No — smooth or worn TC inserts cannot grip a needle securely under",
+          "The ratchet and alignment are the primary functional criteria",
+          "TC inserts are cosmetic and do not affect function",
+          "Smooth or worn TC inserts cannot grip a needle securely under",
           "Only replace the inserts if the surgeon specifically complains about grip"
         ],
         correctIndex: 2,
@@ -779,7 +779,7 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
           "It depends on how expensive the instrument is",
           "The count sheet should only be updated through the",
           "Leave the count sheet at 28 and add a note that one was lost",
-          "Yes — update it to reflect the current inventory of 27"
+          "Update it to reflect the current inventory of 27"
         ],
         correctIndex: 1,
           explanation: "Count sheets are controlled documents that define the validated tray configuration. Changes must go through a formal modification process with input from the surgical team, documentation of rationale, and management approval. The proper action is to replace the discarded instrument and maintain the validated count, not reduce the count to match the loss. Informal count sheet modifications undermine instrument accountability.",
@@ -812,10 +812,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins18",
         baseQuestion: "A powered surgical instrument (orthopedic drill) is being inspected. The tech checks that the battery holds a charge and the drill turns on. Is this inspection adequate?",
         baseOptions: [
-        "Yes — as long as the tech documents the power-on test result in the instrument processing log",
-        "No — powered instrument inspection must also include chuck function, attachment security, and all modes",
-        "Yes — confirming the device powers on and the battery holds charge is sufficient for clearance",
-        "No — but additional testing is only required during annual preventive maintenance evaluations"
+        "As long as the tech documents the power-on test result in the instrument processing log",
+        "Powered instrument inspection must also include chuck function, attachment security, and all modes",
+        "Confirming the device powers on and the battery holds charge is sufficient for clearance",
+        "But additional testing is only required during annual preventive maintenance evaluations"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Powered surgical instruments require comprehensive inspection beyond basic power-on testing. Chuck mechanisms must secure attachments properly, all operating modes must function correctly, triggers must respond proportionally, and all mechanical connections must be secure to prevent intraoperative failures.",
@@ -859,10 +859,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins19",
         baseQuestion: "During inspection, a tech finds rust spots on the hinge of a stainless steel instrument. She cleans them off with a rust-removing solution and the instrument appears clean. Can it be returned to service?",
         baseOptions: [
-        "Yes — but apply a protective instrument milk solution after cleaning to prevent future rust formation",
-        "Yes — the rust has been successfully removed and the instrument surface is now clean and functional",
+        "But apply a protective instrument milk solution after cleaning to prevent future rust formation",
+        "The rust has been successfully removed and the instrument surface is now clean and functional",
         "The instrument needs further evaluation to determine the underlying cause of corrosion",
-        "No — any instrument that develops rust must be permanently retired from service without exception"
+        "Any instrument that develops rust must be permanently retired from service without exception"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Rust on stainless steel instruments indicates the protective chromium oxide layer has been breached. While surface rust can be removed, the underlying cause must be identified — chemical exposure, dissimilar metal contact, prolonged moisture, or manufacturing defect. The instrument should be evaluated by a repair specialist to determine if it can be safely returned to service.",
@@ -906,10 +906,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-ins20",
         baseQuestion: "A surgical tech reports that a self-retaining retractor (Balfour) fails to hold its position and slowly closes during use. The SPD tech inspects it and confirms the ratchet bar is worn. Can it be repaired in-house by filing the ratchet teeth?",
         baseOptions: [
-        "Yes — as long as a biomedical engineer supervises the filing and documents the repair in the log",
-        "Yes — filing the teeth will restore function and is an accepted in-house repair technique",
-        "No — but only because the Balfour is a self-retaining retractor requiring vendor-calibrated tension",
-        "No — in-house filing of ratchet components can alter geometry and create contaminating metal particles"
+        "As long as a biomedical engineer supervises the filing and documents the repair in the log",
+        "Filing the teeth will restore function and is an accepted in-house repair technique",
+        "But only because the Balfour is a self-retaining retractor requiring vendor-calibrated tension",
+        "In-house filing of ratchet components can alter geometry and create contaminating metal particles"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "In-house filing of ratchet teeth is not a validated repair method. It can alter the tooth profile geometry, create metal particles that contaminate the instrument, and result in unpredictable holding strength. Instrument repairs must be performed by qualified repair vendors who can restore components to manufacturer specifications.",
@@ -931,7 +931,7 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
           "The facility should require all repair vendors to meet the same documentation",
           "Accept the minimal documentation but have SPD perform additional testing",
           "Documentation requirements only apply to in-house repairs",
-          "Yes — faster turnaround reduces instrument shortages and the instruments are functional"
+          "Faster turnaround reduces instrument shortages and the instruments are functional"
         ],
         correctIndex: 0,
           explanation: "Instrument repair vendors are an extension of the facility's quality management system. Minimal documentation like 'repaired and tested, passed' provides no evidence that the repair met manufacturer specifications, used appropriate parts, or achieved validated performance criteria. The facility should establish written vendor qualification criteria including required documentation elements, conduct periodic vendor audits, and require that all repair reports include specific repairs performed, parts used, testing results, and specification compliance. A vendor unwilling or unable to meet documentation standards should not be used regardless of speed or cost advantages.",
@@ -1012,10 +1012,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac2",
         baseQuestion: "A fluid warmer in a perioperative area is set to warm IV fluids to 115 degrees F. Is this within acceptable limits?",
         baseOptions: [
-        "No — but the warmer can remain at 115 degrees F if the charge nurse documents a clinical justification and monitors the patient's IV site continuously",
-        "No — fluid warmers must not exceed 110 degrees F to prevent hemolysis and vascular damage",
-        "Yes — AAMI TIR12 guidelines permit fluid warming up to 120 degrees F for perioperative use provided the fluid is administered through an in-line temperature monitoring system with continuous display",
-        "Yes — crystalloid solutions may be safely warmed up to 120 degrees F as long as the fluid type is verified and documented before administration"
+        "But the warmer can remain at 115 degrees F if the charge nurse documents a clinical justification and monitors the patient's IV site continuously",
+        "Fluid warmers must not exceed 110 degrees F to prevent hemolysis and vascular damage",
+        "AAMI TIR12 guidelines permit fluid warming up to 120 degrees F for perioperative use provided the fluid is administered through an in-line temperature monitoring system with continuous display",
+        "Crystalloid solutions may be safely warmed up to 120 degrees F as long as the fluid type is verified and documented before administration"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "IV fluid warmers must not exceed 110 degrees F. Temperatures above this can cause hemolysis (destruction of red blood cells), vascular endothelial damage, and protein denaturation. This applies to all warmed IV fluids and irrigation solutions.",
@@ -1110,9 +1110,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac4",
         baseQuestion: "A nurse plugs a patient's personal cell phone charger into an electrical outlet in a perioperative holding area. Is this a concern?",
         baseOptions: [
-        "Yes — non-hospital-approved electrical devices must not be connected to hospital power in patient care areas without electrical safety testing",
+        "Non-hospital-approved electrical devices must not be connected to hospital power in patient care areas without electrical safety testing",
         "No concern — low-voltage phone chargers do not pose a risk in holding areas because patients are not yet connected to monitoring equipment or invasive lines",
-        "Yes — but only if the charger is plugged into a red emergency outlet; standard white outlets may be used for personal devices without safety testing",
+        "But only if the charger is plugged into a red emergency outlet; standard white outlets may be used for personal devices without safety testing",
         "No concern — UL-listed personal chargers operating below 20V DC output are classified as Class II double-insulated devices under NFPA 99 Section 10.2.3.6 and are exempt from hospital electrical safety testing requirements in monitored patient care areas"
       ],
       baseCorrectIndex: 0,
@@ -1159,10 +1159,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac5",
         baseQuestion: "The OR suite HVAC system provides 15 air changes per hour with 3 of those being fresh outside air. Does this meet minimum requirements?",
         baseOptions: [
-        "No — but the facility may apply for a ventilation variance if it can demonstrate equivalent infection control outcomes through enhanced HEPA filtration",
-        "Yes — 15 total air changes with 3 fresh exchanges meets the current standard for ORs that do not perform procedures on immunocompromised patients",
-        "Yes — ASHRAE 170 Table 7.1 specifies a minimum of 15 total air changes per hour with 3 fresh air exchanges for Class B surgical suites, which includes standard operating rooms not designated for organ transplant or immunocompromised patients",
-        "No — OR suites require a minimum of 20 total air changes per hour with at least 4 being fresh outside air"
+        "But the facility may apply for a ventilation variance if it can demonstrate equivalent infection control outcomes through enhanced HEPA filtration",
+        "15 total air changes with 3 fresh exchanges meets the current standard for ORs that do not perform procedures on immunocompromised patients",
+        "ASHRAE 170 Table 7.1 specifies a minimum of 15 total air changes per hour with 3 fresh air exchanges for Class B surgical suites, which includes standard operating rooms not designated for organ transplant or immunocompromised patients",
+        "OR suites require a minimum of 20 total air changes per hour with at least 4 being fresh outside air"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Operating rooms require a minimum of 20 total air changes per hour (ACH) with at least 4 being fresh outside air per ASHRAE 170 and FGI Guidelines. At 15 ACH with 3 fresh, this OR is significantly below minimum requirements for both total and fresh air changes.",
@@ -1170,9 +1170,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         followUps: [{
           question: "The facilities director says the HVAC system was designed and installed 15 years ago and met the code requirements at the time of construction. Does the facility need to upgrade to current standards?",
           options: [
-          "No — existing systems are grandfathered to the code in effect when installed per NFPA 101 Section 43.1.2 existing conditions provision, which allows facilities to maintain HVAC performance at the original design specification as long as the system has not undergone major modification, and the facility documents the original code compliance in the Environment of Care management plan",
+          "Existing systems are grandfathered to the code in effect when installed per NFPA 101 Section 43.1.2 existing conditions provision, which allows facilities to maintain HVAC performance at the original design specification as long as the system has not undergone major modification, and the facility documents the original code compliance in the Environment of Care management plan",
           "Only if the facility is doing a renovation that triggers code compliance — FGI Guidelines Section 1.2-3.4.2.2 limits retroactive HVAC code application to areas undergoing renovation exceeding $500,000 or involving more than 50% of the department floor area, at which point the renovated section must meet current ASHRAE 170 standards",
-          "Yes — all systems must be upgraded within one year of new code adoption per CMS Conditions of Participation Section 482.41(d)(3), which requires facilities to achieve full compliance with current ASHRAE 170 ventilation standards within 12 months of the effective date of each new edition through their annual capital improvement budget cycle",
+          "All systems must be upgraded within one year of new code adoption per CMS Conditions of Participation Section 482.41(d)(3), which requires facilities to achieve full compliance with current ASHRAE 170 ventilation standards within 12 months of the effective date of each new edition through their annual capital improvement budget cycle",
           "While existing conditions may be grandfathered for some building codes, Joint Commission evaluates environmental conditions based on current standards for patient safety; if the current ventilation is inadequate to maintain proper infection control, the facility must develop a plan to achieve compliance, which may include HVAC modification, supplemental filtration, or operational modifications"
         ],
         correctIndex: 3,
@@ -1209,9 +1209,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         baseQuestion: "During an emergency power system test, the generator starts within 10 seconds and reaches full load. The test is documented. Is this sufficient for Joint Commission compliance?",
         baseOptions: [
         "Additional information is needed — the test must verify that all life-safety and critical branch circuits transfer properly and generator testing must occur under specific conditions",
-        "Yes — a documented 10-second start and full load acceptance satisfies both monthly and annual generator testing requirements under current NFPA 110 standards",
-        "No — the generator must reach full load within 8 seconds, not 10, per the updated 2022 NFPA 110 Type 8 classification for hospital emergency power systems",
-        "Yes — NFPA 110 Section 8.4.2 requires only that the generator achieve rated speed within 10 seconds and accept load transfer, which has been demonstrated; the monthly test documentation of startup time and load acceptance constitutes full compliance with the emergency power testing requirements"
+        "A documented 10-second start and full load acceptance satisfies both monthly and annual generator testing requirements under current NFPA 110 standards",
+        "The generator must reach full load within 8 seconds, not 10, per the updated 2022 NFPA 110 Type 8 classification for hospital emergency power systems",
+        "NFPA 110 Section 8.4.2 requires only that the generator achieve rated speed within 10 seconds and accept load transfer, which has been demonstrated; the monthly test documentation of startup time and load acceptance constitutes full compliance with the emergency power testing requirements"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Generator testing must verify not just startup time but also proper transfer of life-safety, critical, and equipment branch circuits. Tests must occur monthly for 30 minutes under load and annually for 4 continuous hours. Documentation must include all parameters, not just startup confirmation.",
@@ -1220,7 +1220,7 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
           question: "The facilities engineer reveals that monthly generator tests are run under building load but the load only reaches 25% of the generator's rated capacity. Is this adequate?",
           options: [
           "Load percentage does not matter for compliance — NFPA 110 Section 8.4.2.1 evaluates generator testing based on transfer time and voltage stability during transfer, not on the percentage of rated capacity under load; the standard recognizes that connected emergency load varies by facility and does not impose a minimum load threshold for monthly operational tests",
-          "Yes — any load testing demonstrates the generator works and meets NFPA 110 requirements; the standard requires that the generator start, achieve rated voltage and frequency, and accept the connected load within 10 seconds regardless of whether that load represents 5% or 100% of the generator's nameplate capacity; load percentage is a maintenance consideration, not a compliance metric",
+          "Any load testing demonstrates the generator works and meets NFPA 110 requirements; the standard requires that the generator start, achieve rated voltage and frequency, and accept the connected load within 10 seconds regardless of whether that load represents 5% or 100% of the generator's nameplate capacity; load percentage is a maintenance consideration, not a compliance metric",
           "50% load is the minimum requirement per NFPA 110 Section 8.4.9, which specifies that monthly generator tests must achieve at least 50% of nameplate rating for a minimum of 30 continuous minutes to adequately exercise the engine, cooling system, and exhaust components; facilities below this threshold must install permanent load banks sized to achieve the 50% minimum",
           "NFPA 110 requires that generators be tested at a minimum of 30% of nameplate rating; if the facility's connected load does not reach 30%, supplemental load banking must be used to achieve the minimum load threshold and prevent wet stacking, which can damage the generator over time"
         ],
@@ -1282,8 +1282,8 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
           options: [
           "Only a concern if the alcove is not visible from the hallway — NFPA 10 Section 6.1.3.8 requires fire extinguisher locations to be visible from the nearest travel path, but allows partial obstruction of the access path as long as the extinguisher signage remains visible from 25 feet and the obstruction can be moved within 15 seconds by a single person",
           "Acceptable if there is another extinguisher within 50 feet — NFPA 10 Section 6.2.1.1 specifies maximum travel distance of 75 feet for Class A hazard areas and provides redundancy credit when multiple extinguishers serve overlapping coverage zones, reducing accessibility requirements for individual units to reasonable rather than immediate access",
-          "No — the extinguisher is functional and inspected, so it is compliant with NFPA 10 Section 7.2.1.2 which defines compliance based on the extinguisher's operational status (charged, inspected, current certification) rather than its physical accessibility; access path obstruction is classified as an environmental finding under facilities management rather than a fire protection deficiency",
-          "Yes — fire extinguishers must be readily accessible with clear, unobstructed access at all times; equipment blocking access creates a life-safety hazard because seconds matter during a fire emergency; the X-ray machine must be relocated, and staff must be educated that fire safety equipment access must never be blocked"
+          "The extinguisher is functional and inspected, so it is compliant with NFPA 10 Section 7.2.1.2 which defines compliance based on the extinguisher's operational status (charged, inspected, current certification) rather than its physical accessibility; access path obstruction is classified as an environmental finding under facilities management rather than a fire protection deficiency",
+          "Fire extinguishers must be readily accessible with clear, unobstructed access at all times; equipment blocking access creates a life-safety hazard because seconds matter during a fire emergency; the X-ray machine must be relocated, and staff must be educated that fire safety equipment access must never be blocked"
         ],
         correctIndex: 3,
           explanation: "NFPA 10 and Joint Commission standards require fire extinguishers to be readily accessible and unobstructed at all times. Even though the extinguisher is functional and inspected, blocking access defeats its purpose. During a fire, staff must be able to locate and retrieve an extinguisher within seconds. The facility must ensure that equipment storage practices never compromise fire safety equipment access, and staff education should emphasize that blocking fire extinguishers, pull stations, or exits is never acceptable.",
@@ -1306,10 +1306,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac8",
         baseQuestion: "The sterile processing department's water system uses tap water for the final rinse cycle of the washer-disinfector. Is this acceptable?",
         baseOptions: [
-        "Yes — municipal tap water that meets EPA Safe Drinking Water Act standards is approved by AAMI ST79 Section 7.6.3 for all washer-disinfector cycles including the final rinse, provided the facility documents annual water quality testing results from the local utility",
-        "Yes — tap water is acceptable for the final rinse as long as instruments are immediately dried with lint-free towels after the cycle to prevent mineral spotting",
-        "No — but untreated tap water may be used temporarily if the treated water system is down, provided instruments are re-rinsed when the system is restored",
-        "No — the final rinse in washer-disinfectors should use treated water (critical water) to prevent mineral deposits, spotting, and potential endotoxin exposure on instruments"
+        "Municipal tap water that meets EPA Safe Drinking Water Act standards is approved by AAMI ST79 Section 7.6.3 for all washer-disinfector cycles including the final rinse, provided the facility documents annual water quality testing results from the local utility",
+        "Tap water is acceptable for the final rinse as long as instruments are immediately dried with lint-free towels after the cycle to prevent mineral spotting",
+        "But untreated tap water may be used temporarily if the treated water system is down, provided instruments are re-rinsed when the system is restored",
+        "The final rinse in washer-disinfectors should use treated water (critical water) to prevent mineral deposits, spotting, and potential endotoxin exposure on instruments"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Final rinse water in washer-disinfectors should be treated (typically reverse osmosis, deionized, or distilled) to prevent mineral deposits that can interfere with sterilization, cause instrument staining, and introduce endotoxins. AAMI ST79 recommends critical water for the final rinse cycle.",
@@ -1355,10 +1355,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac9",
         baseQuestion: "A surveyor notices that the medical gas zone valve for the OR suite is located inside one of the operating rooms. Is this placement appropriate?",
         baseOptions: [
-        "Yes — zone valve placement inside the OR is acceptable as long as the valve is clearly labeled, accessible, and staff are trained on its location during orientation",
-        "No — medical gas zone valves should be located outside the area they serve so they can be accessed without entering the affected zone during an emergency",
-        "Yes — NFPA 99 Section 5.1.3.5.2 permits zone valve placement within the served area when the valve is located within 5 feet of the room entrance, is clearly labeled with high-visibility signage, and is accessible without requiring passage through the clinical workspace",
-        "No — but a variance may be granted if the facility installs remote electronic shut-off controls at the nursing station as an alternative access point"
+        "Zone valve placement inside the OR is acceptable as long as the valve is clearly labeled, accessible, and staff are trained on its location during orientation",
+        "Medical gas zone valves should be located outside the area they serve so they can be accessed without entering the affected zone during an emergency",
+        "NFPA 99 Section 5.1.3.5.2 permits zone valve placement within the served area when the valve is located within 5 feet of the room entrance, is clearly labeled with high-visibility signage, and is accessible without requiring passage through the clinical workspace",
+        "But a variance may be granted if the facility installs remote electronic shut-off controls at the nursing station as an alternative access point"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Medical gas zone valves must be located outside the area they control, typically in the corridor. Placing a zone valve inside the room it controls means staff would have to enter a potentially dangerous area (fire, gas leak) to shut off the supply. Valves must be accessible, clearly labeled, and in a location that does not require entering the affected zone.",
@@ -1404,10 +1404,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac10",
         baseQuestion: "The temperature in the operating room is set to 65 degrees F because the surgical team prefers a cooler environment. Is this within compliance?",
         baseOptions: [
-        "Yes — surgeon preference for cooler temperatures is an accepted clinical practice that overrides facility temperature guidelines when documented in the operative record",
-        "No — OR temperature must be maintained between 68-75 degrees F per ASHRAE/FGI guidelines; 65 degrees F is below the minimum",
-        "No — but the team may lower the temperature to 65 degrees F if active patient warming devices are in use and core temperature is monitored continuously",
-        "Yes — ASHRAE 170 Section 7.2 Table 7.1 footnote 'b' permits surgeon-requested temperature adjustments down to 62 degrees F for orthopedic and neurosurgical cases when documented as a clinical necessity and approved through the perioperative committee"
+        "Surgeon preference for cooler temperatures is an accepted clinical practice that overrides facility temperature guidelines when documented in the operative record",
+        "OR temperature must be maintained between 68-75 degrees F per ASHRAE/FGI guidelines; 65 degrees F is below the minimum",
+        "But the team may lower the temperature to 65 degrees F if active patient warming devices are in use and core temperature is monitored continuously",
+        "ASHRAE 170 Section 7.2 Table 7.1 footnote 'b' permits surgeon-requested temperature adjustments down to 62 degrees F for orthopedic and neurosurgical cases when documented as a clinical necessity and approved through the perioperative committee"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Operating room temperature must be maintained between 68-75 degrees F per ASHRAE 170 and FGI Guidelines. Temperatures below 68 degrees F increase the risk of patient hypothermia, surgical site infection, and coagulopathy. Staff comfort preferences do not override patient safety requirements.",
@@ -1453,10 +1453,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac11",
         baseQuestion: "An equipment recall notice is received for a specific model of patient warming device. The biomed department checks and finds 2 units in the facility. One is in the OR; the other is in central supply. Only the central supply unit is removed. Is this adequate?",
         baseOptions: [
-        "No — but the OR unit may continue use until the end of the current surgical schedule if removing it would disrupt patient care",
-        "Yes — FDA Medical Device Recall Classification Section 7.46.1 permits continued use of recalled devices that are under active clinical monitoring, provided the department documents enhanced surveillance measures and the device has not exhibited the specific failure mode identified in the recall notice",
-        "No — all recalled units must be removed from service regardless of location or current use status",
-        "Yes — recalled devices may remain in service if the facility documents a risk assessment and the specific failure mode has not been observed on that unit"
+        "But the OR unit may continue use until the end of the current surgical schedule if removing it would disrupt patient care",
+        "FDA Medical Device Recall Classification Section 7.46.1 permits continued use of recalled devices that are under active clinical monitoring, provided the department documents enhanced surveillance measures and the device has not exhibited the specific failure mode identified in the recall notice",
+        "All recalled units must be removed from service regardless of location or current use status",
+        "Recalled devices may remain in service if the facility documents a risk assessment and the specific failure mode has not been observed on that unit"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "All units covered by a recall must be removed from service immediately, regardless of where they are or whether they are currently in use. Continued use of recalled equipment after notification is a serious compliance violation and patient safety risk.",
@@ -1502,10 +1502,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac12",
         baseQuestion: "During a fire drill in the perioperative area, staff correctly identify the location of fire alarm pull stations but cannot locate the oxygen shut-off valve for their zone. Is this a compliance concern?",
         baseOptions: [
-        "Yes — perioperative staff must know the location of both fire alarm pull stations and medical gas shut-off valves as part of fire safety competency",
-        "No — NFPA 99 Section 5.1.4.2 designates medical gas shut-off valve operation as a facilities engineering responsibility separate from clinical fire safety competency; perioperative staff are required to know RACE procedures and fire alarm pull station locations, but gas valve identification falls under the engineering department's emergency response scope",
-        "No — oxygen shut-off valve knowledge is only required for charge nurses and department managers, not for all perioperative clinical staff members",
-        "Yes — but only if the staff member has completed the annual fire safety module; new hires in their first 90 days are exempt from this competency requirement"
+        "Perioperative staff must know the location of both fire alarm pull stations and medical gas shut-off valves as part of fire safety competency",
+        "NFPA 99 Section 5.1.4.2 designates medical gas shut-off valve operation as a facilities engineering responsibility separate from clinical fire safety competency; perioperative staff are required to know RACE procedures and fire alarm pull station locations, but gas valve identification falls under the engineering department's emergency response scope",
+        "Oxygen shut-off valve knowledge is only required for charge nurses and department managers, not for all perioperative clinical staff members",
+        "But only if the staff member has completed the annual fire safety module; new hires in their first 90 days are exempt from this competency requirement"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Perioperative fire safety requires knowledge of RACE (Rescue, Alarm, Contain, Extinguish/Evacuate) procedures AND the location of medical gas shut-off valves. Oxygen supports combustion and must be shut off in fire emergencies. Staff inability to locate gas shut-offs is a significant fire safety deficiency.",
@@ -1551,10 +1551,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac13",
         baseQuestion: "The humidity in Operating Room 3 reads 28%. Staff say it has been in this range for several days. Is this acceptable?",
         baseOptions: [
-        "No — OR humidity must be maintained above 35% at all times to prevent static discharge, and 28% is significantly below this mandatory minimum threshold",
-        "Yes — humidity below 30% is within acceptable limits and requires no corrective action as long as daily readings are logged and reviewed by the safety officer",
-        "Yes — ASHRAE 170 Table 7.1 removed the minimum humidity requirement for operating rooms in the 2017 revision, establishing only a maximum threshold of 60% relative humidity; the standard defers minimum humidity control to the facility's clinical engineering department based on equipment manufacturer specifications",
-        "No — OR humidity should be maintained between 20-60%, and while 28% is within range, very low humidity increases electrostatic discharge risk, especially around flammable anesthetic agents"
+        "OR humidity must be maintained above 35% at all times to prevent static discharge, and 28% is significantly below this mandatory minimum threshold",
+        "Humidity below 30% is within acceptable limits and requires no corrective action as long as daily readings are logged and reviewed by the safety officer",
+        "ASHRAE 170 Table 7.1 removed the minimum humidity requirement for operating rooms in the 2017 revision, establishing only a maximum threshold of 60% relative humidity; the standard defers minimum humidity control to the facility's clinical engineering department based on equipment manufacturer specifications",
+        "OR humidity should be maintained between 20-60%, and while 28% is within range, very low humidity increases electrostatic discharge risk, especially around flammable anesthetic agents"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "While 28% falls within the 20-60% acceptable range, this is on the lower end. Very low humidity environments increase the risk of electrostatic discharge, which can ignite flammable gases or create sparks near oxygen-enriched atmospheres. The facility should investigate why humidity is consistently at the low end and consider whether HVAC adjustments are needed.",
@@ -1649,10 +1649,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac15",
         baseQuestion: "The sterile processing area maintains negative air pressure relative to the adjacent clean corridor. Is this the correct pressure relationship?",
         baseOptions: [
-        "No — the decontamination area should have negative pressure",
-        "Yes — negative pressure prevents contaminants from leaving SPD",
-        "Yes — the entire SPD suite should maintain negative pressure relative to all surrounding corridors to contain airborne contaminants within the department",
-        "No — both the decontamination and clean assembly areas should maintain equal neutral pressure relative to the corridor to prevent cross-contamination"
+        "The decontamination area should have negative pressure",
+        "Negative pressure prevents contaminants from leaving SPD",
+        "The entire SPD suite should maintain negative pressure relative to all surrounding corridors to contain airborne contaminants within the department",
+        "Both the decontamination and clean assembly areas should maintain equal neutral pressure relative to the corridor to prevent cross-contamination"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Pressure relationships in SPD must follow the workflow from dirty to clean. The decontamination area should be under negative pressure (air flows in, containing contaminants). Clean/sterile areas should be under positive pressure (air flows out, preventing contaminated air from entering). This creates an airflow gradient that supports infection control.",
@@ -1698,10 +1698,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac16",
         baseQuestion: "A portable X-ray machine is brought into the OR for an intraoperative scan. The machine's last electrical safety inspection was 14 months ago. The facility policy requires annual safety inspections. Should the machine be used?",
         baseOptions: [
-        "Yes — a 2-month delay is negligible for diagnostic equipment",
-        "Yes — portable diagnostic equipment is exempt from annual inspection requirements if it passes a visual check before each use by the operating technologist",
-        "No — equipment with expired safety inspections should not be used in patient care areas until the inspection is completed and documented",
-        "No — but the machine may be used in an emergency if the requesting physician documents clinical necessity and accepts responsibility for the equipment"
+        "A 2-month delay is negligible for diagnostic equipment",
+        "Portable diagnostic equipment is exempt from annual inspection requirements if it passes a visual check before each use by the operating technologist",
+        "Equipment with expired safety inspections should not be used in patient care areas until the inspection is completed and documented",
+        "But the machine may be used in an emergency if the requesting physician documents clinical necessity and accepts responsibility for the equipment"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Equipment with expired safety inspections must not be used in patient care areas. Annual electrical safety inspection is a patient safety requirement, not a suggestion. Using equipment past its inspection interval violates both facility policy and Joint Commission standards for medical equipment management.",
@@ -1747,10 +1747,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac17",
         baseQuestion: "A Legionella water management plan exists for the facility, but testing has not been performed in 8 months. The plan calls for quarterly testing. Is this acceptable?",
         baseOptions: [
-        "Yes — having the plan is the primary requirement",
-        "No — the plan must be actively implemented with testing performed on the schedule defined in the water management plan",
-        "No — but testing may be deferred up to 12 months if the facility's municipal water supplier provides quarterly compliance reports to the infection control committee",
-        "Yes — the written plan satisfies Joint Commission requirements as long as the facility documents the reason for any testing delays in the annual review"
+        "Having the plan is the primary requirement",
+        "The plan must be actively implemented with testing performed on the schedule defined in the water management plan",
+        "But testing may be deferred up to 12 months if the facility's municipal water supplier provides quarterly compliance reports to the infection control committee",
+        "The written plan satisfies Joint Commission requirements as long as the facility documents the reason for any testing delays in the annual review"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Joint Commission requires not just a water management plan but active implementation. Legionella and other waterborne pathogen testing must occur on the schedule defined in the plan. A plan that exists only on paper without execution is a significant compliance failure.",
@@ -1796,10 +1796,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac18",
         baseQuestion: "An anesthesia provider stores a personal desflurane vaporizer on top of the anesthesia machine between cases. The vaporizer is not secured. Is this a safety concern?",
         baseOptions: [
-        "No — the vaporizer is not in use between cases and poses no risk when the machine is idle",
-        "No — vaporizers are designed to sit on flat surfaces and their weight keeps them stable enough for temporary storage between surgical cases",
-        "Yes — but only if the vaporizer contains residual anesthetic agent; empty vaporizers may be stored unsecured on any stable surface in the OR",
-        "Yes — unsecured equipment on top of the anesthesia machine creates fall hazards and may obstruct access to critical controls during emergencies"
+        "The vaporizer is not in use between cases and poses no risk when the machine is idle",
+        "Vaporizers are designed to sit on flat surfaces and their weight keeps them stable enough for temporary storage between surgical cases",
+        "But only if the vaporizer contains residual anesthetic agent; empty vaporizers may be stored unsecured on any stable surface in the OR",
+        "Unsecured equipment on top of the anesthesia machine creates fall hazards and may obstruct access to critical controls during emergencies"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Unsecured equipment on top of anesthesia machines creates risks of falling objects during patient movement, bed adjustment, or room cleaning. All equipment must be properly secured or stored when not in active use. Additionally, equipment storage on anesthesia machines can obstruct access to controls during emergencies.",
@@ -1894,10 +1894,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-fac20",
         baseQuestion: "A new MRI suite is being constructed adjacent to the OR. The construction crew has breached the infection control barrier separating the construction area from the active perioperative suite. Is an immediate response required?",
         baseOptions: [
-        "No — barrier breaches are only reportable if construction dust is visibly present in the adjacent clinical space or detected by air quality monitoring equipment",
-        "Yes — any breach of the ICRA barrier requires immediate response including stopping construction and assessing contamination of the perioperative area",
-        "Yes — but the response is limited to documenting the breach in the construction log and notifying the project manager to repair the barrier by end of shift",
-        "No — brief barrier breaches during construction are unavoidable and do not require formal response if sealed within one hour of discovery"
+        "Barrier breaches are only reportable if construction dust is visibly present in the adjacent clinical space or detected by air quality monitoring equipment",
+        "Any breach of the ICRA barrier requires immediate response including stopping construction and assessing contamination of the perioperative area",
+        "But the response is limited to documenting the breach in the construction log and notifying the project manager to repair the barrier by end of shift",
+        "Brief barrier breaches during construction are unavoidable and do not require formal response if sealed within one hour of discovery"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Construction barrier breaches in perioperative areas are serious events. Construction dust contains Aspergillus spores and other pathogens dangerous to surgical patients. Immediate response includes stopping construction activity, repairing the barrier, assessing whether contaminants entered the perioperative area, and potentially testing air quality.",
@@ -1953,10 +1953,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd1",
         baseQuestion: "Contaminated instruments arrive in the decontamination area. A tech begins manually cleaning them without first applying enzymatic spray or foam. Is this a concern?",
         baseOptions: [
-        "No — manual cleaning with water and detergent at the decontam sink provides adequate bioburden removal without pretreatment",
-        "No — enzymatic pretreatment is only required for orthopedic cases with heavy bioburden per facility protocol",
-        "Yes — point-of-use enzymatic treatment prevents bioburden from drying on instruments, making subsequent cleaning more effective",
-        "No — the decontamination sink soak replaces point-of-use treatment if instruments arrive within 60 minutes"
+        "Manual cleaning with water and detergent at the decontam sink provides adequate bioburden removal without pretreatment",
+        "Enzymatic pretreatment is only required for orthopedic cases with heavy bioburden per facility protocol",
+        "Point-of-use enzymatic treatment prevents bioburden from drying on instruments, making subsequent cleaning more effective",
+        "The decontamination sink soak replaces point-of-use treatment if instruments arrive within 60 minutes"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Point-of-use enzymatic treatment (spray, foam, or soaking) should be applied to instruments as soon as possible after use to prevent bioburden from drying. Dried bioburden is significantly harder to remove and can form biofilm that resists standard cleaning processes.",
@@ -2000,10 +2000,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd2",
         baseQuestion: "An SPD tech is manually cleaning a lumened instrument. She flushes the lumen with enzymatic solution, then rinses with tap water, and moves on to the next instrument. Has she completed the manual cleaning properly?",
         baseOptions: [
-        "No — proper lumen cleaning requires brushing the entire lumen with an appropriately sized brush, enzymatic flushing, multiple rinses, and visual inspection",
-        "Yes — flushing is sufficient if the enzymatic solution was prepared at the correct concentration",
-        "Yes — flushing with enzymatic solution and rinsing is adequate for lumens under 4mm internal diameter",
-        "Yes — the washer-disinfector automated flush cycle will complete channel cleaning after manual rinse"
+        "Proper lumen cleaning requires brushing the entire lumen with an appropriately sized brush, enzymatic flushing, multiple rinses, and visual inspection",
+        "Flushing is sufficient if the enzymatic solution was prepared at the correct concentration",
+        "Flushing with enzymatic solution and rinsing is adequate for lumens under 4mm internal diameter",
+        "The washer-disinfector automated flush cycle will complete channel cleaning after manual rinse"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Manual cleaning of lumened instruments requires brushing the entire lumen length with a brush sized to contact the inner walls, followed by enzymatic solution flushing, thorough rinsing with treated water, and verification that the lumen is clean. Flushing alone does not remove adherent bioburden from lumen walls.",
@@ -2047,10 +2047,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd3",
         baseQuestion: "The ultrasonic cleaner in the SPD is running with visible bubbles on the surface during the cleaning cycle. A tech says this is normal cavitation. Is the observation correct?",
         baseOptions: [
-        "No — the issue is water temperature rather than cavitation, since cold water reduces cleaning efficiency",
-        "No — visible large bubbles on the surface may indicate degassing rather than proper cavitation; true ultrasonic cavitation produces microscopic implosion bubbles, not visible surface bubbles",
-        "Yes — visible bubble formation on the surface confirms adequate ultrasonic energy output for cleaning",
-        "Yes — both visible and microscopic bubbles occur simultaneously during a normal cleaning cycle"
+        "The issue is water temperature rather than cavitation, since cold water reduces cleaning efficiency",
+        "Visible large bubbles on the surface may indicate degassing rather than proper cavitation; true ultrasonic cavitation produces microscopic implosion bubbles, not visible surface bubbles",
+        "Visible bubble formation on the surface confirms adequate ultrasonic energy output for cleaning",
+        "Both visible and microscopic bubbles occur simultaneously during a normal cleaning cycle"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Visible large bubbles on the surface of an ultrasonic cleaner typically indicate degassing (dissolved air being released from the solution) rather than effective cavitation. True ultrasonic cavitation involves microscopic bubble formation and implosion that creates the cleaning action. Degassing must be completed before effective cleaning begins.",
@@ -2069,8 +2069,8 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         }, {
           question: "The SPD performs aluminum foil cavitation tests weekly, but the results show uniform pitting in the center of the tank and no pitting along the edges and corners. The supervisor marks the test as 'pass' because most of the foil shows cavitation. Is this interpretation correct?",
           options: [
-          "No — uneven cavitation distribution indicates dead zones where instruments placed in those areas will not be effectively cleaned; the ultrasonic transducers may need recalibration or replacement, the tank may be overloaded, or instrument placement racks may be blocking energy distribution; the test should be marked as a conditional pass requiring corrective action",
-          "Yes — cavitation in the center of the tank is sufficient for cleaning because AAMI ST79 Section 7.8.4 defines the 'active cleaning zone' as the central 70% of the tank volume, and instruments should be positioned within this zone using manufacturer-provided positioning racks that concentrate instrument placement away from tank edges where ultrasonic energy naturally attenuates",
+          "Uneven cavitation distribution indicates dead zones where instruments placed in those areas will not be effectively cleaned; the ultrasonic transducers may need recalibration or replacement, the tank may be overloaded, or instrument placement racks may be blocking energy distribution; the test should be marked as a conditional pass requiring corrective action",
+          "Cavitation in the center of the tank is sufficient for cleaning because AAMI ST79 Section 7.8.4 defines the 'active cleaning zone' as the central 70% of the tank volume, and instruments should be positioned within this zone using manufacturer-provided positioning racks that concentrate instrument placement away from tank edges where ultrasonic energy naturally attenuates",
           "Corners always have less cavitation and this is expected behavior documented in the manufacturer's performance specifications, which state that ultrasonic energy intensity decreases by approximately 15-20% within 2 inches of tank walls due to wave reflection interference patterns — the aluminum foil test should only evaluate the central tank area to avoid false failure readings from normal edge attenuation",
           "Only test the center of the tank since that is where instruments are placed per the loading protocol — AAMI ST79 Annex D Section 2.3 specifies that the aluminum foil test strip should be positioned horizontally at the midpoint of the tank depth in the geometric center, and that edge and corner testing is only required during annual validation, not during routine weekly efficacy checks"
         ],
@@ -2095,9 +2095,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         baseQuestion: "A washer-disinfector cycle completes but the printout shows the final rinse temperature reached only 170 degrees F instead of the required 180 degrees F thermal disinfection temperature. Can the load be released?",
         baseOptions: [
         "It depends — a 10-degree variance is acceptable if the washer-disinfector passed its last validation",
-        "Yes — a 10-degree variance is within acceptable tolerance if contact time was proportionally extended",
-        "Yes — the instruments will be sterilized after washing, which compensates for the temperature shortfall",
-        "No — the cycle did not meet the minimum thermal disinfection parameters; the load must be reprocessed or the instruments must undergo alternative disinfection"
+        "A 10-degree variance is within acceptable tolerance if contact time was proportionally extended",
+        "The instruments will be sterilized after washing, which compensates for the temperature shortfall",
+        "The cycle did not meet the minimum thermal disinfection parameters; the load must be reprocessed or the instruments must undergo alternative disinfection"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Thermal disinfection in washer-disinfectors requires a minimum temperature (typically 180 degrees F/82 degrees C) for a specified contact time. Failure to reach this temperature means the disinfection cycle was incomplete. The load cannot be released and must be reprocessed after the machine is investigated and repaired.",
@@ -2188,10 +2188,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd6",
         baseQuestion: "A new tech in the decontamination area is wearing a surgical mask, eye protection, and gloves but is not wearing a fluid-resistant gown. Is her PPE adequate?",
         baseOptions: [
-        "No — decontamination area PPE must include a fluid-resistant gown or coverall to protect against splashes of contaminated water, blood, and body fluids",
-        "No — but the primary deficiency is that she needs heavy-duty utility gloves rather than the missing gown",
-        "Yes — a fluid-resistant gown is only required when manually scrubbing instruments at the decontam sink",
-        "Yes — mask, eye protection, and gloves provide the minimum required PPE for handling contaminated devices"
+        "Decontamination area PPE must include a fluid-resistant gown or coverall to protect against splashes of contaminated water, blood, and body fluids",
+        "But the primary deficiency is that she needs heavy-duty utility gloves rather than the missing gown",
+        "A fluid-resistant gown is only required when manually scrubbing instruments at the decontam sink",
+        "Mask, eye protection, and gloves provide the minimum required PPE for handling contaminated devices"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Decontamination area PPE requirements include a fluid-resistant gown or coverall, gloves (heavy-duty utility gloves, not exam gloves), face protection (mask and eye protection or face shield), and in some cases hearing protection when operating ultrasonic cleaners. A fluid-resistant gown is essential to protect against splash exposure.",
@@ -2235,10 +2235,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd7",
         baseQuestion: "Water quality testing in SPD shows elevated endotoxin levels in the purified water used for final rinse. Instruments processed with this water appear clean. Is there a concern?",
         baseOptions: [
-        "No — instruments that pass visual inspection with illuminated magnification have adequate water quality for use",
-        "No — endotoxin levels only affect flexible endoscope reprocessing, not standard rigid instrument rinse water",
-        "Yes — but only if the instruments are intended for implant procedures or use in immunocompromised patients",
-        "Yes — elevated endotoxins in rinse water can deposit pyrogens on instruments that survive sterilization and cause pyrogenic reactions in patients"
+        "Instruments that pass visual inspection with illuminated magnification have adequate water quality for use",
+        "Endotoxin levels only affect flexible endoscope reprocessing, not standard rigid instrument rinse water",
+        "But only if the instruments are intended for implant procedures or use in immunocompromised patients",
+        "Elevated endotoxins in rinse water can deposit pyrogens on instruments that survive sterilization and cause pyrogenic reactions in patients"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Endotoxins (pyrogens) are heat-stable lipopolysaccharides from gram-negative bacteria cell walls. They can survive standard steam sterilization and, if deposited on instruments from contaminated rinse water, can cause fever, inflammatory responses, and in severe cases, septic shock in patients. Water quality for final rinse must meet AAMI standards for endotoxin limits.",
@@ -2257,10 +2257,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         }, {
           question: "The facility's water treatment system includes reverse osmosis (RO) and deionization (DI) stages. Monthly water quality reports show bacterial counts within limits but trending upward over the past 6 months. The water treatment vendor recommends monitoring only. Is this adequate?",
           options: [
-          "Yes — as long as counts are within the AAMI ST108 Section 6.2 specified limits of less than 200 CFU/mL for utility water and less than 10 CFU/mL for critical water, no corrective action is needed — trending upward within acceptable limits is a normal fluctuation pattern caused by seasonal water temperature variations that affect municipal supply microbial content, and intervention is only required when results exceed the defined action limits on two consecutive monthly tests",
+          "As long as counts are within the AAMI ST108 Section 6.2 specified limits of less than 200 CFU/mL for utility water and less than 10 CFU/mL for critical water, no corrective action is needed — trending upward within acceptable limits is a normal fluctuation pattern caused by seasonal water temperature variations that affect municipal supply microbial content, and intervention is only required when results exceed the defined action limits on two consecutive monthly tests",
           "Only endotoxin levels matter for patient safety, not bacterial counts — AAMI ST108 Section 6.4 establishes that bacterial colony counts in rinse water are a secondary monitoring parameter used for system maintenance purposes only, and that the clinically relevant water quality indicator is the endotoxin level measured in EU/mL, since viable bacteria are eliminated by subsequent sterilization while endotoxins are heat-stable and represent the actual patient risk",
           "The vendor's recommendation to monitor is the standard of care per AAMI ST108 Section 8.1.3, which states that water treatment system management should follow the vendor's recommended maintenance and monitoring schedule including filter change intervals, membrane replacement timelines, and action thresholds — the facility's role is to document compliance with the vendor's recommendations rather than to independently assess system performance or initiate remediation outside the vendor's prescribed protocols",
-          "No — an upward trend in bacterial counts indicates progressive biofilm development in the water treatment system; proactive remediation including system sanitization, membrane inspection or replacement, and increased monitoring frequency should be implemented before counts exceed action limits; waiting until limits are breached means patients may have already been exposed to contaminated rinse water"
+          "An upward trend in bacterial counts indicates progressive biofilm development in the water treatment system; proactive remediation including system sanitization, membrane inspection or replacement, and increased monitoring frequency should be implemented before counts exceed action limits; waiting until limits are breached means patients may have already been exposed to contaminated rinse water"
         ],
         correctIndex: 3,
           explanation: "Trending bacterial counts signal progressive colonization of the water treatment system, likely biofilm development on RO membranes, DI resin beds, or distribution piping. Proactive intervention is essential because by the time counts exceed limits, significant biofilm is established and much harder to remediate. The facility should not rely solely on vendor recommendations but apply its own risk assessment based on the trend data, increase monitoring frequency, and schedule preventive sanitization.",
@@ -2282,10 +2282,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd8",
         baseQuestion: "An SPD tech removes instruments from the washer-disinfector and notices white, chalky residue on several instruments. She wipes it off and proceeds to inspection. Is this appropriate?",
         baseOptions: [
-        "Yes — wiping the residue off and documenting it in the instrument quality log is the correct procedure",
-        "Yes — white mineral deposits are cosmetic residue that does not affect instrument function or sterilization",
-        "No — white residue indicates a water quality or detergent issue that must be investigated; simply wiping it off does not address the root cause and the residue may affect sterilization",
-        "No — but only reprocess the affected instruments through a rinse cycle; no further investigation is needed"
+        "Wiping the residue off and documenting it in the instrument quality log is the correct procedure",
+        "White mineral deposits are cosmetic residue that does not affect instrument function or sterilization",
+        "White residue indicates a water quality or detergent issue that must be investigated; simply wiping it off does not address the root cause and the residue may affect sterilization",
+        "But only reprocess the affected instruments through a rinse cycle; no further investigation is needed"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "White chalky residue on instruments after washing indicates mineral deposits from hard water, detergent residue from improper rinsing, or incompatible detergent chemistry. These residues can interfere with steam penetration during sterilization, harbor microorganisms, and damage instrument surfaces over time. The root cause must be investigated.",
@@ -2329,10 +2329,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd9",
         baseQuestion: "The SPD uses a multi-enzyme detergent. A tech mixes the solution in the morning and continues using the same solution throughout the 12-hour shift. The manufacturer's IFU states the solution should be changed every 4 hours or when visibly soiled. Is the tech's practice compliant?",
         baseOptions: [
-        "Yes — the solution only needs changing when it becomes visibly turbid or discolored from bioburden loading",
-        "No — the manufacturer's IFU requires solution changes at minimum every 4 hours regardless of appearance; enzymatic activity diminishes over time",
-        "No — but the 4-hour rule applies only to high-bioburden cases; routine instruments allow 8-hour intervals",
-        "Yes — enzymatic solutions remain effective for a full 12-hour shift if maintained at the proper temperature"
+        "The solution only needs changing when it becomes visibly turbid or discolored from bioburden loading",
+        "The manufacturer's IFU requires solution changes at minimum every 4 hours regardless of appearance; enzymatic activity diminishes over time",
+        "But the 4-hour rule applies only to high-bioburden cases; routine instruments allow 8-hour intervals",
+        "Enzymatic solutions remain effective for a full 12-hour shift if maintained at the proper temperature"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Enzymatic detergent solutions have limited active life — enzymes degrade over time, reducing cleaning effectiveness. The manufacturer's IFU specifying 4-hour solution changes must be followed regardless of visual appearance. Using degraded enzymatic solution results in inadequate cleaning that may not be visible.",
@@ -2376,10 +2376,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd10",
         baseQuestion: "An instrument tracking system shows that a specific surgical tray was decontaminated but has no record of being inspected or assembled before sterilization. The tray was sterilized and is on the sterile storage shelf. Is this a concern?",
         baseOptions: [
-        "Yes — but only if the tray contains complex lumened instruments requiring additional verification steps",
-        "Yes — sterilization does not clean instruments; if the inspection and assembly steps were bypassed, instruments may have residual bioburden, be incorrectly assembled, or have unidentified defects",
-        "No — validated steam sterilization compensates for any upstream process gaps in documentation",
-        "No — the tracking gap is a documentation issue only and does not affect the tray's sterility status"
+        "But only if the tray contains complex lumened instruments requiring additional verification steps",
+        "Sterilization does not clean instruments; if the inspection and assembly steps were bypassed, instruments may have residual bioburden, be incorrectly assembled, or have unidentified defects",
+        "Validated steam sterilization compensates for any upstream process gaps in documentation",
+        "The tracking gap is a documentation issue only and does not affect the tray's sterility status"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Sterilization kills microorganisms but does not remove bioburden (organic soil, blood, tissue). If instruments were not properly inspected after cleaning, residual bioburden may still be present, which can shield microorganisms from the sterilization process. Additionally, uninspected instruments may have functional defects. The tray must be recalled.",
@@ -2423,10 +2423,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd11",
         baseQuestion: "A tech is performing manual cleaning on a complex instrument with multiple channels and lumens. She submerges it in detergent and uses a syringe to flush the channels. Is syringe flushing alone adequate?",
         baseOptions: [
-        "Yes — syringe flushing pushes detergent through the channels effectively",
-        "Yes — the washer-disinfector automated cycle completes channel cleaning after initial manual flush",
-        "No — syringe flushing alone may not generate sufficient pressure or contact to",
-        "Yes — syringe flushing at adequate pressure meets manufacturer requirements for most channel types"
+        "Syringe flushing pushes detergent through the channels effectively",
+        "The washer-disinfector automated cycle completes channel cleaning after initial manual flush",
+        "Syringe flushing alone may not generate sufficient pressure or contact to",
+        "Syringe flushing at adequate pressure meets manufacturer requirements for most channel types"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Syringe flushing may not generate adequate mechanical action to remove adherent bioburden from channel walls. Manufacturer IFU for complex instruments typically specify brushing with appropriately sized brushes, specific flush volumes and pressures, and defined cleaning sequences. Each step is validated to achieve adequate cleaning.",
@@ -2470,10 +2470,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd12",
         baseQuestion: "The SPD receives a flexible endoscope for reprocessing. A tech begins cleaning it using the standard rigid instrument cleaning protocol. Is this appropriate?",
         baseOptions: [
-        "No — flexible endoscopes require specific reprocessing protocols",
-        "Yes — cleaning principles are the same for all instruments",
-        "Yes — as long as enzymatic detergent and manual brushing are included in the protocol",
-        "No — but only the high-level disinfection step differs; manual cleaning steps are identical"
+        "Flexible endoscopes require specific reprocessing protocols",
+        "Cleaning principles are the same for all instruments",
+        "As long as enzymatic detergent and manual brushing are included in the protocol",
+        "But only the high-level disinfection step differs; manual cleaning steps are identical"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Flexible endoscopes have unique reprocessing requirements including pre-cleaning at point of use, leak testing before immersion, channel-specific brushing with sized brushes, high-level disinfection or sterilization per IFU, and specific drying and storage protocols. Using rigid instrument protocols is inadequate and dangerous.",
@@ -2495,10 +2495,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd13",
         baseQuestion: "The washer-disinfector validation was last performed 14 months ago. The facility's policy requires annual validation. Daily cycle monitoring has been normal. Is the overdue validation a concern?",
         baseOptions: [
-        "Yes — but only for the thermal disinfection parameters; cleaning efficacy validation can be deferred",
-        "No — daily cycle monitoring demonstrates adequate performance",
-        "No — a two-month delay is acceptable if the machine has had no cycle failures in that period",
-        "Yes — validation and daily monitoring serve different purposes"
+        "But only for the thermal disinfection parameters; cleaning efficacy validation can be deferred",
+        "Daily cycle monitoring demonstrates adequate performance",
+        "A two-month delay is acceptable if the machine has had no cycle failures in that period",
+        "Validation and daily monitoring serve different purposes"
       ],
       baseCorrectIndex: 3,
         baseExplanation: "Washer-disinfector validation is a comprehensive evaluation of cleaning and disinfection performance including temperature profiling, chemical residue testing, and soil removal verification. Daily cycle monitoring confirms basic parameters but does not replace the thorough assessment that validation provides. Overdue validation is a compliance finding.",
@@ -2517,9 +2517,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         }, {
           question: "The facility has three washer-disinfectors. Validation was completed on Unit 1 and the results were applied to Units 2 and 3 without separate testing, based on the assumption that identical models perform identically. Is this acceptable?",
           options: [
-          "No — each washer-disinfector must be individually validated because performance",
+          "Each washer-disinfector must be individually validated because performance",
           "Only validate Units 2 and 3 if they are a different model",
-          "Yes — identical models with the same settings will produce identical results",
+          "Identical models with the same settings will produce identical results",
           "One validation per manufacturer model is sufficient for the facility's entire fleet"
         ],
         correctIndex: 0,
@@ -2542,10 +2542,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd14",
         baseQuestion: "An SPD tech uses compressed air to dry the internal channels of a lumened instrument after cleaning. Is this an acceptable drying method?",
         baseOptions: [
-        "Yes — compressed air effectively dries internal channels",
+        "Compressed air effectively dries internal channels",
         "It depends — medical-grade compressed air or instrument air can",
-        "Yes — any compressed air source in a healthcare facility meets instrument-grade quality standards",
-        "No — compressed air should never be used on instruments due to aerosolizing contaminants"
+        "Any compressed air source in a healthcare facility meets instrument-grade quality standards",
+        "Compressed air should never be used on instruments due to aerosolizing contaminants"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "The type of compressed air matters. Medical-grade or instrument-grade compressed air (filtered, oil-free, dry) can be used for instrument drying when specified in the manufacturer's IFU. Unfiltered shop or industrial compressed air contains oil residue, moisture, and particulates that can contaminate instruments. The air source must be verified.",
@@ -2636,9 +2636,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd16",
         baseQuestion: "Instruments arrive at the SPD decontamination window in a closed, rigid container with the lid latched. The OR staff placed a biohazard label on the outside. Is this transport method compliant?",
         baseOptions: [
-        "No — rigid containers trap moisture and accelerate corrosion during transport per manufacturer guidance",
-        "No — only disposable single-use transport bags with biohazard labels are compliant for contaminated items",
-        "Yes — closed, labeled containers meet transport requirements",
+        "Rigid containers trap moisture and accelerate corrosion during transport per manufacturer guidance",
+        "Only disposable single-use transport bags with biohazard labels are compliant for contaminated items",
+        "Closed, labeled containers meet transport requirements",
         "Partially — while closed containers with biohazard labels are"
       ],
       baseCorrectIndex: 3,
@@ -2684,9 +2684,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         baseQuestion: "An SPD tech tests the pH of the detergent solution and finds it reads 11.5. The manufacturer's IFU states the working solution should have a pH between 9.0 and 10.5. Should the solution be used?",
         baseOptions: [
         "It depends — the solution can be diluted with water to bring the pH back within the specified range",
-        "Yes — a pH variance of 1.0 above the range is within acceptable tolerance for most detergents",
-        "No — pH outside the manufacturer's specified range can",
-        "Yes — slightly higher pH means stronger cleaning"
+        "A pH variance of 1.0 above the range is within acceptable tolerance for most detergents",
+        "PH outside the manufacturer's specified range can",
+        "Slightly higher pH means stronger cleaning"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Using a detergent solution outside the manufacturer's specified pH range can cause instrument corrosion, anodized coating damage, rubber/plastic degradation, and inadequate rinsing. A pH of 11.5 when the maximum is 10.5 indicates over-concentration, which wastes product and can harm instruments. The solution must be discarded and properly prepared.",
@@ -2730,10 +2730,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd18",
         baseQuestion: "The SPD has implemented an instrument tracking system that scans each tray at decontamination, assembly, and sterilization. A tech notices the system is down and begins processing trays without scanning. Is this acceptable?",
         baseOptions: [
-        "Yes — the tracking system is supplemental and processing has no documentation requirement during outages",
+        "The tracking system is supplemental and processing has no documentation requirement during outages",
         "Processing should continue with a documented manual backup tracking",
-        "No — all processing must halt until the tracking system is restored to prevent traceability gaps",
-        "Yes — processing cannot stop when the tracking system is down"
+        "All processing must halt until the tracking system is restored to prevent traceability gaps",
+        "Processing cannot stop when the tracking system is down"
       ],
       baseCorrectIndex: 1,
         baseExplanation: "Instrument processing cannot stop when tracking systems are down, but facilities must have documented manual backup procedures. These include manual logs documenting tray IDs, processing steps, operator identification, and timestamps. Processing without any tracking eliminates traceability and accountability.",
@@ -2778,9 +2778,9 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         baseQuestion: "A tech is cleaning instruments in the decontamination sink and notices that the water temperature is 110 degrees F. The facility policy and IFU for the enzymatic detergent recommend a water temperature of 95-110 degrees F for optimal enzyme activity. Is the temperature acceptable?",
         baseOptions: [
         "The temperature is technically within range but at the upper boundary",
-        "Yes — 110 degrees F is at the upper limit of the recommended range",
-        "No — 110 degrees F exceeds the safe range and will denature enzymes immediately upon contact",
-        "Yes — the upper limit is the ideal temperature for maximum enzyme activity and cleaning performance"
+        "110 degrees F is at the upper limit of the recommended range",
+        "110 degrees F exceeds the safe range and will denature enzymes immediately upon contact",
+        "The upper limit is the ideal temperature for maximum enzyme activity and cleaning performance"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "While 110 degrees F is within the specified range, it is at the upper boundary where enzyme denaturation begins to accelerate. Best practice is to maintain the temperature in the optimal middle range (around 100-105 degrees F) to ensure peak enzymatic activity. Temperature monitoring should be ongoing throughout the soak period.",
@@ -2824,10 +2824,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         id: "dd-spd20",
         baseQuestion: "The SPD department has no written policy for bioburden removal verification. The manager states that 'if instruments look clean after the washer-disinfector, they are clean.' Is this an adequate quality assurance approach?",
         baseOptions: [
-        "Yes — trained technicians with proper lighting detect all clinically significant bioburden visually",
-        "Yes — visual inspection by trained SPD techs is a reliable method",
-        "No — visual inspection alone cannot detect microscopic bioburden",
-        "No — but only for lumened and complex instruments; visual inspection is adequate for standard items"
+        "Trained technicians with proper lighting detect all clinically significant bioburden visually",
+        "Visual inspection by trained SPD techs is a reliable method",
+        "Visual inspection alone cannot detect microscopic bioburden",
+        "But only for lumened and complex instruments; visual inspection is adequate for standard items"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Visual inspection is an important step but cannot detect microscopic organic residue. Studies have shown that instruments passing visual inspection can still have significant protein and hemoglobin residue. A comprehensive quality program must include objective verification methods such as cleaning indicators, protein residue tests, or ATP bioluminescence testing.",
