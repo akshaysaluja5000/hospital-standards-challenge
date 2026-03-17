@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Loader2, MessageSquare, Send } from "lucide-react";
+import { BrainCircuit, Loader2, MessageSquare, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiRequest } from "@/lib/queryClient";
@@ -79,7 +79,7 @@ export function AiHandbookSearch() {
           >
             <div className="mt-4 rounded-xl border border-primary/10 bg-card p-4" data-testid="ai-handbook-response">
               <div className="flex items-center gap-2 mb-2">
-                <Sparkles size={14} className="text-primary" />
+                <BrainCircuit size={14} className="text-primary" />
                 <span className="text-xs font-bold text-primary">AI Answer</span>
               </div>
               <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">

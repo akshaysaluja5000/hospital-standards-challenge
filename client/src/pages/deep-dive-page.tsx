@@ -13,7 +13,7 @@ import {
   ChevronDown,
   CheckCircle2,
   XCircle,
-  Sparkles,
+  BrainCircuit,
   RotateCcw,
   X,
   Shuffle,
@@ -513,7 +513,7 @@ export default function DeepDivePage() {
               <span className="text-xs text-muted-foreground">Base XP</span>
             </div>
             <div className="flex items-center gap-2">
-              <Sparkles size={20} className="text-secondary" />
+              <BrainCircuit size={20} className="text-secondary" />
               <span className="font-black text-lg text-secondary">{gameState.expertXpEarned}</span>
               <span className="text-xs text-muted-foreground">Expert XP</span>
             </div>
@@ -762,7 +762,7 @@ export default function DeepDivePage() {
                         </p>
                         {!isBasePhase && activeSelected === displayCorrectIdx && (
                           <div className="flex items-center gap-1.5 mt-2">
-                            <Sparkles
+                            <BrainCircuit
                               size={14}
                               className="text-secondary"
                             />
@@ -819,7 +819,7 @@ export default function DeepDivePage() {
                 <span className="text-sm font-bold">{gameState.baseXpEarned}</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <Sparkles size={14} className="text-secondary" />
+                <BrainCircuit size={14} className="text-secondary" />
                 <span className="text-sm font-bold text-secondary">
                   {gameState.expertXpEarned}
                 </span>

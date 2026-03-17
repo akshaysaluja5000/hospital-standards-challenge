@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Loader2, ChevronDown, Volume2, VolumeX } from "lucide-react";
+import { BrainCircuit, Loader2, ChevronDown, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -29,7 +29,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
 
   const maxDepth = 3;
   const depthLabels = ["Ask AI Tutor", "Go Deeper", "Go Even Deeper"];
-  const depthIcons = ["✨", "🔍", "🎓"];
+  const depthIcons = ["🧠", "🔍", "🎓"];
 
   const handleAskTutor = useCallback(async (depth: number) => {
     setLoading(true);
@@ -104,7 +104,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
           className="gap-2 text-sm font-semibold"
           data-testid="button-ask-ai-tutor"
         >
-          <Sparkles size={16} />
+          <BrainCircuit size={16} />
           {depthLabels[0]}
         </Button>
       )}
@@ -196,7 +196,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
             className="gap-2 text-sm"
             data-testid="button-retry-ai-tutor"
           >
-            <Sparkles size={16} />
+            <BrainCircuit size={16} />
             Try Again
           </Button>
         </div>

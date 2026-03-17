@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, Sparkles, CheckCircle2, Users, TrendingUp, Search } from "lucide-react";
+import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
@@ -31,7 +31,7 @@ const features = [
     description: "Go beyond the basics\u2014answer correctly to unlock expert\u2011level follow\u2011up questions that mirror real Joint Commission tracer rounds",
   },
   {
-    icon: Sparkles,
+    icon: BrainCircuit,
     title: "AI\u2011Enhanced Learning",
     description: "AI tutor that explains missed questions in plain language and bedside scenarios",
   },

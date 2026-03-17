@@ -21,13 +21,33 @@ function getAnthropicClient() {
   }
   const opts: ConstructorParameters<typeof Anthropic>[0] = {
     apiKey,
-    maxRetries: 2,
+    maxRetries: 3,
     timeout: 30000,
   };
   if (baseURL) {
     opts.baseURL = baseURL;
   }
   return new Anthropic(opts);
+}
+
+async function callAnthropicWithRetry(params: Parameters<InstanceType<typeof Anthropic>["messages"]["create"]>[0], maxAttempts = 3) {
+  let lastError: any;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const client = getAnthropicClient();
+      return await client.messages.create(params);
+    } catch (err: any) {
+      lastError = err;
+      const isConnectionError = err?.name === "APIConnectionError" || err?.code === "ECONNREFUSED" || err?.cause?.code === "ECONNREFUSED" || (err?.message || "").includes("Connection error") || (err?.message || "").includes("fetch failed");
+      console.error(`[Anthropic attempt ${attempt}/${maxAttempts}]`, JSON.stringify({ msg: err?.message, code: err?.code, name: err?.name, status: err?.status, cause: err?.cause?.message }));
+      if (isConnectionError && attempt < maxAttempts) {
+        await new Promise(r => setTimeout(r, 1000 * attempt));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw lastError;
 }
 
 function toCentralDate(d: Date | string): string {
@@ -974,6 +994,23 @@ export async function registerRoutes(
   } catch (e) {
   }
 
+  app.get("/api/ai-health", requireAuth, async (req: Request, res: Response) => {
+    try {
+      const start = Date.now();
+      const message = await callAnthropicWithRetry({
+        model: "claude-haiku-4-5",
+        max_tokens: 50,
+        messages: [{ role: "user", content: "Say 'ok' in one word." }],
+      });
+      const elapsed = Date.now() - start;
+      const text = message.content[0]?.type === "text" ? message.content[0].text : "";
+      res.json({ status: "ok", elapsed, response: text, model: message.model });
+    } catch (error: any) {
+      console.error("[AI Health ERROR]", JSON.stringify({ message: error?.message, status: error?.status, code: error?.code, name: error?.name, cause: error?.cause?.message }));
+      res.status(500).json({ status: "error", message: error?.message, code: error?.code, name: error?.name });
+    }
+  });
+
   const aiTutorRateLimit = new Map<number, number[]>();
   const AI_TUTOR_MAX_CALLS = 30;
   const AI_TUTOR_WINDOW_MS = 60 * 60 * 1000;
@@ -1055,7 +1092,7 @@ Correct answer: ${correctAnswer}
 Do not repeat any previously covered information. This is the expert masterclass level.`,
       };
 
-      const message = await getAnthropicClient().messages.create({
+      const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [
@@ -1075,8 +1112,7 @@ Do not repeat any previously covered information. This is the expert masterclass
       const errType = error?.error?.type || error?.type || "";
       const errMsg = error?.message || "";
       const errStatus = error?.status || 500;
-      const errInfo = { status: errStatus, message: errMsg, type: errType, detail: error?.error?.message, name: error?.name, code: error?.code };
-      console.log("[AI Tutor ERROR]", JSON.stringify(errInfo));
+      console.error("[AI Tutor ERROR]", JSON.stringify({ status: errStatus, message: errMsg, type: errType, detail: error?.error?.message, name: error?.name, code: error?.code, cause: error?.cause?.message, stack: (error?.stack || "").split("\n").slice(0, 3).join(" | ") }));
       if (errStatus === 401 || errType === "authentication_error") {
         res.status(502).json({ error: "AI service configuration error. Please contact your administrator." });
       } else if (errStatus === 429) {
@@ -1148,7 +1184,7 @@ Do not repeat any previously covered information. This is the expert masterclass
         .map(l => l.levelName)
         .join(", ");
 
-      const message = await getAnthropicClient().messages.create({
+      const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [
@@ -1231,7 +1267,7 @@ Write for a charge nurse, quality director, or CNO. Use plain language. Be speci
         ? missedQuestions.map((q, i) => `${i + 1}. "${q.question}" — correct answer: "${q.correctAnswer}"`).join("\n")
         : "No missed questions — perfect score!";
 
-      const message = await getAnthropicClient().messages.create({
+      const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [
@@ -1314,7 +1350,7 @@ Keep it concise, practical, and written for a charge nurse or unit manager — n
         ? relevantSections.slice(0, 8).join("\n\n---\n\n")
         : "No directly matching sections found. Answer based on general Joint Commission compliance knowledge relevant to the question.";
 
-      const message = await getAnthropicClient().messages.create({
+      const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
         max_tokens: 8192,
         messages: [

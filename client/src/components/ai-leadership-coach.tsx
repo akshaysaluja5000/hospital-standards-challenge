@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Loader2, TrendingUp } from "lucide-react";
+import { BrainCircuit, Loader2, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -40,7 +40,7 @@ export function AiLeadershipCoach() {
     <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
       <div className="p-5 border-b border-card-border">
         <h3 className="font-bold text-base flex items-center gap-2">
-          <Sparkles size={18} className="text-primary" />
+          <BrainCircuit size={18} className="text-primary" />
           AI Leadership Coach
         </h3>
         <p className="text-xs text-muted-foreground mt-1">
@@ -95,7 +95,7 @@ export function AiLeadershipCoach() {
 
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-4" data-testid="ai-insights-response">
                 <div className="flex items-center gap-2 mb-3">
-                  <Sparkles size={16} className="text-primary" />
+                  <BrainCircuit size={16} className="text-primary" />
                   <span className="text-sm font-bold text-primary">AI Leadership Insights</span>
                 </div>
                 <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Loader2, ClipboardList } from "lucide-react";
+import { BrainCircuit, Loader2, ClipboardList } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -74,7 +74,7 @@ export function AiDebriefBox({ levelId, levelTitle, totalQuestions, correctAnswe
           >
             <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-left" data-testid="ai-debrief-response">
               <div className="flex items-center gap-2 mb-3">
-                <Sparkles size={16} className="text-primary" />
+                <BrainCircuit size={16} className="text-primary" />
                 <span className="text-sm font-bold text-primary">Manager Micro‑Debrief</span>
               </div>
               <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">

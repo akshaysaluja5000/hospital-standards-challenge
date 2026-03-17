@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { ArrowLeft, Microscope, ChevronRight, Sparkles } from "lucide-react";
+import { ArrowLeft, Microscope, ChevronRight, BrainCircuit } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface DeepDiveLevelInfo {
@@ -61,7 +61,7 @@ export default function DeepDiveSelectPage() {
         >
           <div className="flex items-start gap-3">
             <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-secondary/10 flex-shrink-0">
-              <Sparkles size={22} className="text-secondary" />
+              <BrainCircuit size={22} className="text-secondary" />
             </div>
             <div>
               <h3 className="font-bold text-sm mb-1">How Deep Dive Works</h3>
