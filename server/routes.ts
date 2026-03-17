@@ -1025,6 +1025,7 @@ export async function registerRoutes(
       explanation: z.string().max(2000),
       depth: z.number().int().min(1).max(3).default(1),
       previousExplanations: z.array(z.string().max(3000)).max(2).optional(),
+      allOptions: z.array(z.string().max(500)).max(6).optional(),
     });
     const parsed = aiTutorSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -1041,7 +1042,10 @@ export async function registerRoutes(
     aiTutorRateLimit.set(userId, userCalls);
 
     try {
-      const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations } = parsed.data;
+      const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations, allOptions } = parsed.data;
+
+      const wrongOptions = (allOptions || []).filter(o => o !== correctAnswer);
+      const wrongList = wrongOptions.map((o, i) => `"${o}"`).join(", ");
 
       const depthPrompts: Record<number, string> = {
         1: `Hospital compliance tutor. Staff answered a question wrong. Explain why the correct answer matters in 2 sentences. No headers, no bullet points, no markdown. Plain conversational text only.
@@ -1053,28 +1057,33 @@ Why: ${explanation}
 
 Reply in exactly 2 sentences. First sentence: why it matters practically. Second sentence: a quick tip. No formatting.`,
 
-        2: `Hospital compliance tutor follow-up. Give ONE new insight the staff member should know, in 2-3 sentences. No headers, no bullets, no markdown. Plain text only.
+        2: `Hospital compliance tutor follow-up. Two parts, plain text only, no headers, no bullets, no markdown.
+
+Already covered: ${(previousExplanations || []).join(" ")}
+
+Question: ${question}
+Correct answer: ${correctAnswer}
+Wrong choices: ${wrongList}
+
+Part 1 (2 sentences): One new insight about how surveyors check this or a common citation to avoid.
+Part 2 (1 sentence per wrong choice): Briefly explain why each wrong choice is incorrect.
+
+Keep it concise. No formatting, just plain sentences. Separate the two parts with a blank line.`,
+
+        3: `Hospital compliance tutor — final expert tip. Plain text only, no headers, no bullets, no markdown.
 
 Already covered: ${(previousExplanations || []).join(" ")}
 
 Topic: ${question}
 Correct answer: ${correctAnswer}
 
-Focus on how surveyors check this or a common citation to avoid. Do not repeat anything already said. No formatting, just plain sentences.`,
-
-        3: `Hospital compliance tutor — final expert tip. Give ONE actionable takeaway in 2 sentences. No headers, no bullets, no markdown. Plain text only.
-
-Already covered: ${(previousExplanations || []).join(" ")}
-
-Topic: ${question}
-Correct answer: ${correctAnswer}
-
-Focus on what great hospitals do differently for this standard. No formatting, just plain sentences.`,
+Give ONE actionable takeaway in 2 sentences about what great hospitals do differently for this standard. No formatting, just plain sentences.`,
       };
 
+      const tokenLimit = depth === 2 ? 400 : 200;
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 200,
+        max_tokens: tokenLimit,
         messages: [
           {
             role: "user",

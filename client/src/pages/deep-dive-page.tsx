@@ -788,6 +788,7 @@ export default function DeepDivePage() {
                           userAnswer={displayOptions[activeSelected!] || ""}
                           correctAnswer={displayOptions[displayCorrectIdx] || ""}
                           explanation={displayExplanation}
+                          allOptions={displayOptions}
                         />
                       </div>
                     </div>

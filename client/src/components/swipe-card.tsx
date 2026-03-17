@@ -129,6 +129,7 @@ export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: Swip
                       userAnswer={question.options[selected]}
                       correctAnswer={question.options[question.correctIndex]}
                       explanation={question.explanation}
+                      allOptions={question.options}
                     />
                   )}
                 </div>

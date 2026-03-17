@@ -9,9 +9,10 @@ interface AiTutorBoxProps {
   userAnswer: string;
   correctAnswer: string;
   explanation: string;
+  allOptions?: string[];
 }
 
-export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanation }: AiTutorBoxProps) {
+export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanation, allOptions }: AiTutorBoxProps) {
   const [explanations, setExplanations] = useState<string[]>([]);
   const [currentDepth, setCurrentDepth] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -42,6 +43,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
         explanation,
         depth,
         previousExplanations: explanations,
+        allOptions: allOptions || [],
       });
       const data = await res.json();
       setExplanations(prev => [...prev, data.aiExplanation]);
@@ -61,7 +63,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
     } finally {
       setLoading(false);
     }
-  }, [questionText, userAnswer, correctAnswer, explanation, explanations]);
+  }, [questionText, userAnswer, correctAnswer, explanation, explanations, allOptions]);
 
   const handleSpeak = useCallback((text: string, index: number) => {
     if (!window.speechSynthesis) return;

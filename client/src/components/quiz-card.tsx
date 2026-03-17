@@ -133,6 +133,7 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
                       userAnswer={question.options[selected]}
                       correctAnswer={question.options[question.correctIndex]}
                       explanation={question.explanation}
+                      allOptions={question.options}
                     />
                   )}
                 </div>
