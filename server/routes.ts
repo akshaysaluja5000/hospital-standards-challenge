@@ -727,20 +727,22 @@ export async function registerRoutes(
 
         const progressQ = userProgress.reduce((s, p) => s + p.totalQuestions, 0);
         const progressC = userProgress.reduce((s, p) => s + p.score, 0);
-        const sessionQ = userSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
-        const sessionC = userSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const completedLevelIds = new Set(userProgress.map((p) => p.levelId));
+        const inProgressSessions = userSessions.filter((sess) => !completedLevelIds.has(sess.levelId));
+        const sessionQ = inProgressSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
+        const sessionC = inProgressSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
         const questionsAnswered = progressQ + sessionQ;
         const correct = progressC + sessionC;
         const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
         const levelsCompleted = userProgress.filter((p) => p.completed).length;
-        const sessionXp = userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
+        const inProgressXp = inProgressSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
 
         return {
           id: u.id,
           username: u.username,
           firstName: u.firstName,
           lastName: u.lastName,
-          totalXp: (streak?.totalXp || 0) + sessionXp,
+          totalXp: (streak?.totalXp || 0) + inProgressXp,
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
@@ -790,8 +792,10 @@ export async function registerRoutes(
       allUsers.forEach((u) => {
         const up = progressByUser.get(u.id) || [];
         const us = sessionsByUser.get(u.id) || [];
-        totalQuestionsAnswered += up.reduce((s, p) => s + p.totalQuestions, 0) + us.reduce((s, sess) => s + sess.currentQuestion, 0);
-        totalCorrect += up.reduce((s, p) => s + p.score, 0) + us.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const completedIds = new Set(up.map((p) => p.levelId));
+        const inProgress = us.filter((sess) => !completedIds.has(sess.levelId));
+        totalQuestionsAnswered += up.reduce((s, p) => s + p.totalQuestions, 0) + inProgress.reduce((s, sess) => s + sess.currentQuestion, 0);
+        totalCorrect += up.reduce((s, p) => s + p.score, 0) + inProgress.reduce((s, sess) => s + sess.correctAnswers, 0);
       });
       const averageAccuracy = totalQuestionsAnswered > 0
         ? Math.round((totalCorrect / totalQuestionsAnswered) * 100)
@@ -814,8 +818,10 @@ export async function registerRoutes(
 
         const progressQ = userProg.reduce((s, p) => s + p.totalQuestions, 0);
         const progressC = userProg.reduce((s, p) => s + p.score, 0);
-        const sessionQ = userSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
-        const sessionC = userSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const completedLevelIds = new Set(userProg.map((p) => p.levelId));
+        const inProgressSessions = userSessions.filter((sess) => !completedLevelIds.has(sess.levelId));
+        const sessionQ = inProgressSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
+        const sessionC = inProgressSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
         const questionsAnswered = progressQ + sessionQ;
         const correct = progressC + sessionC;
         const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
@@ -841,7 +847,7 @@ export async function registerRoutes(
           username: u.username,
           firstName: u.firstName || "",
           lastName: u.lastName || "",
-          totalXp: (streak?.totalXp || 0) + userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0),
+          totalXp: (streak?.totalXp || 0) + inProgressSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0),
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
