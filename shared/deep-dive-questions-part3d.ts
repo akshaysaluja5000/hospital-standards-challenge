@@ -47,7 +47,7 @@ export const ddEocLevel: DeepDiveLevel = {
       {
         question: "A Joint Commission tracer surveyor visits the same unit 6 months later and asks to review your sprinkler clearance compliance data, including EOC round findings, corrective actions, and trend reports. The surveyor also interviews a floor nurse who is unaware of the 18-inch clearance rule. What is the surveyor MOST likely to cite?",
         options: [
-          "No deficiency, because the capital project demonstrates good-faith effort to resolve the issue",
+          "Because the capital project demonstrates good-faith effort to resolve the issue",
           "A deficiency in EC.02.03.05 only, since the physical environment must meet NFPA standards",
           "Deficiencies in both EC.02.03.05 for inadequate corrective action effectiveness and HR.01.05",
           "A deficiency in staff education and competency under HR.01.05.03, since the nurse could not articulate the safety requirement"
@@ -148,7 +148,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Findings under EC.02.03.05 for the obscured sign and EC.04.01",
           "A finding under EC.02.03.05 only for the obscured exit sign",
           "A finding under EC.02.06.01 for improper use of decorations in a healthcare occupancy",
-          "No finding, since the sign is illuminated and the banner is temporary"
+          "Since the sign is illuminated and the banner is temporary"
         ],
         correctIndex: 0,
         explanation: "Joint Commission surveyors evaluate systems, not just individual findings. An obscured exit sign violates NFPA 101 Section 7.10 (EC.02.03.05), but the nurse's inability to describe a process for maintaining egress visibility suggests the organization lacks an effective monitoring system (EC.04.01.01) and has not ensured staff understand their life safety responsibilities (HR.01.05.03). Surveyors expect that all staff can articulate basic life safety principles relevant to their work area, including keeping exit signage visible.",
@@ -182,7 +182,7 @@ export const ddEocLevel: DeepDiveLevel = {
       {
         question: "During a chemical spill drill, the surveyor observes that staff correctly locate the electronic SDS and the backup binder. However, the SDS in the physical backup binder is dated 2019, while the electronic version was updated in 2023. What compliance concern does this raise?",
         options: [
-          "No concern, as the backup binder is only used in emergencies and the electronic version is current",
+          "As the backup binder is only used in emergencies and the electronic version is current",
           "Only the electronic version must be current; physical backups are exempt from update requirements",
           "The 2019 version is acceptable as long as the chemical formulation has not changed",
           "The outdated backup binder violates OSHA's requirement that all SDS be the most current version available"
@@ -196,7 +196,7 @@ export const ddEocLevel: DeepDiveLevel = {
         options: [
           "A finding under EC.02.02.01 and HR.01.05.03 indicating that while training was completed",
           "A finding under EC.02.02.01 for inadequate chemical labeling in those departments",
-          "No finding, since staff can access SDS and training records are documented",
+          "Since staff can access SDS and training records are documented",
           "A finding under LD.03.02.01 for leadership failure to ensure a safe work environment"
         ],
         correctIndex: 0,
@@ -244,7 +244,7 @@ export const ddEocLevel: DeepDiveLevel = {
         question: "During a Joint Commission tracer, the surveyor reviews your Emergency Management program and notes that both exercises this year were tabletop discussions, the Hazard Vulnerability Analysis (HVA) has not been updated in two years, and the after-action reports do not document specific EOP revisions made in response to identified gaps. What findings will the surveyor MOST likely cite?",
         options: [
           "A finding under EM.02.02.01 only for not updating the Emergency Operations Plan",
-          "No finding if the facility can demonstrate that the tabletop exercises were rigorous and well-attended",
+          "Finding if the facility can demonstrate that the tabletop exercises were rigorous and well-attended",
           "Findings under EM.03.01",
           "A single finding under EM.03.01.03 for insufficient exercise type variety"
         ],
@@ -269,7 +269,7 @@ export const ddEocLevel: DeepDiveLevel = {
         question: "During a fire drill review, the surveyor notices that all drills on the night shift for the past year were announced in advance and conducted in the same nursing unit. What deficiency should be cited?",
         options: [
           "Drills should vary in location and scenario",
-          "No deficiency; consistency in drill location ensures staff familiarity with procedures",
+          "Deficiency; consistency in drill location ensures staff familiarity with procedures",
           "The only issue is that drills need to be on different units; announced vs. unannounced is not specified",
           "Night shift drills are optional since fewer patients are awake during those hours"
         ],
@@ -295,7 +295,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "A finding under EC.02.03.05 for incomplete fire drill evaluation that does not assess evacuation preparedness",
           "Findings under EC.02.03",
           "A finding under EC.02.03.03 for inadequate fire safety education content",
-          "No finding, since the RACE procedures were correctly demonstrated"
+          "Since the RACE procedures were correctly demonstrated"
         ],
         correctIndex: 1,
         explanation: "Healthcare occupancies rely on a defend-in-place strategy where horizontal evacuation to an adjacent smoke compartment is the primary evacuation method. NFPA 101 Section 18.7.1 and Joint Commission EC.02.03.05 require that fire drills evaluate all aspects of fire response including evacuation. Staff inability to identify smoke compartment boundaries indicates both a drill program gap (drills not exercising evacuation procedures) and a staff knowledge gap. Joint Commission expects all clinical staff to know their evacuation routes and smoke compartment layout.",
@@ -390,7 +390,7 @@ export const ddEocLevel: DeepDiveLevel = {
       {
         question: "A Joint Commission surveyor conducting an ICRA-focused tracer during an active construction project asks the contractor's foreman about infection control precautions. The foreman cannot describe the ICRA class level, negative pressure requirements, or the process for reporting barrier breaches. The surveyor also notes that the daily ICRA compliance log has gaps on 4 of the last 14 days. What findings are MOST likely?",
         options: [
-          "No finding against the hospital if the construction contract specifies that the contractor is responsible for ICRA compliance",
+          "Finding against the hospital if the construction contract specifies that the contractor is responsible for ICRA compliance",
           "A finding under IC.02.02.01 only, since the contractor is responsible for maintaining barriers",
           "A finding under HR.01.05.03 for failure to train the contractor",
           "Findings under IC.02.02.01 for inadequate ICRA monitoring and enforcement"
@@ -489,7 +489,7 @@ export const ddEocLevel: DeepDiveLevel = {
         question: "A Joint Commission tracer surveyor selects a ventilator from the ICU and asks to see its complete maintenance history, most recent PM documentation, and any associated recall or alert history. The clinical engineering technician produces the PM records but cannot demonstrate how the department tracks FDA recalls and safety alerts for managed equipment, or show evidence that a recent FDA safety notification for that ventilator model was received and acted upon. What will the surveyor cite?",
         options: [
           "EC.02.04.01 only, for incomplete equipment management records",
-          "No finding, since PM maintenance was current and the ventilator was functioning properly",
+          "Since PM maintenance was current and the ventilator was functioning properly",
           "EC.02.04.03 for failure to report medical device incidents to the FDA",
           "EC.02.04.01 for inadequate medical equipment management program that does not"
         ],
@@ -540,7 +540,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "A finding under IC.02.02.01 for infection control risk from improper waste storage",
           "EC.02.02.01 for unsecured waste storage and recommend more frequent hauler pickups",
           "EC.02.02.01 for multiple deficiencies in regulated medical waste storage including lack of security",
-          "No finding under Joint Commission standards since waste storage is regulated by the state environmental agency, not the Joint Commission"
+          "Finding under Joint Commission standards since waste storage is regulated by the state environmental agency, not the Joint Commission"
         ],
         correctIndex: 2,
         explanation: "Joint Commission EC.02.02.01 encompasses the full lifecycle of hazardous materials and waste management, including storage prior to disposal. Regulated medical waste storage areas must be secured to prevent unauthorized access, use rigid leak-proof containers, have secondary containment, maintain posted emergency procedures, and comply with state storage time limits (typically 7-30 days depending on jurisdiction). Multiple deficiencies in the storage area indicate a systemic gap in the waste management program. The surveyor will cite both the hazardous materials standard and environmental safety standards.",
@@ -636,7 +636,7 @@ export const ddEocLevel: DeepDiveLevel = {
         question: "A Joint Commission surveyor conducting an environment of care tracer observes a patient smoking outside the main entrance and asks the registration clerk about the facility's smoking policy. The clerk states the policy is smoke-free campus but says enforcement is not her responsibility. The surveyor then asks the EOC director for the facility's indoor air quality monitoring data and tobacco cessation program metrics. The director can produce the smoke-free policy document but cannot provide air quality data near entrances or demonstrate how the tobacco cessation program is evaluated for effectiveness. What will the surveyor cite?",
         options: [
           "EC.02.06.01 only for the observed smoking policy violation",
-          "No finding, since the policy exists and smoking occurred in an outdoor area",
+          "Since the policy exists and smoking occurred in an outdoor area",
           "HR.01.05.03 for the clerk's failure to understand her role in policy enforcement",
           "EC.02.06.01 for insufficient monitoring of environmental conditions related to"
         ],
@@ -652,7 +652,7 @@ export const ddEocLevel: DeepDiveLevel = {
         "Written permission from the unit manager is sufficient",
         "An above-ceiling permit that addresses infection control",
         "A verbal approval from the facilities director",
-        "No special permit is required as long as the work is completed within one shift"
+        "Special permit is required as long as the work is completed within one shift"
       ],
       baseCorrectIndex: 1,
       baseExplanation: "Joint Commission standard EC.02.06.05 and infection control standards require an above-ceiling permit before displacing any ceiling tiles in patient care areas. The permit process ensures that infection control precautions are in place (dust containment, HEPA filtration if needed), fire safety features above the ceiling are not compromised, utility systems are identified and protected, and the area is properly restored when work is complete.",
@@ -687,7 +687,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "EC.02.03.05 for breached fire-stopping compromising smoke compartment integrity",
           "EC.02.03.05 only for the breached fire-stopping material",
           "EC.02.06.05 for inadequate above-ceiling work management since the debris and breached fire-stopping indicate permits were closed without proper restoration",
-          "No finding since the conditions above the ceiling are not visible to patients"
+          "Finding since the conditions above the ceiling are not visible to patients"
         ],
         correctIndex: 0,
         explanation: "Above-ceiling conditions directly impact patient safety even though they are not visible. Breached fire-stopping material compromises the smoke compartment integrity required by NFPA 101 (EC.02.03.05). Closed permits with unresolved deficiencies demonstrate a failed permit close-out process (EC.02.06.05). Debris in the ceiling plenum creates infection control risks from particulate matter that can enter the air handling system (IC.02.02.01). The surveyor will note that the organization's process for managing above-ceiling work is ineffective across multiple safety domains.",
@@ -734,7 +734,7 @@ export const ddEocLevel: DeepDiveLevel = {
         question: "During a Joint Commission life safety code tracer, the surveyor walks a corridor and notes that a fire extinguisher cabinet is blocked by a mobile supply cart, making the extinguisher inaccessible. The surveyor asks the unit secretary to describe the RACE protocol and point to the nearest fire extinguisher. The secretary correctly describes RACE but points to the blocked cabinet without recognizing the accessibility issue. The surveyor then reviews your fire extinguisher inspection logs and finds that the monthly inspection for this extinguisher was signed as complete 5 days ago. What will the surveyor cite?",
         options: [
           "EC.02.03.05 for the blocked extinguisher access only",
-          "No finding, since the secretary knew RACE and the inspection was documented",
+          "Since the secretary knew RACE and the inspection was documented",
           "HR.01.05.03 for the secretary's failure to recognize the blocked extinguisher",
           "EC.02.03.05 for blocked fire extinguisher access"
         ],
@@ -782,7 +782,7 @@ export const ddEocLevel: DeepDiveLevel = {
       {
         question: "A Joint Commission surveyor reviews your emergency power program and finds that monthly generator tests are documented and the generator is operational. However, the surveyor asks to see documentation of the facility's emergency power inventory, which should list all equipment and systems connected to the emergency power system. The engineering director cannot produce a current inventory and admits that recent additions to the critical care unit, including new ventilators and monitoring systems, may not have been evaluated for emergency power connection. What will the surveyor cite?",
         options: [
-          "No finding since the generator tests pass and the generator is functional",
+          "Finding since the generator tests pass and the generator is functional",
           "EC.02.05.03 for not maintaining a current inventory of emergency power connections",
           "EC.02.05.01 for failure to maintain a current utility system inventory that",
           "EC.02.05.07 only for incomplete generator testing documentation"
@@ -832,7 +832,7 @@ export const ddEocLevel: DeepDiveLevel = {
         question: "A Joint Commission surveyor arrives during the final week of the construction project and asks to review the complete ILSM documentation package. The package includes the initial assessment, fire department notification, and daily fire watch logs. However, the surveyor notes that the ILSM assessment was not updated when the scope of construction changed at week 3 to include additional demolition work that increased the fire risk level, and there is no evidence that the EOC Committee reviewed the ILSM status during the 6-week period. What findings are expected?",
         options: [
           "EC.02.03.05 for the ILSM assessment not being updated when construction scope changed",
-          "No finding since the basic ILSM requirements of fire watch and AHJ notification were maintained",
+          "Finding since the basic ILSM requirements of fire watch and AHJ notification were maintained",
           "EC.02.03.05 for failure to reassess ILSMs when conditions changed",
           "LD.03.02.01 for EOC Committee oversight failure only"
         ],
@@ -980,7 +980,7 @@ export const ddEocLevel: DeepDiveLevel = {
         options: [
           "EC.02.03.05 for the corridor obstruction issue being relocated rather than resolved",
           "EC.02.03.05 for blocked access to the fire extinguisher and electrical",
-          "No finding since the corridor itself is now clear and compliant",
+          "Finding since the corridor itself is now clear and compliant",
           "EC.02.03.05 for blocked fire extinguisher access only"
         ],
         correctIndex: 1,

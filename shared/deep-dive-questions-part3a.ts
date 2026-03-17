@@ -190,7 +190,7 @@ export const ddOrLevel: DeepDiveLevel = {
           question: "During a complex abdominal procedure, the circulator notices a pool of irrigation fluid has soaked through the surgical drape near the operative site (strike-through). The surgeon states the area is not near the incision. What is the correct response?",
           options: [
           "The wet area must be covered immediately with an additional impervious sterile",
-          "No action is needed since the wet area is not directly adjacent to the incision",
+          "Action is needed since the wet area is not directly adjacent to the incision",
           "Replace the entire drape set to maintain the sterile barrier",
           "Blot the wet area with a sterile towel and continue without additional draping"
         ],
@@ -253,7 +253,7 @@ export const ddOrLevel: DeepDiveLevel = {
           question: "Six months later, a BI from an implant sterilization load run 6 months ago is flagged during a retrospective quality audit as potentially having shown late growth that was misread as negative. Three implants from that load were used in patients. What is the facility's obligation per Joint Commission standards?",
           options: [
           "The facility should re-test the biological indicator to confirm the result before taking any action",
-          "No action is required since the patients have not shown signs of infection and 6 months have passed",
+          "Action is required since the patients have not shown signs of infection and 6 months have passed",
           "The facility must initiate its recall/notification protocol: notify the infection preventionist, risk management",
           "The facility should add the finding to the next quarterly quality report but no immediate action is needed"
         ],
@@ -344,7 +344,7 @@ export const ddOrLevel: DeepDiveLevel = {
           options: [
           "The mask must fully cover both the nose and mouth and be secured to prevent venting at the",
           "The vendor should be wearing a full surgical hood instead of a bouffant cap",
-          "No issues — the vendor is wearing appropriate attire and is not scrubbed in",
+          "The vendor is wearing appropriate attire and is not scrubbed in",
           "The only issue is that vendors should not be permitted within 5 feet of the sterile field"
         ],
         correctIndex: 0,
@@ -804,7 +804,7 @@ export const ddOrLevel: DeepDiveLevel = {
           "The circulator should complete the count independently and document it as reconciled",
           "The team should perform a postoperative count of all remaining supplies in the room to reconcile",
           "The surgeon must document the clinical rationale for omitting the count in the operative note",
-          "No documentation is needed because the count was legitimately omitted for patient safety"
+          "Documentation is needed because the count was legitimately omitted for patient safety"
         ],
         correctIndex: 2,
           explanation: "AORN recognizes that in true life-threatening emergencies, the count may need to be omitted or abbreviated to prioritize patient survival. However, this does not eliminate documentation requirements. The surgeon must document the clinical rationale for omitting the count in the operative note. An intraoperative X-ray should be obtained as soon as the patient is stable enough. An incident report must be filed per facility policy to document the omitted count and trigger follow-up. This documentation protects both the patient and the surgical team.",

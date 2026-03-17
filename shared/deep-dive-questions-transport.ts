@@ -51,7 +51,7 @@ export const ddTransportLevel: DeepDiveLevel = {
           "The facility should also implement a standardized point-of-use treatment kit (spray, moistened towels",
           "The facility should hire dedicated transport staff who apply enzymatic spray during pickup",
           "The facility should switch to pre-treated instrument trays that don't require point-of-use spray",
-          "No additional redesign is needed — making the spray available in each room solves the root cause"
+          "Additional redesign is needed — making the spray available in each room solves the root cause"
         ],
         correctIndex: 0,
           explanation: "Simply making spray available doesn't change behavior or create accountability. A comprehensive system redesign includes standardized kits (reducing barriers), integration into existing workflows (end-of-case checklist), role-specific accountability (circulator verification), and visible performance metrics (dashboard KPI). This approach addresses availability, workflow integration, accountability, and measurement — the four pillars of sustainable process improvement.",
@@ -151,7 +151,7 @@ export const ddTransportLevel: DeepDiveLevel = {
           question: "The facility implements independent PPE audits and discovers that compliance drops to 45% during the overnight shift when no supervisors are present. The overnight decontamination staff state they were never formally trained on PPE requirements — they learned by watching day-shift colleagues. The surveyor asks what regulatory standard this violates. What is the most comprehensive answer?",
           options: [
           "Joint Commission HR standards — employees must demonstrate competency, but annual training is not specifically required",
-          "No specific regulatory standard is violated — PPE training is a best practice recommendation",
+          "Specific regulatory standard is violated — PPE training is a best practice recommendation",
           "CMS Conditions of Participation — but only if a bloodborne pathogen exposure actually occurs",
           "OSHA Bloodborne Pathogen Standard"
         ],
@@ -279,7 +279,7 @@ export const ddTransportLevel: DeepDiveLevel = {
         {
           question: "The tech switches to the correct brush but uses it for three consecutive instruments without cleaning or replacing the brush between uses. What risk does this introduce?",
           options: [
-          "No risk — the brush is being used in a decontamination environment anyway",
+          "The brush is being used in a decontamination environment anyway",
           "Cross-contamination between instruments",
           "The brush will wear out faster but there is no contamination risk",
           "This is only a concern if the instruments are from different patients"
@@ -344,7 +344,7 @@ export const ddTransportLevel: DeepDiveLevel = {
           options: [
           "Contaminated soap dispensers and bottles are a documented source of healthcare-associated infections",
           "The bottle should be replaced weekly to prevent contamination buildup",
-          "No concern — the soap inside the bottle is antimicrobial and therefore self-sterilizing",
+          "The soap inside the bottle is antimicrobial and therefore self-sterilizing",
           "The concern is cosmetic only — the soap's antimicrobial properties are not affected by external contamination"
         ],
         correctIndex: 0,
@@ -394,7 +394,7 @@ export const ddTransportLevel: DeepDiveLevel = {
           question: "During the two weeks the washer is down, the surveyor reviews the facility's contingency plan and finds that manual cleaning is being performed by two techs who were trained on automated processing but have never been competency-validated on manual cleaning and thermal disinfection procedures. What regulatory concern does this raise?",
           options: [
           "The techs need additional supervision but formal competency validation can wait until the washer is repaired",
-          "No concern — manual cleaning is a simpler process that any trained decontamination tech can perform",
+          "Manual cleaning is a simpler process that any trained decontamination tech can perform",
           "Staff performing manual reprocessing must have documented competency validation specific to manual cleaning techniques",
           "The concern is only valid if the techs are processing critical devices; semi-critical devices can be manually processed without specific competency validation"
         ],
@@ -790,7 +790,7 @@ export const ddTransportLevel: DeepDiveLevel = {
           question: "The same tech has been making the solution by eye rather than using the measuring device provided. When asked, she says the experienced techs all do it that way. A quality check reveals solutions vary from 50% to 200% of recommended concentration. What corrective actions are needed?",
           options: [
           "Switch to pre-mixed detergent solutions to eliminate measuring",
-          "No action — slight variations in concentration are expected",
+          "Slight variations in concentration are expected",
           "Only retrain the new tech since she is the one making errors",
           "Standardize the process: retrain ALL staff on proper dilution"
         ],
@@ -893,7 +893,7 @@ export const ddTransportLevel: DeepDiveLevel = {
           options: [
           "The only concern is that they should use the speakerphone feature",
           "Contaminated gloves touching the phone, door handles",
-          "No concern — they are just briefly stepping out",
+          "They are just briefly stepping out",
           "Staff should not be allowed to take phone calls during shifts"
         ],
         correctIndex: 1,

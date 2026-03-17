@@ -75,7 +75,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "The surgeon wants to add an additional procedure discovered intraoperatively. What does the Universal Protocol require?",
           options: [
-          "No additional steps are needed since the patient is already under anesthesia",
+          "Additional steps are needed since the patient is already under anesthesia",
           "A new time-out must be performed before the additional procedure begins",
           "The surgeon verbally announces the addition and that serves as the time-out",
           "The circulating nurse simply documents the additional procedure in the operative note"
@@ -231,7 +231,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "Mark only the first level to be fused",
           "Mark each individual vertebral level on the patient's skin with a permanent marker",
           "Mark the general spinal area and verify specific levels with",
-          "No marking needed since spine procedures use intraoperative imaging"
+          "Marking needed since spine procedures use intraoperative imaging"
         ],
         correctIndex: 2,
           explanation: "For spinal procedures, the general area should be marked, and the specific level(s) must be confirmed with intraoperative imaging (radiographic verification) as part of the time-out. Marking individual vertebral levels on skin is impractical and unreliable for identifying exact spinal levels.",
@@ -279,10 +279,10 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "A patient who speaks only Mandarin is scheduled for gallbladder surgery. The consent discussion was conducted through the patient's 12-year-old bilingual child. Is this acceptable?",
           options: [
-          "No, a qualified medical interpreter must be used",
-          "No, the procedure must be cancelled entirely",
-          "Yes, as long as the child accurately translates",
-          "Yes, if the child signs as the interpreter"
+          "A qualified medical interpreter must be used",
+          "The procedure must be cancelled entirely",
+          "As long as the child accurately translates",
+          "If the child signs as the interpreter"
         ],
         correctIndex: 0,
           explanation: "Joint Commission standards and federal regulations require the use of qualified medical interpreters for informed consent discussions. Minor children should never serve as interpreters for medical decisions due to potential inaccuracy, emotional burden, and inability to understand complex medical terminology.",
@@ -292,7 +292,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           question: "A qualified medical interpreter is used for the consent discussion, and the patient signs the consent form. The surgeon documented 'informed consent obtained via interpreter' in the chart. During a JC tracer, the surveyor asks to see the interpreter documentation. What specific documentation does Joint Commission expect?",
           options: [
           "A separate interpreter consent form signed by the interpreter and the patient",
-          "No additional documentation is needed beyond the surgeon's note",
+          "Additional documentation is needed beyond the surgeon's note",
           "The interpreter's name, language used, interpreter qualification/ID number",
           "Only the interpreter's signature on the consent form is required"
         ],
@@ -304,7 +304,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           question: "A JC surveyor discovers that a facility uses telephone interpreter services for informed consent in surgical cases. The surveyor asks what quality assurance process exists for telephone interpreters. The facility has no QA process. What standard does this implicate, and what corrective action is required?",
           options: [
           "Joint Commission RI.01.01",
-          "No standard addresses telephone interpretation quality — only in-person interpreters require QA",
+          "Standard addresses telephone interpretation quality — only in-person interpreters require QA",
           "The facility simply needs to switch to in-person interpreters for all surgical consents",
           "Telephone interpretation is prohibited for surgical consent under Joint Commission standards"
         ],
@@ -495,7 +495,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "During the root cause analysis of the near-miss events, the team discovers that in both cases, the time-out was led by the circulating nurse while the surgeon was scrubbing and the anesthesiologist was charting. Staff interviews reveal this is a common practice 'to save time.' What Joint Commission standard is being violated, and what corrective action is most appropriate?",
           options: [
-          "No standard is violated — the time-out was performed and documented",
+          "Standard is violated — the time-out was performed and documented",
           "The violation is with staffing standards — the unit needs more nurses so time-outs don't feel rushed",
           "UP.01.03.01 requires active participation of all team members",
           "UP.01.02.01 is violated — the marking process should compensate for incomplete time-outs"
@@ -534,10 +534,10 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "A tracer surveyor observes a time-out where the surgeon continues scrubbing at the sink while the circulating nurse reads the checklist items. The surgeon says 'yeah, yeah' without looking up. Is this compliant?",
           options: [
-          "No, but only because the surgeon should have been already scrubbed",
-          "Yes, as long as the circulating nurse documents the time-out",
-          "Yes, the surgeon verbally acknowledged the information",
-          "No, the time-out requires active participation by all team members"
+          "But only because the surgeon should have been already scrubbed",
+          "As long as the circulating nurse documents the time-out",
+          "The surgeon verbally acknowledged the information",
+          "The time-out requires active participation by all team members"
         ],
         correctIndex: 3,
           explanation: "Active participation means all team members must pause, be focused, and actively engage in the time-out process. A distracted acknowledgment ('yeah, yeah') while performing another task does not constitute active participation. The procedure must not start until all team members have genuinely participated.",
@@ -588,7 +588,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "Switch to a different surgeon who does not use cautery",
           "Minimize oxygen concentration",
           "Use an alcohol-based prep on the face to ensure sterility",
-          "No special precautions are needed for routine cases"
+          "Special precautions are needed for routine cases"
         ],
         correctIndex: 1,
           explanation: "Head and neck procedures with supplemental oxygen and electrosurgery represent the highest fire risk. Prevention includes reducing FiO2 to the minimum necessary, allowing all alcohol-based preps to completely dry (minimum 3 minutes), draping to prevent oxygen entrapment, and ensuring fire suppression equipment is immediately available.",
@@ -661,7 +661,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           question: "A JC surveyor reviews a facility's retained surgical item prevention program. The facility uses radiopaque sponges and manual counting. The surveyor notes that the facility has had 2 retained sponge events in 18 months despite correct final counts being documented in both cases. What additional technology and process improvement should the surveyor expect the facility to evaluate?",
           options: [
           "The facility should switch from laparotomy sponges to non-radiopaque gauze to make X-ray detection easier",
-          "No additional measures are needed — the counts were documented as correct, so the system worked",
+          "Additional measures are needed — the counts were documented as correct, so the system worked",
           "The facility should simply increase the number of count audits performed by management",
           "The facility should consider implementing adjunct technology (radiofrequency detection systems or barcode"
         ],
@@ -854,7 +854,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           options: [
           "PC.02.02.01 — the issue is with discharge planning, not handoff",
           "NPSG.02.03.01 (handoff communication)",
-          "No standard is at risk — this is a normal and efficient handoff process",
+          "Standard is at risk — this is a normal and efficient handoff process",
           "The handoff is adequate as long as it is documented in the chart"
         ],
         correctIndex: 1,
@@ -893,8 +893,8 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           options: [
           "Marking is only needed if both lobes might be removed",
           "Only if the patient requests it",
-          "Yes, because the procedure now involves",
-          "No, thyroid procedures never require marking"
+          "Because the procedure now involves",
+          "Thyroid procedures never require marking"
         ],
         correctIndex: 2,
           explanation: "A thyroid lobectomy involves laterality (right versus left lobe), which makes it subject to the site marking requirement under the Universal Protocol. The operating side must be marked by the surgeon to prevent wrong-side surgery. This differs from a total thyroidectomy which is a midline procedure.",
@@ -915,7 +915,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "A JC surveyor reviews the facility's site marking exemption list and finds that parathyroid exploration is listed as exempt from site marking because it is 'a bilateral procedure.' However, the surveyor notes that the facility frequently performs focused, unilateral parathyroidectomy based on pre-operative sestamibi scan localization. What is the compliance issue?",
           options: [
-          "No issue — parathyroid procedures are always bilateral explorations and therefore exempt",
+          "Parathyroid procedures are always bilateral explorations and therefore exempt",
           "Parathyroid procedures should never be on the exemption list regardless of approach",
           "The exemption is acceptable because the sestamibi scan serves as the site verification",
           "The exemption list fails to distinguish between bilateral parathyroid exploration (which may be"
@@ -1017,7 +1017,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         {
           question: "Six months after implementing the PACS two-identifier retrieval requirement, a JC surveyor returns for a follow-up survey. The facility shows data that wrong-patient imaging retrieval events dropped from 4 per quarter to zero. However, the surveyor discovers that OR staff have developed a workaround: when the PACS two-identifier search is slow, they photograph the imaging screen with a personal phone and use that image for surgical planning. What compliance issues does this workaround create?",
           options: [
-          "No compliance issue — staff are being resourceful to maintain workflow efficiency",
+          "Compliance issue — staff are being resourceful to maintain workflow efficiency",
           "The workaround is acceptable as a temporary measure while the PACS speed is improved",
           "Multiple compliance issues: (1) personal device images bypass the two-identifier verification",
           "The only issue is HIPAA — personal phone photographs of patient imaging violate privacy rules"

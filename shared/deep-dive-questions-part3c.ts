@@ -546,9 +546,9 @@ export const ddPatientCareLevel: DeepDiveLevel = {
         {
           question: "The surveyor observes a dietary aide delivering a meal tray to the C. difficile patient. The aide puts on gloves but does not don a gown before entering the room. When questioned, the aide states, 'I'm only dropping off a tray, I won't touch the patient.' Under IC.01.05.01, is this practice compliant?",
           options: [
-          "Yes, as long as the aide uses alcohol-based hand sanitizer upon exiting",
-          "No, Contact Precautions require both gown and gloves for ALL individuals entering the room regardless of",
-          "Yes, gloves alone are sufficient for brief non-patient-contact entries such as meal delivery",
+          "As long as the aide uses alcohol-based hand sanitizer upon exiting",
+          "Contact Precautions require both gown and gloves for ALL individuals entering the room regardless of",
+          "Gloves alone are sufficient for brief non-patient-contact entries such as meal delivery",
           "Gowns are only required for clinical staff providing direct patient care; ancillary staff may enter with gloves alone"
         ],
         correctIndex: 1,
@@ -852,9 +852,9 @@ export const ddPatientCareLevel: DeepDiveLevel = {
         {
           question: "The surveyor discovers that a patient scheduled for surgery at 0700 has an H&P dated from 32 days prior to admission, with no update documented. The OR charge nurse states, 'The surgeon will update it before the case starts.' Under PC.01.02.03 and the medical staff bylaws, can the surgery proceed?",
           options: [
-          "Yes, the 30-day requirement has a 48-hour grace period for surgical patients",
-          "No, the surgery cannot proceed because the H&P exceeds the 30-day window and is no longer valid",
-          "Yes, as long as the surgeon updates the H&P in the preoperative holding area before the incision",
+          "The 30-day requirement has a 48-hour grace period for surgical patients",
+          "The surgery cannot proceed because the H&P exceeds the 30-day window and is no longer valid",
+          "As long as the surgeon updates the H&P in the preoperative holding area before the incision",
           "The anesthesiologist's pre-anesthesia assessment can substitute for the expired H&P"
         ],
         correctIndex: 1,
@@ -906,7 +906,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "Respiratory protection is only required during aerosol-generating procedures, not for routine room entry",
           "A surgical mask provides adequate filtration for airborne pathogens when properly fitted",
           "An N95 respirator is recommended but a surgical mask is acceptable if N95s are unavailable",
-          "No, staff entering an AIIR for a patient on Airborne Precautions must wear a NIOSH-certified N95 respirator"
+          "Staff entering an AIIR for a patient on Airborne Precautions must wear a NIOSH-certified N95 respirator"
         ],
         correctIndex: 3,
           explanation: "OSHA's Respiratory Protection Standard (29 CFR 1910.134) and Joint Commission IC.01.05.01 require N95 or higher-level respiratory protection for staff entering AIIRs. Surgical masks filter large droplets but do not provide adequate protection against airborne particles (1-5 microns) such as M. tuberculosis. Each staff member must have a documented annual fit test specific to the N95 model they will use. PAPR (Powered Air-Purifying Respirator) is an alternative for staff who cannot be fit-tested for N95s. Respiratory protection is required for ALL entries into the AIIR, not just during aerosol-generating procedures.",

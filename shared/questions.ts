@@ -581,10 +581,10 @@ export const levels: Level[] = [
         id: "e17",
         question: "A pre-op room has wallpaper instead of painted walls. The wallpaper is intact with no peeling edges, tears, or staining. A surveyor evaluates this. What is the concern?",
         options: [
-          "No concern — intact wallpaper with sealed edges provides an acceptable impervious surface for clinical areas per OSHA healthcare facility surface standards",
+          "Intact wallpaper with sealed edges provides an acceptable impervious surface for clinical areas per OSHA healthcare facility surface standards",
           "Wallpaper seams and edges can trap moisture and harbor pathogens even when intact — painted, sealed surfaces are preferred in clinical areas",
-          "No concern — modern healthcare-grade vinyl wallpaper meets CDC infection prevention surface requirements and is approved for clinical patient care areas",
-          "No concern — wallpaper is equivalent to paint for infection prevention purposes when properly maintained, as both provide an impervious cleanable surface"
+          "Modern healthcare-grade vinyl wallpaper meets CDC infection prevention surface requirements and is approved for clinical patient care areas",
+          "Wallpaper is equivalent to paint for infection prevention purposes when properly maintained, as both provide an impervious cleanable surface"
         ],
         correctIndex: 1,
         explanation: "Wallpaper is generally not recommended in clinical areas because seams can trap moisture and harbor microorganisms even when the surface appears intact. Painted, sealed surfaces are preferred because they provide a truly impervious, cleanable barrier.",
@@ -623,9 +623,9 @@ export const levels: Level[] = [
         id: "e20",
         question: "A surveyor runs a finger along the top edge of an OR light boom and finds a thin layer of dust. The housekeeping log shows the boom was cleaned yesterday. Staff says a construction project in an adjacent corridor is generating extra dust. Who is responsible for the finding?",
         options: [
-          "No one — the cleaning log from yesterday demonstrates compliance with the facility EVS schedule, and construction-related re-accumulation is an excused variance",
+          "The cleaning log from yesterday demonstrates compliance with the facility EVS schedule, and construction-related re-accumulation is an excused variance",
           "The construction contractor — per ICRA Class III protocols, they are responsible for dust mitigation and containment during adjacent projects, making this their finding",
-          "No one — construction-related dust is classified as an uncontrollable external factor per ICRA environmental assessment guidelines and the cleaning log confirms compliance",
+          "Construction-related dust is classified as an uncontrollable external factor per ICRA environmental assessment guidelines and the cleaning log confirms compliance",
           "The finding stands regardless of the cause — visible dust is never acceptable and cleaning frequency must increase to match conditions"
         ],
         correctIndex: 3,
@@ -887,7 +887,7 @@ export const levels: Level[] = [
           "The mop and bucket — cleaning equipment does not belong in a clean utility room",
           "The medication refrigerator at 42°F exceeds the 40°F maximum for safe medication storage",
           "The shelving height at 7 inches is below the required 8-inch minimum for clean utility rooms",
-          "No findings — all items are appropriate for a clean utility room and meet storage requirements"
+          "All items are appropriate for a clean utility room and meet storage requirements"
         ],
         correctIndex: 0,
         explanation: "Cleaning equipment (mop and bucket) does not belong in a clean utility room — it should be in a designated housekeeping closet. The shelving at 7 inches meets the 6-8 inch general standard, and the fridge at 42°F is within the 36-46°F range.",
@@ -912,9 +912,9 @@ export const levels: Level[] = [
         id: "s18",
         question: "A surveyor opens a medication refrigerator in the clean utility room and finds: properly stored medications, daily temperature logs at 38°F, and a clearly labeled staff lunch bag with an ice pack. What is the finding?",
         options: [
-          "No finding — the lunch is clearly labeled and physically separated from medications on a different shelf",
-          "No finding — the ice pack keeps the lunch at safe temperature and the labeling prevents medication errors",
-          "No finding — personal items in sealed containers are permitted in medication refrigerators during the staff member's shift",
+          "The lunch is clearly labeled and physically separated from medications on a different shelf",
+          "The ice pack keeps the lunch at safe temperature and the labeling prevents medication errors",
+          "Personal items in sealed containers are permitted in medication refrigerators during the staff member's shift",
           "Staff food cannot be stored in a medication refrigerator under any circumstances, regardless of labeling or separation"
         ],
         correctIndex: 3,
@@ -1217,7 +1217,7 @@ export const levels: Level[] = [
         options: [
           "The humidity at 45% is below the minimum 50% threshold for sterile storage environments",
           "Items stored touching the wall — supplies must not touch walls in sterile storage",
-          "No findings — wire shelving with solid bottom shelf, proper height, and controlled climate meet all requirements",
+          "Wire shelving with solid bottom shelf, proper height, and controlled climate meet all requirements",
           "The bottom shelf at 10 inches exceeds the 8-9 inch maximum height for sterile storage shelving"
         ],
         correctIndex: 1,
@@ -1668,7 +1668,7 @@ export const levels: Level[] = [
         question: "A surveyor counts 10 full O₂ cylinders and 4 partially full cylinders all stored together in a supply room. What are the compliance issues?",
         options: [
           "Both — the total exceeds 12 AND full must be segregated from partially full cylinders",
-          "No issues — the 12-cylinder limit applies only to flammable gas cylinders, not medical oxygen",
+          "The 12-cylinder limit applies only to flammable gas cylinders, not medical oxygen",
           "Only the total count — 14 cylinders exceeds the 12-cylinder maximum; segregation is recommended but not required",
           "Only the mixing — full and partially full cylinders must be segregated, but the total of 14 is within the 15-cylinder limit"
         ],
@@ -2210,8 +2210,8 @@ export const levels: Level[] = [
         options: [
           "The ultrasonic cleaner fluid change frequency should be verified independently — the water treatment PM is a minor documentation gap",
           "The water treatment system PM is overdue — this means the quality of the final rinse water cannot be verified as meeting AAMI TIR34 standards",
-          "No finding — all sterilization-related testing is current and water treatment PM is a facilities responsibility, not an SPD finding",
-          "No finding — water treatment systems only require PM every 18 months per AAMI guidelines, so 14 months is within the acceptable window"
+          "All sterilization-related testing is current and water treatment PM is a facilities responsibility, not an SPD finding",
+          "Water treatment systems only require PM every 18 months per AAMI guidelines, so 14 months is within the acceptable window"
         ],
         correctIndex: 1,
         explanation: "Water treatment systems require current preventive maintenance and quality control. At 14 months without PM (annual policy), the system's output cannot be verified as meeting AAMI TIR34 standards for final rinse water quality. This affects every instrument processed since the PM lapsed.",
@@ -2483,10 +2483,10 @@ export const levels: Level[] = [
         id: "or17",
         question: "An OR has a back table with labeled syringes of Lidocaine 1% and normal saline. An unlabeled medicine cup contains clear fluid. The scrub tech says 'it's just irrigation saline — everyone knows that.' A surveyor observes this. What is the finding?",
         options: [
-          "No finding — per TJC standard MM.05.01.07, irrigation saline is exempt from sterile field labeling requirements because it is classified as a supply item rather than a medication",
+          "Per TJC standard MM.05.01.07, irrigation saline is exempt from sterile field labeling requirements because it is classified as a supply item rather than a medication",
           "The unlabeled cup is a medication safety violation — ALL solutions on the sterile field must be labeled with name and concentration, regardless of how 'obvious' the contents are",
           "Minor documentation gap — the scrub tech should verbally announce the contents at the start of each case, but a physical label is not required for irrigation fluids",
-          "No finding — since the other syringes on the sterile field are properly labeled with drug name and concentration, the remaining unlabeled cup can be safely identified by process of elimination"
+          "Since the other syringes on the sterile field are properly labeled with drug name and concentration, the remaining unlabeled cup can be safely identified by process of elimination"
         ],
         correctIndex: 1,
         explanation: "ALL medications and solutions on the sterile field must be labeled with drug name and concentration — no exceptions. Verbal identification or assumed knowledge is never acceptable. An unlabeled container of clear fluid is a medication error waiting to happen.",
@@ -2526,9 +2526,9 @@ export const levels: Level[] = [
         question: "During a knee arthroscopy, the OR door opens and closes 12 times in 30 minutes for various personnel entering and leaving. All personnel are properly attired. What is the concern?",
         options: [
           "Excessive door opening increases air changes and disrupts the positive-pressure laminar airflow pattern, raising airborne contamination risk near the surgical site",
-          "No concern — door traffic is only a finding if personnel are improperly attired or enter without authorization",
+          "Door traffic is only a finding if personnel are improperly attired or enter without authorization",
           "The concern is noise disruption — frequent door openings distract the surgical team and increase the risk of procedural errors",
-          "No concern — all personnel are properly attired and the OR ventilation system compensates for door openings automatically"
+          "All personnel are properly attired and the OR ventilation system compensates for door openings automatically"
         ],
         correctIndex: 0,
         explanation: "Each door opening disrupts the OR's positive-pressure environment and laminar airflow designed to direct contaminants away from the surgical site. Excessive traffic, even by properly attired personnel, increases airborne particle counts and infection risk. OR traffic must be minimized.",
@@ -2842,9 +2842,9 @@ export const levels: Level[] = [
         id: "up20",
         question: "A surgical site mark is placed by the attending surgeon with patient participation. The mark uses an 'X' over the incision site. Another surgeon in the practice uses an arrow, and a third uses initials. A surveyor asks about the marking method. What is the concern?",
         options: [
-          "No concern — any visible mark that the patient and surgeon agree on is acceptable as long as it is clearly visible",
-          "No concern — individual surgeon preference for marking style is acceptable as long as the mark is at or near the incision site",
-          "No concern — the variety of marks actually provides additional identification since each surgeon's mark is unique to them",
+          "Any visible mark that the patient and surgeon agree on is acceptable as long as it is clearly visible",
+          "Individual surgeon preference for marking style is acceptable as long as the mark is at or near the incision site",
+          "The variety of marks actually provides additional identification since each surgeon's mark is unique to them",
           "The marking method must be consistent — the facility should use the same type of mark each time to avoid confusion"
         ],
         correctIndex: 3,
@@ -3145,9 +3145,9 @@ export const levels: Level[] = [
         id: "pc19",
         question: "A patient screens positive on the C-SSRS (Columbia Suicide Severity Rating Scale). Staff documents the positive screen and places the patient on 1:1 observation. What additional steps are required?",
         options: [
-          "No additional steps — a positive screen with 1:1 observation is the maximum required intervention until psychiatric consultation",
+          "Additional steps — a positive screen with 1:1 observation is the maximum required intervention until psychiatric consultation",
           "SAFE-T risk assessment, suicide precaution orders matching risk level, safety checks documented, ligature-resistant garments if high-risk",
-          "No additional steps — 1:1 observation is the highest level of precaution and encompasses all required safety measures",
+          "Additional steps — 1:1 observation is the highest level of precaution and encompasses all required safety measures",
           "Only a psychiatric consultation referral is needed — the 1:1 observation and documented screen satisfy all other requirements"
         ],
         correctIndex: 1,

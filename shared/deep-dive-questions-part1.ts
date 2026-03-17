@@ -225,7 +225,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
           options: [
           "HPV fogging alone can replace both manual cleaning and UV-C since it reaches all surfaces including shadowed areas — peer-reviewed studies in the Journal of Hospital Infection demonstrate that hydrogen peroxide vapor achieves 6-log reduction across all environmental surfaces including concealed areas under equipment and inside cabinets, making it the only single technology capable of providing comprehensive whole-room decontamination without requiring prior manual cleaning or supplemental UV-C exposure",
           "Three layers are always better than two and should be implemented immediately — the principle of redundant defense-in-depth from SHEA/IDSA environmental infection prevention guidelines Section 7.4 establishes that each additional validated disinfection modality provides incremental pathogen reduction, and facilities have an obligation under IC.02.02.01 to implement all available evidence-based technologies without waiting for facility-specific data when the general efficacy evidence is already established",
-          "No single technology is sufficient alone — manual cleaning provides mechanical bioburden removal, UV-C provides line-of-sight surface disinfection, and HPV provides whole-room gaseous penetration into areas UV-C cannot reach; however, adding HPV must be justified by the facility's HAI data and risk assessment, as the cost, room downtime, and operational complexity must be weighed against measurable infection prevention outcomes for the specific patient population",
+          "Single technology is sufficient alone — manual cleaning provides mechanical bioburden removal, UV-C provides line-of-sight surface disinfection, and HPV provides whole-room gaseous penetration into areas UV-C cannot reach; however, adding HPV must be justified by the facility's HAI data and risk assessment, as the cost, room downtime, and operational complexity must be weighed against measurable infection prevention outcomes for the specific patient population",
           "UV-C and HPV are redundant technologies that target the same microbial populations through different energy mechanisms — the facility should choose one supplemental technology based on a cost-effectiveness analysis per AHRQ's Healthcare Technology Assessment Framework, as operating both UV-C and HPV in sequence provides diminishing marginal returns with each additional modality reducing viable organisms by less than 0.5 additional log units beyond what the previous technology achieved"
         ],
         correctIndex: 2,
@@ -262,7 +262,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
           "The only risk is if the products are mixed together — OSHA Hazard Communication Standard 29 CFR 1910.1200 Section (d)(5)(ii) specifies that chemical incompatibility is the primary safety concern when staff use unfamiliar products, and as long as the float tech uses only one product at a time without combining chemicals, the disinfection outcome will be equivalent regardless of which EPA-registered product is applied to the OR surfaces",
           "This is acceptable as long as the tech cleans thoroughly using proper technique — CDC environmental cleaning guidelines establish that mechanical cleaning action (friction, wiping pressure, and surface coverage) accounts for 80% of pathogen removal effectiveness, with the specific chemical agent contributing the remaining 20%; a well-trained tech applying thorough cleaning technique with any EPA-registered disinfectant will achieve adequate decontamination in the OR",
           "The patient room product may not have the required kill claims for the OR (such as tuberculocidal or sporicidal activity), may have a different contact time the tech is unaware of, and the tech may not have been trained on OR-specific cleaning protocols",
-          "No risk — all EPA-registered disinfectants provide adequate disinfection for any healthcare area because EPA registration under FIFRA requires demonstration of broad-spectrum antimicrobial activity against a standardized panel of organisms including S. aureus, P. aeruginosa, and Salmonella, which represents the core pathogen profile encountered in both patient rooms and operating rooms across all healthcare settings"
+          "All EPA-registered disinfectants provide adequate disinfection for any healthcare area because EPA registration under FIFRA requires demonstration of broad-spectrum antimicrobial activity against a standardized panel of organisms including S. aureus, P. aeruginosa, and Salmonella, which represents the core pathogen profile encountered in both patient rooms and operating rooms across all healthcare settings"
         ],
         correctIndex: 2,
           explanation: "Using the wrong disinfectant in the OR creates multiple risks: the product may lack required kill claims (tuberculocidal activity, efficacy against C. difficile spores), have different contact times, and the tech may not understand OR-specific cleaning sequences and terminal cleaning requirements. Cross-trained staff must be educated on area-specific products and protocols before being reassigned.",
@@ -618,7 +618,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
           options: [
           "Only IC.02.02.01 for infection prevention process gaps",
           "Multiple standards are implicated: IC.02.02",
-          "No standard is directly implicated because curtain change frequency is not specifically mandated by Joint Commission",
+          "Standard is directly implicated because curtain change frequency is not specifically mandated by Joint Commission",
           "This is a housekeeping issue that falls under EC.02.06.01 only"
         ],
         correctIndex: 1,
@@ -715,7 +715,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
           question: "During a Joint Commission tracer focused on the environment of care, a surveyor notices a water-stained ceiling tile in a procedure room. She asks the unit manager when it was first noticed and what was done. The manager says it appeared 'a few weeks ago' and a work order was submitted. The surveyor pulls up the work order system and finds the request was submitted 23 days ago, categorized as 'routine maintenance,' and has not been addressed. The surveyor asks who determines the priority of work orders involving water intrusion in patient care areas. The manager says facilities prioritizes their own work orders. What findings would the surveyor generate?",
           options: [
           "Multiple interconnected findings: EC.02.06",
-          "No finding is warranted since the work order was submitted, demonstrating the system is functioning",
+          "Finding is warranted since the work order was submitted, demonstrating the system is functioning",
           "Only a verbal recommendation to improve work order response times",
           "A single finding for delayed maintenance response under EC.02.06.01"
         ],
@@ -1033,9 +1033,9 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         baseQuestion: "A surveyor follows the flow of sterile instruments from SPD to the OR. The instruments travel through a clean corridor, but the corridor also has access doors to soiled utility rooms along its length. Are these access points a concern?",
         baseOptions: [
         "Soiled utility room doors opening into clean corridors can introduce contaminated air and create cross-traffic opportunities",
-        "No concern — negative pressure in the soiled utility rooms prevents meaningful air exchange when self-closing doors remain closed during operations",
+        "Negative pressure in the soiled utility rooms prevents meaningful air exchange when self-closing doors remain closed during operations",
         "Concerning only if the soiled utility rooms lack proper waste containment and sealed refuse receptacles per OSHA bloodborne pathogen standards",
-        "No concern if the soiled utility room doors are kept locked and accessed only by authorized EVS staff with badge-controlled entry"
+        "Concern if the soiled utility room doors are kept locked and accessed only by authorized EVS staff with badge-controlled entry"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "Soiled utility room doors opening into clean corridors create opportunities for contaminated air release, cross-traffic between clean and soiled activities, and potential contact contamination on door handles and frames. Clean corridors should not have direct access to soiled utility rooms.",
@@ -1424,8 +1424,8 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         id: "dd-seg10",
         baseQuestion: "A surveyor examines the facility's one-way workflow in SPD. Instruments flow from decontamination to clean assembly to sterilization to sterile storage. However, the sterilizer loading area is accessible from both the clean assembly side and the sterile storage side. Is this a concern?",
         baseOptions: [
-        "No concern because the sterilization process eliminates all contamination making cross-access between clean and sterile zones irrelevant",
-        "No concern — AAMI ST79 confirms sterilizer loading areas are classified as transitional zones and dual-access is the standard configuration",
+        "Concern because the sterilization process eliminates all contamination making cross-access between clean and sterile zones irrelevant",
+        "AAMI ST79 confirms sterilizer loading areas are classified as transitional zones and dual-access is the standard configuration",
         "The sterilizer area must have controlled access to prevent unsterilized items from entering the sterile storage side and sterile items from being contaminated by traffic from the clean assembly area",
         "A concern only if pass-through sterilizers are not used — pass-through design inherently prevents cross-zone traffic contamination issues"
       ],
@@ -1672,7 +1672,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         "The duct system filters all air before recirculation so shared ductwork presents no cross-contamination risk",
         "A concern only if the soiled utility room generates aerosolized contaminants from active hopper use or waste processing",
         "Shared return air ductwork between clean and soiled rooms creates a pathway for airborne contaminant transfer",
-        "No concern if the return air system includes MERV-14 filtration at the main air handling unit before recirculation to spaces"
+        "Concern if the return air system includes MERV-14 filtration at the main air handling unit before recirculation to spaces"
       ],
       baseCorrectIndex: 2,
         baseExplanation: "Shared return air ductwork between clean and soiled spaces creates a pathway for airborne contaminant transfer. The soiled utility room should have dedicated exhaust that is discharged directly to the outside, not recirculated through shared ductwork with clean supply areas.",
@@ -1770,7 +1770,7 @@ export const deepDiveLevelsPart1: DeepDiveLevel[] = [
         "Any supplies that enter a contact precaution room are considered potentially contaminated even if packaging appears intact",
         "But only for supplies that were in the room longer than thirty minutes as brief exposure does not result in contamination",
         "They were sealed and unused so the sterile barrier of the packaging was not compromised during the patient care visit",
-        "Yes if the outer packaging shows no visible contamination and the supplies were not within three feet of the patient at any time"
+        "If the outer packaging shows no visible contamination and the supplies were not within three feet of the patient at any time"
       ],
       baseCorrectIndex: 0,
         baseExplanation: "All supplies that enter a contact precaution room are considered potentially contaminated, even if packaging appears intact and unused. They must not be returned to the clean supply area. Only the supplies needed for the procedure should be brought into the room.",

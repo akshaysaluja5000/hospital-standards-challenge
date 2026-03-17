@@ -230,7 +230,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           options: [
           "Only items opened during that period need to be re-sterilized",
           "Document the excursion",
-          "No action needed — the HVAC corrected itself and current temp is fine",
+          "Action needed — the HVAC corrected itself and current temp is fine",
           "Discard all sterile items in the room regardless of packaging integrity"
         ],
         correctIndex: 1,
@@ -404,7 +404,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "After calibrating all sensors, the facility's continuous monitoring system now captures data every 5 minutes and stores it on a local computer. The surveyor asks about data backup and retention. The facility admits the data is stored only on the local hard drive with no backup, and the oldest data was automatically overwritten after 90 days due to storage limits. What compliance issues does this raise?",
           options: [
-          "No issues — 90 days of data retention is sufficient for Joint Commission surveys since surveyors only review current conditions",
+          "90 days of data retention is sufficient for Joint Commission surveys since surveyors only review current conditions",
           "The facility only needs to retain records showing out-of-range events; in-range data can be discarded",
           "Environmental monitoring records must be retained for a minimum period consistent with the facility's record retention",
           "The only issue is the lack of backup — 90 days of retention is adequate as long as data is backed up"
@@ -761,7 +761,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "With all chemicals removed from storage, the facility establishes a cleaning protocol for the sterile storage room. The protocol calls for daily damp mopping with a quaternary ammonium disinfectant and weekly shelf wiping. During a tracer, the surveyor asks: 'What is the dwell time for your disinfectant, and do staff remove sterile items from shelves before wiping?' The charge tech says dwell time is 10 minutes and that staff wipe around the sterile items on the shelf without moving them. What findings should the surveyor cite?",
           options: [
-          "No findings — wiping around items is acceptable as long as the disinfectant is applied properly to the shelf surfaces",
+          "Wiping around items is acceptable as long as the disinfectant is applied properly to the shelf surfaces",
           "The only finding is that quaternary ammonium compounds are not appropriate for sterile storage — only hydrogen peroxide-based cleaners should be used",
           "Multiple findings: (1) wiping around items means shelf surfaces under and behind items are never disinfected, creating bioburden reservoirs",
           "The only finding is that items should be removed before wiping to ensure complete surface coverage of the disinfectant"
@@ -791,7 +791,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           "Only notify the surgeon if the patient develops an infection",
           "Notify the surgeon, infection preventionist, and risk management",
           "File an incident report but no patient notification is necessary",
-          "No action needed — the chemical indicators on those trays changed color, so they were sterile"
+          "Action needed — the chemical indicators on those trays changed color, so they were sterile"
         ],
         correctIndex: 1,
           explanation: "A positive BI with items already used in surgery is a serious event requiring immediate notification of the surgical team, infection prevention, and risk management. Patient surveillance for surgical site infection must be initiated. The root cause of sterilizer failure must be investigated. Chemical indicators only confirm exposure to sterilization conditions — they do not confirm sterility.",
@@ -840,7 +840,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           question: "During the review, the facility discovers that the manufacturer updated the IFU for a commonly used instrument set 18 months ago, changing the required sterilization cycle from 4 minutes at 270°F to 10 minutes at 270°F. The facility has been using the old 4-minute cycle. What are the implications?",
           options: [
           "All instruments processed with the old cycle since the IFU change may not have been",
-          "No implications — both cycles use the same temperature",
+          "Both cycles use the same temperature",
           "Only future loads need to use the new cycle; past loads were processed in good faith",
           "The facility should contact the manufacturer to negotiate keeping the 4-minute cycle"
         ],
@@ -941,7 +941,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "The electronic tracking system goes down for 4 hours during a busy surgical day. Trays are still being processed and distributed. The department has no backup documentation procedure. What risks does this create?",
           options: [
-          "No risk — the system will capture the data when it comes back online",
+          "The system will capture the data when it comes back online",
           "Minimal risk — staff can remember which trays they processed",
           "The department should stop processing until the system is restored",
           "Significant risk — without documentation"
