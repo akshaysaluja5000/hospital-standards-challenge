@@ -968,6 +968,8 @@ export async function registerRoutes(
       userAnswer: z.string().max(500),
       correctAnswer: z.string().max(500),
       explanation: z.string().max(2000),
+      depth: z.number().int().min(1).max(3).default(1),
+      previousExplanations: z.array(z.string().max(3000)).max(2).optional(),
     });
     const parsed = aiTutorSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -984,7 +986,58 @@ export async function registerRoutes(
     aiTutorRateLimit.set(userId, userCalls);
 
     try {
-      const { question, userAnswer, correctAnswer, explanation } = parsed.data;
+      const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations } = parsed.data;
+
+      const depthPrompts: Record<number, string> = {
+        1: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. A staff member just answered a compliance question. Explain the correct answer in plain, conversational language a bedside nurse or SPD tech would understand.
+
+Your response must be exactly 7-8 sentences. Cover:
+- Why the correct answer matters in daily practice
+- A brief real-world scenario showing what could go wrong
+- The specific Joint Commission standard or principle behind this
+- A practical tip staff can use immediately
+
+Question: ${question}
+Staff member answered: ${userAnswer}
+Correct answer: ${correctAnswer}
+Standard explanation: ${explanation}
+
+Give a friendly, plain-language explanation. Do not repeat the question or options verbatim.`,
+
+        2: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. The staff member wants to go deeper on a compliance topic they just learned about.
+
+Here's what was already covered:
+${(previousExplanations || []).join("\n---\n")}
+
+Now go deeper. Your response must be exactly 7-8 sentences. Cover:
+- The regulatory history or rationale behind this standard
+- How Joint Commission surveyors specifically evaluate this during tracers
+- Common citations and how to avoid them
+- Cross-references to related standards that staff should also know
+- A more complex scenario showing how this standard interacts with other requirements
+
+Question context: ${question}
+Correct answer: ${correctAnswer}
+
+Do not repeat information already provided. Build on it with expert-level detail.`,
+
+        3: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. The staff member wants the deepest level of detail on this compliance topic.
+
+Here's what was already covered:
+${(previousExplanations || []).join("\n---\n")}
+
+Now provide the most advanced analysis. Your response must be exactly 7-8 sentences. Cover:
+- How this standard connects to patient safety outcomes and sentinel event data
+- Best practices from high-performing hospitals
+- Leadership and culture dimensions — how management can reinforce compliance
+- What a perfect score looks like during a real Joint Commission survey
+- Actionable steps for the staff member to champion this standard on their unit
+
+Question context: ${question}
+Correct answer: ${correctAnswer}
+
+Do not repeat any previously covered information. This is the expert masterclass level.`,
+      };
 
       const message = await getAnthropicClient().messages.create({
         model: "claude-haiku-4-5",
@@ -992,14 +1045,7 @@ export async function registerRoutes(
         messages: [
           {
             role: "user",
-            content: `You are an AI tutor for hospital staff preparing for Joint Commission surveys. A staff member just answered a compliance question. Explain the correct answer in plain, conversational language a bedside nurse or SPD tech would understand. Use a brief real-world scenario to illustrate why the correct answer matters. Keep it to 2-3 short paragraphs.
-
-Question: ${question}
-Staff member answered: ${userAnswer}
-Correct answer: ${correctAnswer}
-Standard explanation: ${explanation}
-
-Give a friendly, plain-language explanation with a realistic bedside or department scenario. Do not repeat the question or options verbatim.`,
+            content: depthPrompts[depth] || depthPrompts[1],
           },
         ],
       });

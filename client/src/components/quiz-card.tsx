@@ -128,7 +128,12 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
                     {question.explanation}
                   </p>
                   {selected !== null && (
-                    <AiTutorBox question={question} selectedIndex={selected} />
+                    <AiTutorBox
+                      questionText={question.question}
+                      userAnswer={question.options[selected]}
+                      correctAnswer={question.options[question.correctIndex]}
+                      explanation={question.explanation}
+                    />
                   )}
                 </div>
               </div>

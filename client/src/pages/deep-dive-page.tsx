@@ -24,6 +24,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import type { DeepDiveLevel, DeepDiveGameState } from "@shared/schema";
 import type { QuizSession } from "@shared/schema";
+import { AiTutorBox } from "@/components/ai-tutor-box";
 
 function shuffleWithSeed(arr: any[], seed: string) {
   const result = [...arr];
@@ -782,6 +783,12 @@ export default function DeepDivePage() {
                             </span>
                           </div>
                         )}
+                        <AiTutorBox
+                          questionText={displayQuestion}
+                          userAnswer={displayOptions[activeSelected!] || ""}
+                          correctAnswer={displayOptions[displayCorrectIdx] || ""}
+                          explanation={displayExplanation}
+                        />
                       </div>
                     </div>
                   </div>
