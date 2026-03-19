@@ -105,6 +105,27 @@ export const resetPasswordSchema = z.object({
   path: ["confirmNewPassword"],
 });
 
+export const diagnosticResults = pgTable("diagnostic_results", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  score: integer("score").notNull(),
+  totalQuestions: integer("total_questions").notNull(),
+  answers: text("answers").notNull().default("[]"),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
+export const masteryResults = pgTable("mastery_results", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  score: integer("score").notNull(),
+  totalQuestions: integer("total_questions").notNull(),
+  answers: text("answers").notNull().default("[]"),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
+export type DiagnosticResult = typeof diagnosticResults.$inferSelect;
+export type MasteryResult = typeof masteryResults.$inferSelect;
+
 export type InsertFacility = z.infer<typeof insertFacilitySchema>;
 export type Facility = typeof facilities.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;

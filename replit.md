@@ -40,6 +40,9 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - **AI Handbook Search**: "Ask About Standards" search box on the Handbook page. Users type a question, AI searches curated handbook content and answers with inline references to handbook sections. For education and preparation only.
 - **AI Leadership Coach**: Admin-only feature on the Admin Dashboard. Aggregates per-level quiz performance across all facility staff and generates AI-powered leadership insights: unit readiness snapshot, priority focus areas, recommended actions (in-services, practice assignments), and engagement insights. Facility-scoped (only shows data for admin's facility). Uses shared 30 calls/user/hour rate limit.
 
+- **Diagnostic Quiz**: 55-question pre-test (5 per section, all 11 topics). No correct/incorrect feedback during quiz — just pick and move on. Score and section breakdown shown at end. Encourages new users to take it first. Dashboard CTA shown to users who haven't taken it yet. Different teal/cyan color scheme.
+- **Mastery Exam**: 55-question post-test (5 per section, all 11 topics). Shows correct/incorrect feedback with expert explanations after each question. Requires completing at least 10 questions per section to unlock (admin bypass for akshaysaluja and rsaluja). Dashboard CTA shown when eligible. Different amber/orange color scheme. Compares progress from diagnostic baseline.
+
 ## Database Tables
 - `facilities` - Hospital/facility registry (name, unique code)
 - `users` - Auth and profile data, with facilityId foreign key
@@ -47,13 +50,15 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `user_streaks` - Current/longest streaks and total XP
 - `quiz_sessions` - In-progress quiz state (question order, answers, current position) per user per level
 - `daily_activity` - Daily question/answer tracking
+- `diagnostic_results` - Diagnostic quiz attempts (score, total, answers JSON, timestamp)
+- `mastery_results` - Mastery exam attempts (score, total, answers JSON, timestamp)
 
 ## File Structure
 - `shared/schema.ts` - Database schemas and TypeScript types
 - `shared/questions.ts` - Question bank organized by levels
 - `server/routes.ts` - API endpoints with auth middleware
 - `server/storage.ts` - Database CRUD operations
-- `client/src/pages/` - Landing, Auth, Dashboard, Play, Study, Profile, Admin, Leaderboard, Handbook, Terms, DeepDiveSelect, DeepDive pages
+- `client/src/pages/` - Landing, Auth, Dashboard, Play, Study, Profile, Admin, Leaderboard, Handbook, Terms, DeepDiveSelect, DeepDive, DiagnosticQuiz, MasteryExam pages
 - `shared/handbook.ts` - Compliance Handbook content (11 chapters with sections, critical values, scenarios)
 - `shared/deep-dive-questions.ts` - Deep Dive consolidation file (imports and re-exports all 11 sections)
 - `shared/deep-dive-questions-*.ts` - Deep Dive branching question content split across multiple files (transport, sterile, part1, part2, part3a-d)
@@ -89,3 +94,5 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `/leaderboard` - Rankings (auth required)
 - `/profile` - User profile & settings (auth required)
 - `/admin` - Admin dashboard (admin only)
+- `/diagnostic` - Diagnostic Quiz pre-test (auth required)
+- `/mastery` - Mastery Exam post-test (auth required, eligibility-gated)

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,7 +10,7 @@ import { XpBar } from "@/components/xp-bar";
 import { LevelCard } from "@/components/level-card";
 import { DailyCalendar } from "@/components/daily-calendar";
 import { useAuth } from "@/lib/auth";
-import type { UserStreak, UserProgress, DailyActivity, QuizSession } from "@shared/schema";
+import type { UserStreak, UserProgress, DailyActivity, QuizSession, DiagnosticResult } from "@shared/schema";
 import { levels } from "@shared/questions";
 
 export default function DashboardPage() {
@@ -35,6 +35,14 @@ export default function DashboardPage() {
 
   const { data: savedSessions } = useQuery<QuizSession[]>({
     queryKey: ["/api/game/sessions"],
+  });
+
+  const { data: diagnosticResults } = useQuery<DiagnosticResult[]>({
+    queryKey: ["/api/diagnostic/results"],
+  });
+
+  const { data: masteryEligibility } = useQuery<{ eligible: boolean; missingSections: string[] }>({
+    queryKey: ["/api/mastery/eligibility"],
   });
 
   const isLoading = streakLoading || progressLoading || activitiesLoading;
@@ -201,6 +209,60 @@ export default function DashboardPage() {
         </motion.div>
 
         <XpBar currentXp={displayXp} />
+
+        {(!diagnosticResults || diagnosticResults.length === 0) && (
+          <motion.button
+            className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
+            onClick={() => setLocation("/diagnostic")}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileTap={{ scale: 0.98 }}
+            data-testid="button-diagnostic-cta"
+          >
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-md">
+              <Stethoscope size={24} className="text-white" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-base">New here? Take the Diagnostic Quiz</h3>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">
+                  Start
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                55 questions to benchmark your compliance knowledge — takes about 15 minutes
+              </p>
+            </div>
+            <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+          </motion.button>
+        )}
+
+        {masteryEligibility?.eligible && (
+          <motion.button
+            className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10"
+            onClick={() => setLocation("/mastery")}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileTap={{ scale: 0.98 }}
+            data-testid="button-mastery-cta"
+          >
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+              <Crown size={24} className="text-white" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-base">Ready to prove mastery?</h3>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-600 uppercase tracking-wider">
+                  Unlocked
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                55 advanced questions — show you're survey-ready and compare to your diagnostic baseline
+              </p>
+            </div>
+            <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+          </motion.button>
+        )}
 
         <motion.button
           className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"

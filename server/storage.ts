@@ -3,8 +3,9 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
+  diagnosticResults, masteryResults,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
-  type Facility, type InsertFacility,
+  type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -46,6 +47,11 @@ export interface IStorage {
   getFacility(id: number): Promise<Facility | undefined>;
   getFacilityByCode(code: string): Promise<Facility | undefined>;
   getAllFacilities(): Promise<Facility[]>;
+
+  getDiagnosticResults(userId: number): Promise<DiagnosticResult[]>;
+  createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<DiagnosticResult>;
+  getMasteryResults(userId: number): Promise<MasteryResult[]>;
+  createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -240,6 +246,24 @@ export class DatabaseStorage implements IStorage {
 
   async getAllFacilities(): Promise<Facility[]> {
     return db.select().from(facilities).orderBy(facilities.name);
+  }
+
+  async getDiagnosticResults(userId: number): Promise<DiagnosticResult[]> {
+    return db.select().from(diagnosticResults).where(eq(diagnosticResults.userId, userId)).orderBy(desc(diagnosticResults.completedAt));
+  }
+
+  async createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<DiagnosticResult> {
+    const [result] = await db.insert(diagnosticResults).values({ userId, score, totalQuestions, answers }).returning();
+    return result;
+  }
+
+  async getMasteryResults(userId: number): Promise<MasteryResult[]> {
+    return db.select().from(masteryResults).where(eq(masteryResults.userId, userId)).orderBy(desc(masteryResults.completedAt));
+  }
+
+  async createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult> {
+    const [result] = await db.insert(masteryResults).values({ userId, score, totalQuestions, answers }).returning();
+    return result;
   }
 }
 

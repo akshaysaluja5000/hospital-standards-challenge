@@ -12,6 +12,9 @@ import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
 import type { User, DailyActivity } from "@shared/schema";
 import { deepDiveLevels } from "@shared/deep-dive-questions";
+import { diagnosticQuestions } from "@shared/diagnostic-questions";
+import { masteryQuestions } from "@shared/mastery-questions";
+import { levels } from "@shared/questions";
 
 function getAnthropicClient() {
   const apiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY || "replit-ai-integration";
@@ -1341,6 +1344,140 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
       console.error("AI Handbook error:", error?.status, error?.message, error?.error?.type);
       res.status(502).json({ error: "AI Handbook search is temporarily unavailable." });
     }
+  });
+
+  const ADMIN_USERNAMES = ["akshaysaluja", "rsaluja"];
+
+  app.get("/api/diagnostic/questions", requireAuth, (req, res) => {
+    const shuffled = [...diagnosticQuestions].sort(() => Math.random() - 0.5);
+    res.json(shuffled.map(q => ({
+      id: q.id,
+      sectionId: q.sectionId,
+      question: q.question,
+      options: q.options,
+    })));
+  });
+
+  app.get("/api/diagnostic/results", requireAuth, async (req, res) => {
+    const results = await storage.getDiagnosticResults(req.user!.id);
+    res.json(results);
+  });
+
+  app.post("/api/diagnostic/submit", requireAuth, async (req, res) => {
+    const { answers } = req.body;
+    if (!answers || !Array.isArray(answers)) {
+      return res.status(400).json({ message: "Answers required" });
+    }
+    let score = 0;
+    const graded: { questionId: string; selectedIndex: number; correct: boolean }[] = [];
+    for (const ans of answers) {
+      const q = diagnosticQuestions.find(dq => dq.id === ans.questionId);
+      if (q) {
+        const correct = ans.selectedIndex === q.correctIndex;
+        if (correct) score++;
+        graded.push({ questionId: ans.questionId, selectedIndex: ans.selectedIndex, correct });
+      }
+    }
+    const result = await storage.createDiagnosticResult(
+      req.user!.id, score, diagnosticQuestions.length, JSON.stringify(graded)
+    );
+    res.json({ score, totalQuestions: diagnosticQuestions.length, resultId: result.id });
+  });
+
+  app.get("/api/mastery/questions", requireAuth, async (req, res) => {
+    const username = req.user!.username;
+    const isAdmin = ADMIN_USERNAMES.includes(username);
+    if (!isAdmin) {
+      const progress = await storage.getProgress(req.user!.id);
+      const MIN_QUESTIONS_PER_SECTION = 10;
+      for (const level of levels) {
+        const p = progress.find(pr => pr.levelId === level.id);
+        if (!p || p.totalQuestions < MIN_QUESTIONS_PER_SECTION) {
+          return res.status(403).json({ message: "You must complete more training before taking the Mastery Exam." });
+        }
+      }
+    }
+    const shuffled = [...masteryQuestions].sort(() => Math.random() - 0.5);
+    res.json(shuffled.map(q => ({
+      id: q.id,
+      sectionId: q.sectionId,
+      question: q.question,
+      options: q.options,
+    })));
+  });
+
+  app.post("/api/mastery/check", requireAuth, (req, res) => {
+    const { questionId, selectedIndex } = req.body;
+    if (!questionId || selectedIndex === undefined) {
+      return res.status(400).json({ message: "questionId and selectedIndex required" });
+    }
+    const q = masteryQuestions.find(mq => mq.id === questionId);
+    if (!q) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+    res.json({
+      correct: selectedIndex === q.correctIndex,
+      correctIndex: q.correctIndex,
+      explanation: q.explanation,
+    });
+  });
+
+  app.get("/api/mastery/results", requireAuth, async (req, res) => {
+    const results = await storage.getMasteryResults(req.user!.id);
+    res.json(results);
+  });
+
+  app.get("/api/mastery/eligibility", requireAuth, async (req, res) => {
+    const username = req.user!.username;
+    if (ADMIN_USERNAMES.includes(username)) {
+      return res.json({ eligible: true, completedSections: levels.map(l => l.id), missingSections: [], isAdmin: true });
+    }
+    const progress = await storage.getProgress(req.user!.id);
+    const MIN_QUESTIONS_PER_SECTION = 10;
+    const completedSections: string[] = [];
+    const missingSections: string[] = [];
+    for (const level of levels) {
+      const p = progress.find(pr => pr.levelId === level.id);
+      if (p && p.totalQuestions >= MIN_QUESTIONS_PER_SECTION) {
+        completedSections.push(level.id);
+      } else {
+        missingSections.push(level.id);
+      }
+    }
+    res.json({ eligible: missingSections.length === 0, completedSections, missingSections, isAdmin: false });
+  });
+
+  app.post("/api/mastery/submit", requireAuth, async (req, res) => {
+    const { answers } = req.body;
+    if (!answers || !Array.isArray(answers)) {
+      return res.status(400).json({ message: "Answers required" });
+    }
+    const username = req.user!.username;
+    const isAdmin = ADMIN_USERNAMES.includes(username);
+    if (!isAdmin) {
+      const progress = await storage.getProgress(req.user!.id);
+      const MIN_QUESTIONS_PER_SECTION = 10;
+      for (const level of levels) {
+        const p = progress.find(pr => pr.levelId === level.id);
+        if (!p || p.totalQuestions < MIN_QUESTIONS_PER_SECTION) {
+          return res.status(403).json({ message: "You must complete more training before taking the Mastery Exam." });
+        }
+      }
+    }
+    let score = 0;
+    const graded: { questionId: string; selectedIndex: number; correct: boolean }[] = [];
+    for (const ans of answers) {
+      const q = masteryQuestions.find(mq => mq.id === ans.questionId);
+      if (q) {
+        const correct = ans.selectedIndex === q.correctIndex;
+        if (correct) score++;
+        graded.push({ questionId: ans.questionId, selectedIndex: ans.selectedIndex, correct });
+      }
+    }
+    const result = await storage.createMasteryResult(
+      req.user!.id, score, masteryQuestions.length, JSON.stringify(graded)
+    );
+    res.json({ score, totalQuestions: masteryQuestions.length, resultId: result.id });
   });
 
   return httpServer;

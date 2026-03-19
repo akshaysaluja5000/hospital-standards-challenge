@@ -15,6 +15,8 @@ import LeaderboardPage from "@/pages/leaderboard-page";
 import HandbookPage from "@/pages/handbook-page";
 import DeepDiveSelectPage from "@/pages/deep-dive-select-page";
 import DeepDivePage from "@/pages/deep-dive-page";
+import DiagnosticQuizPage from "@/pages/diagnostic-quiz-page";
+import MasteryExamPage from "@/pages/mastery-exam-page";
 import TermsPage from "@/pages/terms-page";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
@@ -99,6 +101,12 @@ function Router() {
       </Route>
       <Route path="/deep-dive/:levelId">
         {() => <ProtectedRoute component={DeepDivePage} />}
+      </Route>
+      <Route path="/diagnostic">
+        {() => <ProtectedRoute component={DiagnosticQuizPage} />}
+      </Route>
+      <Route path="/mastery">
+        {() => <ProtectedRoute component={MasteryExamPage} />}
       </Route>
       <Route path="/leaderboard">
         {() => <ProtectedRoute component={LeaderboardPage} />}
