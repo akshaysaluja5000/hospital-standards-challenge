@@ -1347,10 +1347,26 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
   });
 
   const ADMIN_USERNAMES = ["akshaysaluja", "rsaluja"];
+  const QUESTIONS_PER_SECTION = 5;
+
+  function pickRandomPerSection<T extends { sectionId: string }>(pool: T[], perSection: number): T[] {
+    const grouped = new Map<string, T[]>();
+    for (const q of pool) {
+      const arr = grouped.get(q.sectionId) || [];
+      arr.push(q);
+      grouped.set(q.sectionId, arr);
+    }
+    const selected: T[] = [];
+    for (const [, sectionQs] of grouped) {
+      const shuffled = [...sectionQs].sort(() => Math.random() - 0.5);
+      selected.push(...shuffled.slice(0, perSection));
+    }
+    return selected.sort(() => Math.random() - 0.5);
+  }
 
   app.get("/api/diagnostic/questions", requireAuth, (req, res) => {
-    const shuffled = [...diagnosticQuestions].sort(() => Math.random() - 0.5);
-    res.json(shuffled.map(q => ({
+    const selected = pickRandomPerSection(diagnosticQuestions, QUESTIONS_PER_SECTION);
+    res.json(selected.map(q => ({
       id: q.id,
       sectionId: q.sectionId,
       question: q.question,
@@ -1378,10 +1394,11 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
         graded.push({ questionId: ans.questionId, selectedIndex: ans.selectedIndex, correct });
       }
     }
+    const totalAnswered = graded.length;
     const result = await storage.createDiagnosticResult(
-      req.user!.id, score, diagnosticQuestions.length, JSON.stringify(graded)
+      req.user!.id, score, totalAnswered, JSON.stringify(graded)
     );
-    res.json({ score, totalQuestions: diagnosticQuestions.length, resultId: result.id });
+    res.json({ score, totalQuestions: totalAnswered, resultId: result.id });
   });
 
   app.get("/api/mastery/questions", requireAuth, async (req, res) => {
@@ -1397,8 +1414,8 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
         }
       }
     }
-    const shuffled = [...masteryQuestions].sort(() => Math.random() - 0.5);
-    res.json(shuffled.map(q => ({
+    const selected = pickRandomPerSection(masteryQuestions, QUESTIONS_PER_SECTION);
+    res.json(selected.map(q => ({
       id: q.id,
       sectionId: q.sectionId,
       question: q.question,
@@ -1474,10 +1491,11 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
         graded.push({ questionId: ans.questionId, selectedIndex: ans.selectedIndex, correct });
       }
     }
+    const totalAnswered = graded.length;
     const result = await storage.createMasteryResult(
-      req.user!.id, score, masteryQuestions.length, JSON.stringify(graded)
+      req.user!.id, score, totalAnswered, JSON.stringify(graded)
     );
-    res.json({ score, totalQuestions: masteryQuestions.length, resultId: result.id });
+    res.json({ score, totalQuestions: totalAnswered, resultId: result.id });
   });
 
   return httpServer;
