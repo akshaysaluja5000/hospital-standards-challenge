@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search } from "lucide-react";
+import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
@@ -199,7 +199,104 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="max-w-5xl mx-auto px-4 pb-16 md:pb-24 text-center">
+        <section className="py-16 md:py-20 bg-gradient-to-br from-teal-50 via-cyan-50 to-sky-50 dark:from-teal-950/20 dark:via-cyan-950/20 dark:to-sky-950/20 border-y border-teal-200/50 dark:border-teal-800/50">
+          <div className="max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-shrink-0">
+                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
+                    <Stethoscope size={48} className="text-white" />
+                  </div>
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-teal-800 dark:text-teal-200" data-testid="text-diagnostic-promo-heading">
+                      How survey&#8209;ready are you right now?
+                    </h2>
+                  </div>
+                  <p className="text-base text-teal-700/80 dark:text-teal-300/80 leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
+                    Take our <span className="font-bold text-teal-700 dark:text-teal-200">Diagnostic Quiz</span> &#8212; 55 scenario&#8209;based questions across every compliance domain. No studying needed. Just honest answers to find your starting line. In 15 minutes, you&#x2019;ll know exactly where to focus.
+                  </p>
+                  <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
+                    <Button
+                      size="lg"
+                      className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white shadow-md shadow-teal-500/20 font-bold"
+                      onClick={() => setLocation("/auth")}
+                      data-testid="button-diagnostic-promo-signup"
+                    >
+                      Create Account to Start
+                      <ArrowRight size={18} className="ml-2" />
+                    </Button>
+                    <div className="flex items-center gap-1.5 text-sm text-teal-600 dark:text-teal-400 font-medium">
+                      <Lock size={14} />
+                      <span>Free with your account</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="py-16 md:py-20 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-950/20 dark:via-yellow-950/20 dark:to-orange-950/20 border-b border-amber-200/50 dark:border-amber-800/50">
+          <div className="max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.5 }}
+            >
+              <div className="flex flex-col md:flex-row-reverse items-center gap-8">
+                <div className="flex-shrink-0">
+                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <Crown size={48} className="text-white" />
+                  </div>
+                </div>
+                <div className="flex-1 text-center md:text-left">
+                  <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-amber-800 dark:text-amber-200" data-testid="text-mastery-promo-heading">
+                      Prove you&#x2019;re survey&#8209;ready
+                    </h2>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 dark:bg-amber-800 text-amber-700 dark:text-amber-200 uppercase tracking-wider">
+                      Earn it
+                    </span>
+                  </div>
+                  <p className="text-base text-amber-700/80 dark:text-amber-300/80 leading-relaxed mb-3 max-w-xl" data-testid="text-mastery-promo-body">
+                    After completing the training, take the <span className="font-bold text-amber-700 dark:text-amber-200">Mastery Exam</span> &#8212; 55 advanced questions that go deeper than anything in the levels. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
+                  </p>
+                  <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start mb-4">
+                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
+                      <Sparkles size={14} />
+                      <span>Expert&#8209;level scenarios</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
+                      <CheckCircle2 size={14} />
+                      <span>Instant feedback &amp; explanations</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
+                      <BarChart3 size={14} />
+                      <span>Compare to your diagnostic baseline</span>
+                    </div>
+                  </div>
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md shadow-amber-500/20 font-bold"
+                    onClick={() => setLocation("/auth")}
+                    data-testid="button-mastery-promo-signup"
+                  >
+                    Create Account to Get Started
+                    <ArrowRight size={18} className="ml-2" />
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="max-w-5xl mx-auto px-4 py-16 md:py-24 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
