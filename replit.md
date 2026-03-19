@@ -40,8 +40,8 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - **AI Handbook Search**: "Ask About Standards" search box on the Handbook page. Users type a question, AI searches curated handbook content and answers with inline references to handbook sections. For education and preparation only.
 - **AI Leadership Coach**: Admin-only feature on the Admin Dashboard. Aggregates per-level quiz performance across all facility staff and generates AI-powered leadership insights: unit readiness snapshot, priority focus areas, recommended actions (in-services, practice assignments), and engagement insights. Facility-scoped (only shows data for admin's facility). Uses shared 30 calls/user/hour rate limit.
 
-- **Diagnostic Quiz**: 55-question pre-test (5 per section, all 11 topics). No correct/incorrect feedback during quiz — just pick and move on. Score and section breakdown shown at end. Encourages new users to take it first. Dashboard CTA shown to users who haven't taken it yet. Different teal/cyan color scheme.
-- **Mastery Exam**: 55-question post-test (5 per section, all 11 topics). Shows correct/incorrect feedback with expert explanations after each question. Requires completing at least 10 questions per section to unlock (admin bypass for akshaysaluja and rsaluja). Dashboard CTA shown when eligible. Different amber/orange color scheme. Compares progress from diagnostic baseline.
+- **Diagnostic Quiz**: 55-question pre-test (5 per section, all 11 topics). No correct/incorrect feedback during quiz — just pick and move on. Score and section breakdown shown at end. Encourages new users to take it first. Dashboard CTA shown to users who haven't taken it yet. Different teal/cyan color scheme. Supports back-navigation (change previous answers), explicit Next button, Save & Exit with resume on return.
+- **Final Assessment (Mastery Exam)**: 55-question post-test (5 per section, all 11 topics). No per-question feedback — results shown only at end. Requires completing at least 10 questions per section to unlock (admin bypass for akshaysaluja and rsaluja). Dashboard CTA shown when eligible. Different amber/orange color scheme. Supports back-navigation, Save & Exit with resume on return.
 
 ## Database Tables
 - `facilities` - Hospital/facility registry (name, unique code)
@@ -52,6 +52,8 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `daily_activity` - Daily question/answer tracking
 - `diagnostic_results` - Diagnostic quiz attempts (score, total, answers JSON, timestamp)
 - `mastery_results` - Mastery exam attempts (score, total, answers JSON, timestamp)
+- `diagnostic_sessions` - In-progress diagnostic quiz state (question order, answers, current position) per user
+- `mastery_sessions` - In-progress final assessment state (question order, answers, current position) per user
 
 ## File Structure
 - `shared/schema.ts` - Database schemas and TypeScript types

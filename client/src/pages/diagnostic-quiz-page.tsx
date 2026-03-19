@@ -1,13 +1,12 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ClipboardCheck, Home, Loader2, CheckCircle2, Stethoscope, BarChart3, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, ClipboardCheck, Home, Loader2, CheckCircle2, Stethoscope, BarChart3, ChevronRight, LogOut, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
-import { playCorrectSound, playWrongSound } from "@/lib/sounds";
 import type { DiagnosticResult } from "@shared/schema";
 
 interface DiagnosticQ {
@@ -15,6 +14,12 @@ interface DiagnosticQ {
   sectionId: string;
   question: string;
   options: string[];
+}
+
+interface SavedSession {
+  questions: DiagnosticQ[];
+  answers: { questionId: string; selectedIndex: number }[];
+  currentQuestion: number;
 }
 
 const SECTION_NAMES: Record<string, string> = {
@@ -34,20 +39,50 @@ const SECTION_NAMES: Record<string, string> = {
 export default function DiagnosticQuizPage() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
-  const [phase, setPhase] = useState<"intro" | "quiz" | "results">("intro");
+  const [phase, setPhase] = useState<"loading" | "intro" | "quiz" | "results">("loading");
   const [currentQ, setCurrentQ] = useState(0);
-  const [answers, setAnswers] = useState<{ questionId: string; selectedIndex: number }[]>([]);
+  const [answers, setAnswers] = useState<({ questionId: string; selectedIndex: number } | null)[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
-  const [locked, setLocked] = useState(false);
   const [result, setResult] = useState<{ score: number; totalQuestions: number } | null>(null);
-
-  const { data: questions, isLoading: questionsLoading } = useQuery<DiagnosticQ[]>({
-    queryKey: ["/api/diagnostic/questions"],
-    enabled: phase === "quiz" || phase === "intro",
-  });
+  const [questions, setQuestions] = useState<DiagnosticQ[] | null>(null);
+  const [showExitDialog, setShowExitDialog] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
 
   const { data: pastResults } = useQuery<DiagnosticResult[]>({
     queryKey: ["/api/diagnostic/results"],
+  });
+
+  const { data: savedSession, isLoading: sessionLoading } = useQuery<SavedSession | null>({
+    queryKey: ["/api/diagnostic/session"],
+  });
+
+  useEffect(() => {
+    if (sessionLoading) return;
+    if (savedSession && savedSession.questions && savedSession.questions.length > 0) {
+      setHasSession(true);
+    }
+    setPhase("intro");
+  }, [sessionLoading, savedSession]);
+
+  const fetchQuestions = async () => {
+    const res = await fetch("/api/diagnostic/questions", { credentials: "include" });
+    const data = await res.json();
+    return data as DiagnosticQ[];
+  };
+
+  const saveMutation = useMutation({
+    mutationFn: async (params: { questionOrder: string[]; answers: { questionId: string; selectedIndex: number }[]; currentQuestion: number }) => {
+      await apiRequest("POST", "/api/diagnostic/session", params);
+    },
+  });
+
+  const deleteSavedSession = useMutation({
+    mutationFn: async () => {
+      await apiRequest("DELETE", "/api/diagnostic/session");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/diagnostic/session"] });
+    },
   });
 
   const submitMutation = useMutation({
@@ -59,32 +94,92 @@ export default function DiagnosticQuizPage() {
       setResult(data);
       setPhase("results");
       queryClient.invalidateQueries({ queryKey: ["/api/diagnostic/results"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/diagnostic/session"] });
     },
   });
 
-  const currentQuestion = questions?.[currentQ];
-  const totalQuestions = questions?.length || 55;
-  const progressPercent = ((currentQ) / totalQuestions) * 100;
+  const startFresh = async () => {
+    const qs = await fetchQuestions();
+    setQuestions(qs);
+    setCurrentQ(0);
+    setAnswers(new Array(qs.length).fill(null));
+    setSelected(null);
+    setPhase("quiz");
+  };
+
+  const resumeSession = () => {
+    if (!savedSession || !savedSession.questions.length) return;
+    setQuestions(savedSession.questions);
+    const ansArray: ({ questionId: string; selectedIndex: number } | null)[] = new Array(savedSession.questions.length).fill(null);
+    for (const a of savedSession.answers) {
+      const idx = savedSession.questions.findIndex(q => q.id === a.questionId);
+      if (idx >= 0) ansArray[idx] = a;
+    }
+    setAnswers(ansArray);
+    const clampedQ = Math.min(Math.max(0, savedSession.currentQuestion), savedSession.questions.length - 1);
+    setCurrentQ(clampedQ);
+    setSelected(ansArray[clampedQ]?.selectedIndex ?? null);
+    setPhase("quiz");
+  };
+
+  const saveAndExit = useCallback(() => {
+    if (!questions) return;
+    const finalAnswers = [...answers];
+    if (selected !== null && questions[currentQ]) {
+      finalAnswers[currentQ] = { questionId: questions[currentQ].id, selectedIndex: selected };
+    }
+    const filledAnswers = finalAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
+    saveMutation.mutate({
+      questionOrder: questions.map(q => q.id),
+      answers: filledAnswers,
+      currentQuestion: currentQ,
+    }, {
+      onSettled: () => setLocation("/"),
+    });
+  }, [questions, answers, selected, currentQ, saveMutation, setLocation]);
 
   const handleSelect = (index: number) => {
-    if (locked) return;
     setSelected(index);
-    setLocked(true);
-    playCorrectSound();
-    setTimeout(() => {
-      const newAnswers = [...answers, { questionId: currentQuestion!.id, selectedIndex: index }];
+  };
+
+  const handleNext = () => {
+    if (selected === null || !questions) return;
+    const currentQuestion = questions[currentQ];
+    const newAnswers = [...answers];
+    newAnswers[currentQ] = { questionId: currentQuestion.id, selectedIndex: selected };
+    setAnswers(newAnswers);
+
+    if (currentQ + 1 >= questions.length) {
+      const filledAnswers = newAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
+      submitMutation.mutate(filledAnswers);
+    } else {
+      setCurrentQ(currentQ + 1);
+      setSelected(newAnswers[currentQ + 1]?.selectedIndex ?? null);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentQ <= 0 || !questions) return;
+    const currentQuestion = questions[currentQ];
+    if (selected !== null) {
+      const newAnswers = [...answers];
+      newAnswers[currentQ] = { questionId: currentQuestion.id, selectedIndex: selected };
       setAnswers(newAnswers);
-      if (currentQ + 1 >= totalQuestions) {
-        submitMutation.mutate(newAnswers);
-      } else {
-        setCurrentQ(currentQ + 1);
-        setSelected(null);
-        setLocked(false);
-      }
-    }, 600);
+    }
+    const prevQ = currentQ - 1;
+    setCurrentQ(prevQ);
+    setSelected(answers[prevQ]?.selectedIndex ?? null);
   };
 
   const hasPastResults = pastResults && pastResults.length > 0;
+
+  if (phase === "loading") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-sky-50 dark:from-teal-950/30 dark:via-cyan-950/30 dark:to-sky-950/30">
+        <Loader2 size={32} className="animate-spin text-teal-500" />
+      </div>
+    );
+  }
 
   if (phase === "intro") {
     return (
@@ -134,14 +229,52 @@ export default function DiagnosticQuizPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
-                <span>At the end, you'll see your overall score and a breakdown by section</span>
+                <span>You can go back to change previous answers and save your progress to finish later</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">4</span>
-                <span>Use your results to target the areas where you need the most practice</span>
+                <span>At the end, you'll see your overall score and use results to target weak areas</span>
               </li>
             </ul>
           </motion.div>
+
+          {hasSession && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border-2 border-teal-400 dark:border-teal-600 p-5 mb-6"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <Save size={18} className="text-teal-600" />
+                <span className="font-bold text-sm text-teal-700 dark:text-teal-300">You have a saved quiz in progress</span>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Question {(savedSession?.currentQuestion || 0) + 1} of {savedSession?.questions?.length || 55} — {savedSession?.answers?.length || 0} answers saved
+              </p>
+              <div className="flex gap-3">
+                <Button
+                  className="flex-1 h-11 font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl"
+                  onClick={resumeSession}
+                  data-testid="button-resume-diagnostic"
+                >
+                  Resume Quiz
+                </Button>
+                <Button
+                  variant="outline"
+                  className="flex-1 h-11 font-bold border-teal-300 text-teal-700 dark:text-teal-300 rounded-xl"
+                  onClick={async () => {
+                    await deleteSavedSession.mutateAsync();
+                    setHasSession(false);
+                    startFresh();
+                  }}
+                  data-testid="button-start-fresh-diagnostic"
+                >
+                  Start Fresh
+                </Button>
+              </div>
+            </motion.div>
+          )}
 
           {hasPastResults && (
             <motion.div
@@ -160,27 +293,29 @@ export default function DiagnosticQuizPage() {
             </motion.div>
           )}
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            <Button
-              className="w-full h-14 text-lg font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl shadow-md"
-              onClick={() => setPhase("quiz")}
-              data-testid="button-start-diagnostic"
+          {!hasSession && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
             >
-              {hasPastResults ? "Retake Diagnostic Quiz" : "Start Diagnostic Quiz"}
-              <ChevronRight size={20} className="ml-2" />
-            </Button>
-          </motion.div>
+              <Button
+                className="w-full h-14 text-lg font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl shadow-md"
+                onClick={startFresh}
+                data-testid="button-start-diagnostic"
+              >
+                {hasPastResults ? "Retake Diagnostic Quiz" : "Start Diagnostic Quiz"}
+                <ChevronRight size={20} className="ml-2" />
+              </Button>
+            </motion.div>
+          )}
         </div>
       </div>
     );
   }
 
   if (phase === "quiz") {
-    if (questionsLoading || !questions || !currentQuestion) {
+    if (!questions || !questions[currentQ]) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-sky-50 dark:from-teal-950/30 dark:via-cyan-950/30 dark:to-sky-950/30">
           <Loader2 size={32} className="animate-spin text-teal-500" />
@@ -188,16 +323,58 @@ export default function DiagnosticQuizPage() {
       );
     }
 
+    const currentQuestion = questions[currentQ];
+    const totalQuestions = questions.length;
+    const answeredCount = answers.filter(a => a !== null).length;
+    const progressPercent = (answeredCount / totalQuestions) * 100;
     const sectionName = SECTION_NAMES[currentQuestion.sectionId] || currentQuestion.sectionId;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-sky-50 dark:from-teal-950/30 dark:via-cyan-950/30 dark:to-sky-950/30">
+        {showExitDialog && (
+          <div className="fixed inset-0 z-[100] bg-black/50 flex items-center justify-center p-4" onClick={() => setShowExitDialog(false)}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white dark:bg-card rounded-2xl border border-teal-200 dark:border-teal-800 p-6 max-w-sm w-full shadow-xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <h3 className="font-bold text-lg mb-2">Save & Exit?</h3>
+              <p className="text-sm text-muted-foreground mb-5">
+                Your progress ({answeredCount} of {totalQuestions} answered) will be saved. You can resume anytime from the intro screen.
+              </p>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1 rounded-xl"
+                  onClick={() => setShowExitDialog(false)}
+                  data-testid="button-cancel-exit"
+                >
+                  Keep Going
+                </Button>
+                <Button
+                  className="flex-1 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold"
+                  onClick={saveAndExit}
+                  data-testid="button-confirm-save-exit"
+                >
+                  <Save size={16} className="mr-1" /> Save & Exit
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+
         <div className="sticky top-0 z-50 bg-white/90 dark:bg-card/90 backdrop-blur border-b border-teal-200 dark:border-teal-800">
           <div className="max-w-2xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide">
-                Diagnostic Quiz
-              </span>
+              <button
+                onClick={() => setShowExitDialog(true)}
+                className="flex items-center gap-1 text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide hover:text-teal-800 dark:hover:text-teal-200 transition-colors"
+                data-testid="button-exit-diagnostic"
+              >
+                <LogOut size={14} />
+                Save & Exit
+              </button>
               <span className="text-sm font-bold text-muted-foreground">
                 {currentQ + 1} / {totalQuestions}
               </span>
@@ -232,7 +409,6 @@ export default function DiagnosticQuizPage() {
                         : "border-gray-200 dark:border-gray-700 hover:border-teal-300 dark:hover:border-teal-600 bg-white dark:bg-card"
                     }`}
                     onClick={() => handleSelect(index)}
-                    disabled={locked}
                     whileTap={{ scale: 0.98 }}
                     data-testid={`button-option-${index}`}
                   >
@@ -248,6 +424,29 @@ export default function DiagnosticQuizPage() {
                     </span>
                   </motion.button>
                 ))}
+              </div>
+
+              <div className="flex gap-3 mt-5">
+                {currentQ > 0 && (
+                  <Button
+                    variant="outline"
+                    className="h-11 px-5 font-bold rounded-xl border-teal-300 text-teal-700 dark:text-teal-300"
+                    onClick={handleBack}
+                    data-testid="button-diagnostic-back"
+                  >
+                    <ArrowLeft size={16} className="mr-1" /> Back
+                  </Button>
+                )}
+                {selected !== null && (
+                  <Button
+                    className="flex-1 h-11 font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl"
+                    onClick={handleNext}
+                    data-testid="button-diagnostic-next"
+                  >
+                    {currentQ + 1 >= totalQuestions ? "Finish & See Results" : "Next Question"}
+                    <ArrowRight size={16} className="ml-2" />
+                  </Button>
+                )}
               </div>
             </motion.div>
           </AnimatePresence>
@@ -314,7 +513,7 @@ export default function DiagnosticQuizPage() {
               </li>
               <li className="flex items-start gap-2">
                 <CheckCircle2 size={16} className="text-teal-500 mt-0.5 flex-shrink-0" />
-                <span>Once you've mastered all sections, take the Mastery Exam to prove it</span>
+                <span>Once you've mastered all sections, take the Final Assessment to prove it</span>
               </li>
             </ul>
           </motion.div>

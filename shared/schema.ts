@@ -123,6 +123,27 @@ export const masteryResults = pgTable("mastery_results", {
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
+export const diagnosticSessions = pgTable("diagnostic_sessions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  questionOrder: text("question_order").array().notNull(),
+  answers: text("answers").notNull().default("[]"),
+  currentQuestion: integer("current_question").notNull().default(0),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const masterySessions = pgTable("mastery_sessions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  questionOrder: text("question_order").array().notNull(),
+  answers: text("answers").notNull().default("[]"),
+  currentQuestion: integer("current_question").notNull().default(0),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export type DiagnosticSession = typeof diagnosticSessions.$inferSelect;
+export type MasterySession = typeof masterySessions.$inferSelect;
+
 export type DiagnosticResult = typeof diagnosticResults.$inferSelect;
 export type MasteryResult = typeof masteryResults.$inferSelect;
 

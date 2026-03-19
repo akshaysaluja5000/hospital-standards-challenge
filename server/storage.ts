@@ -3,9 +3,10 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
-  diagnosticResults, masteryResults,
+  diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
+  type DiagnosticSession, type MasterySession,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -52,6 +53,13 @@ export interface IStorage {
   createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<DiagnosticResult>;
   getMasteryResults(userId: number): Promise<MasteryResult[]>;
   createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult>;
+
+  getDiagnosticSession(userId: number): Promise<DiagnosticSession | undefined>;
+  upsertDiagnosticSession(userId: number, data: Partial<DiagnosticSession>): Promise<DiagnosticSession>;
+  deleteDiagnosticSession(userId: number): Promise<void>;
+  getMasterySession(userId: number): Promise<MasterySession | undefined>;
+  upsertMasterySession(userId: number, data: Partial<MasterySession>): Promise<MasterySession>;
+  deleteMasterySession(userId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -264,6 +272,60 @@ export class DatabaseStorage implements IStorage {
   async createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult> {
     const [result] = await db.insert(masteryResults).values({ userId, score, totalQuestions, answers }).returning();
     return result;
+  }
+
+  async getDiagnosticSession(userId: number): Promise<DiagnosticSession | undefined> {
+    const [session] = await db.select().from(diagnosticSessions).where(eq(diagnosticSessions.userId, userId));
+    return session;
+  }
+
+  async upsertDiagnosticSession(userId: number, data: Partial<DiagnosticSession>): Promise<DiagnosticSession> {
+    const existing = await this.getDiagnosticSession(userId);
+    if (existing) {
+      const [updated] = await db.update(diagnosticSessions).set({
+        ...data,
+        updatedAt: new Date(),
+      }).where(eq(diagnosticSessions.id, existing.id)).returning();
+      return updated;
+    }
+    const [created] = await db.insert(diagnosticSessions).values({
+      userId,
+      questionOrder: data.questionOrder || [],
+      answers: data.answers || "[]",
+      currentQuestion: data.currentQuestion || 0,
+    }).returning();
+    return created;
+  }
+
+  async deleteDiagnosticSession(userId: number): Promise<void> {
+    await db.delete(diagnosticSessions).where(eq(diagnosticSessions.userId, userId));
+  }
+
+  async getMasterySession(userId: number): Promise<MasterySession | undefined> {
+    const [session] = await db.select().from(masterySessions).where(eq(masterySessions.userId, userId));
+    return session;
+  }
+
+  async upsertMasterySession(userId: number, data: Partial<MasterySession>): Promise<MasterySession> {
+    const existing = await this.getMasterySession(userId);
+    if (existing) {
+      const [updated] = await db.update(masterySessions).set({
+        ...data,
+        updatedAt: new Date(),
+      }).where(eq(masterySessions.id, existing.id)).returning();
+      return updated;
+    }
+    const [created] = await db.insert(masterySessions).values({
+      userId,
+      questionOrder: data.questionOrder || [],
+      answers: data.answers || "[]",
+      currentQuestion: data.currentQuestion || 0,
+    }).returning();
+    return created;
+  }
+
+  async deleteMasterySession(userId: number): Promise<void> {
+    await db.delete(masterySessions).where(eq(masterySessions.userId, userId));
   }
 }
 

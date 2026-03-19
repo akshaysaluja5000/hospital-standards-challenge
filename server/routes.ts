@@ -1379,6 +1379,36 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     res.json(results);
   });
 
+  app.get("/api/diagnostic/session", requireAuth, async (req, res) => {
+    const session = await storage.getDiagnosticSession(req.user!.id);
+    if (!session) return res.json(null);
+    const questionIds = session.questionOrder;
+    const questionsData = questionIds.map(id => {
+      const q = diagnosticQuestions.find(dq => dq.id === id);
+      return q ? { id: q.id, sectionId: q.sectionId, question: q.question, options: q.options } : null;
+    }).filter(Boolean);
+    res.json({
+      questions: questionsData,
+      answers: JSON.parse(session.answers),
+      currentQuestion: session.currentQuestion,
+    });
+  });
+
+  app.post("/api/diagnostic/session", requireAuth, async (req, res) => {
+    const { questionOrder, answers, currentQuestion } = req.body;
+    await storage.upsertDiagnosticSession(req.user!.id, {
+      questionOrder,
+      answers: JSON.stringify(answers),
+      currentQuestion,
+    });
+    res.json({ success: true });
+  });
+
+  app.delete("/api/diagnostic/session", requireAuth, async (req, res) => {
+    await storage.deleteDiagnosticSession(req.user!.id);
+    res.json({ success: true });
+  });
+
   app.post("/api/diagnostic/submit", requireAuth, async (req, res) => {
     const { answers } = req.body;
     if (!answers || !Array.isArray(answers)) {
@@ -1398,6 +1428,7 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     const result = await storage.createDiagnosticResult(
       req.user!.id, score, totalAnswered, JSON.stringify(graded)
     );
+    await storage.deleteDiagnosticSession(req.user!.id);
     res.json({ score, totalQuestions: totalAnswered, resultId: result.id });
   });
 
@@ -1437,6 +1468,36 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
       correctIndex: q.correctIndex,
       explanation: q.explanation,
     });
+  });
+
+  app.get("/api/mastery/session", requireAuth, async (req, res) => {
+    const session = await storage.getMasterySession(req.user!.id);
+    if (!session) return res.json(null);
+    const questionIds = session.questionOrder;
+    const questionsData = questionIds.map(id => {
+      const q = masteryQuestions.find(mq => mq.id === id);
+      return q ? { id: q.id, sectionId: q.sectionId, question: q.question, options: q.options } : null;
+    }).filter(Boolean);
+    res.json({
+      questions: questionsData,
+      answers: JSON.parse(session.answers),
+      currentQuestion: session.currentQuestion,
+    });
+  });
+
+  app.post("/api/mastery/session", requireAuth, async (req, res) => {
+    const { questionOrder, answers, currentQuestion } = req.body;
+    await storage.upsertMasterySession(req.user!.id, {
+      questionOrder,
+      answers: JSON.stringify(answers),
+      currentQuestion,
+    });
+    res.json({ success: true });
+  });
+
+  app.delete("/api/mastery/session", requireAuth, async (req, res) => {
+    await storage.deleteMasterySession(req.user!.id);
+    res.json({ success: true });
   });
 
   app.get("/api/mastery/results", requireAuth, async (req, res) => {
@@ -1495,6 +1556,7 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     const result = await storage.createMasteryResult(
       req.user!.id, score, totalAnswered, JSON.stringify(graded)
     );
+    await storage.deleteMasterySession(req.user!.id);
     res.json({ score, totalQuestions: totalAnswered, resultId: result.id });
   });
 
