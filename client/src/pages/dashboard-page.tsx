@@ -325,13 +325,13 @@ export default function DashboardPage() {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base">Ready to prove mastery?</h3>
+                <h3 className="font-bold text-base">All sections complete? Take the Final Assessment</h3>
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-600 uppercase tracking-wider">
                   Unlocked
                 </span>
               </div>
               <p className="text-sm text-muted-foreground mt-0.5">
-                55 advanced questions — show you're survey-ready and compare to your diagnostic baseline
+                55 advanced questions to see how much you've learned — compare your results to your Diagnostic score
               </p>
             </div>
             <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />

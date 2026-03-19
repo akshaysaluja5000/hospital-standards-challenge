@@ -258,14 +258,14 @@ export default function LandingPage() {
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
                     <h2 className="text-2xl md:text-3xl font-black tracking-tight text-amber-800 dark:text-amber-200" data-testid="text-mastery-promo-heading">
-                      Prove you&#x2019;re survey&#8209;ready
+                      Prove you&#x2019;re survey&#8209;ready with the Final Assessment
                     </h2>
                     <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 dark:bg-amber-800 text-amber-700 dark:text-amber-200 uppercase tracking-wider">
                       Earn it
                     </span>
                   </div>
                   <p className="text-base text-amber-700/80 dark:text-amber-300/80 leading-relaxed mb-3 max-w-xl" data-testid="text-mastery-promo-body">
-                    After completing the training, take the <span className="font-bold text-amber-700 dark:text-amber-200">Mastery Exam</span> &#8212; 55 advanced questions that go deeper than anything in the levels. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
+                    Finished all the levels? The <span className="font-bold text-amber-700 dark:text-amber-200">Final Assessment</span> unlocks after you complete every section &#8212; 55 advanced questions that go deeper than anything in the training. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
                   </p>
                   <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start mb-4">
                     <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">

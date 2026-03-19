@@ -162,10 +162,10 @@ export default function MasteryExamPage() {
               <Crown size={40} className="text-white" />
             </div>
             <h1 className="text-3xl font-black mb-2 bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-              Mastery Exam
+              Final Assessment
             </h1>
             <p className="text-muted-foreground text-lg">
-              Prove you're survey-ready
+              You've completed the training — now prove you're survey-ready
             </p>
           </motion.div>
 
@@ -187,7 +187,7 @@ export default function MasteryExamPage() {
               </li>
               <li className="flex items-start gap-3">
                 <Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" />
-                <span>These are harder than the training levels — designed to challenge mastery</span>
+                <span>These are harder than the training levels — designed to test everything you've learned</span>
               </li>
               <li className="flex items-start gap-3">
                 <Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" />
@@ -208,7 +208,7 @@ export default function MasteryExamPage() {
                 <span className="font-bold text-sm text-amber-700 dark:text-amber-300">Not quite there yet</span>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Complete at least 10 questions in each section to unlock the Mastery Exam. You still need:
+                Complete at least 10 questions in each section to unlock the Final Assessment. You still need:
               </p>
               <div className="flex flex-wrap gap-2">
                 {missingNames.map((name, i) => (
@@ -248,7 +248,7 @@ export default function MasteryExamPage() {
               disabled={!isEligible}
               data-testid="button-start-mastery"
             >
-              {hasPastResults ? "Retake Mastery Exam" : "Begin Mastery Exam"}
+              {hasPastResults ? "Retake Final Assessment" : "Begin Final Assessment"}
               <ChevronRight size={20} className="ml-2" />
             </Button>
           </motion.div>
@@ -275,7 +275,7 @@ export default function MasteryExamPage() {
           <div className="max-w-2xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wide">
-                Mastery Exam
+                Final Assessment
               </span>
               <span className="text-sm font-bold text-muted-foreground">
                 {currentQ + 1} / {totalQuestions}
@@ -396,8 +396,8 @@ export default function MasteryExamPage() {
             className="text-center mb-8"
           >
             <div className="text-6xl mb-4">{gradeEmoji}</div>
-            <h1 className="text-3xl font-black mb-1">Mastery Exam Complete</h1>
-            <p className="text-muted-foreground">Your compliance mastery has been measured</p>
+            <h1 className="text-3xl font-black mb-1">Final Assessment Complete</h1>
+            <p className="text-muted-foreground">Here's how you did after completing all sections</p>
           </motion.div>
 
           <motion.div
