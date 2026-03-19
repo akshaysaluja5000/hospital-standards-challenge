@@ -274,7 +274,7 @@ export default function LandingPage() {
                     </div>
                     <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
                       <CheckCircle2 size={14} />
-                      <span>Instant feedback &amp; explanations</span>
+                      <span>Full results after completion</span>
                     </div>
                     <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
                       <BarChart3 size={14} />

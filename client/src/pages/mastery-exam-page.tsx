@@ -2,12 +2,11 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Award, Home, Loader2, CheckCircle2, XCircle, Lock, ChevronRight, Trophy, Crown, Star, Sparkles } from "lucide-react";
+import { ArrowLeft, Home, Loader2, Lock, ChevronRight, Trophy, Crown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
-import { playCorrectSound, playWrongSound } from "@/lib/sounds";
 import { levels } from "@shared/questions";
 import type { MasteryResult } from "@shared/schema";
 
@@ -16,12 +15,6 @@ interface MasteryQ {
   sectionId: string;
   question: string;
   options: string[];
-}
-
-interface CheckResult {
-  correct: boolean;
-  correctIndex: number;
-  explanation: string;
 }
 
 interface Eligibility {
@@ -52,8 +45,6 @@ export default function MasteryExamPage() {
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<{ questionId: string; selectedIndex: number }[]>([]);
   const [selected, setSelected] = useState<number | null>(null);
-  const [showResult, setShowResult] = useState(false);
-  const [checkResult, setCheckResult] = useState<CheckResult | null>(null);
   const [resultData, setResultData] = useState<{ score: number; totalQuestions: number } | null>(null);
 
   const { data: eligibility, isLoading: eligLoading } = useQuery<Eligibility>({
@@ -85,40 +76,19 @@ export default function MasteryExamPage() {
   const totalQuestions = questions?.length || 55;
   const progressPercent = ((currentQ) / totalQuestions) * 100;
 
-  const handleSelect = async (index: number) => {
-    if (showResult) return;
+  const handleSelect = (index: number) => {
     setSelected(index);
-
-    try {
-      const res = await apiRequest("POST", "/api/mastery/check", {
-        questionId: currentQuestion!.id,
-        selectedIndex: index,
-      });
-      const data: CheckResult = await res.json();
-      setCheckResult(data);
-      setShowResult(true);
-
-      if (data.correct) {
-        playCorrectSound();
-      } else {
-        playWrongSound();
-      }
-    } catch {
-      setShowResult(true);
-      setCheckResult({ correct: false, correctIndex: -1, explanation: "Unable to verify answer." });
-    }
   };
 
   const handleNext = () => {
-    const newAnswers = [...answers, { questionId: currentQuestion!.id, selectedIndex: selected! }];
+    if (selected === null) return;
+    const newAnswers = [...answers, { questionId: currentQuestion!.id, selectedIndex: selected }];
     setAnswers(newAnswers);
     if (currentQ + 1 >= totalQuestions) {
       submitMutation.mutate(newAnswers);
     } else {
       setCurrentQ(currentQ + 1);
       setSelected(null);
-      setShowResult(false);
-      setCheckResult(null);
     }
   };
 
@@ -183,7 +153,7 @@ export default function MasteryExamPage() {
               </li>
               <li className="flex items-start gap-3">
                 <Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" />
-                <span>See correct/incorrect feedback after each question with expert explanations</span>
+                <span>Answer all questions first — your results and correct answers are revealed at the end</span>
               </li>
               <li className="flex items-start gap-3">
                 <Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" />
@@ -267,7 +237,6 @@ export default function MasteryExamPage() {
     }
 
     const sectionName = SECTION_NAMES[currentQuestion.sectionId] || currentQuestion.sectionId;
-    const isCorrect = checkResult?.correct ?? false;
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-950/30 dark:via-yellow-950/30 dark:to-orange-950/30">
@@ -303,66 +272,46 @@ export default function MasteryExamPage() {
 
               <div className="flex flex-col gap-3">
                 {currentQuestion.options.map((option, index) => {
-                  let borderClass = "border-gray-200 dark:border-gray-700 bg-white dark:bg-card";
-                  let iconEl = null;
-
-                  if (showResult && checkResult) {
-                    if (index === checkResult.correctIndex) {
-                      borderClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/50";
-                      iconEl = <CheckCircle2 size={18} className="text-emerald-500 flex-shrink-0" />;
-                    } else if (index === selected && index !== checkResult.correctIndex) {
-                      borderClass = "border-red-400 bg-red-50 dark:bg-red-950/50";
-                      iconEl = <XCircle size={18} className="text-red-400 flex-shrink-0" />;
-                    }
-                  } else if (selected === index) {
-                    borderClass = "border-amber-500 bg-amber-50 dark:bg-amber-950/50";
-                  }
+                  const isSelected = selected === index;
+                  const borderClass = isSelected
+                    ? "border-amber-500 bg-amber-50 dark:bg-amber-950/50"
+                    : "border-gray-200 dark:border-gray-700 bg-white dark:bg-card";
 
                   return (
                     <motion.button
                       key={index}
                       className={`w-full text-left p-4 rounded-xl border-2 transition-all text-sm font-medium ${borderClass}`}
                       onClick={() => handleSelect(index)}
-                      disabled={showResult}
-                      whileTap={showResult ? {} : { scale: 0.98 }}
+                      whileTap={{ scale: 0.98 }}
                       data-testid={`button-mastery-option-${index}`}
                     >
                       <span className="inline-flex items-center gap-3">
                         <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
-                          showResult && checkResult && index === checkResult.correctIndex
-                            ? "bg-emerald-500 text-white"
-                            : showResult && index === selected
-                            ? "bg-red-400 text-white"
+                          isSelected
+                            ? "bg-amber-500 text-white"
                             : "bg-gray-100 dark:bg-gray-800 text-gray-500"
                         }`}>
                           {String.fromCharCode(65 + index)}
                         </span>
                         <span className="flex-1">{option}</span>
-                        {iconEl}
                       </span>
                     </motion.button>
                   );
                 })}
               </div>
 
-              {showResult && (
+              {selected !== null && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-4"
                 >
-                  <div className={`rounded-xl p-4 ${isCorrect ? "bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800" : "bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800"}`}>
-                    <p className={`text-sm font-semibold mb-1 ${isCorrect ? "text-emerald-700 dark:text-emerald-300" : "text-red-700 dark:text-red-300"}`}>
-                      {isCorrect ? "Correct!" : "Not quite."}
-                    </p>
-                    <p className="text-sm text-muted-foreground">{checkResult?.explanation}</p>
-                  </div>
                   <Button
-                    className="w-full mt-3 h-11 font-bold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl"
+                    className="w-full h-11 font-bold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl"
                     onClick={handleNext}
                     data-testid="button-mastery-next"
                   >
-                    {currentQ + 1 >= totalQuestions ? "See Results" : "Next Question"}
+                    {currentQ + 1 >= totalQuestions ? "Finish & See Results" : "Next Question"}
                     <ArrowLeft size={16} className="ml-2 rotate-180" />
                   </Button>
                 </motion.div>
@@ -373,7 +322,7 @@ export default function MasteryExamPage() {
           {submitMutation.isPending && (
             <div className="flex items-center justify-center mt-8 gap-2 text-amber-600">
               <Loader2 size={20} className="animate-spin" />
-              <span className="font-medium">Calculating your mastery score...</span>
+              <span className="font-medium">Calculating your results...</span>
             </div>
           )}
         </div>
