@@ -129,6 +129,7 @@ export const diagnosticSessions = pgTable("diagnostic_sessions", {
   questionOrder: text("question_order").array().notNull(),
   answers: text("answers").notNull().default("[]"),
   currentQuestion: integer("current_question").notNull().default(0),
+  shuffleMaps: text("shuffle_maps").notNull().default("{}"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
@@ -138,6 +139,7 @@ export const masterySessions = pgTable("mastery_sessions", {
   questionOrder: text("question_order").array().notNull(),
   answers: text("answers").notNull().default("[]"),
   currentQuestion: integer("current_question").notNull().default(0),
+  shuffleMaps: text("shuffle_maps").notNull().default("{}"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

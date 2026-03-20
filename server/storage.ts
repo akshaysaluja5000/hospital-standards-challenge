@@ -293,6 +293,7 @@ export class DatabaseStorage implements IStorage {
       questionOrder: data.questionOrder || [],
       answers: data.answers || "[]",
       currentQuestion: data.currentQuestion || 0,
+      shuffleMaps: data.shuffleMaps || "{}",
     }).returning();
     return created;
   }
@@ -320,6 +321,7 @@ export class DatabaseStorage implements IStorage {
       questionOrder: data.questionOrder || [],
       answers: data.answers || "[]",
       currentQuestion: data.currentQuestion || 0,
+      shuffleMaps: data.shuffleMaps || "{}",
     }).returning();
     return created;
   }

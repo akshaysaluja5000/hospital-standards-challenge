@@ -1364,14 +1364,34 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     return selected.sort(() => Math.random() - 0.5);
   }
 
+  function shuffleArray<T>(arr: T[]): T[] {
+    const shuffled = [...arr];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  function shuffleQuestionOptions<T extends { options: string[]; correctIndex: number }>(q: T): { options: string[]; shuffleMap: number[] } {
+    const indices = q.options.map((_, i) => i);
+    const shuffledIndices = shuffleArray(indices);
+    const shuffledOptions = shuffledIndices.map(i => q.options[i]);
+    return { options: shuffledOptions, shuffleMap: shuffledIndices };
+  }
+
   app.get("/api/diagnostic/questions", requireAuth, (req, res) => {
     const selected = pickRandomPerSection(diagnosticQuestions, QUESTIONS_PER_SECTION);
-    res.json(selected.map(q => ({
-      id: q.id,
-      sectionId: q.sectionId,
-      question: q.question,
-      options: q.options,
-    })));
+    res.json(selected.map(q => {
+      const { options, shuffleMap } = shuffleQuestionOptions(q);
+      return {
+        id: q.id,
+        sectionId: q.sectionId,
+        question: q.question,
+        options,
+        shuffleMap,
+      };
+    }));
   });
 
   app.get("/api/diagnostic/results", requireAuth, async (req, res) => {
@@ -1383,23 +1403,32 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     const session = await storage.getDiagnosticSession(req.user!.id);
     if (!session) return res.json(null);
     const questionIds = session.questionOrder;
-    const questionsData = questionIds.map(id => {
+    const savedAnswers = JSON.parse(session.answers);
+    const savedShuffleMaps = session.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const questionsData = questionIds.map((id, idx) => {
       const q = diagnosticQuestions.find(dq => dq.id === id);
-      return q ? { id: q.id, sectionId: q.sectionId, question: q.question, options: q.options } : null;
+      if (!q) return null;
+      if (savedShuffleMaps && savedShuffleMaps[id]) {
+        const sm = savedShuffleMaps[id] as number[];
+        return { id: q.id, sectionId: q.sectionId, question: q.question, options: sm.map(i => q.options[i]), shuffleMap: sm };
+      }
+      const { options, shuffleMap } = shuffleQuestionOptions(q);
+      return { id: q.id, sectionId: q.sectionId, question: q.question, options, shuffleMap };
     }).filter(Boolean);
     res.json({
       questions: questionsData,
-      answers: JSON.parse(session.answers),
+      answers: savedAnswers,
       currentQuestion: session.currentQuestion,
     });
   });
 
   app.post("/api/diagnostic/session", requireAuth, async (req, res) => {
-    const { questionOrder, answers, currentQuestion } = req.body;
+    const { questionOrder, answers, currentQuestion, shuffleMaps } = req.body;
     await storage.upsertDiagnosticSession(req.user!.id, {
       questionOrder,
       answers: JSON.stringify(answers),
       currentQuestion,
+      shuffleMaps: JSON.stringify(shuffleMaps || {}),
     });
     res.json({ success: true });
   });
@@ -1410,26 +1439,56 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
   });
 
   app.post("/api/diagnostic/submit", requireAuth, async (req, res) => {
-    const { answers } = req.body;
+    const { answers, shuffleMaps: clientShuffleMaps } = req.body;
     if (!answers || !Array.isArray(answers)) {
       return res.status(400).json({ message: "Answers required" });
     }
+
+    const session = await storage.getDiagnosticSession(req.user!.id);
+    const serverShuffleMaps = session?.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const trustedMaps = serverShuffleMaps || clientShuffleMaps || {};
+
     let score = 0;
-    const graded: { questionId: string; selectedIndex: number; correct: boolean }[] = [];
+    const detailedResults: {
+      questionId: string; sectionId: string; question: string; options: string[];
+      selectedIndex: number; correctIndex: number; correct: boolean;
+    }[] = [];
     for (const ans of answers) {
       const q = diagnosticQuestions.find(dq => dq.id === ans.questionId);
       if (q) {
-        const correct = ans.selectedIndex === q.correctIndex;
+        const sm = trustedMaps[q.id] as number[] | undefined;
+        let displayOptions = q.options;
+        let displayCorrectIndex = q.correctIndex;
+        let displaySelectedIndex = ans.selectedIndex;
+        if (sm && sm.length === q.options.length) {
+          displayOptions = sm.map((i: number) => q.options[i]);
+          displayCorrectIndex = sm.indexOf(q.correctIndex);
+        }
+        const correct = sm
+          ? sm[ans.selectedIndex] === q.correctIndex
+          : ans.selectedIndex === q.correctIndex;
         if (correct) score++;
-        graded.push({ questionId: ans.questionId, selectedIndex: ans.selectedIndex, correct });
+        detailedResults.push({
+          questionId: q.id, sectionId: q.sectionId, question: q.question,
+          options: displayOptions, selectedIndex: displaySelectedIndex,
+          correctIndex: displayCorrectIndex, correct,
+        });
       }
     }
-    const totalAnswered = graded.length;
+    const totalAnswered = detailedResults.length;
+    const graded = detailedResults.map(d => ({ questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct }));
     const result = await storage.createDiagnosticResult(
       req.user!.id, score, totalAnswered, JSON.stringify(graded)
     );
     await storage.deleteDiagnosticSession(req.user!.id);
-    res.json({ score, totalQuestions: totalAnswered, resultId: result.id });
+
+    const sectionScores: Record<string, { correct: number; total: number }> = {};
+    for (const d of detailedResults) {
+      if (!sectionScores[d.sectionId]) sectionScores[d.sectionId] = { correct: 0, total: 0 };
+      sectionScores[d.sectionId].total++;
+      if (d.correct) sectionScores[d.sectionId].correct++;
+    }
+    res.json({ score, totalQuestions: totalAnswered, resultId: result.id, detailedResults, sectionScores });
   });
 
   app.get("/api/mastery/questions", requireAuth, async (req, res) => {
@@ -1446,12 +1505,16 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
       }
     }
     const selected = pickRandomPerSection(masteryQuestions, QUESTIONS_PER_SECTION);
-    res.json(selected.map(q => ({
-      id: q.id,
-      sectionId: q.sectionId,
-      question: q.question,
-      options: q.options,
-    })));
+    res.json(selected.map(q => {
+      const { options, shuffleMap } = shuffleQuestionOptions(q);
+      return {
+        id: q.id,
+        sectionId: q.sectionId,
+        question: q.question,
+        options,
+        shuffleMap,
+      };
+    }));
   });
 
   app.post("/api/mastery/check", requireAuth, (req, res) => {
@@ -1474,23 +1537,32 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     const session = await storage.getMasterySession(req.user!.id);
     if (!session) return res.json(null);
     const questionIds = session.questionOrder;
-    const questionsData = questionIds.map(id => {
+    const savedAnswers = JSON.parse(session.answers);
+    const savedShuffleMaps = session.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const questionsData = questionIds.map((id) => {
       const q = masteryQuestions.find(mq => mq.id === id);
-      return q ? { id: q.id, sectionId: q.sectionId, question: q.question, options: q.options } : null;
+      if (!q) return null;
+      if (savedShuffleMaps && savedShuffleMaps[id]) {
+        const sm = savedShuffleMaps[id] as number[];
+        return { id: q.id, sectionId: q.sectionId, question: q.question, options: sm.map(i => q.options[i]), shuffleMap: sm };
+      }
+      const { options, shuffleMap } = shuffleQuestionOptions(q);
+      return { id: q.id, sectionId: q.sectionId, question: q.question, options, shuffleMap };
     }).filter(Boolean);
     res.json({
       questions: questionsData,
-      answers: JSON.parse(session.answers),
+      answers: savedAnswers,
       currentQuestion: session.currentQuestion,
     });
   });
 
   app.post("/api/mastery/session", requireAuth, async (req, res) => {
-    const { questionOrder, answers, currentQuestion } = req.body;
+    const { questionOrder, answers, currentQuestion, shuffleMaps } = req.body;
     await storage.upsertMasterySession(req.user!.id, {
       questionOrder,
       answers: JSON.stringify(answers),
       currentQuestion,
+      shuffleMaps: JSON.stringify(shuffleMaps || {}),
     });
     res.json({ success: true });
   });
@@ -1526,7 +1598,7 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
   });
 
   app.post("/api/mastery/submit", requireAuth, async (req, res) => {
-    const { answers } = req.body;
+    const { answers, shuffleMaps: clientShuffleMaps } = req.body;
     if (!answers || !Array.isArray(answers)) {
       return res.status(400).json({ message: "Answers required" });
     }
@@ -1542,22 +1614,52 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
         }
       }
     }
+
+    const session = await storage.getMasterySession(req.user!.id);
+    const serverShuffleMaps = session?.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const trustedMaps = serverShuffleMaps || clientShuffleMaps || {};
+
     let score = 0;
-    const graded: { questionId: string; selectedIndex: number; correct: boolean }[] = [];
+    const detailedResults: {
+      questionId: string; sectionId: string; question: string; options: string[];
+      selectedIndex: number; correctIndex: number; correct: boolean; explanation: string;
+    }[] = [];
     for (const ans of answers) {
       const q = masteryQuestions.find(mq => mq.id === ans.questionId);
       if (q) {
-        const correct = ans.selectedIndex === q.correctIndex;
+        const sm = trustedMaps[q.id] as number[] | undefined;
+        let displayOptions = q.options;
+        let displayCorrectIndex = q.correctIndex;
+        let displaySelectedIndex = ans.selectedIndex;
+        if (sm && sm.length === q.options.length) {
+          displayOptions = sm.map((i: number) => q.options[i]);
+          displayCorrectIndex = sm.indexOf(q.correctIndex);
+        }
+        const correct = sm
+          ? sm[ans.selectedIndex] === q.correctIndex
+          : ans.selectedIndex === q.correctIndex;
         if (correct) score++;
-        graded.push({ questionId: ans.questionId, selectedIndex: ans.selectedIndex, correct });
+        detailedResults.push({
+          questionId: q.id, sectionId: q.sectionId, question: q.question,
+          options: displayOptions, selectedIndex: displaySelectedIndex,
+          correctIndex: displayCorrectIndex, correct, explanation: q.explanation,
+        });
       }
     }
-    const totalAnswered = graded.length;
+    const totalAnswered = detailedResults.length;
+    const graded = detailedResults.map(d => ({ questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct }));
     const result = await storage.createMasteryResult(
       req.user!.id, score, totalAnswered, JSON.stringify(graded)
     );
     await storage.deleteMasterySession(req.user!.id);
-    res.json({ score, totalQuestions: totalAnswered, resultId: result.id });
+
+    const sectionScores: Record<string, { correct: number; total: number }> = {};
+    for (const d of detailedResults) {
+      if (!sectionScores[d.sectionId]) sectionScores[d.sectionId] = { correct: 0, total: 0 };
+      sectionScores[d.sectionId].total++;
+      if (d.correct) sectionScores[d.sectionId].correct++;
+    }
+    res.json({ score, totalQuestions: totalAnswered, resultId: result.id, detailedResults, sectionScores });
   });
 
   return httpServer;
