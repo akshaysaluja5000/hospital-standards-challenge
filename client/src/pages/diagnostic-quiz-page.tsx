@@ -65,7 +65,6 @@ export default function DiagnosticQuizPage() {
   const [result, setResult] = useState<SubmitResponse | null>(null);
   const [questions, setQuestions] = useState<DiagnosticQ[] | null>(null);
   const [showExitDialog, setShowExitDialog] = useState(false);
-  const [hasSession, setHasSession] = useState(false);
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
   const [showAllQuestions, setShowAllQuestions] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -76,15 +75,16 @@ export default function DiagnosticQuizPage() {
 
   const { data: savedSession, isLoading: sessionLoading } = useQuery<SavedSession | null>({
     queryKey: ["/api/diagnostic/session"],
+    staleTime: 0,
+    refetchOnMount: "always",
   });
+
+  const hasSession = !!(savedSession && savedSession.questions && savedSession.questions.length > 0);
 
   useEffect(() => {
     if (sessionLoading) return;
-    if (savedSession && savedSession.questions && savedSession.questions.length > 0) {
-      setHasSession(true);
-    }
-    setPhase("intro");
-  }, [sessionLoading, savedSession]);
+    if (phase === "loading") setPhase("intro");
+  }, [sessionLoading, phase]);
 
   const fetchQuestions = async () => {
     const res = await fetch("/api/diagnostic/questions", { credentials: "include" });
@@ -103,6 +103,9 @@ export default function DiagnosticQuizPage() {
   const saveMutation = useMutation({
     mutationFn: async (params: { questionOrder: string[]; answers: { questionId: string; selectedIndex: number }[]; currentQuestion: number; shuffleMaps: Record<string, number[]> }) => {
       await apiRequest("POST", "/api/diagnostic/session", params);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/diagnostic/session"] });
     },
   });
 
@@ -139,6 +142,12 @@ export default function DiagnosticQuizPage() {
     setAnswers(new Array(qs.length).fill(null));
     setSelected(null);
     setPhase("quiz");
+    saveMutation.mutate({
+      questionOrder: qs.map(q => q.id),
+      answers: [],
+      currentQuestion: 0,
+      shuffleMaps: buildShuffleMaps(qs),
+    });
   };
 
   const resumeSession = () => {
@@ -188,22 +197,37 @@ export default function DiagnosticQuizPage() {
       const filledAnswers = newAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
       submitMutation.mutate({ answers: filledAnswers, shuffleMaps: buildShuffleMaps(questions) });
     } else {
-      setCurrentQ(currentQ + 1);
-      setSelected(newAnswers[currentQ + 1]?.selectedIndex ?? null);
+      const nextQ = currentQ + 1;
+      setCurrentQ(nextQ);
+      setSelected(newAnswers[nextQ]?.selectedIndex ?? null);
+      const filledAnswers = newAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
+      saveMutation.mutate({
+        questionOrder: questions.map(q => q.id),
+        answers: filledAnswers,
+        currentQuestion: nextQ,
+        shuffleMaps: buildShuffleMaps(questions),
+      });
     }
   };
 
   const handleBack = () => {
     if (currentQ <= 0 || !questions) return;
     const currentQuestion = questions[currentQ];
+    const newAnswers = [...answers];
     if (selected !== null) {
-      const newAnswers = [...answers];
       newAnswers[currentQ] = { questionId: currentQuestion.id, selectedIndex: selected };
       setAnswers(newAnswers);
     }
     const prevQ = currentQ - 1;
     setCurrentQ(prevQ);
-    setSelected(answers[prevQ]?.selectedIndex ?? null);
+    setSelected(newAnswers[prevQ]?.selectedIndex ?? null);
+    const filledAnswers = newAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
+    saveMutation.mutate({
+      questionOrder: questions.map(q => q.id),
+      answers: filledAnswers,
+      currentQuestion: prevQ,
+      shuffleMaps: buildShuffleMaps(questions),
+    });
   };
 
   const hasPastResults = pastResults && pastResults.length > 0;
@@ -267,7 +291,7 @@ export default function DiagnosticQuizPage() {
                 <Button className="flex-1 h-11 font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl" onClick={resumeSession} data-testid="button-resume-diagnostic">
                   Resume Quiz
                 </Button>
-                <Button variant="outline" className="flex-1 h-11 font-bold border-teal-300 text-teal-700 dark:text-teal-300 rounded-xl" onClick={async () => { await deleteSavedSession.mutateAsync(); setHasSession(false); startFresh(); }} data-testid="button-start-fresh-diagnostic">
+                <Button variant="outline" className="flex-1 h-11 font-bold border-teal-300 text-teal-700 dark:text-teal-300 rounded-xl" onClick={async () => { await deleteSavedSession.mutateAsync(); startFresh(); }} data-testid="button-start-fresh-diagnostic">
                   Start Fresh
                 </Button>
               </div>

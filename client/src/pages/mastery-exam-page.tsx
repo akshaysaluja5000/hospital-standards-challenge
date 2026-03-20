@@ -74,7 +74,6 @@ export default function MasteryExamPage() {
   const [resultData, setResultData] = useState<SubmitResponse | null>(null);
   const [questions, setQuestions] = useState<MasteryQ[] | null>(null);
   const [showExitDialog, setShowExitDialog] = useState(false);
-  const [hasSession, setHasSession] = useState(false);
   const [expandedQuestions, setExpandedQuestions] = useState<Set<number>>(new Set());
   const [showAllQuestions, setShowAllQuestions] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -89,15 +88,16 @@ export default function MasteryExamPage() {
 
   const { data: savedSession, isLoading: sessionLoading } = useQuery<SavedSession | null>({
     queryKey: ["/api/mastery/session"],
+    staleTime: 0,
+    refetchOnMount: "always",
   });
+
+  const hasSession = !!(savedSession && savedSession.questions && savedSession.questions.length > 0);
 
   useEffect(() => {
     if (sessionLoading || eligLoading) return;
-    if (savedSession && savedSession.questions && savedSession.questions.length > 0) {
-      setHasSession(true);
-    }
-    setPhase("intro");
-  }, [sessionLoading, eligLoading, savedSession]);
+    if (phase === "loading") setPhase("intro");
+  }, [sessionLoading, eligLoading, phase]);
 
   const fetchQuestions = async () => {
     const res = await fetch("/api/mastery/questions", { credentials: "include" });
@@ -117,6 +117,9 @@ export default function MasteryExamPage() {
   const saveMutation = useMutation({
     mutationFn: async (params: { questionOrder: string[]; answers: { questionId: string; selectedIndex: number }[]; currentQuestion: number; shuffleMaps: Record<string, number[]> }) => {
       await apiRequest("POST", "/api/mastery/session", params);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/mastery/session"] });
     },
   });
 
@@ -153,6 +156,12 @@ export default function MasteryExamPage() {
     setAnswers(new Array(qs.length).fill(null));
     setSelected(null);
     setPhase("quiz");
+    saveMutation.mutate({
+      questionOrder: qs.map(q => q.id),
+      answers: [],
+      currentQuestion: 0,
+      shuffleMaps: buildShuffleMaps(qs),
+    });
   };
 
   const resumeSession = () => {
@@ -202,22 +211,37 @@ export default function MasteryExamPage() {
       const filledAnswers = newAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
       submitMutation.mutate({ answers: filledAnswers, shuffleMaps: buildShuffleMaps(questions) });
     } else {
-      setCurrentQ(currentQ + 1);
-      setSelected(newAnswers[currentQ + 1]?.selectedIndex ?? null);
+      const nextQ = currentQ + 1;
+      setCurrentQ(nextQ);
+      setSelected(newAnswers[nextQ]?.selectedIndex ?? null);
+      const filledAnswers = newAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
+      saveMutation.mutate({
+        questionOrder: questions.map(q => q.id),
+        answers: filledAnswers,
+        currentQuestion: nextQ,
+        shuffleMaps: buildShuffleMaps(questions),
+      });
     }
   };
 
   const handleBack = () => {
     if (currentQ <= 0 || !questions) return;
     const currentQuestion = questions[currentQ];
+    const newAnswers = [...answers];
     if (selected !== null) {
-      const newAnswers = [...answers];
       newAnswers[currentQ] = { questionId: currentQuestion.id, selectedIndex: selected };
       setAnswers(newAnswers);
     }
     const prevQ = currentQ - 1;
     setCurrentQ(prevQ);
-    setSelected(answers[prevQ]?.selectedIndex ?? null);
+    setSelected(newAnswers[prevQ]?.selectedIndex ?? null);
+    const filledAnswers = newAnswers.filter((a): a is { questionId: string; selectedIndex: number } => a !== null);
+    saveMutation.mutate({
+      questionOrder: questions.map(q => q.id),
+      answers: filledAnswers,
+      currentQuestion: prevQ,
+      shuffleMaps: buildShuffleMaps(questions),
+    });
   };
 
   const hasPastResults = pastResults && pastResults.length > 0;
@@ -281,7 +305,7 @@ export default function MasteryExamPage() {
               <p className="text-sm text-muted-foreground mb-4">Question {(savedSession?.currentQuestion || 0) + 1} of {savedSession?.questions?.length || 55} — {savedSession?.answers?.length || 0} answers saved</p>
               <div className="flex gap-3">
                 <Button className="flex-1 h-11 font-bold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl" onClick={resumeSession} data-testid="button-resume-mastery">Resume Assessment</Button>
-                <Button variant="outline" className="flex-1 h-11 font-bold border-amber-300 text-amber-700 dark:text-amber-300 rounded-xl" onClick={async () => { await deleteSavedSession.mutateAsync(); setHasSession(false); startFresh(); }} data-testid="button-start-fresh-mastery">Start Fresh</Button>
+                <Button variant="outline" className="flex-1 h-11 font-bold border-amber-300 text-amber-700 dark:text-amber-300 rounded-xl" onClick={async () => { await deleteSavedSession.mutateAsync(); startFresh(); }} data-testid="button-start-fresh-mastery">Start Fresh</Button>
               </div>
             </motion.div>
           )}
