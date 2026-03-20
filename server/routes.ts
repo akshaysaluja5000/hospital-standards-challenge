@@ -1381,7 +1381,14 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
   }
 
   app.get("/api/diagnostic/questions", requireAuth, (req, res) => {
-    const selected = pickRandomPerSection(diagnosticQuestions, QUESTIONS_PER_SECTION);
+    const DIAG_PER_SECTION = 2;
+    const DIAG_EXTRAS = 3;
+    let selected = pickRandomPerSection(diagnosticQuestions, DIAG_PER_SECTION);
+    const usedIds = new Set(selected.map(q => q.id));
+    const remaining = diagnosticQuestions.filter(q => !usedIds.has(q.id));
+    const shuffledRemaining = shuffleArray([...remaining]);
+    selected = selected.concat(shuffledRemaining.slice(0, DIAG_EXTRAS));
+    selected = shuffleArray(selected);
     res.json(selected.map(q => {
       const { options, shuffleMap } = shuffleQuestionOptions(q);
       return {
