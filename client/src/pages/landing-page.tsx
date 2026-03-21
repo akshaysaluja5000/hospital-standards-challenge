@@ -219,7 +219,7 @@ export default function LandingPage() {
                     </h2>
                   </div>
                   <p className="text-base text-teal-700/80 dark:text-teal-300/80 leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
-                    Take our <span className="font-bold text-teal-700 dark:text-teal-200">Diagnostic Quiz</span> &#8212; 55 scenario&#8209;based questions across every compliance domain. No studying needed. Just honest answers to find your starting line. In 15 minutes, you&#x2019;ll know exactly where to focus.
+                    Take our <span className="font-bold text-teal-700 dark:text-teal-200">Diagnostic Quiz</span> &#8212; 25 scenario&#8209;based questions across every compliance domain. No studying needed. Just honest answers to find your starting line. In 10 minutes, you&#x2019;ll know exactly where to focus.
                   </p>
                   <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
                     <Button

@@ -230,7 +230,7 @@ export default function DashboardPage() {
                 </span>
               </div>
               <p className="text-sm text-muted-foreground mt-0.5">
-                55 questions to benchmark your compliance knowledge — takes about 15 minutes
+                25 questions to benchmark your compliance knowledge — takes about 10 minutes
               </p>
             </div>
             <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />

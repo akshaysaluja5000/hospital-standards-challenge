@@ -261,7 +261,7 @@ export default function DiagnosticQuizPage() {
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
-                <span>55 questions covering all 11 compliance areas — 5 from each topic</span>
+                <span>25 questions covering all 11 compliance areas — a focused sample from each topic</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
