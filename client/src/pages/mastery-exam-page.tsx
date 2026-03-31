@@ -280,7 +280,7 @@ export default function MasteryExamPage() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-2xl bg-white/80 dark:bg-card border border-amber-200 dark:border-amber-800 p-6 mb-6 shadow-sm">
             <h2 className="font-bold text-lg mb-3 text-amber-700 dark:text-amber-300">What to expect</h2>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-start gap-3"><Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" /><span>55 advanced questions — 5 from each compliance area</span></li>
+              <li className="flex items-start gap-3"><Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" /><span>25 advanced questions — a focused sample from each compliance area</span></li>
               <li className="flex items-start gap-3"><Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" /><span>Answer all questions first — detailed results, correct answers, and explanations are revealed at the end</span></li>
               <li className="flex items-start gap-3"><Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" /><span>You can go back to change previous answers and save progress to finish later</span></li>
               <li className="flex items-start gap-3"><Sparkles size={16} className="text-amber-500 mt-0.5 flex-shrink-0" /><span>Compare your score to your Diagnostic Quiz to see how far you've come</span></li>

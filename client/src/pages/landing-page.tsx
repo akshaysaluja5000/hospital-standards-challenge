@@ -265,7 +265,7 @@ export default function LandingPage() {
                     </span>
                   </div>
                   <p className="text-base text-amber-700/80 dark:text-amber-300/80 leading-relaxed mb-3 max-w-xl" data-testid="text-mastery-promo-body">
-                    Finished all the levels? The <span className="font-bold text-amber-700 dark:text-amber-200">Final Assessment</span> unlocks after you complete every section &#8212; 55 advanced questions that go deeper than anything in the training. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
+                    Finished all the levels? The <span className="font-bold text-amber-700 dark:text-amber-200">Final Assessment</span> unlocks after you complete every section &#8212; 25 advanced questions that go deeper than anything in the training. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
                   </p>
                   <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start mb-4">
                     <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">

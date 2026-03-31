@@ -1511,7 +1511,14 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
         }
       }
     }
-    const selected = pickRandomPerSection(masteryQuestions, QUESTIONS_PER_SECTION);
+    const MASTERY_PER_SECTION = 2;
+    const MASTERY_EXTRAS = 3;
+    let selected = pickRandomPerSection(masteryQuestions, MASTERY_PER_SECTION);
+    const usedIds = new Set(selected.map(q => q.id));
+    const remaining = masteryQuestions.filter(q => !usedIds.has(q.id));
+    const shuffledRemaining = shuffleArray([...remaining]);
+    selected = selected.concat(shuffledRemaining.slice(0, MASTERY_EXTRAS));
+    selected = shuffleArray(selected);
     res.json(selected.map(q => {
       const { options, shuffleMap } = shuffleQuestionOptions(q);
       return {

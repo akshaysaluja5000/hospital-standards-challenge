@@ -331,7 +331,7 @@ export default function DashboardPage() {
                 </span>
               </div>
               <p className="text-sm text-muted-foreground mt-0.5">
-                55 advanced questions to see how much you've learned — compare your results to your Diagnostic score
+                25 advanced questions to see how much you've learned — compare your results to your Diagnostic score
               </p>
             </div>
             <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
