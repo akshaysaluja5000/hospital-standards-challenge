@@ -1,0 +1,67 @@
+Right now a scrub tech and a floor nurse are seeing the same content, which creates noise and reduces engagement.
+
+The Core Concept: Role-Based Learning Tracks
+Instead of one universal path, each staff member is assigned a track based on their role and department. They only see the chapters, drills, and tests relevant to their job.
+
+MOSH Role-to-Chapter Mapping
+Role	Relevant Chapters
+Scrub Tech / Surgical Tech	Transport of Instruments, OR & Sterile Technique, Instruments & Inspection, Surgical Safety & Consent, SPD & Decontamination
+SPD Technician	Transport of Instruments, SPD & Decontamination, Clean vs. Dirty, Sterile Storage, Instruments & Inspection
+OR Nurse / Circulator	OR & Sterile Technique, Surgical Safety & Consent, Patient Care & Documentation, EOC & Safety Compliance, Facilities & Equipment
+PACU / Floor Nurse	Patient Care & Documentation, EOC & Safety Compliance, Surgical Safety & Consent
+OR Manager / Charge Nurse	All chapters (leadership needs full picture)
+Compliance Officer / CNO	All chapters + Action Plan dashboard
+Environmental Services	Environment & Surfaces, Clean vs. Dirty, EOC & Safety Compliance
+Facilities/Maintenance	Facilities & Equipment, EOC & Safety Compliance, Environment & Surfaces
+What Changes Structurally in the App
+1. Onboarding: Role Selection
+At registration or first login, the user selects their role/department. This sets their track permanently (editable by admin).
+
+2. Personalized Dashboard
+Each user sees only their assigned chapters — their handbook, drills, diagnostic, and post-test are all scoped to their role. A scrub tech never sees the PACU nursing content and vice versa.
+
+3. Role-Specific Diagnostic & Post-Test
+Instead of a single 25-question test covering all chapters:
+
+Each role gets a diagnostic and post-test scoped to their chapters only
+
+Question count scales with number of assigned chapters (e.g., SPD tech gets 15 questions; OR nurse gets 20)
+
+Scores are more meaningful because they reflect actual job relevance
+
+4. Action Plans Become Department-Scoped
+When a gap is flagged, the corrective action plan goes to that department's manager — not a generic admin. An SPD gap routes to the SPD manager; an OR consent gap routes to the OR director.
+
+What This Looks Like in the App Flow
+text
+Registration / Login
+        ↓
+Select Role (Scrub Tech, SPD Tech, OR Nurse, etc.)
+        ↓
+Personalized Dashboard (only relevant chapters visible)
+        ↓
+Role-Specific Diagnostic Test
+        ↓
+Targeted Drills + AI Tutor (assigned chapters only)
+        ↓
+Role-Specific Post Test
+        ↓
+Gap → Action Plan → Assigned to Department Manager
+Why This Makes the CEO Conversation Stronger
+Before Role-Based Tracks	After Role-Based Tracks
+One-size-fits-all content	Each staff member sees only what they need
+SPD tech answers OR nursing questions	SPD tech focuses entirely on decon and sterile storage
+Generic compliance score	Department-level compliance scores
+Hard to argue ROI	Clear: "SPD is 85% ready, OR nursing is 67% — here's the action plan"
+Build Complexity
+This is not a major rebuild — it's primarily a data model addition:
+
+Add a role field to the user table
+
+Add a chapter_roles mapping table (which roles see which chapters)
+
+Filter all content queries by the user's role
+
+Scope diagnostic/post-test question pools to assigned chapters
+
+Most of your existing content, quiz logic, and UI stays exactly the same — you're just adding a filter layer on top.
