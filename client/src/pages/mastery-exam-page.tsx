@@ -302,7 +302,7 @@ export default function MasteryExamPage() {
           {hasSession && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="rounded-2xl bg-amber-50 dark:bg-amber-950/50 border-2 border-amber-400 dark:border-amber-600 p-5 mb-6">
               <div className="flex items-center gap-2 mb-3"><Save size={18} className="text-amber-600" /><span className="font-bold text-sm text-amber-700 dark:text-amber-300">You have a saved assessment in progress</span></div>
-              <p className="text-sm text-muted-foreground mb-4">Question {(savedSession?.currentQuestion || 0) + 1} of {savedSession?.questions?.length || 55} — {savedSession?.answers?.length || 0} answers saved</p>
+              <p className="text-sm text-muted-foreground mb-4">Question {(savedSession?.currentQuestion || 0) + 1} of {savedSession?.questions?.length || 25} — {savedSession?.answers?.length || 0} answers saved</p>
               <div className="flex gap-3">
                 <Button className="flex-1 h-11 font-bold bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl" onClick={resumeSession} data-testid="button-resume-mastery">Resume Assessment</Button>
                 <Button variant="outline" className="flex-1 h-11 font-bold border-amber-300 text-amber-700 dark:text-amber-300 rounded-xl" onClick={async () => { await deleteSavedSession.mutateAsync(); startFresh(); }} data-testid="button-start-fresh-mastery">Start Fresh</Button>
