@@ -15,6 +15,37 @@ const pool = new pg.Pool({
 
 export const db = drizzle(pool);
 
+export async function ensureTablesExist() {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS diagnostic_sessions (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        question_order TEXT[] NOT NULL,
+        answers TEXT NOT NULL DEFAULT '[]',
+        current_question INTEGER NOT NULL DEFAULT 0,
+        shuffle_maps TEXT NOT NULL DEFAULT '{}',
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS mastery_sessions (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        question_order TEXT[] NOT NULL,
+        answers TEXT NOT NULL DEFAULT '[]',
+        current_question INTEGER NOT NULL DEFAULT 0,
+        shuffle_maps TEXT NOT NULL DEFAULT '{}',
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+    `);
+    console.log("Ensured diagnostic_sessions and mastery_sessions tables exist");
+  } catch (err) {
+    console.error("Error ensuring tables exist:", err);
+  } finally {
+    client.release();
+  }
+}
+
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
