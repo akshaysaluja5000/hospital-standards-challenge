@@ -19,6 +19,77 @@ export async function ensureTablesExist() {
   const client = await pool.connect();
   try {
     await client.query(`
+      CREATE TABLE IF NOT EXISTS facilities (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        code TEXT NOT NULL UNIQUE,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        username TEXT NOT NULL UNIQUE,
+        first_name TEXT NOT NULL DEFAULT '',
+        last_name TEXT NOT NULL DEFAULT '',
+        password TEXT NOT NULL,
+        is_admin BOOLEAN NOT NULL DEFAULT false,
+        facility_id INTEGER REFERENCES facilities(id),
+        daily_goal INTEGER NOT NULL DEFAULT 5,
+        reminder_enabled BOOLEAN NOT NULL DEFAULT true,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS user_progress (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        level_id TEXT NOT NULL,
+        score INTEGER NOT NULL DEFAULT 0,
+        total_questions INTEGER NOT NULL DEFAULT 0,
+        best_score INTEGER NOT NULL DEFAULT 0,
+        completed BOOLEAN NOT NULL DEFAULT false,
+        completed_at TIMESTAMP
+      );
+      CREATE TABLE IF NOT EXISTS user_streaks (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) UNIQUE,
+        current_streak INTEGER NOT NULL DEFAULT 0,
+        longest_streak INTEGER NOT NULL DEFAULT 0,
+        last_played_date DATE,
+        total_xp INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE TABLE IF NOT EXISTS daily_activity (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        date DATE NOT NULL,
+        questions_answered INTEGER NOT NULL DEFAULT 0,
+        correct_answers INTEGER NOT NULL DEFAULT 0,
+        xp_earned INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE TABLE IF NOT EXISTS quiz_sessions (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        level_id TEXT NOT NULL,
+        question_order TEXT[] NOT NULL,
+        answers TEXT NOT NULL DEFAULT '[]',
+        current_question INTEGER NOT NULL DEFAULT 0,
+        correct_answers INTEGER NOT NULL DEFAULT 0,
+        xp_earned INTEGER NOT NULL DEFAULT 0,
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS diagnostic_results (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        score INTEGER NOT NULL,
+        total_questions INTEGER NOT NULL,
+        answers TEXT NOT NULL DEFAULT '[]',
+        completed_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS mastery_results (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        score INTEGER NOT NULL,
+        total_questions INTEGER NOT NULL,
+        answers TEXT NOT NULL DEFAULT '[]',
+        completed_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
       CREATE TABLE IF NOT EXISTS diagnostic_sessions (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -38,7 +109,7 @@ export async function ensureTablesExist() {
         updated_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
     `);
-    console.log("Ensured diagnostic_sessions and mastery_sessions tables exist");
+    console.log("Ensured all database tables exist");
   } catch (err) {
     console.error("Error ensuring tables exist:", err);
   } finally {
