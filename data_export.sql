@@ -23,20 +23,23 @@ INSERT INTO user_streaks (id, user_id, current_streak, longest_streak, last_play
 VALUES (4, 4, 0, 0, NULL, 0)
 ON CONFLICT (id) DO NOTHING;
 
--- 4. Reset sequences
-SELECT setval('facilities_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM facilities), 1));
-SELECT setval('users_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM users), 4));
-SELECT setval('user_progress_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM user_progress), 1));
-SELECT setval('user_streaks_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM user_streaks), 4));
-SELECT setval('quiz_sessions_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM quiz_sessions), 1));
-SELECT setval('daily_activity_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM daily_activity), 1));
--- Add program column to modules table (run once)
-ALTER TABLE modules ADD COLUMN program TEXT DEFAULT 'hospital';
+-- 4. Add program column to modules table (safe to re-run)
+ALTER TABLE modules ADD COLUMN IF NOT EXISTS program TEXT DEFAULT 'hospital';
 
--- Create clinic modules (copy your hospital ones, change titles/content)
-INSERT INTO modules (title, qs, studies, program, id) VALUES
-('Environment of Care', 20, 5, 'clinic', 'eoc'),
-('Infection Prevention', 20, 5, 'clinic', 'infection-prev'),
-('Patient Care Documentation', 20, 5, 'clinic', 'patient-docs'),
-('Facilities & Equipment', 20, 5, 'clinic', 'facilities'),
-('EOC Safety Compliance', 20, 5, 'clinic', 'eoc-safety');
+-- 5. Create clinic modules (safe to re-run)
+-- Note: modules.id is a TEXT slug column (not a serial), so no sequence reset is needed below.
+INSERT INTO modules (id, title, qs, studies, program) VALUES
+('eoc',            'Environment of Care',           20, 5, 'clinic'),
+('infection-prev', 'Infection Prevention',           20, 5, 'clinic'),
+('patient-docs',   'Patient Care Documentation',     20, 5, 'clinic'),
+('facilities',     'Facilities & Equipment',         20, 5, 'clinic'),
+('eoc-safety',     'EOC Safety Compliance',          20, 5, 'clinic')
+ON CONFLICT (id) DO NOTHING;
+
+-- 6. Reset sequences
+SELECT setval('facilities_id_seq',    GREATEST((SELECT COALESCE(MAX(id), 0) FROM facilities), 1));
+SELECT setval('users_id_seq',         GREATEST((SELECT COALESCE(MAX(id), 0) FROM users), 4));
+SELECT setval('user_progress_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM user_progress), 1));
+SELECT setval('user_streaks_id_seq',  GREATEST((SELECT COALESCE(MAX(id), 0) FROM user_streaks), 4));
+SELECT setval('quiz_sessions_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM quiz_sessions), 1));
+SELECT setval('daily_activity_id_seq',GREATEST((SELECT COALESCE(MAX(id), 0) FROM daily_activity), 1));
