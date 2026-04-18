@@ -816,14 +816,14 @@ export async function registerRoutes(
         const userProgress = progressByUser.get(u.id) || [];
 
         const progressQ = userProgress.reduce((s, p) => s + p.totalQuestions, 0);
-        const progressC = userProgress.reduce((s, p) => s + p.score, 0);
+        const progressC = userProgress.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0);
         const completedLevelIds = new Set(userProgress.map((p) => p.levelId));
         const inProgressSessions = userSessions.filter((sess) => !completedLevelIds.has(sess.levelId));
         const sessionQ = inProgressSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
-        const sessionC = inProgressSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const sessionC = inProgressSessions.reduce((s, sess) => s + Math.min(sess.correctAnswers, sess.currentQuestion), 0);
         const questionsAnswered = progressQ + sessionQ;
-        const correct = progressC + sessionC;
-        const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
+        const correct = Math.min(progressC + sessionC, questionsAnswered);
+        const accuracy = questionsAnswered > 0 ? Math.min(100, Math.round((correct / questionsAnswered) * 100)) : 0;
         const levelsCompleted = userProgress.filter((p) => p.completed).length;
         const inProgressXp = inProgressSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
 
@@ -884,11 +884,13 @@ export async function registerRoutes(
         const us = sessionsByUser.get(u.id) || [];
         const completedIds = new Set(up.map((p) => p.levelId));
         const inProgress = us.filter((sess) => !completedIds.has(sess.levelId));
-        totalQuestionsAnswered += up.reduce((s, p) => s + p.totalQuestions, 0) + inProgress.reduce((s, sess) => s + sess.currentQuestion, 0);
-        totalCorrect += up.reduce((s, p) => s + p.score, 0) + inProgress.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const userQ = up.reduce((s, p) => s + p.totalQuestions, 0) + inProgress.reduce((s, sess) => s + sess.currentQuestion, 0);
+        const userC = up.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0) + inProgress.reduce((s, sess) => s + Math.min(sess.correctAnswers, sess.currentQuestion), 0);
+        totalQuestionsAnswered += userQ;
+        totalCorrect += Math.min(userC, userQ);
       });
       const averageAccuracy = totalQuestionsAnswered > 0
-        ? Math.round((totalCorrect / totalQuestionsAnswered) * 100)
+        ? Math.min(100, Math.round((totalCorrect / totalQuestionsAnswered) * 100))
         : 0;
 
       const activeTodayFromActivities = new Set(
@@ -907,14 +909,14 @@ export async function registerRoutes(
         const userProg = progressByUser.get(u.id) || [];
 
         const progressQ = userProg.reduce((s, p) => s + p.totalQuestions, 0);
-        const progressC = userProg.reduce((s, p) => s + p.score, 0);
+        const progressC = userProg.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0);
         const completedLevelIds = new Set(userProg.map((p) => p.levelId));
         const inProgressSessions = userSessions.filter((sess) => !completedLevelIds.has(sess.levelId));
         const sessionQ = inProgressSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
-        const sessionC = inProgressSessions.reduce((s, sess) => s + sess.correctAnswers, 0);
+        const sessionC = inProgressSessions.reduce((s, sess) => s + Math.min(sess.correctAnswers, sess.currentQuestion), 0);
         const questionsAnswered = progressQ + sessionQ;
-        const correct = progressC + sessionC;
-        const accuracy = questionsAnswered > 0 ? Math.round((correct / questionsAnswered) * 100) : 0;
+        const correct = Math.min(progressC + sessionC, questionsAnswered);
+        const accuracy = questionsAnswered > 0 ? Math.min(100, Math.round((correct / questionsAnswered) * 100)) : 0;
 
         let lastActiveTimestamp: string | null = null;
         const latestSession = userSessions.reduce((latest: Date | null, sess) => {
