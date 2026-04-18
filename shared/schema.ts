@@ -10,6 +10,22 @@ export const facilities = pgTable("facilities", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+export const roles = pgTable("roles", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  department: text("department").notNull(),
+  scope: text("scope").notNull().default("standard"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const roleChapterMappings = pgTable("role_chapter_mappings", {
+  id: serial("id").primaryKey(),
+  roleId: integer("role_id").notNull().references(() => roles.id),
+  chapterSlug: text("chapter_slug").notNull(),
+  displayOrder: integer("display_order").notNull().default(0),
+});
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -18,10 +34,16 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   isAdmin: boolean("is_admin").notNull().default(false),
   facilityId: integer("facility_id").references(() => facilities.id),
+  roleId: integer("role_id").references(() => roles.id),
+  viewScope: text("view_scope").notNull().default("department"),
+  roleAssignedAt: timestamp("role_assigned_at"),
   dailyGoal: integer("daily_goal").notNull().default(5),
   reminderEnabled: boolean("reminder_enabled").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export type Role = typeof roles.$inferSelect;
+export type RoleChapterMapping = typeof roleChapterMappings.$inferSelect;
 
 export const userProgress = pgTable("user_progress", {
   id: serial("id").primaryKey(),

@@ -59,13 +59,20 @@ export default function PlayPage() {
     answers: [],
   });
 
-  const { data: savedSession, isFetching: sessionLoading } = useQuery<QuizSession | null>({
+  const { data: savedSession, isFetching: sessionLoading, error: sessionError } = useQuery<QuizSession | null>({
     queryKey: ["/api/game/session", levelId],
     enabled: !!levelId,
     staleTime: 0,
     gcTime: 0,
     refetchOnMount: "always",
+    retry: false,
   });
+
+  useEffect(() => {
+    if (sessionError && (sessionError as any).message?.includes("403")) {
+      setLocation("/");
+    }
+  }, [sessionError, setLocation]);
 
   useEffect(() => {
     if (!level) return;

@@ -97,6 +97,8 @@ declare global {
       dailyGoal: number;
       reminderEnabled: boolean;
       createdAt: Date;
+      roleId: number | null;
+      viewScope: string | null;
     }
   }
 }
@@ -113,6 +115,15 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
     return res.status(403).json({ message: "Admin access required" });
   }
   next();
+}
+
+async function userCanAccessLevel(userId: number, levelId: string): Promise<boolean> {
+  const user = await storage.getUser(userId);
+  if (!user) return false;
+  if (user.isAdmin) return true;
+  const assigned = await storage.getUserAssignedChapters(userId);
+  if (assigned.length === 0) return false;
+  return assigned.includes(levelId);
 }
 
 export async function registerRoutes(
@@ -265,6 +276,49 @@ export async function registerRoutes(
     res.json(req.user);
   });
 
+  app.get("/api/roles", async (_req, res) => {
+    const roles = await storage.getAllRoles();
+    res.json(roles);
+  });
+
+  app.post("/api/auth/role", requireAuth, async (req, res) => {
+    const { roleSlug } = req.body;
+    if (!roleSlug || typeof roleSlug !== "string") {
+      return res.status(400).json({ message: "roleSlug is required" });
+    }
+    const role = await storage.getRoleBySlug(roleSlug);
+    if (!role) {
+      return res.status(404).json({ message: "Role not found" });
+    }
+    const updated = await storage.updateUser(req.user!.id, {
+      roleId: role.id,
+      roleAssignedAt: new Date(),
+    });
+    if (!updated) return res.status(500).json({ message: "Failed to update role" });
+    const { password: _, ...safeUser } = updated;
+    res.json(safeUser);
+  });
+
+  app.patch("/api/user/view-scope", requireAuth, async (req, res) => {
+    const { scope } = req.body;
+    if (scope !== "department" && scope !== "all") {
+      return res.status(400).json({ message: "scope must be 'department' or 'all'" });
+    }
+    const updated = await storage.updateUser(req.user!.id, { viewScope: scope });
+    if (!updated) return res.status(500).json({ message: "Failed to update view scope" });
+    const { password: _, ...safeUser } = updated;
+    res.json(safeUser);
+  });
+
+  app.get("/api/user/assigned-chapters", requireAuth, async (req, res) => {
+    const chapters = await storage.getUserAssignedChapters(req.user!.id);
+    let role = null;
+    if (req.user!.roleId) {
+      role = await storage.getRoleById(req.user!.roleId);
+    }
+    res.json({ chapters, role });
+  });
+
   app.post("/api/auth/reset-password", async (req, res) => {
     try {
       const parsed = resetPasswordSchema.safeParse(req.body);
@@ -401,6 +455,9 @@ export async function registerRoutes(
       }
       const { levelId, score, totalQuestions, xpEarned } = parsed.data;
       const userId = req.user!.id;
+      if (!(await userCanAccessLevel(userId, levelId))) {
+        return res.status(403).json({ message: "This chapter is not assigned to your role." });
+      }
       const today = toCentralDate(new Date());
 
       const existingSession = await storage.getQuizSession(userId, levelId);
@@ -475,6 +532,9 @@ export async function registerRoutes(
   app.get("/api/game/session/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId as string;
+      if (!(await userCanAccessLevel(req.user!.id, levelId))) {
+        return res.status(403).json({ message: "This chapter is not assigned to your role." });
+      }
       const session = await storage.getQuizSession(req.user!.id, levelId);
       if (!session) {
         return res.json(null);
@@ -489,6 +549,9 @@ export async function registerRoutes(
     try {
       const levelId = req.params.levelId as string;
       const userId = req.user!.id;
+      if (!(await userCanAccessLevel(userId, levelId))) {
+        return res.status(403).json({ message: "This chapter is not assigned to your role." });
+      }
       const { questionOrder, answers, currentQuestion, correctAnswers, xpEarned } = req.body;
 
       const existingSession = await storage.getQuizSession(userId, levelId);
@@ -638,7 +701,11 @@ export async function registerRoutes(
 
   app.get("/api/game/deep-dive/:levelId", requireAuth, async (req, res) => {
     try {
-      const level = deepDiveLevels.find((l) => l.id === req.params.levelId);
+      const levelId = req.params.levelId;
+      if (!(await userCanAccessLevel(req.user!.id, levelId))) {
+        return res.status(403).json({ message: "This chapter is not assigned to your role." });
+      }
+      const level = deepDiveLevels.find((l) => l.id === levelId);
       if (!level) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }
@@ -662,6 +729,9 @@ export async function registerRoutes(
     try {
       const data = deepDiveSubmitSchema.parse(req.body);
       const userId = req.user!.id;
+      if (!(await userCanAccessLevel(userId, data.levelId))) {
+        return res.status(403).json({ message: "This chapter is not assigned to your role." });
+      }
       const totalXp = data.baseXpEarned + data.expertXpEarned;
       const totalCorrect = data.baseCorrect + data.followUpCorrect;
       const totalAnswered = data.totalQuestions + data.followUpAttempted;
@@ -1380,12 +1450,16 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     return { options: shuffledOptions, shuffleMap: shuffledIndices };
   }
 
-  app.get("/api/diagnostic/questions", requireAuth, (req, res) => {
+  app.get("/api/diagnostic/questions", requireAuth, async (req, res) => {
     const DIAG_PER_SECTION = 2;
     const DIAG_EXTRAS = 3;
-    let selected = pickRandomPerSection(diagnosticQuestions, DIAG_PER_SECTION);
+    const assignedChapters = await storage.getUserAssignedChapters(req.user!.id);
+    const pool = assignedChapters.length > 0
+      ? diagnosticQuestions.filter(q => assignedChapters.includes(q.sectionId))
+      : diagnosticQuestions;
+    let selected = pickRandomPerSection(pool, DIAG_PER_SECTION);
     const usedIds = new Set(selected.map(q => q.id));
-    const remaining = diagnosticQuestions.filter(q => !usedIds.has(q.id));
+    const remaining = pool.filter(q => !usedIds.has(q.id));
     const shuffledRemaining = shuffleArray([...remaining]);
     selected = selected.concat(shuffledRemaining.slice(0, DIAG_EXTRAS));
     selected = shuffleArray(selected);
@@ -1501,10 +1575,12 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
   app.get("/api/mastery/questions", requireAuth, async (req, res) => {
     const username = req.user!.username;
     const isAdmin = ADMIN_USERNAMES.includes(username);
+    const assignedChaptersForCheck = await storage.getUserAssignedChapters(req.user!.id);
     if (!isAdmin) {
       const progress = await storage.getProgress(req.user!.id);
+      const requiredLevels = assignedChaptersForCheck.length > 0 ? levels.filter(l => assignedChaptersForCheck.includes(l.id)) : levels;
       const MIN_QUESTIONS_PER_SECTION = 10;
-      for (const level of levels) {
+      for (const level of requiredLevels) {
         const p = progress.find(pr => pr.levelId === level.id);
         if (!p || p.totalQuestions < MIN_QUESTIONS_PER_SECTION) {
           return res.status(403).json({ message: "You must complete more training before taking the Mastery Exam." });
@@ -1513,9 +1589,13 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     }
     const MASTERY_PER_SECTION = 2;
     const MASTERY_EXTRAS = 3;
-    let selected = pickRandomPerSection(masteryQuestions, MASTERY_PER_SECTION);
+    const assignedChapters = await storage.getUserAssignedChapters(req.user!.id);
+    const pool = assignedChapters.length > 0
+      ? masteryQuestions.filter(q => assignedChapters.includes(q.sectionId))
+      : masteryQuestions;
+    let selected = pickRandomPerSection(pool, MASTERY_PER_SECTION);
     const usedIds = new Set(selected.map(q => q.id));
-    const remaining = masteryQuestions.filter(q => !usedIds.has(q.id));
+    const remaining = pool.filter(q => !usedIds.has(q.id));
     const shuffledRemaining = shuffleArray([...remaining]);
     selected = selected.concat(shuffledRemaining.slice(0, MASTERY_EXTRAS));
     selected = shuffleArray(selected);
@@ -1597,10 +1677,12 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
       return res.json({ eligible: true, completedSections: levels.map(l => l.id), missingSections: [], isAdmin: true });
     }
     const progress = await storage.getProgress(req.user!.id);
+    const assigned = await storage.getUserAssignedChapters(req.user!.id);
+    const requiredLevels = assigned.length > 0 ? levels.filter(l => assigned.includes(l.id)) : levels;
     const MIN_QUESTIONS_PER_SECTION = 10;
     const completedSections: string[] = [];
     const missingSections: string[] = [];
-    for (const level of levels) {
+    for (const level of requiredLevels) {
       const p = progress.find(pr => pr.levelId === level.id);
       if (p && p.totalQuestions >= MIN_QUESTIONS_PER_SECTION) {
         completedSections.push(level.id);
@@ -1620,8 +1702,10 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     const isAdmin = ADMIN_USERNAMES.includes(username);
     if (!isAdmin) {
       const progress = await storage.getProgress(req.user!.id);
+      const assignedSubmit = await storage.getUserAssignedChapters(req.user!.id);
+      const requiredLevels = assignedSubmit.length > 0 ? levels.filter(l => assignedSubmit.includes(l.id)) : levels;
       const MIN_QUESTIONS_PER_SECTION = 10;
-      for (const level of levels) {
+      for (const level of requiredLevels) {
         const p = progress.find(pr => pr.levelId === level.id);
         if (!p || p.totalQuestions < MIN_QUESTIONS_PER_SECTION) {
           return res.status(403).json({ message: "You must complete more training before taking the Mastery Exam." });

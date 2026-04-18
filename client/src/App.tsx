@@ -17,6 +17,7 @@ import DeepDiveSelectPage from "@/pages/deep-dive-select-page";
 import DeepDivePage from "@/pages/deep-dive-page";
 import DiagnosticQuizPage from "@/pages/diagnostic-quiz-page";
 import MasteryExamPage from "@/pages/mastery-exam-page";
+import RoleSelectPage from "@/pages/role-select-page";
 import TermsPage from "@/pages/terms-page";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
@@ -37,6 +38,10 @@ function ProtectedRoute({ component: Component }: { component: () => JSX.Element
 
   if (!user) {
     return <Redirect to="/auth" />;
+  }
+
+  if (!user.roleId && !user.isAdmin) {
+    return <Redirect to="/role-select" />;
   }
 
   return <Component />;
@@ -72,10 +77,26 @@ function HomeRoute() {
   }
 
   if (user) {
+    if (!user.roleId && !user.isAdmin) {
+      return <Redirect to="/role-select" />;
+    }
     return <DashboardPage />;
   }
 
   return <LandingPage />;
+}
+
+function RoleSelectRoute() {
+  const { user, isLoading } = useAuth();
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-primary" />
+      </div>
+    );
+  }
+  if (!user) return <Redirect to="/auth" />;
+  return <RoleSelectPage />;
 }
 
 function Router() {
@@ -83,6 +104,7 @@ function Router() {
     <Switch>
       <Route path="/auth" component={AuthRoute} />
       <Route path="/terms" component={TermsPage} />
+      <Route path="/role-select" component={RoleSelectRoute} />
       <Route path="/" component={HomeRoute} />
       <Route path="/play/:levelId">
         {() => <ProtectedRoute component={PlayPage} />}

@@ -1,0 +1,39 @@
+🔴 Problem 1 — ALTER TABLE will crash on every re-run
+sqlALTER TABLE modules ADD COLUMN program TEXT DEFAULT 'hospital';
+No IF NOT EXISTS. The second time this file runs, Postgres throws:
+ERROR: column "program" of relation "modules" already exists
+and the entire script halts, meaning the clinic module inserts below it never execute.
+Fix:
+sqlALTER TABLE modules ADD COLUMN IF NOT EXISTS program TEXT DEFAULT 'hospital';
+
+🔴 Problem 2 — Clinic modules INSERT has no ON CONFLICT clause
+sqlINSERT INTO modules (title, qs, studies, program, id) VALUES
+('Environment of Care', 20, 5, 'clinic', 'eoc'),
+...
+No ON CONFLICT DO NOTHING. Re-running the file will throw a duplicate key error and fail.
+Fix:
+sqlINSERT INTO modules (title, qs, studies, program, id) VALUES
+('Environment of Care', 20, 5, 'clinic', 'eoc'),
+('Infection Prevention', 20, 5, 'clinic', 'infection-prev'),
+('Patient Care Documentation', 20, 5, 'clinic', 'patient-docs'),
+('Facilities & Equipment', 20, 5, 'clinic', 'facilities'),
+('EOC Safety Compliance', 20, 5, 'clinic', 'eoc-safety')
+ON CONFLICT (id) DO NOTHING;
+
+🟡 Problem 3 — id column in modules INSERT needs verification
+You're inserting string values ('eoc', 'infection-prev') into the id column. That only works if modules.id is a TEXT or VARCHAR column, not a SERIAL integer. Run this to confirm:
+sqlSELECT column_name, data_type 
+FROM information_schema.columns 
+WHERE table_name = 'modules' AND column_name = 'id';
+If it comes back integer, these inserts will throw a type error and you need to either use a separate slug column or restructure the insert. If it comes back text or character varying, you're fine.
+
+🟡 Problem 4 — Column order in modules INSERT is non-standard
+sqlINSERT INTO modules (title, qs, studies, program, id) VALUES ...
+Putting id last is legal but risky — if anyone reads or modifies this later and assumes id is first, they'll mismap values. Convention is id first or omit it entirely if it's auto-generated. Since yours appears to be a text slug (not auto-generated), listing it first makes intent clearer:
+sqlINSERT INTO modules (id, title, qs, studies, program) VALUES
+('eoc',            'Environment of Care',           20, 5, 'clinic'),
+('infection-prev', 'Infection Prevention',           20, 5, 'clinic'),
+('patient-docs',   'Patient Care Documentation',     20, 5, 'clinic'),
+('facilities',     'Facilities & Equipment',         20, 5, 'clinic'),
+('eoc-safety',     'EOC Safety Compliance',          20, 5, 'clinic')
+ON CONFLICT (id) DO NOTHING;

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,6 +10,8 @@ import { XpBar } from "@/components/xp-bar";
 import { LevelCard } from "@/components/level-card";
 import { DailyCalendar } from "@/components/daily-calendar";
 import { useAuth } from "@/lib/auth";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useMutation } from "@tanstack/react-query";
 import type { UserStreak, UserProgress, DailyActivity, QuizSession, DiagnosticResult } from "@shared/schema";
 import { levels } from "@shared/questions";
 
@@ -45,10 +47,29 @@ export default function DashboardPage() {
     queryKey: ["/api/mastery/eligibility"],
   });
 
+  const { data: assignedData } = useQuery<{ chapters: string[]; role: { name: string; scope: string; department: string } | null }>({
+    queryKey: ["/api/user/assigned-chapters"],
+  });
+
+  const viewScopeMutation = useMutation({
+    mutationFn: async (scope: "department" | "all") => {
+      const res = await apiRequest("PATCH", "/api/user/view-scope", { scope });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/me"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/assigned-chapters"] });
+    },
+  });
+
   const isLoading = streakLoading || progressLoading || activitiesLoading;
 
   const progressMap = new Map<string, UserProgress>();
   progress?.forEach((p) => progressMap.set(p.levelId, p));
+
+  const assignedFilteredLevels = (assignedData?.chapters && assignedData.chapters.length > 0)
+    ? levels.filter(l => assignedData.chapters.includes(l.id))
+    : levels;
 
   const sessionsMap = new Map<string, QuizSession>();
   savedSessions?.forEach((s) => sessionsMap.set(s.levelId, s));
@@ -295,8 +316,28 @@ export default function DashboardPage() {
               Questions are <span className="font-semibold text-foreground">shuffled each time</span> you play, so you'll get a different order every session.
             </p>
           </div>
+          {assignedData?.role && (
+            <div className="flex items-center gap-2 mb-4 px-3 py-3 rounded-xl bg-secondary/50 border border-border" data-testid="text-role-banner">
+              <Briefcase size={16} className="text-primary flex-shrink-0" />
+              <p className="text-sm flex-1">
+                Showing <span className="font-semibold">{assignedFilteredLevels.length}</span> level{assignedFilteredLevels.length === 1 ? "" : "s"} for your role:{" "}
+                <span className="font-semibold text-foreground">{assignedData.role.name}</span>
+              </p>
+              {assignedData.role.scope === "dual" && (
+                <button
+                  className="text-xs font-semibold text-primary hover:underline"
+                  data-testid="button-toggle-view-scope"
+                  onClick={() => viewScopeMutation.mutate(user?.viewScope === "all" ? "department" : "all")}
+                  disabled={viewScopeMutation.isPending}
+                >
+                  {user?.viewScope === "all" ? "Show only my role" : "Show all chapters"}
+                </button>
+              )}
+              <Link href="/profile" className="text-xs font-semibold text-muted-foreground hover:text-primary">Change role</Link>
+            </div>
+          )}
           <div className="flex flex-col gap-3">
-            {levels.map((level, index) => (
+            {assignedFilteredLevels.map((level, index) => (
               <LevelCard
                 key={level.id}
                 level={level}

@@ -4,9 +4,10 @@ import pg from "pg";
 import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
+  roles, roleChapterMappings,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
-  type DiagnosticSession, type MasterySession,
+  type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -25,6 +26,20 @@ export async function ensureTablesExist() {
         code TEXT NOT NULL UNIQUE,
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS roles (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        slug TEXT NOT NULL UNIQUE,
+        department TEXT NOT NULL,
+        scope TEXT NOT NULL DEFAULT 'standard',
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS role_chapter_mappings (
+        id SERIAL PRIMARY KEY,
+        role_id INTEGER NOT NULL REFERENCES roles(id),
+        chapter_slug TEXT NOT NULL,
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username TEXT NOT NULL UNIQUE,
@@ -33,10 +48,16 @@ export async function ensureTablesExist() {
         password TEXT NOT NULL,
         is_admin BOOLEAN NOT NULL DEFAULT false,
         facility_id INTEGER REFERENCES facilities(id),
+        role_id INTEGER REFERENCES roles(id),
+        view_scope TEXT NOT NULL DEFAULT 'department',
+        role_assigned_at TIMESTAMP,
         daily_goal INTEGER NOT NULL DEFAULT 5,
         reminder_enabled BOOLEAN NOT NULL DEFAULT true,
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS role_id INTEGER REFERENCES roles(id);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS view_scope TEXT NOT NULL DEFAULT 'department';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS role_assigned_at TIMESTAMP;
       CREATE TABLE IF NOT EXISTS user_progress (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -110,11 +131,59 @@ export async function ensureTablesExist() {
       );
     `);
     console.log("Ensured all database tables exist");
+    await seedRoles(client);
   } catch (err) {
     console.error("Error ensuring tables exist:", err);
   } finally {
     client.release();
   }
+}
+
+const ROLE_SEED: { name: string; slug: string; department: string; scope: "standard" | "all" | "dual"; chapters: string[] }[] = [
+  { name: "Scrub Tech / Surgical Tech", slug: "scrub_tech", department: "OR", scope: "standard",
+    chapters: ["transport", "or_sterile_field", "instruments", "universal_protocol", "spd_decontam"] },
+  { name: "SPD Technician", slug: "spd_tech", department: "SPD", scope: "standard",
+    chapters: ["transport", "spd_decontam", "segregation", "sterile_storage", "instruments"] },
+  { name: "OR Circulating Nurse", slug: "or_circulating_nurse", department: "OR", scope: "standard",
+    chapters: ["or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "facilities"] },
+  { name: "PACU / Floor Nurse", slug: "pacu_nurse", department: "PACU", scope: "standard",
+    chapters: ["patient_care_docs", "eoc_safety", "universal_protocol"] },
+  { name: "Environmental Services", slug: "evs", department: "EVS", scope: "standard",
+    chapters: ["environment", "segregation", "eoc_safety"] },
+  { name: "Facilities / Maintenance", slug: "facilities_maint", department: "Facilities", scope: "standard",
+    chapters: ["facilities", "eoc_safety", "environment"] },
+  { name: "OR Manager / Charge Nurse", slug: "or_manager", department: "OR", scope: "dual",
+    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"] },
+  { name: "Compliance Officer / CNO", slug: "compliance_officer", department: "Leadership", scope: "all",
+    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"] },
+  { name: "Nurse Educator / Staff Development", slug: "nurse_educator", department: "Leadership", scope: "dual",
+    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"] },
+];
+
+async function seedRoles(client: pg.PoolClient) {
+  for (const r of ROLE_SEED) {
+    const existing = await client.query("SELECT id FROM roles WHERE slug = $1", [r.slug]);
+    let roleId: number;
+    if (existing.rows.length === 0) {
+      const inserted = await client.query(
+        "INSERT INTO roles (name, slug, department, scope) VALUES ($1, $2, $3, $4) RETURNING id",
+        [r.name, r.slug, r.department, r.scope]
+      );
+      roleId = inserted.rows[0].id;
+    } else {
+      roleId = existing.rows[0].id;
+      await client.query("UPDATE roles SET name=$1, department=$2, scope=$3 WHERE id=$4",
+        [r.name, r.department, r.scope, roleId]);
+    }
+    await client.query("DELETE FROM role_chapter_mappings WHERE role_id = $1", [roleId]);
+    for (let i = 0; i < r.chapters.length; i++) {
+      await client.query(
+        "INSERT INTO role_chapter_mappings (role_id, chapter_slug, display_order) VALUES ($1, $2, $3)",
+        [roleId, r.chapters[i], i]
+      );
+    }
+  }
+  console.log("Seeded roles and role_chapter_mappings");
 }
 
 export interface IStorage {
@@ -155,6 +224,12 @@ export interface IStorage {
   createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<DiagnosticResult>;
   getMasteryResults(userId: number): Promise<MasteryResult[]>;
   createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult>;
+
+  getAllRoles(): Promise<Role[]>;
+  getRoleById(id: number): Promise<Role | undefined>;
+  getRoleBySlug(slug: string): Promise<Role | undefined>;
+  getRoleChapters(roleId: number): Promise<RoleChapterMapping[]>;
+  getUserAssignedChapters(userId: number): Promise<string[]>;
 
   getDiagnosticSession(userId: number): Promise<DiagnosticSession | undefined>;
   upsertDiagnosticSession(userId: number, data: Partial<DiagnosticSession>): Promise<DiagnosticSession>;
@@ -430,6 +505,51 @@ export class DatabaseStorage implements IStorage {
 
   async deleteMasterySession(userId: number): Promise<void> {
     await db.delete(masterySessions).where(eq(masterySessions.userId, userId));
+  }
+
+  async getAllRoles(): Promise<Role[]> {
+    return await db.select().from(roles).orderBy(roles.department, roles.name);
+  }
+
+  async getRoleById(id: number): Promise<Role | undefined> {
+    const [role] = await db.select().from(roles).where(eq(roles.id, id));
+    return role;
+  }
+
+  async getRoleBySlug(slug: string): Promise<Role | undefined> {
+    const [role] = await db.select().from(roles).where(eq(roles.slug, slug));
+    return role;
+  }
+
+  async getRoleChapters(roleId: number): Promise<RoleChapterMapping[]> {
+    return await db.select().from(roleChapterMappings)
+      .where(eq(roleChapterMappings.roleId, roleId))
+      .orderBy(roleChapterMappings.displayOrder);
+  }
+
+  async getUserAssignedChapters(userId: number): Promise<string[]> {
+    const user = await this.getUser(userId);
+    if (!user || !user.roleId) return [];
+    const role = await this.getRoleById(user.roleId);
+    if (!role) return [];
+    const mappings = await this.getRoleChapters(role.id);
+    const allMapped = mappings.map(m => m.chapterSlug);
+    if (role.scope === "all") return allMapped;
+    if (role.scope === "dual") {
+      if (user.viewScope === "all") return allMapped;
+      const ALL_LEVELS = ["transport","environment","segregation","sterile_storage","instruments","facilities","spd_decontam","or_sterile_field","universal_protocol","patient_care_docs","eoc_safety"];
+      const DEPT_TO_LEVELS: Record<string, string[]> = {
+        OR: ["or_sterile_field", "universal_protocol", "instruments", "transport"],
+        SPD: ["spd_decontam", "segregation", "sterile_storage", "transport", "instruments"],
+        PACU: ["patient_care_docs", "eoc_safety", "universal_protocol"],
+        EVS: ["environment", "segregation", "eoc_safety"],
+        Facilities: ["facilities", "eoc_safety", "environment"],
+        Leadership: ALL_LEVELS,
+      };
+      const deptLevels = DEPT_TO_LEVELS[role.department] || ALL_LEVELS;
+      return allMapped.filter(c => deptLevels.includes(c));
+    }
+    return allMapped;
   }
 }
 

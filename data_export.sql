@@ -30,3 +30,13 @@ SELECT setval('user_progress_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM
 SELECT setval('user_streaks_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM user_streaks), 4));
 SELECT setval('quiz_sessions_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM quiz_sessions), 1));
 SELECT setval('daily_activity_id_seq', GREATEST((SELECT COALESCE(MAX(id), 0) FROM daily_activity), 1));
+-- Add program column to modules table (run once)
+ALTER TABLE modules ADD COLUMN program TEXT DEFAULT 'hospital';
+
+-- Create clinic modules (copy your hospital ones, change titles/content)
+INSERT INTO modules (title, qs, studies, program, id) VALUES
+('Environment of Care', 20, 5, 'clinic', 'eoc'),
+('Infection Prevention', 20, 5, 'clinic', 'infection-prev'),
+('Patient Care Documentation', 20, 5, 'clinic', 'patient-docs'),
+('Facilities & Equipment', 20, 5, 'clinic', 'facilities'),
+('EOC Safety Compliance', 20, 5, 'clinic', 'eoc-safety');

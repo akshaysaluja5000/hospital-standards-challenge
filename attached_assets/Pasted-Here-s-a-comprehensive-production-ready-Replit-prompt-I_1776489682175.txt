@@ -1,0 +1,295 @@
+Here's a comprehensive, production-ready Replit prompt. I've expanded the logic, added enhancements, hardened edge cases, and structured it so Replit's AI can execute it cleanly in one pass:
+
+---
+
+```
+CONTEXT
+=======
+This is the Hospital Standards Challenge (Compliance Quest) app — a gamified compliance 
+training platform for hospital staff. It runs on Node.js + Express with PostgreSQL. 
+The frontend uses server-rendered HTML with session-based auth. Users complete chapters, 
+drills, a diagnostic pre-test, and a post-test. Scores and progress are stored per user.
+
+FEATURE TO BUILD: Role-Based Learning Tracks
+=============================================
+Instead of every user seeing every chapter, assign each user a curated chapter set 
+based on their hospital role. Their entire experience — chapters, drills, handbook, 
+diagnostic, post-test, and action plans — is scoped to that role's track.
+
+────────────────────────────────────────────
+1. DATABASE SCHEMA CHANGES
+────────────────────────────────────────────
+
+Create the following new tables if they don't exist:
+
+TABLE: roles
+  - id (SERIAL PRIMARY KEY)
+  - name (VARCHAR, e.g. "SPD Technician")
+  - slug (VARCHAR UNIQUE, e.g. "spd_tech") 
+  - department (VARCHAR, e.g. "SPD", "OR", "PACU", "EVS", "Facilities", "Leadership")
+  - scope (VARCHAR: "standard" | "all" | "dual")
+    -- "standard" = sees only assigned chapters
+    -- "all" = sees all chapters always (e.g. Compliance Officer)
+    -- "dual" = gets the department/all toggle (e.g. educators, managers)
+  - created_at (TIMESTAMP DEFAULT NOW())
+
+TABLE: role_chapter_mappings
+  - id (SERIAL PRIMARY KEY)
+  - role_id (INTEGER REFERENCES roles(id))
+  - chapter_slug (VARCHAR, matching your existing chapter identifiers)
+  - display_order (INTEGER)
+
+Alter TABLE: users
+  - Add column: role_id (INTEGER REFERENCES roles(id), nullable initially)
+  - Add column: view_scope (VARCHAR DEFAULT 'department') 
+    -- only used when role.scope = 'dual'; values: 'department' | 'all'
+  - Add column: role_assigned_at (TIMESTAMP)
+
+────────────────────────────────────────────
+2. SEED DATA — ROLE-TO-CHAPTER MAPPINGS
+────────────────────────────────────────────
+
+Seed the roles and role_chapter_mappings tables with the following mappings.
+Use the existing chapter slugs from your chapters table (or hardcoded array). 
+Map them as follows:
+
+Role: "Scrub Tech / Surgical Tech" | slug: scrub_tech | dept: OR | scope: standard
+  Chapters: transport_of_instruments, or_sterile_technique, instruments_inspection,
+            surgical_safety_consent, spd_decontamination
+
+Role: "SPD Technician" | slug: spd_tech | dept: SPD | scope: standard
+  Chapters: transport_of_instruments, spd_decontamination, clean_dirty_segregation,
+            sterile_storage, instruments_inspection
+
+Role: "OR Circulating Nurse" | slug: or_circulating_nurse | dept: OR | scope: standard
+  Chapters: or_sterile_technique, surgical_safety_consent, patient_care_documentation,
+            eoc_safety_compliance, facilities_equipment
+
+Role: "PACU / Floor Nurse" | slug: pacu_nurse | dept: PACU | scope: standard
+  Chapters: patient_care_documentation, eoc_safety_compliance, surgical_safety_consent
+
+Role: "Environmental Services" | slug: evs | dept: EVS | scope: standard
+  Chapters: environment_surfaces, clean_dirty_segregation, eoc_safety_compliance
+
+Role: "Facilities / Maintenance" | slug: facilities | dept: Facilities | scope: standard
+  Chapters: facilities_equipment, eoc_safety_compliance, environment_surfaces
+
+Role: "OR Manager / Charge Nurse" | slug: or_manager | dept: OR | scope: dual
+  Chapters: ALL (when in department mode, filter to OR chapters only)
+
+Role: "Compliance Officer / CNO" | slug: compliance_officer | dept: Leadership | scope: all
+  Chapters: ALL + Action Plan Dashboard access
+
+Role: "Nurse Educator / Staff Development" | slug: nurse_educator | dept: Leadership | scope: dual
+  Chapters: ALL (toggle between department view and all-department view)
+
+────────────────────────────────────────────
+3. REGISTRATION / ONBOARDING FLOW
+────────────────────────────────────────────
+
+On the registration or profile-setup page, add a "Your Role" dropdown BEFORE the user 
+first accesses any chapter. This must be a required field — no role = no access to content.
+
+The dropdown should be department-grouped using <optgroup> tags:
+
+  OR Department:
+    Scrub Tech / Surgical Tech
+    OR Circulating Nurse
+    OR Manager / Charge Nurse
+
+  SPD Department:
+    SPD Technician
+
+  PACU / Nursing:
+    PACU / Floor Nurse
+
+  Support Services:
+    Environmental Services
+    Facilities / Maintenance
+
+  Leadership & Education:
+    Compliance Officer / CNO
+    Nurse Educator / Staff Development
+
+On form submission:
+  - Look up the role by slug → get role_id
+  - Set users.role_id = role_id, users.role_assigned_at = NOW()
+  - Redirect to their personalized dashboard
+
+If a user already exists without a role (role_id IS NULL), intercept their next 
+login and send them to a role-selection screen before the dashboard. Do not let 
+them skip this step.
+
+────────────────────────────────────────────
+4. CHAPTER FILTERING MIDDLEWARE
+────────────────────────────────────────────
+
+Create a middleware function: getUserAssignedChapters(userId)
+  - Joins users → roles → role_chapter_mappings
+  - If role.scope = 'all': return all chapters
+  - If role.scope = 'dual' AND users.view_scope = 'all': return all chapters
+  - If role.scope = 'dual' AND users.view_scope = 'department': return only 
+    chapters matching role.department
+  - If role.scope = 'standard': return only role-mapped chapters
+  - Returns an ordered array of chapter slugs
+
+Use this middleware to filter:
+  - Dashboard chapter list
+  - Handbook section visibility
+  - Drill availability
+  - Diagnostic question pool
+  - Post-test question pool
+  - Action plan generation
+
+If a user tries to directly access a chapter URL not in their assigned set, 
+return a 403 with a friendly message: 
+  "This chapter isn't part of your training track. 
+   Contact your manager if you think this is an error."
+
+────────────────────────────────────────────
+5. PERSONALIZED DASHBOARD
+────────────────────────────────────────────
+
+The dashboard should:
+  - Show the user's role name prominently near the top: 
+    e.g. "Your Track: SPD Technician (5 Chapters)"
+  - Only list assigned chapters with their current completion status
+  - Show a role-specific progress bar: X of Y chapters complete
+  - For dual-scope users (managers/educators): render the view toggle at the top:
+    
+    [● My Department]  [○ All Departments]
+    
+    This toggle hits POST /user/view-scope with body {scope: 'department' | 'all'} 
+    and refreshes the page. Store the preference in users.view_scope.
+
+  - Do NOT show "locked" grayed-out chapters for out-of-scope roles — 
+    simply don't render them at all. Cognitive clarity over false completeness.
+
+────────────────────────────────────────────
+6. ROLE-SCOPED DIAGNOSTIC & POST-TEST
+────────────────────────────────────────────
+
+The existing diagnostic and post-test pull questions from a questions table 
+that references chapters. Update the question-selection logic:
+
+  - Fetch assigned chapters for the user (via getUserAssignedChapters)
+  - Filter the question pool to only questions belonging to those chapters
+  - Select questions proportionally: aim for roughly 3 questions per chapter,
+    with a minimum of 2 and maximum of 5 per chapter, total capped at 30
+  - Shuffle within each chapter group before presenting
+
+The result: an SPD Tech with 5 chapters might get 15 questions. An OR nurse 
+with 5 chapters gets 15. An All-scope leader gets the full bank (up to 30).
+
+On score display, show which chapters the user scored well on vs. had gaps in.
+
+────────────────────────────────────────────
+7. ROLE-SCOPED ACTION PLANS
+────────────────────────────────────────────
+
+When a gap is detected (score below threshold on a chapter), the action plan 
+routing uses the user's role.department to determine the recipient:
+
+  - SPD department → route to SPD Manager
+  - OR department → route to OR Director  
+  - PACU → route to Charge Nurse / Nurse Manager
+  - EVS → route to EVS Supervisor
+  - Facilities → route to Facilities Director
+  - Leadership → route to CNO or Compliance Officer
+
+Store a routing_department column in the action_plans table (or whatever your 
+action plans table is called). Add a manager-facing filtered view that only 
+shows action plans for their department.
+
+────────────────────────────────────────────
+8. ADMIN / EDUCATOR DUAL VIEW
+────────────────────────────────────────────
+
+For users with role.scope = 'dual' or role.scope = 'all':
+  - Show a "Staff Readiness" panel on their dashboard
+  - This panel shows: staff members grouped by department, their chapter 
+    completion %, and whether they've completed their post-test
+  - In "My Department" mode: filter to role.department users only
+  - In "All Departments" mode: show everyone
+
+Add a route: GET /admin/readiness
+  - Protected: only accessible if role.scope = 'dual' or 'all'
+  - Renders a table: Name | Role | Dept | Chapters Done | Post-Test | Score
+
+────────────────────────────────────────────
+9. ROLE MANAGEMENT (ADMIN UTILITY)
+────────────────────────────────────────────
+
+Add a simple admin page at /admin/roles (protected by admin flag or role.scope = 'all'):
+  - List all users with their current role
+  - Allow an admin to reassign a user's role via a dropdown + save button
+  - On role change: 
+    * Update users.role_id and role_assigned_at
+    * DO NOT wipe existing chapter progress — let them keep what they've done
+    * If new role has chapters they haven't started, those appear as new items
+    * If old role had chapters now out of scope, progress is preserved in DB 
+      but those chapters are hidden from their dashboard
+
+────────────────────────────────────────────
+10. EDGE CASES TO HANDLE
+────────────────────────────────────────────
+
+- User with no role assigned: redirect to role selection before ANY content access
+- Role with 0 chapter mappings in DB: show error message, alert admin
+- User directly navigating to /chapter/:slug not in their track: 403 + friendly message
+- All-scope user toggling to department mode when no department chapters exist: 
+  show message "No chapters mapped to your department yet"
+- Question pool for a role returns fewer than 5 questions: show a warning in 
+  admin panel; still run the test with what's available
+- Role slug in DB doesn't match chapter slug in questions table: log a warning 
+  server-side, exclude unmatched chapters gracefully rather than crashing
+
+────────────────────────────────────────────
+11. UI COPY STANDARDS
+────────────────────────────────────────────
+
+- "Your Track" not "Your Role" in dashboard header (feels more personal)
+- "X of Y Modules Complete" not "X of Y Chapters" (sounds less academic)
+- When blocking out-of-scope content: "This module isn't in your track." — 
+  never say "you don't have access" (sounds punitive)
+- Progress email/notification subject: "Your [Role Name] compliance track update"
+
+────────────────────────────────────────────
+12. DO NOT BREAK
+────────────────────────────────────────────
+
+- Existing user sessions and scores must not be invalidated
+- The connect-pg-simple session middleware must remain configured correctly 
+  (its SQL init file must be included in the build output — do not let esbuild 
+  exclude it). Keep the existing build and start commands intact.
+- All new DB columns must be added as nullable or with defaults so existing 
+  rows don't fail constraint checks
+- All new routes must be added to the existing Express router, not a new app instance
+- Run all schema changes as ALTER TABLE / CREATE TABLE IF NOT EXISTS — 
+  never DROP existing tables
+
+Build this feature incrementally in this order:
+1. Schema changes (ALTER TABLE, CREATE TABLE IF NOT EXISTS, seed data)
+2. getUserAssignedChapters middleware
+3. Registration role dropdown + role assignment on submit
+4. Dashboard filtering
+5. Diagnostic/post-test scoping
+6. Action plan routing
+7. Dual-view toggle for leaders/educators
+8. Admin readiness panel + role reassignment page
+9. Edge case guards
+```
+
+---
+
+A few things I added beyond the original spec that are worth calling out:
+
+**Scope column on roles** — rather than hardcoding "all chapters" logic per role name in application code, the `scope` field on the role record drives it. That means you can add a new all-access role later without touching code.
+
+**Role reassignment without wiping progress** — critical UX detail. If someone switches from SPD Tech to SPD Lead, they shouldn't lose their decontamination chapter progress.
+
+**Proportional question scaling** — rather than arbitrary per-role question counts, the 3-per-chapter formula scales automatically as the role mapping evolves.
+
+**`connect-pg-simple` build guard** — I included it in the "DO NOT BREAK" section because that's the bug that crashed Hospital Standards Challenge before. Keeps Replit from re-introducing it.
+
+Paste this wholesale into Replit Agent and it should be able to execute all 12 sections sequentially. Want me to also draft the seed SQL separately so you can run it manually if the agent's seeding logic gets it wrong?

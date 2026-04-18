@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowLeft, Flame, Zap, Trophy, Target, Bell, BellOff, User as UserIcon, Pencil, Lock, Eye, EyeOff, Check, X, Loader2 } from "lucide-react";
+import { ArrowLeft, Flame, Zap, Trophy, Target, Bell, BellOff, User as UserIcon, Pencil, Lock, Eye, EyeOff, Check, X, Loader2, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -319,6 +319,24 @@ export default function ProfilePage() {
         <div className="rounded-2xl bg-card border border-card-border p-5">
           <h3 className="font-bold text-base mb-4">Settings</h3>
           <div className="flex flex-col gap-5">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Briefcase size={18} className="text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-bold">Role</p>
+                  <p className="text-xs text-muted-foreground">Tailors your training to your work</p>
+                </div>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                data-testid="button-change-role"
+                onClick={() => setLocation("/role-select")}
+              >
+                Change role
+              </Button>
+            </div>
+
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <Target size={18} className="text-muted-foreground" />
