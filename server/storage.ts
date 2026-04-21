@@ -139,26 +139,34 @@ export async function ensureTablesExist() {
   }
 }
 
-const ROLE_SEED: { name: string; slug: string; department: string; scope: "standard" | "all" | "dual"; chapters: string[] }[] = [
-  { name: "Scrub Tech / Surgical Tech", slug: "scrub_tech", department: "OR", scope: "standard",
-    chapters: ["transport", "or_sterile_field", "instruments", "universal_protocol", "spd_decontam"] },
-  { name: "SPD Technician", slug: "spd_tech", department: "SPD", scope: "standard",
-    chapters: ["transport", "spd_decontam", "segregation", "sterile_storage", "instruments"] },
-  { name: "OR Circulating Nurse", slug: "or_circulating_nurse", department: "OR", scope: "standard",
-    chapters: ["or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "facilities"] },
-  { name: "PACU / Floor Nurse", slug: "pacu_nurse", department: "PACU", scope: "standard",
-    chapters: ["patient_care_docs", "eoc_safety", "universal_protocol"] },
-  { name: "Environmental Services", slug: "evs", department: "EVS", scope: "standard",
-    chapters: ["environment", "segregation", "eoc_safety"] },
-  { name: "Facilities / Maintenance", slug: "facilities_maint", department: "Facilities", scope: "standard",
-    chapters: ["facilities", "eoc_safety", "environment"] },
-  { name: "OR Manager / Charge Nurse", slug: "or_manager", department: "OR", scope: "dual",
-    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"] },
-  { name: "Compliance Officer / CNO", slug: "compliance_officer", department: "Leadership", scope: "all",
-    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"] },
-  { name: "Nurse Educator / Staff Development", slug: "nurse_educator", department: "Leadership", scope: "dual",
-    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"] },
-];
+import { ROLE_CONFIGS } from "@shared/roles";
+
+function scopeToDb(scope: "DEPT" | "DEPT_PLUS_ALL" | "FULL"): "standard" | "dual" | "all" {
+  if (scope === "FULL") return "all";
+  if (scope === "DEPT_PLUS_ALL") return "dual";
+  return "standard";
+}
+
+function deptToDbCode(department: string): string {
+  switch (department) {
+    case "Operating Room": return "OR";
+    case "Sterile Processing": return "SPD";
+    case "PACU & Floor": return "PACU";
+    case "Environmental Services": return "EVS";
+    case "Facilities & Maintenance": return "Facilities";
+    case "Leadership & Compliance": return "Leadership";
+    default: return department;
+  }
+}
+
+const ROLE_SEED: { name: string; slug: string; department: string; scope: "standard" | "all" | "dual"; chapters: string[] }[] =
+  ROLE_CONFIGS.map((r) => ({
+    name: r.title,
+    slug: r.id,
+    department: deptToDbCode(r.department),
+    scope: scopeToDb(r.scope),
+    chapters: r.chapters,
+  }));
 
 async function seedRoles(client: pg.PoolClient) {
   for (const r of ROLE_SEED) {

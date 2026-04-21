@@ -1,0 +1,128 @@
+Context: This is AccreditationReady, a hospital compliance training platform. We are preparing for the MOSH pilot. The role-selection screen already exists (heading "What's your role at MOSH?", department groupings, role cards with scope chips, a Continue button, and a "No role selected" footer state). I need you to harden the role-selection flow end-to-end. Do not rebuild the page — fix, wire, and tighten what's there.
+
+===========================================
+1. ROLE DEFINITIONS (source of truth)
+===========================================
+
+Create a single roles config file (e.g. /shared/roles.ts or /server/config/roles.ts) that is the ONLY source of truth for the role cards, routing, and first-module assignment. The role-select page, router, and admin views must all read from this file. Schema:
+
+{
+  id: string,                     // stable slug, e.g. "or_circulating_nurse"
+  department: string,             // e.g. "Operating Room"
+  title: string,                  // e.g. "OR Circulating Nurse"
+  description: string,            // short role description shown on card
+  scope: "DEPT" | "DEPT_PLUS_ALL" | "FULL",
+  destinationRoute: string,       // e.g. "/training/or-nurse"
+  firstModuleId: string,          // id of the first quiz/module shown
+  reportingScope: "own_department" | "own_plus_all" | "enterprise"
+}
+
+Seed with exactly these roles:
+
+Operating Room
+- OR Circulating Nurse        — DEPT
+- OR Manager / Charge Nurse   — DEPT_PLUS_ALL
+- Scrub Tech / Surgical Tech  — DEPT
+
+Sterile Processing
+- SPD Technician              — DEPT
+
+PACU & Floor
+- PACU / Floor Nurse          — DEPT
+
+Environmental Services
+- Environmental Services      — DEPT
+
+Facilities & Maintenance
+- Facilities / Maintenance    — DEPT
+
+Leadership & Compliance
+- Compliance Officer / CNO           — FULL
+- Nurse Educator / Staff Development — DEPT_PLUS_ALL
+
+For each role, assign a plausible destinationRoute and a firstModuleId that points at the correct specialty test (e.g. SPD Technician → decontamination/sterilization quiz, EVS → cleaning/waste/EOC quiz, Compliance Officer → full survey readiness module). If a module does not yet exist, create a placeholder module record so the routing does not dead-end.
+
+===========================================
+2. ROUTING REQUIREMENTS
+===========================================
+
+- Tapping Continue must route to the destinationRoute for the selected role's id. No hard-coded route strings outside the config.
+- The destination page MUST visibly reflect the chosen role in its title/header (e.g. "Training — OR Circulating Nurse") and MUST render the firstModuleId as the first question/module.
+- If a role id is missing, unknown, or the module lookup fails, render an explicit error page with a "Change role" button, NOT a blank screen or a silent fallback.
+
+===========================================
+3. SELECTION AND VALIDATION BEHAVIOR
+===========================================
+
+- Role cards must have a clearly distinct selected state (border + background + checkmark or equivalent). Do not rely on color alone.
+- Only one role can be selected at a time. Rapidly tapping a second card must cleanly replace the first selection with no race condition.
+- Continue is disabled until a role is selected. If a user tries to continue without a selection (keyboard, screen reader, or any bypass), show an inline error above the Continue button: "Select a role to continue." The existing "No role selected" footer text is too subtle on its own — keep it but add the inline error.
+- Selected role must persist in session state so a page refresh returns the user to the same selected card (not wiped). Browser back from the destination page must return to the role-select page with the previous selection still highlighted.
+- Add a visible "Change role" affordance on the destination page so users are never trapped.
+
+===========================================
+4. ACCESS SCOPE CHIPS — MAKE THEM MEAN SOMETHING
+===========================================
+
+Right now "DEPT. ACCESS", "DEPT + ALL", and "FULL ACCESS" are opaque. Do two things:
+
+a) Add a tooltip / tap-to-expand on each chip with plain-English text:
+   - DEPT. ACCESS   → "You'll see training and reporting for your department only."
+   - DEPT + ALL     → "You'll see your department plus a view across all departments."
+   - FULL ACCESS    → "You'll see training and reporting for the entire organization."
+
+b) Enforce the scope on the destination and on any admin/reporting views:
+   - DEPT roles see only their own department's data.
+   - DEPT_PLUS_ALL roles see their department plus a read-only all-department view.
+   - FULL roles see the enterprise dashboard.
+   Scope must be enforced server-side, not just hidden in the UI.
+
+===========================================
+5. MICROCOPY UPDATES ON THE ROLE-SELECT PAGE
+===========================================
+
+Replace / add the following:
+
+- Keep the heading "What's your role at MOSH?"
+- Under the subtext, add one short line: "You'll go straight to the training that matches this role. You can change your role later from your profile."
+- Replace "Step 1 of 2" with something concrete, e.g. "Step 1 of 2 — Choose your role" and make Step 2 label visible, e.g. "Step 2 — Start your training."
+- Add a small link under the role grid: "I work in more than one role" → opens a modal that says: "Pick the role you spend the most time in. You can switch roles from your profile at any time." (Do NOT build multi-role selection yet — just acknowledge it honestly.)
+
+===========================================
+6. EDGE CASES TO HANDLE EXPLICITLY
+===========================================
+
+Write handlers (not just hope) for:
+- Continue tapped with no selection → inline error (see §3).
+- Role A selected, then Role B tapped, then Continue → routes to Role B's destination.
+- Refresh after selecting → selection persists.
+- Browser back from destination → returns to role-select with the previous selection visible and re-selectable.
+- Role changed from profile after training has started → user is asked "Switch roles? Your current progress will be saved under [Old Role]." before the switch commits.
+
+===========================================
+7. ACCEPTANCE CRITERIA (treat as tests I will run)
+===========================================
+
+The build is not pilot-ready until ALL of these pass:
+
+1. Every role in the config routes to its declared destinationRoute, and the destination shows the declared firstModuleId as the first module.
+2. A first-time user reaches the first question of their role's training in no more than two taps from the role-select page.
+3. Pressing Continue with no selection produces a visible inline error, not a silent no-op.
+4. Leadership roles (Compliance Officer / CNO, Nurse Educator) visibly land on a broader view than DEPT-only roles — not the same page with hidden differences.
+5. Refreshing the role-select page or using browser back does not wipe the user's selection.
+6. Every scope chip has a readable explanation on hover/tap.
+7. Nothing in the UI references route paths, role ids, or internal labels — only MOSH-native, human language.
+
+===========================================
+8. OUT OF SCOPE FOR THIS PASS
+===========================================
+
+- Do not build true multi-role support yet (only acknowledge it in copy).
+- Do not redesign the role cards visually.
+- Do not change the department groupings.
+- Do not add new roles beyond the list in §1.
+
+When you finish, give me back:
+- The roles config file contents.
+- A short list of every file you changed and why.
+- Any role where you had to create a placeholder module because the real one didn't exist.

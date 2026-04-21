@@ -631,6 +631,9 @@ export async function registerRoutes(
   app.get("/api/game/deep-dive/session/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId as string;
+      if (!(await userCanAccessLevel(req.user!.id, levelId))) {
+        return res.status(403).json({ message: "Access denied for this level" });
+      }
       const session = await storage.getQuizSession(req.user!.id, levelId);
       if (!session) {
         return res.json(null);
@@ -653,6 +656,9 @@ export async function registerRoutes(
     try {
       const levelId = req.params.levelId as string;
       const userId = req.user!.id;
+      if (!(await userCanAccessLevel(userId, levelId))) {
+        return res.status(403).json({ message: "Access denied for this level" });
+      }
       const data = deepDiveSessionSchema.parse(req.body);
 
       const session = await storage.upsertQuizSession(userId, levelId, {

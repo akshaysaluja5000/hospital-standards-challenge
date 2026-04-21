@@ -11,6 +11,7 @@ import { AiDebriefBox } from "@/components/ai-debrief-box";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import { levels } from "@shared/questions";
+import { getRoleConfig } from "@shared/roles";
 import type { GameState, QuizSession } from "@shared/schema";
 
 function shuffleWithSeed(arr: any[], seed: string) {
@@ -27,6 +28,39 @@ function shuffleWithSeed(arr: any[], seed: string) {
     [result[i], result[j]] = [result[j], result[i]];
   }
   return result;
+}
+
+function RoleContextLine() {
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
+  const { data: roles } = useQuery<{ id: number; slug: string; name: string }[]>({
+    queryKey: ["/api/roles"],
+    enabled: !!user?.roleId,
+  });
+  if (!user?.roleId || !roles) return null;
+  const dbRole = roles.find((r) => r.id === user.roleId);
+  if (!dbRole) return null;
+  const cfg = getRoleConfig(dbRole.slug);
+  const title = cfg?.title || dbRole.name;
+  return (
+    <div className="flex items-center justify-center gap-1.5 mb-0.5">
+      <p
+        className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold leading-none"
+        data-testid="text-role-context"
+      >
+        Training — {title}
+      </p>
+      <span aria-hidden="true" className="text-muted-foreground text-[10px]">·</span>
+      <button
+        type="button"
+        onClick={() => navigate("/role-select")}
+        data-testid="link-change-role"
+        className="text-[10px] uppercase tracking-wider font-semibold leading-none text-primary hover:underline"
+      >
+        Change role
+      </button>
+    </div>
+  );
 }
 
 function invalidateDashboardData() {
@@ -477,6 +511,7 @@ export default function PlayPage() {
               <X size={20} />
             </Button>
             <div className="flex-1 text-center">
+              <RoleContextLine />
               <h2 className="font-bold text-sm" data-testid="text-level-title" style={{ color: level.color }}>
                 {level.name}
               </h2>

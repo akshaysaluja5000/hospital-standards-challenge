@@ -18,6 +18,8 @@ import DeepDivePage from "@/pages/deep-dive-page";
 import DiagnosticQuizPage from "@/pages/diagnostic-quiz-page";
 import MasteryExamPage from "@/pages/mastery-exam-page";
 import RoleSelectPage from "@/pages/role-select-page";
+import { Button } from "@/components/ui/button";
+import { AlertCircle } from "lucide-react";
 import TermsPage from "@/pages/terms-page";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
@@ -86,6 +88,28 @@ function HomeRoute() {
   return <LandingPage />;
 }
 
+function RoleErrorRoute() {
+  const [, navigate] = useLocation();
+  return (
+    <div className="min-h-screen flex items-center justify-center p-6">
+      <div className="max-w-md text-center flex flex-col items-center gap-4">
+        <div className="rounded-full bg-destructive/10 text-destructive p-3">
+          <AlertCircle size={28} />
+        </div>
+        <h1 className="text-2xl font-bold" data-testid="text-role-error-title">
+          We couldn't start your training
+        </h1>
+        <p className="text-muted-foreground">
+          The role you selected isn't available. Please choose a different role to continue.
+        </p>
+        <Button data-testid="button-role-error-change" onClick={() => navigate("/role-select")}>
+          Change role
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 function RoleSelectRoute() {
   const { user, isLoading } = useAuth();
   if (isLoading) {
@@ -105,6 +129,7 @@ function Router() {
       <Route path="/auth" component={AuthRoute} />
       <Route path="/terms" component={TermsPage} />
       <Route path="/role-select" component={RoleSelectRoute} />
+      <Route path="/role-error" component={RoleErrorRoute} />
       <Route path="/" component={HomeRoute} />
       <Route path="/play/:levelId">
         {() => <ProtectedRoute component={PlayPage} />}

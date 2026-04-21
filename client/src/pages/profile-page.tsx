@@ -8,6 +8,16 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { StreakFlame } from "@/components/streak-flame";
 import { XpBar } from "@/components/xp-bar";
 import { DailyCalendar } from "@/components/daily-calendar";
@@ -21,6 +31,7 @@ export default function ProfilePage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
 
+  const [showChangeRoleDialog, setShowChangeRoleDialog] = useState(false);
   const [editingUsername, setEditingUsername] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
@@ -331,7 +342,7 @@ export default function ProfilePage() {
                 variant="outline"
                 size="sm"
                 data-testid="button-change-role"
-                onClick={() => setLocation("/role-select")}
+                onClick={() => setShowChangeRoleDialog(true)}
               >
                 Change role
               </Button>
@@ -395,6 +406,29 @@ export default function ProfilePage() {
           />
         </div>
       </div>
+
+      <AlertDialog open={showChangeRoleDialog} onOpenChange={setShowChangeRoleDialog}>
+        <AlertDialogContent data-testid="dialog-change-role">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Switch roles?</AlertDialogTitle>
+            <AlertDialogDescription className="pt-2 leading-relaxed">
+              Your current progress will be saved under your existing role. You'll be taken back to the role selection screen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel data-testid="button-change-role-cancel">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              data-testid="button-change-role-confirm"
+              onClick={() => {
+                setShowChangeRoleDialog(false);
+                setLocation("/role-select");
+              }}
+            >
+              Switch role
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
