@@ -282,7 +282,7 @@ export async function registerRoutes(
   });
 
   app.post("/api/auth/role", requireAuth, async (req, res) => {
-    const { roleSlug } = req.body;
+    const { roleSlug, additionalRoleSlugs } = req.body;
     if (!roleSlug || typeof roleSlug !== "string") {
       return res.status(400).json({ message: "roleSlug is required" });
     }
@@ -290,8 +290,17 @@ export async function registerRoutes(
     if (!role) {
       return res.status(404).json({ message: "Role not found" });
     }
+    let additionalIds: number[] = [];
+    if (Array.isArray(additionalRoleSlugs)) {
+      for (const slug of additionalRoleSlugs) {
+        if (typeof slug !== "string" || slug === roleSlug) continue;
+        const r = await storage.getRoleBySlug(slug);
+        if (r && !additionalIds.includes(r.id)) additionalIds.push(r.id);
+      }
+    }
     const updated = await storage.updateUser(req.user!.id, {
       roleId: role.id,
+      additionalRoleIds: additionalIds,
       roleAssignedAt: new Date(),
     });
     if (!updated) return res.status(500).json({ message: "Failed to update role" });

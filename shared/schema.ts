@@ -35,6 +35,7 @@ export const users = pgTable("users", {
   isAdmin: boolean("is_admin").notNull().default(false),
   facilityId: integer("facility_id").references(() => facilities.id),
   roleId: integer("role_id").references(() => roles.id),
+  additionalRoleIds: integer("additional_role_ids").array().notNull().default(sql`ARRAY[]::integer[]`),
   viewScope: text("view_scope").notNull().default("department"),
   roleAssignedAt: timestamp("role_assigned_at"),
   dailyGoal: integer("daily_goal").notNull().default(5),

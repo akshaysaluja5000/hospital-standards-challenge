@@ -74,24 +74,23 @@ const SCOPE_BADGE_CLASSES: Record<RoleConfig["scope"], string> = {
   FULL: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20",
 };
 
-const SELECTION_KEY = "mosh_pending_role_id";
+const SELECTION_KEY = "mosh_pending_role_ids";
 
 export default function RoleSelectPage() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const { toast } = useToast();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showMultiRoleModal, setShowMultiRoleModal] = useState(false);
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem(SELECTION_KEY);
-      if (saved && ROLE_CONFIGS.some((r) => r.id === saved)) {
-        setSelectedId(saved);
-      } else if (user?.roleId) {
-        const { data } = queryClient.getQueryData<any>(["/api/auth/me"]) || {};
-        if (data?.roleId) setSelectedId(null);
+      if (saved) {
+        const parsed: string[] = JSON.parse(saved);
+        const valid = parsed.filter((id) => ROLE_CONFIGS.some((r) => r.id === id));
+        if (valid.length) setSelectedIds(valid);
       }
     } catch {}
   }, [user]);
@@ -107,22 +106,32 @@ export default function RoleSelectPage() {
   }, [dbRoles]);
 
   const setRoleMutation = useMutation({
-    mutationFn: async (roleId: string) => {
-      const res = await apiRequest("POST", "/api/auth/role", { roleSlug: roleId });
+    mutationFn: async (ids: string[]) => {
+      const [primary, ...rest] = ids;
+      const res = await apiRequest("POST", "/api/auth/role", {
+        roleSlug: primary,
+        additionalRoleSlugs: rest,
+      });
       return res.json();
     },
-    onSuccess: async (updatedUser, roleId) => {
+    onSuccess: async (updatedUser, ids) => {
       try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
       queryClient.setQueryData(["/api/auth/me"], updatedUser);
       await queryClient.invalidateQueries({ queryKey: ["/api/user/assigned-chapters"] });
       await queryClient.invalidateQueries({ queryKey: ["/api/user/view-scope"] });
-      const cfg = ROLE_CONFIGS.find((r) => r.id === roleId);
-      if (!cfg) {
+      const primary = ROLE_CONFIGS.find((r) => r.id === ids[0]);
+      if (!primary) {
         toast({ title: "Error", description: "Role configuration is missing.", variant: "destructive" });
         navigate("/role-error");
         return;
       }
-      toast({ title: "Role saved", description: `You're set up as ${cfg.title}.` });
+      const extra = ids.length - 1;
+      toast({
+        title: "Role saved",
+        description: extra > 0
+          ? `You're set up as ${primary.title} (+${extra} more role${extra > 1 ? "s" : ""}).`
+          : `You're set up as ${primary.title}.`,
+      });
       navigate("/");
     },
     onError: (err: any) => {
@@ -132,26 +141,35 @@ export default function RoleSelectPage() {
 
   const grouped = useMemo(() => rolesByDepartment(), []);
   const selectedRole = useMemo(
-    () => ROLE_CONFIGS.find((r) => r.id === selectedId) || null,
-    [selectedId]
+    () => ROLE_CONFIGS.find((r) => r.id === selectedIds[0]) || null,
+    [selectedIds]
   );
 
+  const persist = (ids: string[]) => {
+    try { sessionStorage.setItem(SELECTION_KEY, JSON.stringify(ids)); } catch {}
+  };
+
   const handleSelect = (id: string) => {
-    setSelectedId(id);
     setShowError(false);
-    try { sessionStorage.setItem(SELECTION_KEY, id); } catch {}
+    setSelectedIds((prev) => {
+      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+      persist(next);
+      return next;
+    });
   };
 
   const handleContinue = () => {
-    if (!selectedId) {
+    if (selectedIds.length === 0) {
       setShowError(true);
       return;
     }
-    if (!slugToDbId.has(selectedId)) {
-      toast({ title: "Error", description: "Selected role is not available. Please choose another.", variant: "destructive" });
-      return;
+    for (const id of selectedIds) {
+      if (!slugToDbId.has(id)) {
+        toast({ title: "Error", description: "One of your selected roles is not available. Please review.", variant: "destructive" });
+        return;
+      }
     }
-    setRoleMutation.mutate(selectedId);
+    setRoleMutation.mutate(selectedIds);
   };
 
   if (isLoading) {
@@ -229,13 +247,15 @@ export default function RoleSelectPage() {
 
                   <div className="grid sm:grid-cols-2 gap-3">
                     {grouped[dept].map((role) => {
-                      const isSelected = selectedId === role.id;
+                      const isSelected = selectedIds.includes(role.id);
+                      const order = selectedIds.indexOf(role.id);
+                      const isPrimary = order === 0;
                       const RoleIcon = ROLE_ICONS[role.id] || Users;
                       return (
                         <button
                           key={role.id}
                           type="button"
-                          role="radio"
+                          role="checkbox"
                           aria-checked={isSelected}
                           aria-label={`${role.title}. ${role.description}. ${SCOPE_CHIP_TOOLTIPS[role.scope]}`}
                           data-testid={`card-role-${role.id}`}
@@ -262,11 +282,21 @@ export default function RoleSelectPage() {
                                   {role.title}
                                 </h3>
                                 {isSelected && (
-                                  <div
-                                    className="shrink-0 rounded-full bg-primary text-primary-foreground p-0.5"
-                                    data-testid={`indicator-selected-${role.id}`}
-                                  >
-                                    <Check size={14} strokeWidth={3} />
+                                  <div className="shrink-0 flex items-center gap-1">
+                                    {isPrimary && selectedIds.length > 1 && (
+                                      <span
+                                        className="text-[9px] font-bold tracking-wider uppercase rounded-full bg-primary/15 text-primary px-1.5 py-0.5"
+                                        data-testid={`badge-primary-${role.id}`}
+                                      >
+                                        Primary
+                                      </span>
+                                    )}
+                                    <div
+                                      className="rounded-full bg-primary text-primary-foreground p-0.5"
+                                      data-testid={`indicator-selected-${role.id}`}
+                                    >
+                                      <Check size={14} strokeWidth={3} />
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -320,19 +350,22 @@ export default function RoleSelectPage() {
             >
               I work in more than one role
             </button>
+            <p className="text-xs text-muted-foreground mt-2">
+              Tap as many roles as you fill — your first pick is your primary role.
+            </p>
           </div>
         </div>
 
         <div className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-10">
           <div className="max-w-4xl mx-auto px-4 py-4">
-            {showError && !selectedId && (
+            {showError && selectedIds.length === 0 && (
               <div
                 role="alert"
                 data-testid="alert-no-selection"
                 className="mb-3 flex items-center gap-2 text-sm text-destructive font-medium"
               >
                 <AlertCircle size={16} />
-                <span>Select a role to continue.</span>
+                <span>Select at least one role to continue.</span>
               </div>
             )}
             <div className="flex items-center justify-between gap-4">
@@ -340,9 +373,18 @@ export default function RoleSelectPage() {
                 {selectedRole ? (
                   <div data-testid="text-role-summary">
                     <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-                      Selected role
+                      {selectedIds.length > 1
+                        ? `Selected (${selectedIds.length} roles · primary first)`
+                        : "Selected role"}
                     </p>
-                    <p className="font-semibold truncate">{selectedRole.title}</p>
+                    <p className="font-semibold truncate">
+                      {selectedRole.title}
+                      {selectedIds.length > 1 && (
+                        <span className="text-muted-foreground font-normal">
+                          {" "}+ {selectedIds.length - 1} more
+                        </span>
+                      )}
+                    </p>
                   </div>
                 ) : (
                   <div>
@@ -350,7 +392,7 @@ export default function RoleSelectPage() {
                       No role selected
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      Choose your role above to continue
+                      Choose one or more roles above to continue
                     </p>
                   </div>
                 )}
@@ -379,9 +421,24 @@ export default function RoleSelectPage() {
         <Dialog open={showMultiRoleModal} onOpenChange={setShowMultiRoleModal}>
           <DialogContent data-testid="dialog-multi-role">
             <DialogHeader>
-              <DialogTitle>More than one role?</DialogTitle>
-              <DialogDescription className="pt-2 text-sm leading-relaxed">
-                Pick the role you spend the most time in. You can switch roles from your profile at any time.
+              <DialogTitle>Work in more than one role?</DialogTitle>
+              <DialogDescription asChild>
+                <div className="pt-2 text-sm leading-relaxed space-y-3">
+                  <p>
+                    Go ahead and tap every role you fill — you can pick as many as you need. Tap a role again to remove it.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1">
+                    <li>
+                      <strong>Your first pick is your primary role.</strong> It's what we'll use to label your training.
+                    </li>
+                    <li>
+                      We'll combine the chapters from every role you select so your training covers all of your work.
+                    </li>
+                    <li>
+                      You can update your roles anytime from your profile.
+                    </li>
+                  </ul>
+                </div>
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>

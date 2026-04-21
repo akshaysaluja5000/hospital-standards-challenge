@@ -538,26 +538,35 @@ export class DatabaseStorage implements IStorage {
   async getUserAssignedChapters(userId: number): Promise<string[]> {
     const user = await this.getUser(userId);
     if (!user || !user.roleId) return [];
-    const role = await this.getRoleById(user.roleId);
-    if (!role) return [];
-    const mappings = await this.getRoleChapters(role.id);
-    const allMapped = mappings.map(m => m.chapterSlug);
-    if (role.scope === "all") return allMapped;
-    if (role.scope === "dual") {
-      if (user.viewScope === "all") return allMapped;
-      const ALL_LEVELS = ["transport","environment","segregation","sterile_storage","instruments","facilities","spd_decontam","or_sterile_field","universal_protocol","patient_care_docs","eoc_safety"];
-      const DEPT_TO_LEVELS: Record<string, string[]> = {
-        OR: ["or_sterile_field", "universal_protocol", "instruments", "transport"],
-        SPD: ["spd_decontam", "segregation", "sterile_storage", "transport", "instruments"],
-        PACU: ["patient_care_docs", "eoc_safety", "universal_protocol"],
-        EVS: ["environment", "segregation", "eoc_safety"],
-        Facilities: ["facilities", "eoc_safety", "environment"],
-        Leadership: ALL_LEVELS,
-      };
-      const deptLevels = DEPT_TO_LEVELS[role.department] || ALL_LEVELS;
-      return allMapped.filter(c => deptLevels.includes(c));
+    const ALL_LEVELS = ["transport","environment","segregation","sterile_storage","instruments","facilities","spd_decontam","or_sterile_field","universal_protocol","patient_care_docs","eoc_safety"];
+    const DEPT_TO_LEVELS: Record<string, string[]> = {
+      OR: ["or_sterile_field", "universal_protocol", "instruments", "transport"],
+      SPD: ["spd_decontam", "segregation", "sterile_storage", "transport", "instruments"],
+      PACU: ["patient_care_docs", "eoc_safety", "universal_protocol"],
+      EVS: ["environment", "segregation", "eoc_safety"],
+      Facilities: ["facilities", "eoc_safety", "environment"],
+      Leadership: ALL_LEVELS,
+    };
+    const chaptersForRole = async (roleId: number): Promise<string[]> => {
+      const role = await this.getRoleById(roleId);
+      if (!role) return [];
+      const mappings = await this.getRoleChapters(role.id);
+      const allMapped = mappings.map(m => m.chapterSlug);
+      if (role.scope === "all") return allMapped;
+      if (role.scope === "dual") {
+        if (user.viewScope === "all") return allMapped;
+        const deptLevels = DEPT_TO_LEVELS[role.department] || ALL_LEVELS;
+        return allMapped.filter(c => deptLevels.includes(c));
+      }
+      return allMapped;
+    };
+    const ids = [user.roleId, ...(user.additionalRoleIds || []).filter(id => id !== user.roleId)];
+    const union = new Set<string>();
+    for (const rid of ids) {
+      const list = await chaptersForRole(rid);
+      list.forEach(c => union.add(c));
     }
-    return allMapped;
+    return Array.from(union);
   }
 }
 
