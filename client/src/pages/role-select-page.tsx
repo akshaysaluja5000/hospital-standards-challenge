@@ -122,8 +122,8 @@ export default function RoleSelectPage() {
         navigate("/role-error");
         return;
       }
-      toast({ title: "Role saved", description: `Starting your ${cfg.title} training.` });
-      navigate(cfg.destinationRoute);
+      toast({ title: "Role saved", description: `You're set up as ${cfg.title}.` });
+      navigate("/");
     },
     onError: (err: any) => {
       toast({ title: "Error", description: err.message || "Failed to save role", variant: "destructive" });
