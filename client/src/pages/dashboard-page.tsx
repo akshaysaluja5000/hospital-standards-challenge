@@ -360,23 +360,33 @@ export default function DashboardPage() {
             </p>
           </div>
           {assignedData?.role && (
-            <div className="flex items-center gap-2 mb-4 px-3 py-3 rounded-xl bg-secondary/50 border border-border" data-testid="text-role-banner">
-              <Briefcase size={16} className="text-primary flex-shrink-0" />
-              <p className="text-sm flex-1">
+            <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-card border border-card-border" data-testid="text-role-banner">
+              <Briefcase size={16} className="text-muted-foreground flex-shrink-0" />
+              <p className="text-sm flex-1 min-w-[180px] text-foreground">
                 Showing <span className="font-semibold">{assignedFilteredLevels.length}</span> level{assignedFilteredLevels.length === 1 ? "" : "s"} for your role:{" "}
-                <span className="font-semibold text-foreground">{assignedData.role.name}</span>
+                <span className="font-semibold">{assignedData.role.name}</span>
               </p>
-              {assignedData.role.scope === "dual" && (
-                <button
-                  className="text-xs font-semibold text-primary hover:underline"
-                  data-testid="button-toggle-view-scope"
-                  onClick={() => viewScopeMutation.mutate(user?.viewScope === "all" ? "department" : "all")}
-                  disabled={viewScopeMutation.isPending}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {assignedData.role.scope === "dual" && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    data-testid="button-toggle-view-scope"
+                    onClick={() => viewScopeMutation.mutate(user?.viewScope === "all" ? "department" : "all")}
+                    disabled={viewScopeMutation.isPending}
+                  >
+                    {user?.viewScope === "all" ? "Show only my role" : "Show all chapters"}
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  data-testid="button-banner-change-role"
+                  onClick={() => setLocation("/role-select")}
                 >
-                  {user?.viewScope === "all" ? "Show only my role" : "Show all chapters"}
-                </button>
-              )}
-              <Link href="/profile" className="text-xs font-semibold text-muted-foreground hover:text-primary">Change role</Link>
+                  Change role
+                </Button>
+              </div>
             </div>
           )}
           <div className="flex flex-col gap-3">
