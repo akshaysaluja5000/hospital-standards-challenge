@@ -35,6 +35,7 @@ import {
   GraduationCap,
   Building2,
   Users,
+  ChevronLeft,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -166,6 +167,20 @@ export default function RoleSelectPage() {
   return (
     <TooltipProvider delayDuration={200}>
       <div className="min-h-screen bg-muted/30 pb-36">
+        {user?.roleId && (
+          <div className="max-w-4xl mx-auto px-4 pt-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/")}
+              data-testid="button-role-select-back"
+              className="-ml-2"
+            >
+              <ChevronLeft size={16} />
+              Back
+            </Button>
+          </div>
+        )}
         <div className="max-w-4xl mx-auto px-4 pt-10 md:pt-14">
           <div className="text-center mb-2">
             <Badge
