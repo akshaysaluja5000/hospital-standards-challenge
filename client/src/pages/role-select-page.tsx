@@ -232,6 +232,47 @@ export default function RoleSelectPage() {
             </p>
           </div>
 
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+            <Button
+              type="button"
+              variant={selectedIds.length === ROLE_CONFIGS.length ? "default" : "outline"}
+              size="sm"
+              data-testid="button-select-all-roles"
+              onClick={() => {
+                setShowError(false);
+                if (selectedIds.length === ROLE_CONFIGS.length) {
+                  setSelectedIds([]);
+                  persist([]);
+                } else {
+                  const all = ROLE_CONFIGS.map((r) => r.id);
+                  setSelectedIds(all);
+                  persist(all);
+                }
+              }}
+            >
+              {selectedIds.length === ROLE_CONFIGS.length
+                ? "Clear all roles"
+                : "Select all roles (full access)"}
+            </Button>
+            {selectedIds.length > 0 && selectedIds.length < ROLE_CONFIGS.length && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                data-testid="button-clear-roles"
+                onClick={() => {
+                  setSelectedIds([]);
+                  persist([]);
+                }}
+              >
+                Clear selection
+              </Button>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground text-center -mt-4 mb-6 max-w-xl mx-auto">
+            Want to see every module? Pick "Select all roles" to unlock training across every department.
+          </p>
+
           <div className="space-y-8">
             {departmentsInOrder.map((dept) => {
               const DeptIcon = DEPT_ICONS[dept] || Users;
