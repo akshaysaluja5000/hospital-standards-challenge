@@ -58,6 +58,7 @@ export async function ensureTablesExist() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS role_id INTEGER REFERENCES roles(id);
       ALTER TABLE users ADD COLUMN IF NOT EXISTS view_scope TEXT NOT NULL DEFAULT 'department';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS role_assigned_at TIMESTAMP;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS additional_role_ids INTEGER[] NOT NULL DEFAULT ARRAY[]::INTEGER[];
       CREATE TABLE IF NOT EXISTS user_progress (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
