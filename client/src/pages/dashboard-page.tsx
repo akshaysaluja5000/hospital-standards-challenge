@@ -360,7 +360,7 @@ export default function DashboardPage() {
             </p>
           </div>
           {assignedData?.role && (
-            <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-card border border-card-border" data-testid="text-role-banner">
+            <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-muted border border-border" data-testid="text-role-banner">
               <Briefcase size={16} className="text-muted-foreground flex-shrink-0" />
               <p className="text-sm flex-1 min-w-[180px] text-foreground">
                 Showing <span className="font-semibold">{assignedFilteredLevels.length}</span> level{assignedFilteredLevels.length === 1 ? "" : "s"} for your role:{" "}
