@@ -14,6 +14,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import type { UserStreak, UserProgress, DailyActivity, QuizSession, DiagnosticResult } from "@shared/schema";
 import { levels } from "@shared/questions";
+import { getRoleConfig } from "@shared/roles";
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -47,6 +48,10 @@ export default function DashboardPage() {
     queryKey: ["/api/mastery/eligibility"],
   });
 
+  const { data: rolesList } = useQuery<{ id: number; slug: string; name: string }[]>({
+    queryKey: ["/api/roles"],
+    enabled: !!user?.roleId,
+  });
   const { data: assignedData } = useQuery<{ chapters: string[]; role: { name: string; scope: string; department: string } | null }>({
     queryKey: ["/api/user/assigned-chapters"],
   });
@@ -159,6 +164,44 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 pt-6 flex flex-col gap-6">
+        {user?.roleId && (() => {
+          const dbRole = rolesList?.find((r) => r.id === user.roleId);
+          const cfg = dbRole ? getRoleConfig(dbRole.slug) : undefined;
+          const title = cfg?.title || dbRole?.name || assignedData?.role?.name || "Your role";
+          const department = cfg?.department || assignedData?.role?.department || "";
+          return (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-2xl bg-card border border-card-border p-4 flex items-center gap-3"
+              data-testid="card-current-role"
+            >
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Briefcase size={18} className="text-primary" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold leading-none mb-1">
+                  Your role
+                </p>
+                <p className="font-bold text-sm truncate" data-testid="text-current-role-title">
+                  {title}
+                </p>
+                {department && (
+                  <p className="text-xs text-muted-foreground truncate">{department}</p>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLocation("/role-select")}
+                data-testid="button-dashboard-change-role"
+              >
+                Change
+              </Button>
+            </motion.div>
+          );
+        })()}
+
         <div className="grid grid-cols-3 gap-3">
           <motion.div
             className="game-card p-4 flex flex-col items-center justify-center"
