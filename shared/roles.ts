@@ -48,6 +48,17 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     chapters: ["transport", "or_sterile_field", "instruments", "universal_protocol", "spd_decontam"],
   },
   {
+    id: "surgical_ortho_assistant",
+    department: "Operating Room",
+    title: "Surgical/Orthopedic Assistant",
+    description: "Patient positioning, room flow, instruments, perioperative support",
+    scope: "DEPT",
+    destinationRoute: "/play/or_sterile_field",
+    firstModuleId: "or_sterile_field",
+    reportingScope: "own_department",
+    chapters: ["or_sterile_field", "universal_protocol", "instruments", "patient_care_docs", "eoc_safety"],
+  },
+  {
     id: "spd_tech",
     department: "Sterile Processing",
     title: "SPD Technician",
