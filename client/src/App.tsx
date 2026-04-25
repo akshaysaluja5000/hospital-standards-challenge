@@ -18,6 +18,7 @@ import DeepDivePage from "@/pages/deep-dive-page";
 import DiagnosticQuizPage from "@/pages/diagnostic-quiz-page";
 import MasteryExamPage from "@/pages/mastery-exam-page";
 import RoleSelectPage from "@/pages/role-select-page";
+import { HospitalsPage, ClinicsPage, AscPage } from "@/pages/solutions-page";
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 import TermsPage from "@/pages/terms-page";
@@ -133,6 +134,9 @@ function Router() {
     <Switch>
       <Route path="/auth" component={AuthRoute} />
       <Route path="/terms" component={TermsPage} />
+      <Route path="/hospitals" component={HospitalsPage} />
+      <Route path="/clinics" component={ClinicsPage} />
+      <Route path="/asc" component={AscPage} />
       <Route path="/role-select" component={RoleSelectRoute} />
       <Route path="/role-error" component={RoleErrorRoute} />
       <Route path="/" component={HomeRoute} />

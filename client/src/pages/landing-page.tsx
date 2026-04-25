@@ -1,8 +1,14 @@
 import { motion } from "framer-motion";
-import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles } from "lucide-react";
+import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, ChevronDown, Hospital, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const features = [
   {
@@ -69,6 +75,56 @@ export default function LandingPage() {
             <span className="font-black text-lg tracking-tight" data-testid="text-app-name">Hospital Standards Challenge</span>
           </div>
           <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="gap-1"
+                  data-testid="button-header-solutions"
+                >
+                  Solutions
+                  <ChevronDown size={14} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem
+                  onClick={() => setLocation("/hospitals")}
+                  data-testid="link-solutions-hospitals"
+                >
+                  <Hospital size={16} className="mr-2 text-primary" />
+                  <div className="flex flex-col">
+                    <span className="font-semibold">Hospitals</span>
+                    <span className="text-xs text-muted-foreground">
+                      Joint Commission readiness
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setLocation("/clinics")}
+                  data-testid="link-solutions-clinics"
+                >
+                  <Stethoscope size={16} className="mr-2 text-primary" />
+                  <div className="flex flex-col">
+                    <span className="font-semibold">Clinics</span>
+                    <span className="text-xs text-muted-foreground">
+                      MOMA / MOSH / TSC surveys
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setLocation("/asc")}
+                  data-testid="link-solutions-asc"
+                >
+                  <Activity size={16} className="mr-2 text-primary" />
+                  <div className="flex flex-col">
+                    <span className="font-semibold">ASCs</span>
+                    <span className="text-xs text-muted-foreground">
+                      CMS & AAAHC accreditation
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               variant="ghost"
               onClick={() => setLocation("/auth")}
