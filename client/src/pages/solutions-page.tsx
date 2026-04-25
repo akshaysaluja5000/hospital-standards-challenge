@@ -71,13 +71,19 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
   },
   clinics: {
     slug: "clinics",
-    pageTitle: "Clinics — Hospital Standards Challenge",
+    pageTitle: "Ambulatory Clinics — Hospital Standards Challenge",
     audience: "For Outpatient Clinic Administrators",
     heroIcon: Stethoscope,
-    headline: "Ready for MOMA / MOSH / TSC Surveys?",
+    headline: "Compliance Training Built for Ambulatory Clinics.",
     subhead:
-      "A lightweight, no-IT-required training platform that gets your clinic staff survey-ready in days. Track completion by staff member and walk into your next inspection with confidence.",
+      "Get your clinic staff ready for Joint Commission Ambulatory Health Care accreditation and AAAHC surveys — without adding hours to anyone's week. Short, gamified lessons keep providers and front-desk staff sharp between site visits.",
     features: [
+      {
+        icon: ShieldCheck,
+        title: "JC Ambulatory & AAAHC-aligned",
+        description:
+          "Content mapped to Joint Commission Ambulatory Health Care standards and AAAHC chapters — the surveys your clinic actually faces.",
+      },
       {
         icon: Zap,
         title: "Lightweight deployment",
@@ -105,15 +111,15 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     pageTitle: "ASCs — Hospital Standards Challenge",
     audience: "For Ambulatory Surgery Centers",
     heroIcon: Activity,
-    headline: "ASC Accreditation Training That Actually Sticks.",
+    headline: "ASC Accreditation Training That Sticks.",
     subhead:
-      "CMS- and AAAHC-aligned training built for the pace of an ASC. Fast onboarding for new hires, refreshers for veteran staff, and reporting your corporate partners can use day one.",
+      "AAAHC, Joint Commission ASC pathway, and CMS Conditions for Coverage — covered. Built for the pace of an ASC, with fast onboarding for new hires, refreshers for veteran staff, and reporting that multi-site operators like Surgery Partners can use on day one.",
     features: [
       {
         icon: ShieldCheck,
-        title: "CMS & AAAHC-aligned content",
+        title: "AAAHC, JC ASC & CMS CfC content",
         description:
-          "Modules covering the standards your surveyors actually cite — sterile field, instruments, EOC, patient safety, and documentation.",
+          "Modules aligned to AAAHC standards, the Joint Commission ASC accreditation pathway, and CMS Conditions for Coverage — the standards your surveyors actually cite.",
       },
       {
         icon: Zap,
@@ -123,13 +129,13 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
       },
       {
         icon: Building2,
-        title: "Surgery Partners-compatible",
+        title: "Built for multi-site operators",
         description:
-          "Roles, reporting scopes, and dashboards built to plug into multi-site management — so corporate, regional, and center-level leaders all see what they need.",
+          "Roles, reporting scopes, and dashboards designed for groups like Surgery Partners and other multi-site ASC operators — corporate, regional, and center-level leaders all see what they need.",
       },
     ],
     bottomLine:
-      "ASC-specific content. ASC-friendly pricing. Built by people who know what a 7am first-case start looks like.",
+      "ASC-specific content tied to the standards your surveyors actually use. Built by people who know what a 7am first-case start looks like.",
   },
 };
 
