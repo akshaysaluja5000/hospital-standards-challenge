@@ -116,6 +116,7 @@ export default function RoleSelectPage() {
     },
     onSuccess: async (updatedUser, ids) => {
       try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
+      try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
       queryClient.setQueryData(["/api/auth/me"], updatedUser);
       await queryClient.invalidateQueries({ queryKey: ["/api/user/assigned-chapters"] });
       await queryClient.invalidateQueries({ queryKey: ["/api/user/view-scope"] });
@@ -190,7 +191,10 @@ export default function RoleSelectPage() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/")}
+              onClick={() => {
+                try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
+                navigate("/");
+              }}
               data-testid="button-role-select-back"
               className="-ml-2"
             >

@@ -52,8 +52,10 @@ export default function AuthPage() {
   const onLogin = async (data: z.infer<typeof loginSchema>) => {
     setIsSubmitting(true);
     try {
+      try { sessionStorage.setItem("mosh_force_role_select", "1"); } catch {}
       await login(data.username, data.password);
     } catch (error: any) {
+      try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
       toast({
         title: "Login failed",
         description: extractErrorMessage(error, "Invalid credentials"),
@@ -67,12 +69,14 @@ export default function AuthPage() {
   const onRegister = async (data: z.infer<typeof registerSchema>) => {
     setIsSubmitting(true);
     try {
+      try { sessionStorage.setItem("mosh_force_role_select", "1"); } catch {}
       await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode || undefined);
       toast({
         title: "Account created!",
         description: "Welcome to Hospital Standards Challenge!",
       });
     } catch (error: any) {
+      try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
       toast({
         title: "Registration failed",
         description: extractErrorMessage(error, "Something went wrong"),
