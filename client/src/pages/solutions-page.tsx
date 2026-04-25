@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import {
   Shield,
   ArrowRight,
-  Mail,
   Hospital,
   Stethoscope,
   Activity,
@@ -21,8 +20,6 @@ import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 
-const DEMO_EMAIL = "demo@accreditationready.ai";
-
 interface Feature {
   icon: LucideIcon;
   title: string;
@@ -36,7 +33,6 @@ interface SolutionConfig {
   heroIcon: LucideIcon;
   headline: string;
   subhead: string;
-  emailSubject: string;
   features: Feature[];
   bottomLine: string;
 }
@@ -50,7 +46,6 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     headline: "Compliance Training Built for Hospitals.",
     subhead:
       "Get every nurse, tech, and unit leader Joint Commission ready — without adding hours to anyone's week. Short, gamified levels keep staff engaged between surveys, while leaderboards let you track readiness across every department.",
-    emailSubject: "Hospital Standards Challenge — Hospital Demo Request",
     features: [
       {
         icon: ShieldCheck,
@@ -82,7 +77,6 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     headline: "Ready for MOMA / MOSH / TSC Surveys?",
     subhead:
       "A lightweight, no-IT-required training platform that gets your clinic staff survey-ready in days. Track completion by staff member and walk into your next inspection with confidence.",
-    emailSubject: "Hospital Standards Challenge — Clinic Demo Request",
     features: [
       {
         icon: Zap,
@@ -114,7 +108,6 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     headline: "ASC Accreditation Training That Actually Sticks.",
     subhead:
       "CMS- and AAAHC-aligned training built for the pace of an ASC. Fast onboarding for new hires, refreshers for veteran staff, and reporting your corporate partners can use day one.",
-    emailSubject: "Hospital Standards Challenge — ASC Demo Request",
     features: [
       {
         icon: ShieldCheck,
@@ -152,12 +145,6 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
     };
   }, [config.pageTitle]);
 
-  const mailto = `mailto:${DEMO_EMAIL}?subject=${encodeURIComponent(
-    config.emailSubject
-  )}&body=${encodeURIComponent(
-    `Hi,\n\nI'd like to schedule a demo of Hospital Standards Challenge for our ${config.audience.toLowerCase().replace(/^for /, "")} team.\n\nName:\nOrganization:\nRole:\nBest contact:\n\nThanks!`
-  )}`;
-
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-border bg-card sticky top-0 z-50">
@@ -183,11 +170,11 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             >
               Sign In
             </Button>
-            <Button asChild data-testid="button-header-request-demo">
-              <a href={mailto}>
-                <Mail size={16} className="mr-2" />
-                Request a Demo
-              </a>
+            <Button
+              onClick={() => setLocation("/auth")}
+              data-testid="button-header-create-account"
+            >
+              Create Account
             </Button>
           </div>
         </div>
@@ -223,32 +210,23 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               {config.subhead}
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
-              <Button asChild size="lg" data-testid="button-hero-request-demo">
-                <a href={mailto}>
-                  <Mail size={18} className="mr-2" />
-                  Request a Demo
-                  <ArrowRight size={18} className="ml-2" />
-                </a>
+              <Button
+                size="lg"
+                onClick={() => setLocation("/auth")}
+                data-testid="button-hero-create-account"
+              >
+                Create Account
+                <ArrowRight size={18} className="ml-2" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
                 onClick={() => setLocation("/auth")}
-                data-testid="button-hero-try-app"
+                data-testid="button-hero-signin"
               >
-                Try the App
+                Sign In
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Or email us directly at{" "}
-              <a
-                href={`mailto:${DEMO_EMAIL}`}
-                className="underline font-medium"
-                data-testid="link-demo-email"
-              >
-                {DEMO_EMAIL}
-              </a>
-            </p>
           </motion.div>
         </section>
 
@@ -307,11 +285,13 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               experience.
             </p>
             <div className="flex items-center gap-3 flex-wrap justify-center mt-2">
-              <Button asChild size="lg" data-testid="button-bottom-request-demo">
-                <a href={mailto}>
-                  <Mail size={18} className="mr-2" />
-                  Request a Demo
-                </a>
+              <Button
+                size="lg"
+                onClick={() => setLocation("/auth")}
+                data-testid="button-bottom-create-account"
+              >
+                Create Account
+                <ArrowRight size={18} className="ml-2" />
               </Button>
               <Button
                 size="lg"
