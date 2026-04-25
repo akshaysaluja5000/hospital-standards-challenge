@@ -15,6 +15,8 @@ import { deepDiveLevels } from "@shared/deep-dive-questions";
 import { diagnosticQuestions } from "@shared/diagnostic-questions";
 import { masteryQuestions } from "@shared/mastery-questions";
 import { levels } from "@shared/questions";
+import { findLevelById, getVisibleLevelsForModule } from "@shared/all-levels";
+import type { ModuleId } from "@shared/schema";
 
 function getAnthropicClient() {
   const apiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY || "replit-ai-integration";
@@ -121,9 +123,21 @@ async function userCanAccessLevel(userId: number, levelId: string): Promise<bool
   const user = await storage.getUser(userId);
   if (!user) return false;
   if (user.isAdmin) return true;
+  const level = findLevelById(levelId);
+  if (!level) return false;
+  if (level.draft) return false;
+  const userModule = (user.organizationType as ModuleId) || "hospital";
+  const levelModule = (level.module as ModuleId) || "hospital";
+  if (levelModule !== userModule) return false;
   const assigned = await storage.getUserAssignedChapters(userId);
   if (assigned.length === 0) return false;
   return assigned.includes(levelId);
+}
+
+async function getModuleLevelsForUser(userId: number) {
+  const user = await storage.getUser(userId);
+  const module: ModuleId = (user?.organizationType as ModuleId) || "hospital";
+  return getVisibleLevelsForModule(module);
 }
 
 export async function registerRoutes(
@@ -190,7 +204,7 @@ export async function registerRoutes(
 
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, firstName, lastName, facilityCode, password } = req.body;
+      const { username, firstName, lastName, facilityCode, password, organizationType } = req.body;
 
       if (!username || !password) {
         return res.status(400).json({ message: "Username and password are required" });
@@ -204,6 +218,12 @@ export async function registerRoutes(
       if (password.length < 6) {
         return res.status(400).json({ message: "Password must be at least 6 characters" });
       }
+
+      const allowedOrgTypes = ["hospital", "clinic", "asc"] as const;
+      type OrgType = typeof allowedOrgTypes[number];
+      const normalizedOrgType: OrgType = (allowedOrgTypes as readonly string[]).includes(organizationType)
+        ? (organizationType as OrgType)
+        : "hospital";
 
       const existingUsername = await storage.getUserByUsername(username);
       if (existingUsername) {
@@ -230,9 +250,10 @@ export async function registerRoutes(
         facilityId,
       });
 
-      if (isFirstUser) {
-        user = (await storage.updateUser(user.id, { isAdmin: true }))!;
-      }
+      user = (await storage.updateUser(user.id, {
+        organizationType: normalizedOrgType,
+        ...(isFirstUser ? { isAdmin: true } : {}),
+      }))!;
 
       await storage.upsertStreak(user.id, {
         currentStreak: 0,
@@ -401,6 +422,42 @@ export async function registerRoutes(
       if (parsed.data.dailyGoal !== undefined) updates.dailyGoal = parsed.data.dailyGoal;
       if (parsed.data.reminderEnabled !== undefined) updates.reminderEnabled = parsed.data.reminderEnabled;
       const user = await storage.updateUser(req.user!.id, updates);
+      if (!user) return res.status(404).json({ message: "User not found" });
+      const { password: _, ...safeUser } = user;
+      res.json(safeUser);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.patch("/api/user/organization-type", requireAuth, async (req, res) => {
+    try {
+      const allowed = ["hospital", "clinic", "asc"] as const;
+      const { organizationType } = req.body || {};
+      if (!(allowed as readonly string[]).includes(organizationType)) {
+        return res.status(400).json({ message: "Invalid organization type" });
+      }
+      const user = await storage.updateUser(req.user!.id, { organizationType });
+      if (!user) return res.status(404).json({ message: "User not found" });
+      const { password: _, ...safeUser } = user;
+      res.json(safeUser);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.patch("/api/admin/users/:id/organization-type", requireAdmin, async (req, res) => {
+    try {
+      const allowed = ["hospital", "clinic", "asc"] as const;
+      const { organizationType } = req.body || {};
+      const userId = parseInt(String(req.params.id), 10);
+      if (Number.isNaN(userId)) {
+        return res.status(400).json({ message: "Invalid user id" });
+      }
+      if (!(allowed as readonly string[]).includes(organizationType)) {
+        return res.status(400).json({ message: "Invalid organization type" });
+      }
+      const user = await storage.updateUser(userId, { organizationType });
       if (!user) return res.status(404).json({ message: "User not found" });
       const { password: _, ...safeUser } = user;
       res.json(safeUser);
@@ -1595,7 +1652,8 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     const assignedChaptersForCheck = await storage.getUserAssignedChapters(req.user!.id);
     if (!isAdmin) {
       const progress = await storage.getProgress(req.user!.id);
-      const requiredLevels = assignedChaptersForCheck.length > 0 ? levels.filter(l => assignedChaptersForCheck.includes(l.id)) : levels;
+      const moduleLevels = await getModuleLevelsForUser(req.user!.id);
+      const requiredLevels = assignedChaptersForCheck.length > 0 ? moduleLevels.filter(l => assignedChaptersForCheck.includes(l.id)) : moduleLevels;
       const MIN_QUESTIONS_PER_SECTION = 10;
       for (const level of requiredLevels) {
         const p = progress.find(pr => pr.levelId === level.id);
@@ -1690,12 +1748,13 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
 
   app.get("/api/mastery/eligibility", requireAuth, async (req, res) => {
     const username = req.user!.username;
+    const moduleLevels = await getModuleLevelsForUser(req.user!.id);
     if (ADMIN_USERNAMES.includes(username)) {
-      return res.json({ eligible: true, completedSections: levels.map(l => l.id), missingSections: [], isAdmin: true });
+      return res.json({ eligible: true, completedSections: moduleLevels.map(l => l.id), missingSections: [], isAdmin: true });
     }
     const progress = await storage.getProgress(req.user!.id);
     const assigned = await storage.getUserAssignedChapters(req.user!.id);
-    const requiredLevels = assigned.length > 0 ? levels.filter(l => assigned.includes(l.id)) : levels;
+    const requiredLevels = assigned.length > 0 ? moduleLevels.filter(l => assigned.includes(l.id)) : moduleLevels;
     const MIN_QUESTIONS_PER_SECTION = 10;
     const completedSections: string[] = [];
     const missingSections: string[] = [];
@@ -1720,7 +1779,8 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     if (!isAdmin) {
       const progress = await storage.getProgress(req.user!.id);
       const assignedSubmit = await storage.getUserAssignedChapters(req.user!.id);
-      const requiredLevels = assignedSubmit.length > 0 ? levels.filter(l => assignedSubmit.includes(l.id)) : levels;
+      const moduleLevelsSubmit = await getModuleLevelsForUser(req.user!.id);
+      const requiredLevels = assignedSubmit.length > 0 ? moduleLevelsSubmit.filter(l => assignedSubmit.includes(l.id)) : moduleLevelsSubmit;
       const MIN_QUESTIONS_PER_SECTION = 10;
       for (const level of requiredLevels) {
         const p = progress.find(pr => pr.levelId === level.id);

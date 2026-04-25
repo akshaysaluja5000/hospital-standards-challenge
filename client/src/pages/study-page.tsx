@@ -4,14 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Lightbulb, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { levels } from "@shared/questions";
+import { findLevelById } from "@shared/all-levels";
 
 export default function StudyPage() {
   const [, params] = useRoute("/study/:levelId");
   const [, setLocation] = useLocation();
   const levelId = params?.levelId;
 
-  const level = useMemo(() => levels.find((l) => l.id === levelId), [levelId]);
+  const level = useMemo(() => findLevelById(levelId), [levelId]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   if (!level) {

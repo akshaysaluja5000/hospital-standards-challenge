@@ -26,6 +26,15 @@ export const roleChapterMappings = pgTable("role_chapter_mappings", {
   displayOrder: integer("display_order").notNull().default(0),
 });
 
+export const MODULE_IDS = ["hospital", "clinic", "asc"] as const;
+export type ModuleId = (typeof MODULE_IDS)[number];
+
+export const MODULE_LABELS: Record<ModuleId, string> = {
+  hospital: "Hospital",
+  clinic: "Ambulatory Clinic",
+  asc: "Ambulatory Surgery Center (ASC)",
+};
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -36,6 +45,7 @@ export const users = pgTable("users", {
   facilityId: integer("facility_id").references(() => facilities.id),
   roleId: integer("role_id").references(() => roles.id),
   additionalRoleIds: integer("additional_role_ids").array().notNull().default(sql`ARRAY[]::integer[]`),
+  organizationType: text("organization_type").notNull().default("hospital"),
   viewScope: text("view_scope").notNull().default("department"),
   roleAssignedAt: timestamp("role_assigned_at"),
   dailyGoal: integer("daily_goal").notNull().default(5),
@@ -112,11 +122,16 @@ export const registerSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   facilityCode: z.string().optional(),
+  organizationType: z.enum(MODULE_IDS).default("hospital"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
+});
+
+export const updateOrganizationTypeSchema = z.object({
+  organizationType: z.enum(MODULE_IDS),
 });
 
 export const resetPasswordSchema = z.object({
@@ -189,6 +204,8 @@ export interface Question {
   explanation: string;
   xpReward: number;
   isSwipe: boolean;
+  module?: ModuleId;
+  draft?: boolean;
 }
 
 export interface StudyConcept {
@@ -206,6 +223,8 @@ export interface Level {
   requiredScore: number;
   studyMaterial: StudyConcept[];
   questions: Question[];
+  module?: ModuleId;
+  draft?: boolean;
 }
 
 export interface HandbookSection {

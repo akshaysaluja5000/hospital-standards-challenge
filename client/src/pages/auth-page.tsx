@@ -6,6 +6,7 @@ import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/lib/auth";
 import { loginSchema, registerSchema, resetPasswordSchema } from "@shared/schema";
@@ -30,7 +31,7 @@ export default function AuthPage() {
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { username: "", firstName: "", lastName: "", facilityCode: "", password: "", confirmPassword: "" },
+    defaultValues: { username: "", firstName: "", lastName: "", facilityCode: "", organizationType: "hospital", password: "", confirmPassword: "" },
   });
 
   const resetForm = useForm<z.infer<typeof resetPasswordSchema>>({
@@ -70,7 +71,7 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       try { sessionStorage.setItem("mosh_force_role_select", "1"); } catch {}
-      await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode || undefined);
+      await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode || undefined, data.organizationType);
       toast({
         title: "Account created!",
         description: "Welcome to Hospital Standards Challenge!",
@@ -308,6 +309,31 @@ export default function AuthPage() {
                                 data-testid="input-register-facility-code"
                               />
                             </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="organizationType"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Organization Type</FormLabel>
+                          <FormControl>
+                            <Select
+                              value={field.value ?? "hospital"}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger data-testid="select-register-organization-type">
+                                <SelectValue placeholder="Choose your organization type" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="hospital" data-testid="option-org-hospital">Hospital</SelectItem>
+                                <SelectItem value="clinic" data-testid="option-org-clinic">Ambulatory Clinic</SelectItem>
+                                <SelectItem value="asc" data-testid="option-org-asc">Ambulatory Surgery Center (ASC)</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </FormControl>
                           <FormMessage />
                         </FormItem>

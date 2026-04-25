@@ -13,7 +13,8 @@ import { useAuth } from "@/lib/auth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import type { UserStreak, UserProgress, DailyActivity, QuizSession, DiagnosticResult } from "@shared/schema";
-import { levels } from "@shared/questions";
+import { getVisibleLevelsForModule } from "@shared/all-levels";
+import type { ModuleId } from "@shared/schema";
 import { getRoleConfig } from "@shared/roles";
 
 export default function DashboardPage() {
@@ -72,9 +73,12 @@ export default function DashboardPage() {
   const progressMap = new Map<string, UserProgress>();
   progress?.forEach((p) => progressMap.set(p.levelId, p));
 
+  const userModule: ModuleId = (user?.organizationType as ModuleId) || "hospital";
+  const moduleLevels = getVisibleLevelsForModule(userModule);
+
   const assignedFilteredLevels = (assignedData?.chapters && assignedData.chapters.length > 0)
-    ? levels.filter(l => assignedData.chapters.includes(l.id))
-    : levels;
+    ? moduleLevels.filter(l => assignedData.chapters.includes(l.id))
+    : moduleLevels;
 
   const sessionsMap = new Map<string, QuizSession>();
   savedSessions?.forEach((s) => sessionsMap.set(s.levelId, s));

@@ -5,7 +5,8 @@ import { ArrowLeft, Trophy, Zap, Flame, Target, TrendingUp, Medal, Crown } from 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
-import { levels } from "@shared/questions";
+import { getVisibleLevelsForModule } from "@shared/all-levels";
+import type { ModuleId } from "@shared/schema";
 
 interface LeaderboardEntry {
   id: number;
@@ -55,7 +56,8 @@ export default function LeaderboardPage() {
     );
   }
 
-  const totalLevels = levels.length;
+  const userModule: ModuleId = (user?.organizationType as ModuleId) || "hospital";
+  const totalLevels = getVisibleLevelsForModule(userModule).length;
   const topThree = leaderboard?.slice(0, 3) || [];
   const rest = leaderboard?.slice(3) || [];
   const myRank = leaderboard?.findIndex((e) => e.id === user?.id);

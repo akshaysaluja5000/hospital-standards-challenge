@@ -10,7 +10,7 @@ import { QuizCard } from "@/components/quiz-card";
 import { AiDebriefBox } from "@/components/ai-debrief-box";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
-import { levels } from "@shared/questions";
+import { findLevelById } from "@shared/all-levels";
 import { getRoleConfig } from "@shared/roles";
 import type { GameState, QuizSession } from "@shared/schema";
 
@@ -77,7 +77,7 @@ export default function PlayPage() {
   const [, setLocation] = useLocation();
   const { user } = useAuth();
   const levelId = params?.levelId;
-  const level = useMemo(() => levels.find((l) => l.id === levelId), [levelId]);
+  const level = useMemo(() => findLevelById(levelId), [levelId]);
   const [sessionLoaded, setSessionLoaded] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const [showQuitDialog, setShowQuitDialog] = useState(false);

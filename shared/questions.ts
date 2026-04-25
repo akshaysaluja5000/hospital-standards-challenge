@@ -1,6 +1,6 @@
 import type { Level } from "./schema";
 
-export const levels: Level[] = [
+const hospitalLevelsRaw: Level[] = [
   {
     id: "transport",
     name: "Transport of Instruments",
@@ -3489,3 +3489,11 @@ export const levels: Level[] = [
     ],
   },
 ];
+
+export const levels: Level[] = hospitalLevelsRaw.map((level) => ({
+  ...level,
+  module: "hospital",
+  questions: level.questions.map((q) => ({ ...q, module: "hospital" })),
+}));
+
+export const hospitalLevels: Level[] = levels;

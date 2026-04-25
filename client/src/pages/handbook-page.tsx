@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AiHandbookSearch } from "@/components/ai-handbook-search";
 import { handbook } from "@shared/handbook";
-import { levels } from "@shared/questions";
+import { findLevelById } from "@shared/all-levels";
 import type { HandbookChapter, HandbookSection } from "@shared/schema";
 
 function SectionCard({ section, levelColor, index }: { section: HandbookSection; levelColor: string; index: number }) {
@@ -96,7 +96,7 @@ function SectionCard({ section, levelColor, index }: { section: HandbookSection;
 
 function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: () => void }) {
   const [, setLocation] = useLocation();
-  const level = levels.find((l) => l.id === chapter.levelId);
+  const level = findLevelById(chapter.levelId);
   const color = level?.color || "hsl(152, 82%, 39%)";
   const [showQuickRef, setShowQuickRef] = useState(false);
 
@@ -258,7 +258,7 @@ export default function HandbookPage() {
 
         <div className="flex flex-col gap-3">
           {filteredChapters.map((chapter) => {
-            const level = levels.find((l) => l.id === chapter.levelId);
+            const level = findLevelById(chapter.levelId);
             const color = level?.color || "hsl(152, 82%, 39%)";
 
             return (

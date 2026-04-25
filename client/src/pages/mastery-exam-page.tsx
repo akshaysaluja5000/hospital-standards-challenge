@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
-import { levels } from "@shared/questions";
+import { findLevelById } from "@shared/all-levels";
 import type { MasteryResult } from "@shared/schema";
 
 interface MasteryQ {
@@ -258,7 +258,7 @@ export default function MasteryExamPage() {
     const isEligible = eligibility?.eligible;
     const missingSections = eligibility?.missingSections || [];
     const missingNames = missingSections.map(id => {
-      const level = levels.find(l => l.id === id);
+      const level = findLevelById(id);
       return level?.name || id;
     });
 

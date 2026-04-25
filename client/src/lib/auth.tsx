@@ -1,7 +1,7 @@
 import { createContext, useContext, ReactNode } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { queryClient, apiRequest, getQueryFn } from "./queryClient";
-import type { User } from "@shared/schema";
+import type { User, ModuleId } from "@shared/schema";
 
 type AuthUser = Omit<User, "password">;
 
@@ -10,7 +10,7 @@ interface AuthContextType {
   isLoading: boolean;
   isAuthenticating: boolean;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, firstName: string, lastName: string, password: string, facilityCode?: string) => Promise<void>;
+  register: (username: string, firstName: string, lastName: string, password: string, facilityCode?: string, organizationType?: ModuleId) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -33,8 +33,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const registerMutation = useMutation({
-    mutationFn: async ({ username, firstName, lastName, password, facilityCode }: { username: string; firstName: string; lastName: string; password: string; facilityCode?: string }) => {
-      const res = await apiRequest("POST", "/api/auth/register", { username, firstName, lastName, password, facilityCode });
+    mutationFn: async ({ username, firstName, lastName, password, facilityCode, organizationType }: { username: string; firstName: string; lastName: string; password: string; facilityCode?: string; organizationType?: ModuleId }) => {
+      const res = await apiRequest("POST", "/api/auth/register", { username, firstName, lastName, password, facilityCode, organizationType });
       return await res.json();
     },
     onSuccess: (data) => {
@@ -60,8 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login: async (username, password) => {
           await loginMutation.mutateAsync({ username, password });
         },
-        register: async (username, firstName, lastName, password, facilityCode) => {
-          await registerMutation.mutateAsync({ username, firstName, lastName, password, facilityCode });
+        register: async (username, firstName, lastName, password, facilityCode, organizationType) => {
+          await registerMutation.mutateAsync({ username, firstName, lastName, password, facilityCode, organizationType });
         },
         logout: async () => {
           await logoutMutation.mutateAsync();
