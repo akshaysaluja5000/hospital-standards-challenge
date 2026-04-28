@@ -14,8 +14,20 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import type { UserStreak, UserProgress, DailyActivity, QuizSession, DiagnosticResult } from "@shared/schema";
 import { getVisibleLevelsForModule } from "@shared/all-levels";
-import type { ModuleId } from "@shared/schema";
+import { MODULE_LABELS, type ModuleId } from "@shared/schema";
 import { getRoleConfig } from "@shared/roles";
+
+const PATHWAY_HEADERS: Record<ModuleId, string> = {
+  hospital: "Hospital Standards",
+  clinic: "Ambulatory Clinic Domains",
+  asc: "ASC Domains",
+};
+
+const PATHWAY_DISCLAIMERS: Record<ModuleId, string> = {
+  hospital: "Not affiliated with The Joint Commission. For educational purposes only.",
+  clinic: "Not affiliated with The Joint Commission or AAAHC. For educational purposes only.",
+  asc: "Not affiliated with AAAHC, The Joint Commission, or CMS. For educational purposes only.",
+};
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -352,10 +364,16 @@ export default function DashboardPage() {
 
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-black flex items-center gap-2">
+            <h2 className="text-lg font-black flex items-center gap-2" data-testid="text-pathway-header">
               <CalendarIcon size={20} className="text-primary" />
-              Levels
+              {PATHWAY_HEADERS[userModule]}
             </h2>
+            <span
+              className="text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-full bg-primary/10 text-primary"
+              data-testid="badge-pathway"
+            >
+              {MODULE_LABELS[userModule]}
+            </span>
           </div>
           <div className="flex items-center gap-2 mb-4 px-3 py-3 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-shuffle-note">
             <Shuffle size={16} className="text-primary flex-shrink-0" />
@@ -394,18 +412,32 @@ export default function DashboardPage() {
             </div>
           )}
           <div className="flex flex-col gap-3">
-            {assignedFilteredLevels.map((level, index) => (
-              <LevelCard
-                key={level.id}
-                level={level}
-                progress={progressMap.get(level.id)}
-                savedSession={sessionsMap.get(level.id)}
-                isUnlocked={isLevelUnlocked(index)}
-                index={index}
-                onPlay={() => setLocation(`/play/${level.id}`)}
-                onStudy={() => setLocation(`/study/${level.id}`)}
-              />
-            ))}
+            {assignedFilteredLevels.length === 0 ? (
+              <div
+                className="rounded-2xl border-2 border-dashed border-border bg-muted/30 p-6 text-center"
+                data-testid="empty-state-pathway-domains"
+              >
+                <p className="font-semibold text-base mb-1">
+                  {MODULE_LABELS[userModule]} content is in development
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Domains for the {MODULE_LABELS[userModule]} pathway are set up, but training questions and study material aren't published yet. Check back soon.
+                </p>
+              </div>
+            ) : (
+              assignedFilteredLevels.map((level, index) => (
+                <LevelCard
+                  key={level.id}
+                  level={level}
+                  progress={progressMap.get(level.id)}
+                  savedSession={sessionsMap.get(level.id)}
+                  isUnlocked={isLevelUnlocked(index)}
+                  index={index}
+                  onPlay={() => setLocation(`/play/${level.id}`)}
+                  onStudy={() => setLocation(`/study/${level.id}`)}
+                />
+              ))
+            )}
           </div>
         </div>
 
@@ -449,7 +481,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="text-center mt-8 mb-4 text-xs text-muted-foreground" data-testid="text-disclaimer-footer">
-        Not affiliated with The Joint Commission. For educational purposes only.{" "}
+        {PATHWAY_DISCLAIMERS[userModule]}{" "}
         <Link href="/terms" className="underline hover:text-primary">Terms & Privacy</Link>
       </div>
     </div>
