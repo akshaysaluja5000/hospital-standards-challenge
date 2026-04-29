@@ -334,7 +334,6 @@ export default function AuthPage() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="hospital" data-testid="option-org-hospital">Hospital</SelectItem>
-                                <SelectItem value="clinic" data-testid="option-org-clinic">Ambulatory Clinic</SelectItem>
                                 <SelectItem value="asc" data-testid="option-org-asc">Ambulatory Surgery Center (ASC)</SelectItem>
                               </SelectContent>
                             </Select>

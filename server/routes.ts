@@ -146,7 +146,7 @@ async function userCanAccessLevel(userId: number, levelId: string): Promise<bool
   const levelModule = (level.module as ModuleId) || "hospital";
   if (levelModule !== userModule) return false;
   // Role-based chapter assignment is only enforced for the hospital module.
-  // Other modules (asc, clinic) are open to any user in that module.
+  // Other modules (asc) are open to any user in that module.
   if (userModule !== "hospital") return true;
   const assigned = await storage.getUserAssignedChapters(userId);
   if (assigned.length === 0) return false;
@@ -238,7 +238,7 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Password must be at least 6 characters" });
       }
 
-      const allowedOrgTypes = ["hospital", "clinic", "asc"] as const;
+      const allowedOrgTypes = ["hospital", "asc"] as const;
       type OrgType = typeof allowedOrgTypes[number];
       const normalizedOrgType: OrgType = (allowedOrgTypes as readonly string[]).includes(organizationType)
         ? (organizationType as OrgType)
@@ -478,7 +478,7 @@ export async function registerRoutes(
 
   app.patch("/api/user/organization-type", requireAuth, async (req, res) => {
     try {
-      const allowed = ["hospital", "clinic", "asc"] as const;
+      const allowed = ["hospital", "asc"] as const;
       const { organizationType } = req.body || {};
       if (!(allowed as readonly string[]).includes(organizationType)) {
         return res.status(400).json({ message: "Invalid organization type" });
@@ -494,7 +494,7 @@ export async function registerRoutes(
 
   app.patch("/api/admin/users/:id/organization-type", requireAdmin, async (req, res) => {
     try {
-      const allowed = ["hospital", "clinic", "asc"] as const;
+      const allowed = ["hospital", "asc"] as const;
       const { organizationType } = req.body || {};
       const userId = parseInt(String(req.params.id), 10);
       if (Number.isNaN(userId)) {

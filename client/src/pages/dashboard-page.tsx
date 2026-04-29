@@ -20,13 +20,11 @@ import { getRoleConfig } from "@shared/roles";
 
 const PATHWAY_HEADERS: Record<ModuleId, string> = {
   hospital: "Hospital Standards",
-  clinic: "Ambulatory Clinic Domains",
   asc: "ASC Domains",
 };
 
 const PATHWAY_DISCLAIMERS: Record<ModuleId, string> = {
   hospital: "Not affiliated with The Joint Commission. For educational purposes only.",
-  clinic: "Not affiliated with The Joint Commission or AAAHC. For educational purposes only.",
   asc: "Not affiliated with AAAHC, The Joint Commission, or CMS. For educational purposes only.",
 };
 

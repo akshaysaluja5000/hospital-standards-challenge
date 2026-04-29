@@ -3,7 +3,6 @@ import {
   Shield,
   ArrowRight,
   Hospital,
-  Stethoscope,
   Activity,
   ClipboardCheck,
   Users,
@@ -69,43 +68,6 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     ],
     bottomLine:
       "Built with the same standards your survey teams use. Deployed in hours, not quarters.",
-  },
-  clinics: {
-    slug: "clinics",
-    pageTitle: "Ambulatory Clinics — Hospital Standards Challenge",
-    audience: "For Outpatient Clinic Administrators",
-    heroIcon: Stethoscope,
-    headline: "Compliance Training Built for Ambulatory Clinics.",
-    subhead:
-      "Get your clinic staff ready for Joint Commission Ambulatory Health Care accreditation and AAAHC surveys — without adding hours to anyone's week. Short, gamified lessons keep providers and front-desk staff sharp between site visits.",
-    features: [
-      {
-        icon: ShieldCheck,
-        title: "JC Ambulatory & AAAHC-aligned",
-        description:
-          "Content mapped to Joint Commission Ambulatory Health Care standards and AAAHC chapters — the surveys your clinic actually faces.",
-      },
-      {
-        icon: Zap,
-        title: "Lightweight deployment",
-        description:
-          "Browser-based. No installs, no servers. Send your team a link and they can start training the same day.",
-      },
-      {
-        icon: Wifi,
-        title: "No IT required",
-        description:
-          "Works on any device — phone, tablet, or front-desk computer. Your office manager can roll it out without filing a ticket.",
-      },
-      {
-        icon: ClipboardCheck,
-        title: "Per-staff completion tracking",
-        description:
-          "See exactly who's completed which modules, who needs a nudge, and who's ready for the surveyor's questions.",
-      },
-    ],
-    bottomLine:
-      "Designed for the realities of small clinic operations: simple to launch, easy to track, fast to show results.",
   },
   asc: {
     slug: "asc",
@@ -337,15 +299,6 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             <span className="text-muted-foreground">·</span>
             <button
               type="button"
-              onClick={() => setLocation("/clinics")}
-              className="font-medium hover:underline"
-              data-testid="link-footer-clinics"
-            >
-              Clinics
-            </button>
-            <span className="text-muted-foreground">·</span>
-            <button
-              type="button"
               onClick={() => setLocation("/asc")}
               className="font-medium hover:underline"
               data-testid="link-footer-asc"
@@ -370,10 +323,6 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
 
 export function HospitalsPage() {
   return <SolutionsPage slug="hospitals" />;
-}
-
-export function ClinicsPage() {
-  return <SolutionsPage slug="clinics" />;
 }
 
 export function AscPage() {

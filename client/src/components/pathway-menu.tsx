@@ -1,4 +1,4 @@
-import { ChevronDown, Hospital, Stethoscope, Activity, Check, Loader2 } from "lucide-react";
+import { ChevronDown, Hospital, Activity, Check, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -37,14 +37,6 @@ const PATHWAYS: Pathway[] = [
     title: "Hospitals",
     description: "Joint Commission readiness",
     testId: "link-pathway-hospitals",
-  },
-  {
-    href: "/clinics",
-    module: "clinic",
-    icon: Stethoscope,
-    title: "Ambulatory Clinics",
-    description: "Joint Commission AHC & AAAHC surveys",
-    testId: "link-pathway-clinics",
   },
   {
     href: "/asc",

@@ -110,10 +110,10 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - Test admin: `rsaluja` (id 42, organization_type=asc, view_scope=all). Credential is stored in the secrets manager — do not hardcode here.
 
 ## Roles & Facility Filtering
-- `shared/roles.ts` defines `ROLE_CONFIGS` with a `facilityType` field of `"hospital" | "clinic" | "asc"`.
-- 10 hospital roles + 21 ASC roles seeded automatically by `seedRoles()` in `server/storage.ts` (iterates ROLE_CONFIGS).
-- ASC roles span 7 departments: Leadership & Compliance (5), Front Office & Patient Access (3), Pre-Op & PACU (2), Operating Room (4), Sterile Processing (2), Business Office & Credentialing (3), Environmental & Facilities (2). Slugs all prefixed `asc_`.
+- `MODULE_IDS = ["hospital", "asc"]` in `shared/schema.ts`. The clinic facility module has been completely removed (no /clinics route, no clinic role configs, no clinic question bank).
+- `shared/roles.ts` defines `ROLE_CONFIGS` with a `facilityType` field of `"hospital" | "asc"`.
+- 10 hospital roles + 6 ASC roles seeded automatically by `seedRoles()` in `server/storage.ts` (iterates ROLE_CONFIGS).
+- ASC roles are organized one-per-published-chapter under a single department `"AAAHC Standards"`. Slugs: `asc_governance_track`, `asc_patient_rights_track`, `asc_clinical_records_track`, `asc_credentialing_track`, `asc_quality_management_track`, `asc_infection_prevention_track`. Each is `DEPT` scope and maps to exactly one chapter; users wanting full coverage tap "Select all roles".
 - `/role-select` filters cards to roles whose `facilityType` matches the user's `organizationType`. Department order comes from `DEPARTMENT_ORDER_BY_FACILITY[facilityType]`.
-- For facility types with no roles yet (clinic), the page shows an empty state with inline "Switch to <module>" buttons that PATCH `/api/user/organization-type` so users are never trapped in a redirect loop.
 - `POST /api/auth/role` enforces facility match server-side: rejects with HTTP 403 if a role's `facilityType` doesn't match the user's `organizationType` (applies to both primary `roleSlug` and `additionalRoleSlugs`).
 - Pathway menu (`client/src/components/pathway-menu.tsx`) is auth-aware: logged-in users get an in-place facility switch that invalidates `/api/levels` and ASC results queries instead of being signed out.
