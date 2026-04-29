@@ -9,6 +9,7 @@ import { StreakFlame } from "@/components/streak-flame";
 import { XpBar } from "@/components/xp-bar";
 import { LevelCard } from "@/components/level-card";
 import { DailyCalendar } from "@/components/daily-calendar";
+import { PathwayMenu } from "@/components/pathway-menu";
 import { useAuth } from "@/lib/auth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
@@ -141,6 +142,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
+            <PathwayMenu triggerVariant="outline" triggerSize="sm" />
             <Button
               variant="outline"
               size="sm"

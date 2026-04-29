@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
+import { PathwayMenu } from "@/components/pathway-menu";
 
 interface Feature {
   icon: LucideIcon;
@@ -169,6 +170,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             </span>
           </button>
           <div className="flex items-center gap-2">
+            <PathwayMenu />
             <Button
               variant="ghost"
               onClick={() => setLocation("/auth")}
