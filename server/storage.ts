@@ -4,10 +4,12 @@ import pg from "pg";
 import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
+  ascPretestResults, ascPosttestResults,
   roles, roleChapterMappings,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
+  type AscPretestResult, type AscPosttestResult,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -131,6 +133,31 @@ export async function ensureTablesExist() {
         shuffle_maps TEXT NOT NULL DEFAULT '{}',
         updated_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS asc_pretest_results (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        score INTEGER NOT NULL,
+        total_questions INTEGER NOT NULL,
+        answers TEXT NOT NULL DEFAULT '[]',
+        chapter_scores TEXT NOT NULL DEFAULT '{}',
+        completed_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS asc_posttest_results (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        score INTEGER NOT NULL,
+        total_questions INTEGER NOT NULL,
+        answers TEXT NOT NULL DEFAULT '[]',
+        chapter_scores TEXT NOT NULL DEFAULT '{}',
+        completed_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS asc_test_sessions (
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        test_type TEXT NOT NULL,
+        shuffle_maps TEXT NOT NULL DEFAULT '{}',
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        PRIMARY KEY (user_id, test_type)
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedRoles(client);
@@ -234,6 +261,11 @@ export interface IStorage {
   createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<DiagnosticResult>;
   getMasteryResults(userId: number): Promise<MasteryResult[]>;
   createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult>;
+
+  getAscPretestResults(userId: number): Promise<AscPretestResult[]>;
+  createAscPretestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPretestResult>;
+  getAscPosttestResults(userId: number): Promise<AscPosttestResult[]>;
+  createAscPosttestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPosttestResult>;
 
   getAllRoles(): Promise<Role[]>;
   getRoleById(id: number): Promise<Role | undefined>;
@@ -458,6 +490,79 @@ export class DatabaseStorage implements IStorage {
 
   async createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult> {
     const [result] = await db.insert(masteryResults).values({ userId, score, totalQuestions, answers }).returning();
+    return result;
+  }
+
+  async getAscPretestResults(userId: number): Promise<AscPretestResult[]> {
+    return db.select().from(ascPretestResults).where(eq(ascPretestResults.userId, userId)).orderBy(desc(ascPretestResults.completedAt));
+  }
+
+  async createAscPretestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPretestResult> {
+    const [result] = await db.insert(ascPretestResults).values({ userId, score, totalQuestions, answers, chapterScores }).returning();
+    return result;
+  }
+
+  async getAscTestSession(userId: number, testType: string): Promise<{ shuffleMaps: string } | null> {
+    const client = await pool.connect();
+    try {
+      const r = await client.query(
+        "SELECT shuffle_maps FROM asc_test_sessions WHERE user_id = $1 AND test_type = $2",
+        [userId, testType],
+      );
+      if (r.rows.length === 0) return null;
+      return { shuffleMaps: r.rows[0].shuffle_maps as string };
+    } finally {
+      client.release();
+    }
+  }
+
+  async upsertAscTestSession(userId: number, testType: string, shuffleMaps: string): Promise<void> {
+    const client = await pool.connect();
+    try {
+      await client.query(
+        `INSERT INTO asc_test_sessions (user_id, test_type, shuffle_maps, updated_at)
+         VALUES ($1, $2, $3, NOW())
+         ON CONFLICT (user_id, test_type)
+         DO UPDATE SET shuffle_maps = EXCLUDED.shuffle_maps, updated_at = NOW()`,
+        [userId, testType, shuffleMaps],
+      );
+    } finally {
+      client.release();
+    }
+  }
+
+  async deleteAscTestSession(userId: number, testType: string): Promise<void> {
+    const client = await pool.connect();
+    try {
+      await client.query(
+        "DELETE FROM asc_test_sessions WHERE user_id = $1 AND test_type = $2",
+        [userId, testType],
+      );
+    } finally {
+      client.release();
+    }
+  }
+
+  async claimAscTestSession(userId: number, testType: string): Promise<{ shuffleMaps: string } | null> {
+    const client = await pool.connect();
+    try {
+      const r = await client.query(
+        "DELETE FROM asc_test_sessions WHERE user_id = $1 AND test_type = $2 RETURNING shuffle_maps",
+        [userId, testType],
+      );
+      if (r.rows.length === 0) return null;
+      return { shuffleMaps: r.rows[0].shuffle_maps as string };
+    } finally {
+      client.release();
+    }
+  }
+
+  async getAscPosttestResults(userId: number): Promise<AscPosttestResult[]> {
+    return db.select().from(ascPosttestResults).where(eq(ascPosttestResults.userId, userId)).orderBy(desc(ascPosttestResults.completedAt));
+  }
+
+  async createAscPosttestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPosttestResult> {
+    const [result] = await db.insert(ascPosttestResults).values({ userId, score, totalQuestions, answers, chapterScores }).returning();
     return result;
   }
 

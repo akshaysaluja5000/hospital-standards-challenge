@@ -14,6 +14,8 @@ import type { User, DailyActivity } from "@shared/schema";
 import { deepDiveLevels } from "@shared/deep-dive-questions";
 import { diagnosticQuestions } from "@shared/diagnostic-questions";
 import { masteryQuestions } from "@shared/mastery-questions";
+import { ascPretestQuestions } from "@shared/asc-pretest";
+import { ascPosttestQuestions } from "@shared/asc-posttest";
 import { levels } from "@shared/questions";
 import { findLevelById, getVisibleLevelsForModule } from "@shared/all-levels";
 import type { ModuleId } from "@shared/schema";
@@ -1674,6 +1676,222 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
       if (d.correct) sectionScores[d.sectionId].correct++;
     }
     res.json({ score, totalQuestions: totalAnswered, resultId: result.id, detailedResults, sectionScores });
+  });
+
+  function buildAscTestPayload(pool: typeof ascPretestQuestions) {
+    const shuffleMaps: Record<string, number[]> = {};
+    const items = pool.map(q => {
+      const { options, shuffleMap } = shuffleQuestionOptions(q);
+      shuffleMaps[q.id] = shuffleMap;
+      return {
+        id: q.id,
+        chapterId: q.chapterId,
+        chapterName: q.chapterName,
+        question: q.question,
+        options,
+      };
+    });
+    return { items, shuffleMaps };
+  }
+
+  function gradeAscTest(
+    pool: typeof ascPretestQuestions,
+    answers: { questionId: string; selectedIndex: number }[],
+    serverShuffleMaps: Record<string, number[]>,
+  ) {
+    const trustedMaps = serverShuffleMaps;
+    let score = 0;
+    const detailedResults: {
+      questionId: string;
+      chapterId: string;
+      chapterName: string;
+      question: string;
+      options: string[];
+      selectedIndex: number;
+      correctIndex: number;
+      correct: boolean;
+      explanation: string;
+      cmsTag?: string;
+      tutor?: any;
+    }[] = [];
+    const seenIds = new Set<string>();
+    for (const ans of answers) {
+      if (!ans || typeof ans.questionId !== "string" || typeof ans.selectedIndex !== "number") continue;
+      if (seenIds.has(ans.questionId)) continue;
+      const q = pool.find(pq => pq.id === ans.questionId);
+      if (!q) continue;
+      seenIds.add(ans.questionId);
+      const sm = trustedMaps[q.id];
+      const validShuffle =
+        Array.isArray(sm) &&
+        sm.length === q.options.length &&
+        sm.every((i: unknown) => typeof i === "number" && Number.isInteger(i) && i >= 0 && i < q.options.length) &&
+        new Set(sm).size === q.options.length;
+      const selected = ans.selectedIndex;
+      if (!Number.isInteger(selected) || selected < 0 || selected >= q.options.length) continue;
+      let displayOptions = q.options;
+      let displayCorrectIndex = q.correctIndex;
+      const displaySelectedIndex = selected;
+      if (validShuffle) {
+        displayOptions = (sm as number[]).map((i: number) => q.options[i]);
+        displayCorrectIndex = (sm as number[]).indexOf(q.correctIndex);
+      }
+      const correct = validShuffle
+        ? (sm as number[])[selected] === q.correctIndex
+        : selected === q.correctIndex;
+      if (correct) score++;
+      detailedResults.push({
+        questionId: q.id,
+        chapterId: q.chapterId,
+        chapterName: q.chapterName,
+        question: q.question,
+        options: displayOptions,
+        selectedIndex: displaySelectedIndex,
+        correctIndex: displayCorrectIndex,
+        correct,
+        explanation: q.explanation || "",
+        cmsTag: q.cmsTag,
+        tutor: q.tutor,
+      });
+    }
+    const chapterScores: Record<string, { name: string; correct: number; total: number }> = {};
+    for (const d of detailedResults) {
+      if (!chapterScores[d.chapterId]) {
+        chapterScores[d.chapterId] = { name: d.chapterName, correct: 0, total: 0 };
+      }
+      chapterScores[d.chapterId].total++;
+      if (d.correct) chapterScores[d.chapterId].correct++;
+    }
+    return { score, totalAnswered: detailedResults.length, detailedResults, chapterScores };
+  }
+
+  function requireAsc(req: any, res: any, next: any) {
+    if (req.user?.organizationType !== "asc") {
+      return res.status(403).json({ message: "ASC module access required" });
+    }
+    next();
+  }
+
+  function validateAscAnswerSet(
+    answers: any,
+    issuedIds: string[],
+    questionsBank: { id: string; options: string[] }[],
+  ): { ok: true; cleaned: { questionId: string; selectedIndex: number }[] } | { ok: false; message: string } {
+    if (!Array.isArray(answers)) return { ok: false, message: "Answers must be an array" };
+    if (answers.length !== issuedIds.length) {
+      return { ok: false, message: `Expected ${issuedIds.length} answers, received ${answers.length}` };
+    }
+    const issuedSet = new Set(issuedIds);
+    const bankById = new Map(questionsBank.map(q => [q.id, q]));
+    const seen = new Set<string>();
+    const cleaned: { questionId: string; selectedIndex: number }[] = [];
+    for (const a of answers) {
+      if (!a || typeof a.questionId !== "string" || typeof a.selectedIndex !== "number") {
+        return { ok: false, message: "Each answer must have questionId and selectedIndex" };
+      }
+      if (!Number.isInteger(a.selectedIndex)) {
+        return { ok: false, message: `selectedIndex must be an integer for ${a.questionId}` };
+      }
+      if (!issuedSet.has(a.questionId)) {
+        return { ok: false, message: `Unexpected questionId: ${a.questionId}` };
+      }
+      if (seen.has(a.questionId)) {
+        return { ok: false, message: `Duplicate questionId: ${a.questionId}` };
+      }
+      const q = bankById.get(a.questionId);
+      if (!q) {
+        return { ok: false, message: `Unknown questionId: ${a.questionId}` };
+      }
+      if (a.selectedIndex < 0 || a.selectedIndex >= q.options.length) {
+        return { ok: false, message: `selectedIndex out of range for ${a.questionId}` };
+      }
+      seen.add(a.questionId);
+      cleaned.push({ questionId: a.questionId, selectedIndex: a.selectedIndex });
+    }
+    if (seen.size !== issuedIds.length) {
+      return { ok: false, message: "Missing answers for some issued questions" };
+    }
+    return { ok: true, cleaned };
+  }
+
+  app.get("/api/asc-pretest/questions", requireAuth, requireAsc, async (req, res) => {
+    const { items, shuffleMaps } = buildAscTestPayload(ascPretestQuestions);
+    await storage.upsertAscTestSession(req.user!.id, "pretest", JSON.stringify(shuffleMaps));
+    res.json(items);
+  });
+
+  app.get("/api/asc-pretest/results", requireAuth, requireAsc, async (req, res) => {
+    const results = await storage.getAscPretestResults(req.user!.id);
+    res.json(results);
+  });
+
+  app.post("/api/asc-pretest/submit", requireAuth, requireAsc, async (req, res) => {
+    const { answers } = req.body;
+    const peek = await storage.getAscTestSession(req.user!.id, "pretest");
+    if (!peek) {
+      return res.status(400).json({ message: "No active pretest session. Please start the test from the beginning." });
+    }
+    const serverShuffleMaps = JSON.parse(peek.shuffleMaps) as Record<string, number[]>;
+    const issuedIds = Object.keys(serverShuffleMaps);
+    const validation = validateAscAnswerSet(answers, issuedIds, ascPretestQuestions);
+    if (!validation.ok) {
+      return res.status(400).json({ message: validation.message });
+    }
+    const claimed = await storage.claimAscTestSession(req.user!.id, "pretest");
+    if (!claimed) {
+      return res.status(409).json({ message: "Pretest already submitted." });
+    }
+    const { score, detailedResults, chapterScores } = gradeAscTest(
+      ascPretestQuestions, validation.cleaned, serverShuffleMaps,
+    );
+    const totalQuestions = issuedIds.length;
+    const graded = detailedResults.map(d => ({
+      questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct,
+    }));
+    const result = await storage.createAscPretestResult(
+      req.user!.id, score, totalQuestions, JSON.stringify(graded), JSON.stringify(chapterScores),
+    );
+    res.json({ score, totalQuestions, resultId: result.id, detailedResults, chapterScores });
+  });
+
+  app.get("/api/asc-posttest/questions", requireAuth, requireAsc, async (req, res) => {
+    const { items, shuffleMaps } = buildAscTestPayload(ascPosttestQuestions);
+    await storage.upsertAscTestSession(req.user!.id, "posttest", JSON.stringify(shuffleMaps));
+    res.json(items);
+  });
+
+  app.get("/api/asc-posttest/results", requireAuth, requireAsc, async (req, res) => {
+    const results = await storage.getAscPosttestResults(req.user!.id);
+    res.json(results);
+  });
+
+  app.post("/api/asc-posttest/submit", requireAuth, requireAsc, async (req, res) => {
+    const { answers } = req.body;
+    const peek = await storage.getAscTestSession(req.user!.id, "posttest");
+    if (!peek) {
+      return res.status(400).json({ message: "No active posttest session. Please start the test from the beginning." });
+    }
+    const serverShuffleMaps = JSON.parse(peek.shuffleMaps) as Record<string, number[]>;
+    const issuedIds = Object.keys(serverShuffleMaps);
+    const validation = validateAscAnswerSet(answers, issuedIds, ascPosttestQuestions);
+    if (!validation.ok) {
+      return res.status(400).json({ message: validation.message });
+    }
+    const claimed = await storage.claimAscTestSession(req.user!.id, "posttest");
+    if (!claimed) {
+      return res.status(409).json({ message: "Posttest already submitted." });
+    }
+    const { score, detailedResults, chapterScores } = gradeAscTest(
+      ascPosttestQuestions, validation.cleaned, serverShuffleMaps,
+    );
+    const totalQuestions = issuedIds.length;
+    const graded = detailedResults.map(d => ({
+      questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct,
+    }));
+    const result = await storage.createAscPosttestResult(
+      req.user!.id, score, totalQuestions, JSON.stringify(graded), JSON.stringify(chapterScores),
+    );
+    res.json({ score, totalQuestions, resultId: result.id, detailedResults, chapterScores });
   });
 
   app.get("/api/mastery/questions", requireAuth, async (req, res) => {

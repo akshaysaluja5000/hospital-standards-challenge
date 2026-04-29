@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useRoute, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Lightbulb, Play } from "lucide-react";
+import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Lightbulb, Play, AlertTriangle, ListChecks, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { findLevelById } from "@shared/all-levels";
@@ -13,6 +13,9 @@ export default function StudyPage() {
 
   const level = useMemo(() => findLevelById(levelId), [levelId]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [view, setView] = useState<"summary" | "concepts">(
+    level?.chapterSummary ? "summary" : "concepts"
+  );
 
   if (!level) {
     return (
@@ -26,6 +29,7 @@ export default function StudyPage() {
   const currentConcept = concepts[currentIndex];
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === concepts.length - 1;
+  const summary = level.chapterSummary;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -58,26 +62,141 @@ export default function StudyPage() {
               Quiz
             </Button>
           </div>
-          <div className="flex gap-1.5">
-            {concepts.map((_, i) => (
+          {summary && (
+            <div className="flex gap-2">
               <button
-                key={i}
-                className={`flex-1 h-2 rounded-full transition-all ${
-                  i === currentIndex
-                    ? "opacity-100"
-                    : i < currentIndex
-                    ? "opacity-60"
-                    : "opacity-20"
+                onClick={() => setView("summary")}
+                className={`flex-1 text-xs font-bold uppercase tracking-wide py-1.5 rounded-md border transition-all ${
+                  view === "summary" ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border"
                 }`}
-                style={{ backgroundColor: level.color }}
-                onClick={() => setCurrentIndex(i)}
-                data-testid={`button-concept-dot-${i}`}
-              />
-            ))}
-          </div>
+                data-testid="button-view-summary"
+              >
+                <FileText size={12} className="inline mr-1" /> Chapter Overview
+              </button>
+              <button
+                onClick={() => setView("concepts")}
+                className={`flex-1 text-xs font-bold uppercase tracking-wide py-1.5 rounded-md border transition-all ${
+                  view === "concepts" ? "bg-primary text-primary-foreground border-primary" : "bg-background text-muted-foreground border-border"
+                }`}
+                data-testid="button-view-concepts"
+              >
+                <BookOpen size={12} className="inline mr-1" /> Study Cards
+              </button>
+            </div>
+          )}
+          {view === "concepts" && (
+            <div className="flex gap-1.5">
+              {concepts.map((_, i) => (
+                <button
+                  key={i}
+                  className={`flex-1 h-2 rounded-full transition-all ${
+                    i === currentIndex
+                      ? "opacity-100"
+                      : i < currentIndex
+                      ? "opacity-60"
+                      : "opacity-20"
+                  }`}
+                  style={{ backgroundColor: level.color }}
+                  onClick={() => setCurrentIndex(i)}
+                  data-testid={`button-concept-dot-${i}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
+      {view === "summary" && summary && (
+        <div className="flex-1 flex flex-col items-center p-4">
+          <div className="w-full max-w-lg space-y-4">
+            <Card className="rounded-2xl border-2 p-6 shadow-lg" style={{ borderColor: `${level.color}30` }}>
+              <h3 className="text-xl font-black mb-3" data-testid="text-chapter-title">
+                {summary.chapterTitle}
+              </h3>
+              <p className="text-base text-foreground/80 leading-relaxed" data-testid="text-chapter-summary">
+                {summary.plainLanguageSummary}
+              </p>
+              {summary.cmsTags && summary.cmsTags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-4 pt-4 border-t border-border" data-testid="container-chapter-cms-tags">
+                  {summary.cmsTags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border"
+                      data-testid={`text-chapter-cms-tag-${i}`}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </Card>
+
+            {summary.keyOperationalExpectations && summary.keyOperationalExpectations.length > 0 && (
+              <Card className="rounded-2xl border-2 p-6 shadow-md" style={{ borderColor: `${level.color}20` }}>
+                <div className="flex items-center gap-2 mb-3">
+                  <ListChecks size={20} style={{ color: level.color }} />
+                  <h4 className="text-base font-black uppercase tracking-wide" style={{ color: level.color }}>
+                    What you'll be expected to do
+                  </h4>
+                </div>
+                <ul className="space-y-2" data-testid="list-expectations">
+                  {summary.keyOperationalExpectations.map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-foreground/80 leading-relaxed">
+                      <span className="text-muted-foreground mt-0.5">•</span>
+                      <span data-testid={`text-expectation-${i}`}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+
+            {summary.commonRiskPoints && summary.commonRiskPoints.length > 0 && (
+              <Card className="rounded-2xl border-2 border-destructive/20 bg-destructive/5 p-6 shadow-md">
+                <div className="flex items-center gap-2 mb-3">
+                  <AlertTriangle size={20} className="text-destructive" />
+                  <h4 className="text-base font-black uppercase tracking-wide text-destructive">
+                    Common risk points
+                  </h4>
+                </div>
+                <ul className="space-y-2" data-testid="list-risks">
+                  {summary.commonRiskPoints.map((item, i) => (
+                    <li key={i} className="flex gap-2 text-sm text-foreground/80 leading-relaxed">
+                      <span className="text-destructive mt-0.5">!</span>
+                      <span data-testid={`text-risk-${i}`}>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+
+            <div className="flex gap-3">
+              {concepts.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="flex-1"
+                  onClick={() => setView("concepts")}
+                  data-testid="button-go-to-concepts"
+                >
+                  <BookOpen size={18} className="mr-1" />
+                  Study Cards
+                </Button>
+              )}
+              <Button
+                size="lg"
+                className="flex-1"
+                onClick={() => setLocation(`/play/${level.id}`)}
+                data-testid="button-start-quiz-from-summary"
+              >
+                <Play size={18} className="mr-1" />
+                Start Quiz
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {view === "concepts" && (
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <AnimatePresence mode="wait">
           <motion.div
@@ -155,6 +274,7 @@ export default function StudyPage() {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }

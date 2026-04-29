@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, Lightbulb } from "lucide-react";
+import { Check, X, Lightbulb, ChevronDown, ChevronUp } from "lucide-react";
 import { playCorrectSound, playWrongSound } from "@/lib/sounds";
 import { AiTutorBox } from "@/components/ai-tutor-box";
 import type { Question } from "@shared/schema";
@@ -15,10 +15,12 @@ interface SwipeCardProps {
 export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: SwipeCardProps) {
   const [selected, setSelected] = useState<number | null>(previousAnswer?.selectedIndex ?? null);
   const [showResult, setShowResult] = useState(!!previousAnswer);
+  const [tutorOpen, setTutorOpen] = useState(false);
 
   useEffect(() => {
     setSelected(previousAnswer?.selectedIndex ?? null);
     setShowResult(!!previousAnswer);
+    setTutorOpen(false);
   }, [question.id, previousAnswer]);
 
   const handleSelect = (index: number) => {
@@ -124,38 +126,60 @@ export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: Swip
                     {question.explanation}
                   </p>
                   {question.tutor && (
-                    <div className="mt-3 space-y-2">
-                      {!isCorrect && selected !== null && question.tutor.whyWrong?.[String.fromCharCode(65 + selected)] && (
-                        <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3" data-testid="text-tutor-why-wrong">
-                          <p className="text-xs font-bold uppercase tracking-wide text-destructive mb-1">
-                            Why your answer was off
-                          </p>
-                          <p className="text-sm text-foreground/80 leading-relaxed">
-                            {question.tutor.whyWrong[String.fromCharCode(65 + selected)]}
-                          </p>
-                        </div>
-                      )}
-                      <div className="rounded-lg border border-chart-1/20 bg-chart-1/5 p-3" data-testid="text-tutor-why-correct">
-                        <p className="text-xs font-bold uppercase tracking-wide text-chart-1 mb-1">
-                          Why the correct answer is right
-                        </p>
-                        <p className="text-sm text-foreground/80 leading-relaxed">
-                          {question.tutor.whyCorrect}
-                        </p>
-                      </div>
-                      <div className="rounded-lg border border-border bg-muted/40 p-3" data-testid="text-tutor-operational">
-                        <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
-                          On the floor
-                        </p>
-                        <p className="text-sm text-foreground/80 leading-relaxed">
-                          {question.tutor.operationalContext}
-                        </p>
-                      </div>
-                      {question.cmsTag && (
-                        <p className="text-xs text-muted-foreground italic" data-testid="text-cms-tag">
-                          Reference: {question.cmsTag}
-                        </p>
-                      )}
+                    <div className="mt-3">
+                      <button
+                        type="button"
+                        onClick={() => setTutorOpen((v) => !v)}
+                        className="flex items-center gap-1 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+                        data-testid="button-toggle-tutor"
+                      >
+                        {tutorOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        {tutorOpen ? "Hide explanation" : "Show explanation"}
+                      </button>
+                      <AnimatePresence initial={false}>
+                        {tutorOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="space-y-2 pt-2">
+                              {!isCorrect && selected !== null && question.tutor.whyWrong?.[String.fromCharCode(65 + selected)] && (
+                                <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3" data-testid="text-tutor-why-wrong">
+                                  <p className="text-xs font-bold uppercase tracking-wide text-destructive mb-1">
+                                    Why your answer was off
+                                  </p>
+                                  <p className="text-sm text-foreground/80 leading-relaxed">
+                                    {question.tutor.whyWrong[String.fromCharCode(65 + selected)]}
+                                  </p>
+                                </div>
+                              )}
+                              <div className="rounded-lg border border-chart-1/20 bg-chart-1/5 p-3" data-testid="text-tutor-why-correct">
+                                <p className="text-xs font-bold uppercase tracking-wide text-chart-1 mb-1">
+                                  Why the correct answer is right
+                                </p>
+                                <p className="text-sm text-foreground/80 leading-relaxed">
+                                  {question.tutor.whyCorrect}
+                                </p>
+                              </div>
+                              <div className="rounded-lg border border-border bg-muted/40 p-3" data-testid="text-tutor-operational">
+                                <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                                  On the floor
+                                </p>
+                                <p className="text-sm text-foreground/80 leading-relaxed">
+                                  {question.tutor.operationalContext}
+                                </p>
+                              </div>
+                              {question.cmsTag && (
+                                <p className="text-xs text-muted-foreground italic" data-testid="text-cms-tag">
+                                  Reference: {question.cmsTag}
+                                </p>
+                              )}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                   )}
                   {selected !== null && (

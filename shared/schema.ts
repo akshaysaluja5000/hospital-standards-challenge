@@ -184,11 +184,33 @@ export const masterySessions = pgTable("mastery_sessions", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+export const ascPretestResults = pgTable("asc_pretest_results", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  score: integer("score").notNull(),
+  totalQuestions: integer("total_questions").notNull(),
+  answers: text("answers").notNull().default("[]"),
+  chapterScores: text("chapter_scores").notNull().default("{}"),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
+export const ascPosttestResults = pgTable("asc_posttest_results", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  score: integer("score").notNull(),
+  totalQuestions: integer("total_questions").notNull(),
+  answers: text("answers").notNull().default("[]"),
+  chapterScores: text("chapter_scores").notNull().default("{}"),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+});
+
 export type DiagnosticSession = typeof diagnosticSessions.$inferSelect;
 export type MasterySession = typeof masterySessions.$inferSelect;
 
 export type DiagnosticResult = typeof diagnosticResults.$inferSelect;
 export type MasteryResult = typeof masteryResults.$inferSelect;
+export type AscPretestResult = typeof ascPretestResults.$inferSelect;
+export type AscPosttestResult = typeof ascPosttestResults.$inferSelect;
 
 export type InsertFacility = z.infer<typeof insertFacilitySchema>;
 export type Facility = typeof facilities.$inferSelect;

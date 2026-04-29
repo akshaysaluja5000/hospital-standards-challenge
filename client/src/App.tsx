@@ -17,6 +17,8 @@ import DeepDiveSelectPage from "@/pages/deep-dive-select-page";
 import DeepDivePage from "@/pages/deep-dive-page";
 import DiagnosticQuizPage from "@/pages/diagnostic-quiz-page";
 import MasteryExamPage from "@/pages/mastery-exam-page";
+import AscPretestPage from "@/pages/asc-pretest-page";
+import AscPosttestPage from "@/pages/asc-posttest-page";
 import RoleSelectPage from "@/pages/role-select-page";
 import { HospitalsPage, ClinicsPage, AscPage } from "@/pages/solutions-page";
 import { Button } from "@/components/ui/button";
@@ -163,6 +165,12 @@ function Router() {
       </Route>
       <Route path="/mastery">
         {() => <ProtectedRoute component={MasteryExamPage} />}
+      </Route>
+      <Route path="/asc-pretest">
+        {() => <ProtectedRoute component={AscPretestPage} />}
+      </Route>
+      <Route path="/asc-posttest">
+        {() => <ProtectedRoute component={AscPosttestPage} />}
       </Route>
       <Route path="/leaderboard">
         {() => <ProtectedRoute component={LeaderboardPage} />}
