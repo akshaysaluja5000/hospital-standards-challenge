@@ -198,6 +198,12 @@ export type UserProgress = typeof userProgress.$inferSelect;
 export type UserStreak = typeof userStreaks.$inferSelect;
 export type DailyActivity = typeof dailyActivity.$inferSelect;
 
+export interface QuestionTutor {
+  whyCorrect: string;
+  whyWrong: Record<string, string>;
+  operationalContext: string;
+}
+
 export interface Question {
   id: string;
   question: string;
@@ -209,12 +215,22 @@ export interface Question {
   isSwipe: boolean;
   module?: ModuleId;
   draft?: boolean;
+  cmsTag?: string;
+  tutor?: QuestionTutor;
 }
 
 export interface StudyConcept {
   title: string;
   content: string;
   keyPoint: string;
+}
+
+export interface ChapterSummary {
+  chapterTitle: string;
+  plainLanguageSummary: string;
+  keyOperationalExpectations: string[];
+  commonRiskPoints: string[];
+  cmsTags: string[];
 }
 
 export interface Level {
@@ -228,6 +244,7 @@ export interface Level {
   questions: Question[];
   module?: ModuleId;
   draft?: boolean;
+  chapterSummary?: ChapterSummary;
 }
 
 export interface HandbookSection {

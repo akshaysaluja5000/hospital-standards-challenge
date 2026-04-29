@@ -123,6 +123,41 @@ export function SwipeCard({ question, onAnswer, disabled, previousAnswer }: Swip
                   <p className="text-base text-foreground/70 leading-relaxed" data-testid="text-explanation">
                     {question.explanation}
                   </p>
+                  {question.tutor && (
+                    <div className="mt-3 space-y-2">
+                      {!isCorrect && selected !== null && question.tutor.whyWrong?.[String.fromCharCode(65 + selected)] && (
+                        <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-3" data-testid="text-tutor-why-wrong">
+                          <p className="text-xs font-bold uppercase tracking-wide text-destructive mb-1">
+                            Why your answer was off
+                          </p>
+                          <p className="text-sm text-foreground/80 leading-relaxed">
+                            {question.tutor.whyWrong[String.fromCharCode(65 + selected)]}
+                          </p>
+                        </div>
+                      )}
+                      <div className="rounded-lg border border-chart-1/20 bg-chart-1/5 p-3" data-testid="text-tutor-why-correct">
+                        <p className="text-xs font-bold uppercase tracking-wide text-chart-1 mb-1">
+                          Why the correct answer is right
+                        </p>
+                        <p className="text-sm text-foreground/80 leading-relaxed">
+                          {question.tutor.whyCorrect}
+                        </p>
+                      </div>
+                      <div className="rounded-lg border border-border bg-muted/40 p-3" data-testid="text-tutor-operational">
+                        <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground mb-1">
+                          On the floor
+                        </p>
+                        <p className="text-sm text-foreground/80 leading-relaxed">
+                          {question.tutor.operationalContext}
+                        </p>
+                      </div>
+                      {question.cmsTag && (
+                        <p className="text-xs text-muted-foreground italic" data-testid="text-cms-tag">
+                          Reference: {question.cmsTag}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   {selected !== null && (
                     <AiTutorBox
                       questionText={question.question}

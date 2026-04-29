@@ -98,3 +98,15 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `/admin` - Admin dashboard (admin only)
 - `/diagnostic` - Diagnostic Quiz pre-test (auth required)
 - `/mastery` - Mastery Exam post-test (auth required, eligibility-gated)
+
+## ASC Module (in progress)
+- Source: AAAHC Accreditation Handbook for Medicare Deemed Status v42 (full PDF extracted to /tmp/handbook.txt). All ASC content is plain-English original — no verbatim handbook text.
+- Activated by `users.organization_type = 'asc'`. `/api/user/assigned-chapters` returns `[]` for non-hospital users so the dashboard shows all published ASC chapters.
+- Schema additions (backward-compatible, optional): `Question.tutor` ({ whyCorrect, whyWrong: A-D, operationalContext }), `Question.cmsTag`, `Level.chapterSummary`.
+- quiz-card and swipe-card render structured tutor blocks under the existing explanation: "Why your answer was off" (only on wrong), "Why the correct answer is right", "On the floor", and a CMS reference line. Existing AI Tutor box still renders below.
+- Published chapters (Phase 1):
+  * `asc_patient_rights` — Patient Rights, 15 questions with full tutors + chapterSummary
+  * `asc_infection_prevention_safety` — Infection Prevention and Safety, 15 questions with full tutors + chapterSummary
+- Draft chapters (Phase 2 — next): governance, administration, quality_of_care, clinical_records, anesthesia_surgery_services, facilities_environment, medicare_conditions_for_coverage
+- Pre/Post tests (Phase 3): not yet built (25-Q ASC pretest + 25-Q ASC posttest planned).
+- Test admin: `rsaluja` (id 42, organization_type=asc, view_scope=all). Credential is stored in the secrets manager — do not hardcode here.

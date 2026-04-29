@@ -1,18 +1,9 @@
 import type { Level } from "./schema";
+import { ascPatientRightsLevel } from "./asc-patient-rights";
+import { ascInfectionPreventionLevel } from "./asc-infection-prevention";
 
 export const ascLevels: Level[] = [
-  {
-    id: "asc_patient_rights",
-    module: "asc",
-    draft: true,
-    name: "Patient Rights",
-    description: "ASC domain: patient rights and responsibilities. Top-level container — no content yet.",
-    icon: "ScrollText",
-    color: "hsl(210, 82%, 45%)",
-    requiredScore: 0,
-    studyMaterial: [],
-    questions: [],
-  },
+  ascPatientRightsLevel,
   {
     id: "asc_governance",
     module: "asc",
@@ -73,18 +64,7 @@ export const ascLevels: Level[] = [
     studyMaterial: [],
     questions: [],
   },
-  {
-    id: "asc_infection_prevention_safety",
-    module: "asc",
-    draft: true,
-    name: "Infection Prevention and Safety",
-    description: "ASC domain: infection prevention practices, sterile processing, hand hygiene, and patient safety. Top-level container — no content yet.",
-    icon: "ShieldCheck",
-    color: "hsl(152, 70%, 40%)",
-    requiredScore: 0,
-    studyMaterial: [],
-    questions: [],
-  },
+  ascInfectionPreventionLevel,
   {
     id: "asc_facilities_environment",
     module: "asc",

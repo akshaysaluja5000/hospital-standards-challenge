@@ -540,6 +540,7 @@ export class DatabaseStorage implements IStorage {
   async getUserAssignedChapters(userId: number): Promise<string[]> {
     const user = await this.getUser(userId);
     if (!user || !user.roleId) return [];
+    if (user.organizationType && user.organizationType !== "hospital") return [];
     const ALL_LEVELS = ["transport","environment","segregation","sterile_storage","instruments","facilities","spd_decontam","or_sterile_field","universal_protocol","patient_care_docs","eoc_safety"];
     const DEPT_TO_LEVELS: Record<string, string[]> = {
       OR: ["or_sterile_field", "universal_protocol", "instruments", "transport"],

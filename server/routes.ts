@@ -142,6 +142,9 @@ async function userCanAccessLevel(userId: number, levelId: string): Promise<bool
   const userModule = (user.organizationType as ModuleId) || "hospital";
   const levelModule = (level.module as ModuleId) || "hospital";
   if (levelModule !== userModule) return false;
+  // Role-based chapter assignment is only enforced for the hospital module.
+  // Other modules (asc, clinic) are open to any user in that module.
+  if (userModule !== "hospital") return true;
   const assigned = await storage.getUserAssignedChapters(userId);
   if (assigned.length === 0) return false;
   return assigned.includes(levelId);
