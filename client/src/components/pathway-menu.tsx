@@ -1,5 +1,6 @@
-import { ChevronDown, Hospital, Stethoscope, Activity } from "lucide-react";
+import { ChevronDown, Hospital, Stethoscope, Activity, Check, Loader2 } from "lucide-react";
 import { useLocation } from "wouter";
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +8,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/lib/auth";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import type { ModuleId } from "@shared/schema";
 
 type PathwayMenuProps = {
   triggerLabel?: string;
@@ -15,9 +20,19 @@ type PathwayMenuProps = {
   align?: "start" | "end" | "center";
 };
 
-const PATHWAYS = [
+type Pathway = {
+  href: string;
+  module: ModuleId;
+  icon: typeof Hospital;
+  title: string;
+  description: string;
+  testId: string;
+};
+
+const PATHWAYS: Pathway[] = [
   {
     href: "/hospitals",
+    module: "hospital",
     icon: Hospital,
     title: "Hospitals",
     description: "Joint Commission readiness",
@@ -25,6 +40,7 @@ const PATHWAYS = [
   },
   {
     href: "/clinics",
+    module: "clinic",
     icon: Stethoscope,
     title: "Ambulatory Clinics",
     description: "Joint Commission AHC & AAAHC surveys",
@@ -32,6 +48,7 @@ const PATHWAYS = [
   },
   {
     href: "/asc",
+    module: "asc",
     icon: Activity,
     title: "Ambulatory Surgery Centers",
     description: "AAAHC, Joint Commission & CMS pathways",
@@ -46,6 +63,33 @@ export function PathwayMenu({
   align = "end",
 }: PathwayMenuProps) {
   const [, setLocation] = useLocation();
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const switchModule = useMutation({
+    mutationFn: async (organizationType: ModuleId) => {
+      const res = await apiRequest("PATCH", "/api/user/organization-type", { organizationType });
+      return await res.json();
+    },
+    onSuccess: (updatedUser) => {
+      queryClient.setQueryData(["/api/auth/me"], updatedUser);
+      queryClient.invalidateQueries({ queryKey: ["/api/levels"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/asc-pretest/results"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/asc-posttest/results"] });
+      setLocation("/");
+      const label = PATHWAYS.find(p => p.module === updatedUser?.organizationType)?.title ?? "your facility";
+      toast({ title: "Switched facility", description: `Now viewing ${label}.` });
+    },
+    onError: (err: any) => {
+      toast({
+        title: "Couldn't switch facility",
+        description: err?.message ?? "Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const currentModule = (user?.organizationType as ModuleId | undefined) ?? null;
 
   return (
     <DropdownMenu>
@@ -61,22 +105,43 @@ export function PathwayMenu({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={align} className="w-72">
-        {PATHWAYS.map(({ href, icon: Icon, title, description, testId }) => (
-          <DropdownMenuItem
-            key={href}
-            onClick={() => setLocation(href)}
-            data-testid={testId}
-            className="py-2"
-          >
-            <Icon size={16} className="mr-2 mt-0.5 text-primary flex-shrink-0" />
-            <div className="flex flex-col">
-              <span className="font-semibold">{title}</span>
-              <span className="text-xs text-muted-foreground">
-                {description}
-              </span>
-            </div>
-          </DropdownMenuItem>
-        ))}
+        {PATHWAYS.map(({ href, module, icon: Icon, title, description, testId }) => {
+          const isActive = user && currentModule === module;
+          const isPending = switchModule.isPending && switchModule.variables === module;
+          return (
+            <DropdownMenuItem
+              key={href}
+              onClick={(e) => {
+                if (user) {
+                  e.preventDefault();
+                  if (isActive || switchModule.isPending) return;
+                  switchModule.mutate(module);
+                } else {
+                  setLocation(href);
+                }
+              }}
+              data-testid={testId}
+              className="py-2"
+              disabled={switchModule.isPending}
+            >
+              <Icon size={16} className="mr-2 mt-0.5 text-primary flex-shrink-0" />
+              <div className="flex flex-col flex-1">
+                <span className="font-semibold flex items-center gap-2">
+                  {title}
+                  {isActive && (
+                    <Check size={14} className="text-primary" data-testid={`icon-pathway-active-${module}`} />
+                  )}
+                  {isPending && (
+                    <Loader2 size={14} className="animate-spin text-muted-foreground" />
+                  )}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  {description}
+                </span>
+              </div>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );
