@@ -99,14 +99,21 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `/diagnostic` - Diagnostic Quiz pre-test (auth required)
 - `/mastery` - Mastery Exam post-test (auth required, eligibility-gated)
 
-## ASC Module (in progress)
+## ASC Module
 - Source: AAAHC Accreditation Handbook for Medicare Deemed Status v42 (full PDF extracted to /tmp/handbook.txt). All ASC content is plain-English original — no verbatim handbook text.
 - Activated by `users.organization_type = 'asc'`. `/api/user/assigned-chapters` returns `[]` for non-hospital users so the dashboard shows all published ASC chapters.
 - Schema additions (backward-compatible, optional): `Question.tutor` ({ whyCorrect, whyWrong: A-D, operationalContext }), `Question.cmsTag`, `Level.chapterSummary`.
 - quiz-card and swipe-card render structured tutor blocks under the existing explanation: "Why your answer was off" (only on wrong), "Why the correct answer is right", "On the floor", and a CMS reference line. Existing AI Tutor box still renders below.
-- Published chapters (Phase 1):
-  * `asc_patient_rights` — Patient Rights, 15 questions with full tutors + chapterSummary
-  * `asc_infection_prevention_safety` — Infection Prevention and Safety, 15 questions with full tutors + chapterSummary
-- Draft chapters (Phase 2 — next): governance, administration, quality_of_care, clinical_records, anesthesia_surgery_services, facilities_environment, medicare_conditions_for_coverage
-- Pre/Post tests (Phase 3): not yet built (25-Q ASC pretest + 25-Q ASC posttest planned).
+- Published chapters (6): `asc_patient_rights`, `asc_infection_prevention_safety`, `asc_governance`, `asc_clinical_records`, `asc_credentialing`, `asc_quality_management` — each 15 Qs with full tutors + chapterSummary.
+- Draft chapters: `asc_anesthesia_surgery_services`, `asc_facilities_environment`, `asc_medicare_conditions_for_coverage`.
+- Pre/Post tests: `/asc-pretest` and `/asc-posttest`, 25 Qs each, server-authoritative grading via `asc_test_sessions` table with peek→validate→claim flow (DELETE…RETURNING for atomicity), `requireAsc` middleware, bound-checked selectedIndex, locked totalQuestions.
 - Test admin: `rsaluja` (id 42, organization_type=asc, view_scope=all). Credential is stored in the secrets manager — do not hardcode here.
+
+## Roles & Facility Filtering
+- `shared/roles.ts` defines `ROLE_CONFIGS` with a `facilityType` field of `"hospital" | "clinic" | "asc"`.
+- 10 hospital roles + 21 ASC roles seeded automatically by `seedRoles()` in `server/storage.ts` (iterates ROLE_CONFIGS).
+- ASC roles span 7 departments: Leadership & Compliance (5), Front Office & Patient Access (3), Pre-Op & PACU (2), Operating Room (4), Sterile Processing (2), Business Office & Credentialing (3), Environmental & Facilities (2). Slugs all prefixed `asc_`.
+- `/role-select` filters cards to roles whose `facilityType` matches the user's `organizationType`. Department order comes from `DEPARTMENT_ORDER_BY_FACILITY[facilityType]`.
+- For facility types with no roles yet (clinic), the page shows an empty state with inline "Switch to <module>" buttons that PATCH `/api/user/organization-type` so users are never trapped in a redirect loop.
+- `POST /api/auth/role` enforces facility match server-side: rejects with HTTP 403 if a role's `facilityType` doesn't match the user's `organizationType` (applies to both primary `roleSlug` and `additionalRoleSlugs`).
+- Pathway menu (`client/src/components/pathway-menu.tsx`) is auth-aware: logged-in users get an in-place facility switch that invalidates `/api/levels` and ASC results queries instead of being signed out.

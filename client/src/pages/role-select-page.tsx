@@ -36,18 +36,27 @@ import {
   Building2,
   Users,
   ChevronLeft,
+  ClipboardCheck,
+  CalendarClock,
+  FileText,
+  Briefcase,
+  DoorOpen,
   type LucideIcon,
 } from "lucide-react";
+import { MODULE_IDS, MODULE_LABELS, type ModuleId } from "@shared/schema";
 import {
   ROLE_CONFIGS,
-  DEPARTMENT_ORDER,
+  DEPARTMENT_ORDER_BY_FACILITY,
   SCOPE_CHIP_LABELS,
   SCOPE_CHIP_TOOLTIPS,
   rolesByDepartment,
+  rolesForFacility,
   type RoleConfig,
+  type FacilityType,
 } from "@shared/roles";
 
 const ROLE_ICONS: Record<string, LucideIcon> = {
+  // Hospital
   scrub_tech: Scissors,
   spd_tech: Sparkles,
   or_circulating_nurse: Stethoscope,
@@ -57,15 +66,48 @@ const ROLE_ICONS: Record<string, LucideIcon> = {
   facilities_maint: Wrench,
   compliance_officer: ShieldCheck,
   nurse_educator: GraduationCap,
+  surgical_ortho_assistant: Stethoscope,
+  // ASC — Leadership & Compliance
+  asc_administrator: Building2,
+  asc_medical_director: ShieldCheck,
+  asc_director_of_nursing: ClipboardCheck,
+  asc_quality_ip_coordinator: ShieldCheck,
+  asc_nurse_educator: GraduationCap,
+  // ASC — Front Office & Patient Access
+  asc_front_desk: DoorOpen,
+  asc_scheduling_coordinator: CalendarClock,
+  asc_medical_records: FileText,
+  // ASC — Pre-Op & PACU
+  asc_pre_op_pacu_nurse: HeartPulse,
+  asc_pacu_charge_nurse: ClipboardList,
+  // ASC — Operating Room
+  asc_or_circulating_nurse: Stethoscope,
+  asc_or_manager: ClipboardList,
+  asc_scrub_tech: Scissors,
+  asc_surgical_assistant: Stethoscope,
+  // ASC — Sterile Processing
+  asc_spd_tech: Sparkles,
+  asc_spd_lead: ClipboardCheck,
+  // ASC — Business Office & Credentialing
+  asc_credentialing_coordinator: ClipboardCheck,
+  asc_billing_business: Briefcase,
+  asc_materials_supply: ClipboardList,
+  // ASC — Environmental & Facilities
+  asc_evs: Sparkles,
+  asc_facilities: Wrench,
 };
 
 const DEPT_ICONS: Record<string, LucideIcon> = {
   "Operating Room": Scissors,
   "Sterile Processing": Sparkles,
   "PACU & Floor": HeartPulse,
+  "Pre-Op & PACU": HeartPulse,
   "Environmental Services": Sparkles,
   "Facilities & Maintenance": Wrench,
+  "Environmental & Facilities": Wrench,
   "Leadership & Compliance": Building2,
+  "Front Office & Patient Access": DoorOpen,
+  "Business Office & Credentialing": Briefcase,
 };
 
 const SCOPE_BADGE_CLASSES: Record<RoleConfig["scope"], string> = {
@@ -84,16 +126,21 @@ export default function RoleSelectPage() {
   const [showMultiRoleModal, setShowMultiRoleModal] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  const facilityType: FacilityType = (user?.organizationType as FacilityType) || "hospital";
+  const visibleRoles = useMemo(() => rolesForFacility(facilityType), [facilityType]);
+  const visibleIds = useMemo(() => new Set(visibleRoles.map((r) => r.id)), [visibleRoles]);
+
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem(SELECTION_KEY);
       if (saved) {
         const parsed: string[] = JSON.parse(saved);
-        const valid = parsed.filter((id) => ROLE_CONFIGS.some((r) => r.id === id));
+        const valid = parsed.filter((id) => visibleIds.has(id));
         if (valid.length) setSelectedIds(valid);
       }
     } catch {}
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, facilityType]);
 
   const { data: dbRoles, isLoading } = useQuery<{ id: number; slug: string }[]>({
     queryKey: ["/api/roles"],
@@ -104,6 +151,26 @@ export default function RoleSelectPage() {
     (dbRoles || []).forEach((r) => map.set(r.slug, r.id));
     return map;
   }, [dbRoles]);
+
+  const switchFacilityMutation = useMutation({
+    mutationFn: async (organizationType: ModuleId) => {
+      const res = await apiRequest("PATCH", "/api/user/organization-type", { organizationType });
+      return res.json();
+    },
+    onSuccess: async (updatedUser) => {
+      try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
+      queryClient.setQueryData(["/api/auth/me"], updatedUser);
+      setSelectedIds([]);
+      await queryClient.invalidateQueries({ queryKey: ["/api/levels"] });
+      toast({
+        title: "Facility module switched",
+        description: `You're now using the ${MODULE_LABELS[updatedUser.organizationType as ModuleId] || updatedUser.organizationType} module.`,
+      });
+    },
+    onError: (err: any) => {
+      toast({ title: "Error", description: err.message || "Failed to switch facility", variant: "destructive" });
+    },
+  });
 
   const setRoleMutation = useMutation({
     mutationFn: async (ids: string[]) => {
@@ -140,7 +207,7 @@ export default function RoleSelectPage() {
     },
   });
 
-  const grouped = useMemo(() => rolesByDepartment(), []);
+  const grouped = useMemo(() => rolesByDepartment(facilityType), [facilityType]);
   const selectedRole = useMemo(
     () => ROLE_CONFIGS.find((r) => r.id === selectedIds[0]) || null,
     [selectedIds]
@@ -181,7 +248,8 @@ export default function RoleSelectPage() {
     );
   }
 
-  const departmentsInOrder = DEPARTMENT_ORDER.filter((d) => grouped[d]?.length);
+  const orderForFacility = DEPARTMENT_ORDER_BY_FACILITY[facilityType] || [];
+  const departmentsInOrder = orderForFacility.filter((d) => grouped[d]?.length);
 
   return (
     <TooltipProvider delayDuration={200}>
@@ -239,26 +307,27 @@ export default function RoleSelectPage() {
           <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
             <Button
               type="button"
-              variant={selectedIds.length === ROLE_CONFIGS.length ? "default" : "outline"}
+              variant={selectedIds.length === visibleRoles.length && visibleRoles.length > 0 ? "default" : "outline"}
               size="sm"
               data-testid="button-select-all-roles"
+              disabled={visibleRoles.length === 0}
               onClick={() => {
                 setShowError(false);
-                if (selectedIds.length === ROLE_CONFIGS.length) {
+                if (selectedIds.length === visibleRoles.length) {
                   setSelectedIds([]);
                   persist([]);
                 } else {
-                  const all = ROLE_CONFIGS.map((r) => r.id);
+                  const all = visibleRoles.map((r) => r.id);
                   setSelectedIds(all);
                   persist(all);
                 }
               }}
             >
-              {selectedIds.length === ROLE_CONFIGS.length
+              {selectedIds.length === visibleRoles.length && visibleRoles.length > 0
                 ? "Clear all roles"
                 : "Select all roles (full access)"}
             </Button>
-            {selectedIds.length > 0 && selectedIds.length < ROLE_CONFIGS.length && (
+            {selectedIds.length > 0 && selectedIds.length < visibleRoles.length && (
               <Button
                 type="button"
                 variant="ghost"
@@ -276,6 +345,39 @@ export default function RoleSelectPage() {
           <p className="text-xs text-muted-foreground text-center -mt-4 mb-6 max-w-xl mx-auto">
             Want to see every module? Pick "Select all roles" to unlock training across every department.
           </p>
+
+          {visibleRoles.length === 0 && (
+            <div
+              className="rounded-xl border-2 border-dashed border-border bg-card p-8 text-center"
+              data-testid="empty-no-roles-for-facility"
+            >
+              <Building2 size={28} className="mx-auto text-muted-foreground mb-3" />
+              <h3 className="font-semibold text-base mb-2">
+                Roles for {MODULE_LABELS[facilityType] || facilityType} are coming soon
+              </h3>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                We're building out role-specific training for this facility type. Switch your
+                facility module below to access available training right now.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
+                {MODULE_IDS.filter((m) => m !== facilityType && rolesForFacility(m).length > 0).map((m) => (
+                  <Button
+                    key={m}
+                    variant="default"
+                    size="sm"
+                    data-testid={`button-switch-facility-${m}`}
+                    disabled={switchFacilityMutation.isPending}
+                    onClick={() => switchFacilityMutation.mutate(m)}
+                  >
+                    {switchFacilityMutation.isPending ? (
+                      <Loader2 className="animate-spin mr-2" size={14} />
+                    ) : null}
+                    Switch to {MODULE_LABELS[m]}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="space-y-8">
             {departmentsInOrder.map((dept) => {

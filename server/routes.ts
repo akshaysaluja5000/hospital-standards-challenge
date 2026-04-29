@@ -19,6 +19,7 @@ import { ascPosttestQuestions } from "@shared/asc-posttest";
 import { levels } from "@shared/questions";
 import { findLevelById, getVisibleLevelsForModule } from "@shared/all-levels";
 import type { ModuleId } from "@shared/schema";
+import { getRoleConfig } from "@shared/roles";
 
 const BYPASS_USERNAMES = ["akshaysaluja", "rsaluja"] as const;
 
@@ -333,6 +334,19 @@ export async function registerRoutes(
     if (!roleSlug || typeof roleSlug !== "string") {
       return res.status(400).json({ message: "roleSlug is required" });
     }
+    // Server-side enforcement: a user can only adopt roles that match their
+    // current facility module (organizationType). The client UI also filters,
+    // but we must reject cross-facility role assignment from direct API calls.
+    const userFacility = req.user!.organizationType;
+    const primaryConfig = getRoleConfig(roleSlug);
+    if (!primaryConfig) {
+      return res.status(404).json({ message: "Role not found" });
+    }
+    if (primaryConfig.facilityType !== userFacility) {
+      return res.status(403).json({
+        message: `Role "${roleSlug}" is not available for your facility module (${userFacility}).`,
+      });
+    }
     const role = await storage.getRoleBySlug(roleSlug);
     if (!role) {
       return res.status(404).json({ message: "Role not found" });
@@ -341,6 +355,12 @@ export async function registerRoutes(
     if (Array.isArray(additionalRoleSlugs)) {
       for (const slug of additionalRoleSlugs) {
         if (typeof slug !== "string" || slug === roleSlug) continue;
+        const cfg = getRoleConfig(slug);
+        if (!cfg || cfg.facilityType !== userFacility) {
+          return res.status(403).json({
+            message: `Role "${slug}" is not available for your facility module (${userFacility}).`,
+          });
+        }
         const r = await storage.getRoleBySlug(slug);
         if (r && !additionalIds.includes(r.id)) additionalIds.push(r.id);
       }

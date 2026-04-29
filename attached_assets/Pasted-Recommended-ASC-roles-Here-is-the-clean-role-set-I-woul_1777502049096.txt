@@ -1,0 +1,133 @@
+Recommended ASC roles
+Here is the clean role set I would use for the Ambulatory Surgery Center section.
+
+Leadership & Compliance
+ASC Administrator
+
+Medical Director
+
+Director of Nursing / Clinical Director
+
+Quality / Infection Prevention Coordinator
+
+Nurse Educator / Staff Development (only if the center truly has one; many smaller ASCs won’t)
+
+These roles match how ASCs are typically led: administrator for overall operations, medical director for physician/clinical oversight, and a nursing or clinical director for day-to-day clinical execution and standards compliance.
+
+Front Office / Patient Access
+Front Desk / Registration
+
+Scheduling / Authorization Coordinator
+
+Medical Records / Health Information
+
+Smaller ASCs often combine these functions, so if the center is small, you can merge them into Front Office / Scheduling / Registration rather than pretending they have hospital-style departmental separation.
+
+Pre-Op / PACU
+Pre-Op / PACU Nurse
+
+PACU Charge Nurse / Perioperative Supervisor (if applicable)
+
+Do not use “PACU / Floor Nurse” for an ASC unless the center actually has overnight/floor capability. Most ASCs are not hospitals and do not have floor nurses in the inpatient sense.
+
+Operating Room
+OR Circulating Nurse
+
+Scrub Tech / Surgical Tech
+
+OR Manager / Charge Nurse
+
+Surgical Assistant / Orthopedic Assistant (if relevant to the cases you do)
+
+Those are fine and should stay close to what you already have.
+
+Sterile Processing
+SPD Technician
+
+Sterile Processing Lead / Manager (optional if the center is large enough)
+
+Sterile processing is important enough in ASCs that it deserves its own role set, especially because equipment/instrument flow and sterility failures are a huge compliance risk.
+
+Facilities / Environment
+Environmental Services
+
+Facilities / Maintenance
+
+These can stay, though in some ASCs they may be outsourced or combined. If outsourced, you may want a role like Contracted Facilities / EVS Support later.
+
+Credentialing / Business Office
+Credentialing / Medical Staff Coordinator
+
+Billing / Business Office
+
+Materials / Supply Coordinator (optional but useful in surgery centers)
+
+Credentialing matters more in ASCs than many people realize because privileging, medical staff files, NPDB checks, reappointments, and physician documentation are major operational issues.
+
+What I would rename from your current hospital list
+A few of your current names should change for ASC:
+
+Current hospital-style name	Better ASC name
+Compliance Officer / CNO	ASC Administrator / Clinical Leadership or split into ASC Administrator and Director of Nursing / Clinical Director
+PACU / Floor Nurse	Pre-Op / PACU Nurse
+Nurse Educator / Staff Development	Keep only if real; otherwise remove
+Facilities / Maintenance	Keep
+Environmental Services	Keep
+OR Manager / Charge Nurse	Keep
+Surgical/Orthopedic Assistant	Keep if actually used
+SPD Technician	Keep
+The big mistake would be keeping a hospital-style CNO label in an ASC unless the actual structure really uses that title.
+
+My practical final role list
+If you want the best MVP role list, use this:
+
+ASC Administrator
+
+Medical Director
+
+Director of Nursing / Clinical Director
+
+Quality / Infection Prevention Coordinator
+
+Front Desk / Registration
+
+Scheduling / Authorization Coordinator
+
+Medical Records / Health Information
+
+Pre-Op / PACU Nurse
+
+OR Circulating Nurse
+
+OR Manager / Charge Nurse
+
+Scrub Tech / Surgical Tech
+
+Surgical / Orthopedic Assistant
+
+SPD Technician
+
+Environmental Services
+
+Facilities / Maintenance
+
+Credentialing / Medical Staff Coordinator
+
+Billing / Business Office
+
+That is enough to look real without bloating the UI.
+
+Access logic
+I would assign access like this:
+
+Full Access: ASC Administrator
+
+Dept + All: Medical Director, Director of Nursing / Clinical Director, Quality / Infection Prevention Coordinator, OR Manager / Charge Nurse
+
+Dept Access: everyone else
+
+That mirrors actual oversight patterns better than pretending every support role needs cross-facility visibility.
+
+Blunt recommendation
+Do not overload the first version with 25 micro-roles. That’s fake precision. Start with 15–17 real roles that match how ASCs actually function, then split roles later only if pilots show a need.
+

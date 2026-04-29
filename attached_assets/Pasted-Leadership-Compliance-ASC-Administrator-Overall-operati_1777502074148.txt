@@ -1,0 +1,90 @@
+Leadership & Compliance
+ASC Administrator
+Overall operations, accreditation readiness, contracts, staffing oversight
+LEADERSHIP & COMPLIANCE · FULL ACCESS
+
+Medical Director
+Clinical oversight, physician accountability, quality and safety leadership
+LEADERSHIP & COMPLIANCE · DEPT + ALL
+
+Director of Nursing / Clinical Director
+Perioperative operations, staffing, competencies, clinical compliance
+LEADERSHIP & COMPLIANCE · DEPT + ALL
+
+Quality / Infection Prevention Coordinator
+QAPI, infection prevention, audits, corrective actions, tracer follow-up
+LEADERSHIP & COMPLIANCE · DEPT + ALL
+
+Nurse Educator / Staff Development
+Staff education, competencies, annual reviews, policy rollout
+LEADERSHIP & COMPLIANCE · DEPT + ALL
+
+Front Office & Patient Access
+Front Desk / Registration
+Patient intake, consent flow, demographic verification, communication
+FRONT OFFICE & PATIENT ACCESS · DEPT. ACCESS
+
+Scheduling / Authorization Coordinator
+Case scheduling, insurance authorization, pre-op readiness coordination
+FRONT OFFICE & PATIENT ACCESS · DEPT. ACCESS
+
+Medical Records / Health Information
+Clinical documentation, record completion, release of information
+FRONT OFFICE & PATIENT ACCESS · DEPT. ACCESS
+
+Pre-Op & PACU
+Pre-Op / PACU Nurse
+Pre-op preparation, recovery care, monitoring, discharge readiness
+PRE-OP & PACU · DEPT. ACCESS
+
+PACU Charge Nurse / Perioperative Supervisor
+Recovery flow, staffing coordination, escalation, periop oversight
+PRE-OP & PACU · DEPT + ALL
+
+Operating Room
+OR Circulating Nurse
+OR safety, time-outs, patient advocacy, perioperative documentation
+OPERATING ROOM · DEPT. ACCESS
+
+OR Manager / Charge Nurse
+OR operations leadership, staffing, room flow, standards oversight
+OPERATING ROOM · DEPT + ALL
+
+Scrub Tech / Surgical Tech
+Sterile field, instruments, case setup, surgical support
+OPERATING ROOM · DEPT. ACCESS
+
+Surgical / Orthopedic Assistant
+Positioning, exposure, instrumentation, perioperative support
+OPERATING ROOM · DEPT. ACCESS
+
+Sterile Processing
+SPD Technician
+Decontamination, sterilization, tray assembly, instrument processing
+STERILE PROCESSING · DEPT. ACCESS
+
+Sterile Processing Lead / Manager
+Sterilization workflow, quality checks, instrument readiness, oversight
+STERILE PROCESSING · DEPT + ALL
+
+Business Office & Credentialing
+Credentialing / Medical Staff Coordinator
+credentialing files, privileging, reappointment, NPDB and license tracking
+BUSINESS OFFICE & CREDENTIALING · DEPT. ACCESS
+
+Billing / Business Office
+billing workflow, claims support, financial documentation, patient accounts
+BUSINESS OFFICE & CREDENTIALING · DEPT. ACCESS
+
+Materials / Supply Coordinator
+supply chain, implants, par levels, vendor coordination
+BUSINESS OFFICE & CREDENTIALING · DEPT. ACCESS
+
+Environmental & Facilities
+Environmental Services
+environmental cleaning, turnover support, waste segregation, EOC safety
+ENVIRONMENTAL SERVICES · DEPT. ACCESS
+
+Facilities / Maintenance
+building systems, life safety, utilities, environment of care
+FACILITIES & MAINTENANCE · DEPT. ACCESS
