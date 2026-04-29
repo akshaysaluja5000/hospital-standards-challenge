@@ -261,6 +261,7 @@ export async function registerRoutes(
 
       const hashedPassword = await hashPassword(password);
       const isFirstUser = (await storage.getAllUsers()).length === 0;
+      const isBypassUser = isFacilityScopeBypass({ username });
 
       let user = await storage.createUser({
         username,
@@ -272,7 +273,7 @@ export async function registerRoutes(
 
       user = (await storage.updateUser(user.id, {
         organizationType: normalizedOrgType,
-        ...(isFirstUser ? { isAdmin: true } : {}),
+        ...(isFirstUser || isBypassUser ? { isAdmin: true } : {}),
       }))!;
 
       await storage.upsertStreak(user.id, {
@@ -1071,9 +1072,11 @@ export async function registerRoutes(
       });
     }
 
-    const adminUser = await storage.getUserByUsername("akshaysaluja");
-    if (adminUser && (!adminUser.isAdmin || adminUser.facilityId !== facility.id)) {
-      await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
+    for (const adminUsername of BYPASS_USERNAMES) {
+      const adminUser = await storage.getUserByUsername(adminUsername);
+      if (adminUser && (!adminUser.isAdmin || adminUser.facilityId !== facility.id)) {
+        await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
+      }
     }
 
     const existingActs = await storage.getAllActivities();
