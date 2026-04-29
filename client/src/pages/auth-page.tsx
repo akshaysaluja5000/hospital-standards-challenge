@@ -71,7 +71,7 @@ export default function AuthPage() {
     setIsSubmitting(true);
     try {
       try { sessionStorage.setItem("mosh_force_role_select", "1"); } catch {}
-      await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode || undefined, data.organizationType);
+      await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode, data.organizationType);
       toast({
         title: "Account created!",
         description: "Welcome to Hospital Standards Challenge!",
@@ -298,18 +298,22 @@ export default function AuthPage() {
                       name="facilityCode"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Facility Code</FormLabel>
+                          <FormLabel>Institution Code</FormLabel>
                           <FormControl>
                             <div className="relative">
                               <Building2 size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                               <Input
                                 {...field}
-                                placeholder="Enter your facility code (optional)"
+                                placeholder="e.g. STMARYS-OR or your team's shared code"
                                 className="pl-9"
+                                autoCapitalize="characters"
                                 data-testid="input-register-facility-code"
                               />
                             </div>
                           </FormControl>
+                          <p className="text-xs text-muted-foreground mt-1">
+                            This keeps your team's progress private. Use the code your administrator shared, or pick a new one if you're the first from your facility — everyone who joins with the same code becomes part of the same group.
+                          </p>
                           <FormMessage />
                         </FormItem>
                       )}

@@ -121,7 +121,10 @@ export const registerSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  facilityCode: z.string().optional(),
+  facilityCode: z
+    .string()
+    .min(3, "Institution code is required (ask your administrator if you don't have one)")
+    .max(40, "Institution code is too long"),
   organizationType: z.enum(MODULE_IDS).default("hospital"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   confirmPassword: z.string(),

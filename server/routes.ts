@@ -18,6 +18,19 @@ import { levels } from "@shared/questions";
 import { findLevelById, getVisibleLevelsForModule } from "@shared/all-levels";
 import type { ModuleId } from "@shared/schema";
 
+const BYPASS_USERNAMES = ["akshaysaluja", "rsaluja"] as const;
+
+function isFacilityScopeBypass(user: { username?: string | null } | undefined | null): boolean {
+  const u = (user?.username || "").trim().toLowerCase();
+  return (BYPASS_USERNAMES as readonly string[]).includes(u);
+}
+
+function getFacilityFilter(user: User | undefined | null): (other: { facilityId: number | null }) => boolean {
+  if (isFacilityScopeBypass(user)) return () => true;
+  const fid = user?.facilityId ?? null;
+  return (other) => other.facilityId === fid;
+}
+
 function getAnthropicClient() {
   const apiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY || "replit-ai-integration";
   const baseURL = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL;
@@ -230,14 +243,21 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Username already taken" });
       }
 
-      let facilityId: number | null = null;
-      if (facilityCode && facilityCode.trim()) {
-        const facility = await storage.getFacilityByCode(facilityCode.trim().toUpperCase());
-        if (!facility) {
-          return res.status(400).json({ message: "Invalid facility code. Please check with your administrator." });
-        }
-        facilityId = facility.id;
+      const trimmedCode = typeof facilityCode === "string" ? facilityCode.trim() : "";
+      if (!trimmedCode || trimmedCode.length < 3) {
+        return res.status(400).json({
+          message: "Institution code is required. Ask your administrator for one or pick a code your team will share.",
+        });
       }
+      const normalizedCode = trimmedCode.toUpperCase();
+      let facility = await storage.getFacilityByCode(normalizedCode);
+      if (!facility) {
+        facility = await storage.createFacility({
+          code: normalizedCode,
+          name: normalizedCode,
+        });
+      }
+      const facilityId: number = facility.id;
 
       const hashedPassword = await hashPassword(password);
       const isFirstUser = (await storage.getAllUsers()).length === 0;
@@ -858,7 +878,10 @@ export async function registerRoutes(
 
   app.get("/api/game/leaderboard", requireAuth, async (req, res) => {
     try {
-      const allUsers = await storage.getAllUsers();
+      const currentUser = req.user as User;
+      const facilityFilter = getFacilityFilter(currentUser);
+      const allUsersRaw = await storage.getAllUsers();
+      const allUsers = allUsersRaw.filter(facilityFilter);
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
       const allSessions = await storage.getAllQuizSessions();
@@ -922,7 +945,10 @@ export async function registerRoutes(
 
   app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
-      const allUsers = await storage.getAllUsers();
+      const adminUser = req.user as User;
+      const facilityFilter = getFacilityFilter(adminUser);
+      const allUsersRaw = await storage.getAllUsers();
+      const allUsers = allUsersRaw.filter(facilityFilter);
       const allStreaks = await storage.getAllStreaks();
       const allActivities = await storage.getAllActivities();
       const allSessions = await storage.getAllQuizSessions();
@@ -1274,9 +1300,7 @@ Give ONE actionable takeaway in 2 sentences about what great hospitals do differ
     try {
       const adminUser = req.user as User;
       const allUsersRaw = await storage.getAllUsers();
-      const allUsers = adminUser.facilityId
-        ? allUsersRaw.filter(u => u.facilityId === adminUser.facilityId)
-        : allUsersRaw;
+      const allUsers = allUsersRaw.filter(getFacilityFilter(adminUser));
       const allProgressData = await Promise.all(
         allUsers.map(async (u) => ({ userId: u.id, username: u.username, progress: await storage.getProgress(u.id) }))
       );
