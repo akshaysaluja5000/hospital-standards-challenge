@@ -82,7 +82,10 @@ function HomeRoute() {
   }
 
   if (user) {
-    if (!user.roleId && !user.isAdmin) {
+    const forceRoleSelect = (() => {
+      try { return sessionStorage.getItem("mosh_force_role_select") === "1"; } catch { return false; }
+    })();
+    if (!user.isAdmin && (!user.roleId || forceRoleSelect)) {
       return <Redirect to="/role-select" />;
     }
     try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}

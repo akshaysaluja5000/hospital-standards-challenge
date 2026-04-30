@@ -49,7 +49,7 @@ const PATHWAYS: Pathway[] = [
 ];
 
 export function PathwayMenu({
-  triggerLabel = "For Your Facility",
+  triggerLabel = "Your Facility",
   triggerVariant = "ghost",
   triggerSize = "default",
   align = "end",
