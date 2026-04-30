@@ -34,6 +34,12 @@ function getFacilityFilter(user: User | undefined | null): (other: { facilityId:
   return (other) => other.facilityId === fid;
 }
 
+function getOrganizationTypeFilter(user: User | undefined | null): (other: { organizationType: string | null }) => boolean {
+  if (isFacilityScopeBypass(user)) return () => true;
+  const orgType = user?.organizationType ?? "hospital";
+  return (other) => (other.organizationType ?? "hospital") === orgType;
+}
+
 function getAnthropicClient() {
   const apiKey = process.env.AI_INTEGRATIONS_ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY || "replit-ai-integration";
   const baseURL = process.env.AI_INTEGRATIONS_ANTHROPIC_BASE_URL;
@@ -906,22 +912,27 @@ export async function registerRoutes(
     try {
       const currentUser = req.user as User;
       const facilityFilter = getFacilityFilter(currentUser);
+      const orgTypeFilter = getOrganizationTypeFilter(currentUser);
+
+      // Pre-compute per-module level ID sets so each leaderboard entry can be scored
+      // against ITS OWN module. A non-bypass viewer only sees same-module users (so this
+      // resolves to the viewer's module for everyone). Bypass admins see all users; each
+      // user is scored on their native module's level set so cross-module entries still
+      // show meaningful XP.
+      const moduleLevelIdsByModule = new Map<ModuleId, Set<string>>([
+        ["hospital", new Set(getVisibleLevelsForModule("hospital", { includeDraft: true }).map((l) => l.id))],
+        ["asc", new Set(getVisibleLevelsForModule("asc", { includeDraft: true }).map((l) => l.id))],
+      ]);
+
       const allUsersRaw = await storage.getAllUsers();
-      const allUsers = allUsersRaw.filter(facilityFilter);
+      const allUsers = allUsersRaw.filter((u) => facilityFilter(u) && orgTypeFilter(u));
       const allStreaks = await storage.getAllStreaks();
-      const allActivities = await storage.getAllActivities();
       const allSessions = await storage.getAllQuizSessions();
       const allProgressData = await Promise.all(
         allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
       );
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
-      const activitiesByUser = new Map<number, DailyActivity[]>();
-      allActivities.forEach((a) => {
-        const list = activitiesByUser.get(a.userId) || [];
-        list.push(a);
-        activitiesByUser.set(a.userId, list);
-      });
       const sessionsByUser = new Map<number, typeof allSessions>();
       allSessions.forEach((s) => {
         const list = sessionsByUser.get(s.userId) || [];
@@ -932,9 +943,10 @@ export async function registerRoutes(
 
       const leaderboard = allUsers.map((u) => {
         const streak = streakMap.get(u.id);
-        const userActivities = activitiesByUser.get(u.id) || [];
-        const userSessions = sessionsByUser.get(u.id) || [];
-        const userProgress = progressByUser.get(u.id) || [];
+        const userModuleId: ModuleId = ((u.organizationType as ModuleId) || "hospital");
+        const moduleLevelIds = moduleLevelIdsByModule.get(userModuleId) ?? moduleLevelIdsByModule.get("hospital")!;
+        const userSessions = (sessionsByUser.get(u.id) || []).filter((s) => moduleLevelIds.has(s.levelId));
+        const userProgress = (progressByUser.get(u.id) || []).filter((p) => moduleLevelIds.has(p.levelId));
 
         const progressQ = userProgress.reduce((s, p) => s + p.totalQuestions, 0);
         const progressC = userProgress.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0);
@@ -946,14 +958,17 @@ export async function registerRoutes(
         const correct = Math.min(progressC + sessionC, questionsAnswered);
         const accuracy = questionsAnswered > 0 ? Math.min(100, Math.round((correct / questionsAnswered) * 100)) : 0;
         const levelsCompleted = userProgress.filter((p) => p.completed).length;
-        const inProgressXp = inProgressSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
+        // Module-specific XP: sum xpEarned across the user's quiz_sessions for THIS module's levels.
+        // Quiz sessions persist past completion, so this captures XP from both in-progress and finished levels
+        // without double-counting and without leaking cross-module XP from streak.totalXp.
+        const moduleTotalXp = userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
 
         return {
           id: u.id,
           username: u.username,
           firstName: u.firstName,
           lastName: u.lastName,
-          totalXp: (streak?.totalXp || 0) + inProgressXp,
+          totalXp: moduleTotalXp,
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,

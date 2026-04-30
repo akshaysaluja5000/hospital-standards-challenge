@@ -24,7 +24,9 @@ import { DailyCalendar } from "@/components/daily-calendar";
 import { useAuth } from "@/lib/auth";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import type { UserStreak, DailyActivity } from "@shared/schema";
+import type { UserStreak, DailyActivity, QuizSession } from "@shared/schema";
+import { getVisibleLevelsForModule } from "@shared/all-levels";
+import type { ModuleId } from "@shared/schema";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -48,6 +50,17 @@ export default function ProfilePage() {
   const { data: activities } = useQuery<DailyActivity[]>({
     queryKey: ["/api/game/activities"],
   });
+
+  const { data: savedSessions } = useQuery<QuizSession[]>({
+    queryKey: ["/api/game/sessions"],
+  });
+
+  // Module-scoped XP — match the dashboard / leaderboard so the user sees consistent numbers per module.
+  const userModule: ModuleId = (user?.organizationType as ModuleId) || "hospital";
+  const moduleLevelIdSet = new Set(getVisibleLevelsForModule(userModule, { includeDraft: true }).map((l) => l.id));
+  const moduleXp = savedSessions
+    ?.filter((s) => moduleLevelIdSet.has(s.levelId))
+    .reduce((sum, s) => sum + (s.xpEarned || 0), 0) || 0;
 
   const updateSettingsMutation = useMutation({
     mutationFn: async (data: { dailyGoal?: number; reminderEnabled?: boolean }) => {
@@ -141,7 +154,7 @@ export default function ProfilePage() {
           <StreakFlame streak={streak?.currentStreak || 0} size="lg" />
         </motion.div>
 
-        <XpBar currentXp={streak?.totalXp || 0} />
+        <XpBar currentXp={moduleXp} />
 
         <div className="rounded-2xl bg-card border border-card-border p-5">
           <h3 className="font-bold text-base mb-4">Account</h3>

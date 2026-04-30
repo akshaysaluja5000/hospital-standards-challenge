@@ -210,8 +210,13 @@ export default function DashboardPage() {
   const sessionsMap = new Map<string, QuizSession>();
   savedSessions?.forEach((s) => sessionsMap.set(s.levelId, s));
 
-  const sessionXp = savedSessions?.reduce((sum, s) => sum + (s.xpEarned || 0), 0) || 0;
-  const displayXp = (streak?.totalXp || 0) + sessionXp;
+  // Module-scoped XP: only count XP earned on levels in the current module (hospital vs ASC).
+  // Quiz sessions persist past completion with their final xpEarned value, so summing per-module
+  // sessions is the correct module-specific total without leaking the other module's XP.
+  const moduleLevelIdSet = new Set(getVisibleLevelsForModule(userModule, { includeDraft: true }).map((l) => l.id));
+  const displayXp = savedSessions
+    ?.filter((s) => moduleLevelIdSet.has(s.levelId))
+    .reduce((sum, s) => sum + (s.xpEarned || 0), 0) || 0;
 
   const isLevelUnlocked = (_levelIndex: number) => {
     return true;

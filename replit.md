@@ -120,3 +120,9 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 - `/role-select` filters cards to roles whose `facilityType` matches the user's `organizationType`. Department order comes from `DEPARTMENT_ORDER_BY_FACILITY[facilityType]`.
 - `POST /api/auth/role` enforces facility match server-side: rejects with HTTP 403 if a role's `facilityType` doesn't match the user's `organizationType` (applies to both primary `roleSlug` and `additionalRoleSlugs`).
 - Pathway menu (`client/src/components/pathway-menu.tsx`) is auth-aware: logged-in users get an in-place facility switch that invalidates `/api/levels` and ASC results queries instead of being signed out.
+
+## Module Separation (Leaderboard / XP)
+- Hospital users see only hospital users on the leaderboard with hospital-only XP/stats; ASC users see only ASC users with ASC-only XP/stats. `getOrganizationTypeFilter` in `server/routes.ts` mirrors `getFacilityFilter` and is applied alongside it on `/api/game/leaderboard`.
+- Per-user stats (questionsAnswered, accuracy, levelsCompleted, totalXp) are computed against each user's own module's level IDs (from `getVisibleLevelsForModule(module, { includeDraft: true })`). `totalXp` is the sum of `quiz_sessions.xpEarned` over module-relevant sessions; sessions persist past completion so this captures both in-progress and finished levels without leaking the other module's XP.
+- Bypass admins (`akshaysaluja`, `rsaluja`) skip both filters and see ALL users across all facilities and both org types. Each user is still scored on their native module's level set so cross-module entries show meaningful XP.
+- Dashboard `displayXp` and Profile `XpBar` both compute module-specific XP the same way (filter `savedSessions` by current module's level ID set, sum `xpEarned`). Streaks (currentStreak/longestStreak) intentionally remain global since `daily_activity` has no module column.
