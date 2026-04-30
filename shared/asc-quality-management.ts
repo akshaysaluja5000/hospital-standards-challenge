@@ -75,12 +75,12 @@ export const ascQualityManagementLevel: Level = {
     {
       id: "asc_qm_01",
       question:
-        "An ASC's QAPI plan was written 6 years ago using a generic template provided by a consultant. The plan lists 'patient satisfaction,' 'infection control,' and 'safety' as priorities, with no specific indicators or targets. The plan has not been reviewed since adoption. What is the most likely survey finding?",
+        "An ASC's QAPI plan was written 6 years ago using a generic template provided by a consultant. The plan lists 'patient satisfaction,' 'infection control,' and 'safety' as priorities, with no specific indicators or targets. The plan has not been reviewed since adoption. Does this meet the requirement?",
       options: [
-        "Compliant — having a written QAPI plan satisfies the requirement",
-        "Non-compliant — the QAPI plan must reflect the ASC's specific procedures, identify measurable indicators with targets, and be reviewed and updated regularly",
-        "Compliant if the plan is signed by the governing body",
-        "Non-compliant only if no data is being collected",
+        "Yes — having a written QAPI plan satisfies the requirement",
+        "No — the QAPI plan must reflect the ASC's specific procedures, identify measurable indicators with targets, and be reviewed and updated regularly",
+        "Yes — only if the plan is signed by the governing body",
+        "No — only if no data is being collected",
       ],
       correctIndex: 1,
       explanation:
@@ -215,12 +215,12 @@ export const ascQualityManagementLevel: Level = {
     {
       id: "asc_qm_06",
       question:
-        "An ASC's adverse event log shows 4 medication errors in the past quarter. The log entries say 'Patient given wrong dose,' 'Wrong route,' 'Wrong patient,' 'Wrong drug.' There are no RCAs. The QAPI report to the governing body lists the events as 'Medication errors: 4.' How is this scored?",
+        "An ASC's adverse event log shows 4 medication errors in the past quarter. The log entries say 'Patient given wrong dose,' 'Wrong route,' 'Wrong patient,' 'Wrong drug.' There are no RCAs. The QAPI report to the governing body lists the events as 'Medication errors: 4.' Does this meet the requirement?",
       options: [
-        "Compliant — events are being tracked and reported",
-        "Non-compliant — medication errors with patient impact require RCA, and QAPI reports must convey enough information for the governing body to make decisions, not just counts",
-        "Compliant if no patients were harmed",
-        "Compliant if the medication errors were caught before reaching the patient",
+        "Yes — events are being tracked and reported",
+        "No — medication errors with patient impact require RCA, and QAPI reports must convey enough information for the governing body to make decisions, not just counts",
+        "Yes — only if no patients were harmed",
+        "Yes — only if the medication errors were caught before reaching the patient",
       ],
       correctIndex: 1,
       explanation:

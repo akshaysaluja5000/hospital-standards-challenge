@@ -191,12 +191,12 @@ export const ascPretestQuestions: AscPretestQuestion[] = [
     chapterId: "asc_governance",
     chapterName: "Governance",
     question:
-      "A QAPI report shows a sustained sterilization failure rate above benchmark for 4 months. Governing body minutes say only 'QAPI report received.' How is this most likely scored?",
+      "A QAPI report shows a sustained sterilization failure rate above benchmark for 4 months. Governing body minutes say only 'QAPI report received.' Does this meet the requirement?",
     options: [
-      "Compliant — receipt is documented",
-      "Non-compliant — governance requires evidence of substantive review, discussion, and direction, not just receipt",
-      "Compliant if the QAPI committee is acting on the issue",
-      "Non-compliant only if patient harm has occurred",
+      "Yes — receipt is documented",
+      "No — governance requires evidence of substantive review, discussion, and direction, not just receipt",
+      "Yes — only if the QAPI committee is acting on the issue",
+      "No — only if patient harm has occurred",
     ],
     correctIndex: 1,
     explanation:
@@ -251,7 +251,7 @@ export const ascPretestQuestions: AscPretestQuestion[] = [
     chapterId: "asc_clinical_records",
     chapterName: "Clinical Records",
     question:
-      "A patient arrives for a procedure with an H&P dated 28 days ago. The pre-op nurse documents a brief assessment but the surgeon does not write a day-of update note. Is this compliant?",
+      "A patient arrives for a procedure with an H&P dated 28 days ago. The pre-op nurse documents a brief assessment but the surgeon does not write a day-of update note. Does this meet the requirement?",
     options: [
       "Yes — the H&P is within 30 days",
       "No — the H&P is within window but the day-of update by a qualified provider is a separate, required entry",

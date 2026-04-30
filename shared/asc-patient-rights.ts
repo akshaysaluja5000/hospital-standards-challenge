@@ -92,12 +92,12 @@ export const ascPatientRightsLevel: Level = {
     {
       id: "asc_pr_1",
       question:
-        "A patient arrives for a screening colonoscopy. The pre-op nurse hands them a written notice of rights and asks them to sign it after they are already changed into a gown and on the stretcher in the pre-op bay. Is this compliant with the CMS requirement?",
+        "A patient arrives for a screening colonoscopy. The pre-op nurse hands them a written notice of rights and asks them to sign it after they are already changed into a gown and on the stretcher in the pre-op bay. Does this meet the CMS requirement?",
       options: [
-        "Compliant — the notice was provided before the procedure began",
-        "Compliant — written notice alone meets the CMS requirement",
-        "Non-compliant — verbal AND written notice must be delivered before the patient is prepared for the procedure",
-        "Non-compliant — only the surgeon may deliver the notice of rights",
+        "Yes — the notice was provided before the procedure began",
+        "Yes — written notice alone meets the CMS requirement",
+        "No — verbal AND written notice must be delivered before the patient is prepared for the procedure",
+        "No — only the surgeon may deliver the notice of rights",
       ],
       correctIndex: 2,
       explanation:
@@ -120,12 +120,12 @@ export const ascPatientRightsLevel: Level = {
     {
       id: "asc_pr_2",
       question:
-        "During a survey, the surveyor asks to see the ASC's posted notice of patient rights. The administrator points to a binder at the registration desk that contains the notice. The waiting room has no posted notice. What is the finding?",
+        "During a survey, the surveyor asks to see the ASC's posted notice of patient rights. The administrator points to a binder at the registration desk that contains the notice. The waiting room has no posted notice. Does this meet the requirement?",
       options: [
-        "Compliant — the notice is available on request, which meets the requirement",
-        "Non-compliant — the written notice must be posted in places likely to be noticed by patients in the waiting area",
-        "Compliant — posting is recommended but not required",
-        "Non-compliant — the notice must be posted in every patient room, not just the waiting area",
+        "Yes — the notice is available on request, which meets the requirement",
+        "No — the written notice must be posted in places likely to be noticed by patients in the waiting area",
+        "Yes — posting is recommended but not required",
+        "No — the notice must be posted in every patient room, not just the waiting area",
       ],
       correctIndex: 1,
       explanation:
@@ -287,12 +287,12 @@ export const ascPatientRightsLevel: Level = {
     {
       id: "asc_pr_8",
       question:
-        "An ASC's grievance policy says: \"Verbal complaints are tracked informally; written grievances are logged and answered in writing within 45 days.\" A surveyor reviews the policy. What is the most likely finding?",
+        "An ASC's grievance policy says: \"Verbal complaints are tracked informally; written grievances are logged and answered in writing within 45 days.\" A surveyor reviews the policy. Does this meet the requirement?",
       options: [
-        "Compliant — the policy distinguishes verbal from written, which CMS allows",
-        "Non-compliant — the grievance documentation requirement applies equally to verbal and written grievances",
-        "Compliant — 45 days is within the CMS-mandated maximum response time",
-        "Non-compliant — only because 45 days is too long; verbal grievances may be tracked informally",
+        "Yes — the policy distinguishes verbal from written, which CMS allows",
+        "No — the grievance documentation requirement applies equally to verbal and written grievances",
+        "Yes — 45 days is within the CMS-mandated maximum response time",
+        "No — only because 45 days is too long; verbal grievances may be tracked informally",
       ],
       correctIndex: 1,
       explanation:

@@ -103,12 +103,12 @@ export const ascInfectionPreventionLevel: Level = {
     {
       id: "asc_ip_1",
       question:
-        "A surveyor reviews the ASC's infection prevention program and finds it is written, approved by the governing body, and references CDC guidelines. The risk assessment, however, is from the original 2018 build of the facility. The ASC has added two ORs and a GI suite since then. What is the finding?",
+        "A surveyor reviews the ASC's infection prevention program and finds it is written, approved by the governing body, and references CDC guidelines. The risk assessment, however, is from the original 2018 build of the facility. The ASC has added two ORs and a GI suite since then. Does this meet the requirement?",
       options: [
-        "Compliant — the program is written, approved, and references nationally recognized guidelines",
-        "Non-compliant — the IPC program must be relevant to the current organization as demonstrated by a current, formal documented infection prevention risk assessment",
-        "Compliant — risk assessments are recommended but not required",
-        "Non-compliant — risk assessments must be performed every six months",
+        "Yes — the program is written, approved, and references nationally recognized guidelines",
+        "No — the IPC program must be relevant to the current organization as demonstrated by a current, formal documented infection prevention risk assessment",
+        "Yes — risk assessments are recommended but not required",
+        "No — risk assessments must be performed every six months",
       ],
       correctIndex: 1,
       explanation:

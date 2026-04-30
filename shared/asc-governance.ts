@@ -78,10 +78,10 @@ export const ascGovernanceLevel: Level = {
       question:
         "A new ASC opens with a single owner-physician. The owner is the surgeon, the medical director, the chief privileging officer, and the QAPI chair. There are no governing body meetings on the calendar because 'it's just me.' During a survey, what is the most likely finding?",
       options: [
-        "Compliant — a single owner can hold all governance roles in a one-physician ASC",
+        "No finding — a single owner can hold all governance roles in a one-physician ASC",
         "Condition-level deficiency — the governing body must meet, deliberate, and document its decisions even if it has only one member",
         "Standard-level finding only — the owner just needs to add a co-signer",
-        "No finding — governance requirements only apply to multi-physician ASCs",
+        "Not applicable — governance requirements only apply to multi-physician ASCs",
       ],
       correctIndex: 1,
       explanation:
@@ -132,12 +132,12 @@ export const ascGovernanceLevel: Level = {
     {
       id: "asc_gov_03",
       question:
-        "An ASC's transfer agreement with the local hospital expired 8 months ago. The administrator says, 'We've used the same hospital for 10 years, the relationship is solid, no patient has needed transfer in over a year.' Is the ASC compliant with the Conditions for Coverage on transfer arrangements?",
+        "An ASC's transfer agreement with the local hospital expired 8 months ago. The administrator says, 'We've used the same hospital for 10 years, the relationship is solid, no patient has needed transfer in over a year.' Does the ASC meet the Conditions for Coverage on transfer arrangements?",
       options: [
-        "Compliant — informal long-standing relationships satisfy the transfer agreement requirement",
-        "Compliant if every physician on staff has hospital privileges at the receiving hospital",
-        "Non-compliant — a current written transfer agreement (or written documentation that all physicians have admitting privileges at the receiving hospital) is required",
-        "Compliant — transfer agreements are required only when the ASC performs higher-acuity procedures",
+        "Yes — informal long-standing relationships satisfy the transfer agreement requirement",
+        "Yes — only if every physician on staff has hospital privileges at the receiving hospital",
+        "No — a current written transfer agreement (or written documentation that all physicians have admitting privileges at the receiving hospital) is required",
+        "Yes — transfer agreements are required only when the ASC performs higher-acuity procedures",
       ],
       correctIndex: 2,
       explanation:
@@ -216,12 +216,12 @@ export const ascGovernanceLevel: Level = {
     {
       id: "asc_gov_06",
       question:
-        "An ASC's bylaws state that the medical director will be appointed by the governing body and will report to the governing body quarterly on medical staff activities. In practice, the role rotates informally among the partners and no medical director report has been delivered in 14 months. How is this scored?",
+        "An ASC's bylaws state that the medical director will be appointed by the governing body and will report to the governing body quarterly on medical staff activities. In practice, the role rotates informally among the partners and no medical director report has been delivered in 14 months. Does this meet the requirement?",
       options: [
-        "Compliant — informal rotation is a flexible governance model",
-        "Non-compliant — the bylaws are the binding standard the ASC has set for itself; failure to follow them is a citation",
-        "Compliant if the partners self-attest that they are jointly serving as medical director",
-        "Non-compliant only if a patient was harmed",
+        "Yes — informal rotation is a flexible governance model",
+        "No — the bylaws are the binding standard the ASC has set for itself; failure to follow them is a citation",
+        "Yes — only if the partners self-attest that they are jointly serving as medical director",
+        "No — only if a patient was harmed",
       ],
       correctIndex: 1,
       explanation:

@@ -76,12 +76,12 @@ export const ascClinicalRecordsLevel: Level = {
     {
       id: "asc_cr_01",
       question:
-        "A patient arrives for outpatient knee arthroscopy. The chart contains an H&P dated 32 days ago. The pre-op nurse asks the patient about any changes and writes 'No changes' on a sticky note in the chart. Is this compliant?",
+        "A patient arrives for outpatient knee arthroscopy. The chart contains an H&P dated 32 days ago. The pre-op nurse asks the patient about any changes and writes 'No changes' on a sticky note in the chart. Does this meet the requirement?",
       options: [
-        "Compliant — the patient confirmed no changes, which is the day-of update",
-        "Compliant — H&P validity is 90 days for low-risk procedures",
-        "Non-compliant — the H&P is outside the 30-day window and the day-of update must be a properly dated, signed chart entry, not a sticky note",
-        "Non-compliant — the H&P window is 14 days for ASC procedures",
+        "Yes — the patient confirmed no changes, which is the day-of update",
+        "Yes — H&P validity is 90 days for low-risk procedures",
+        "No — the H&P is outside the 30-day window and the day-of update must be a properly dated, signed chart entry, not a sticky note",
+        "No — the H&P window is 14 days for ASC procedures",
       ],
       correctIndex: 2,
       explanation:
