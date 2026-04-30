@@ -111,6 +111,9 @@ A gamified SaaS learning app that turns Joint Commission compliance audits into 
 
 ## Roles & Facility Filtering
 - `MODULE_IDS = ["hospital", "asc"]` in `shared/schema.ts`. The clinic facility module has been completely removed (no /clinics route, no clinic role configs, no clinic question bank).
+- `/role-select` is a 2-step wizard: Step 1 = Choose facility (Hospital or ASC cards, current facility highlighted as "YOUR FACILITY"); Step 2 = Choose role(s) for that facility. Step 1 always shows first when the page mounts, even if the user already has an `organizationType` set from signup. A "Change facility" link on Step 2 returns to Step 1. Picking a different facility on Step 1 PATCHes `/api/user/organization-type` before advancing.
+- After successful role save, role-select-page uses `window.location.assign("/")` for a hard reload — wouter's `navigate("/")` was racing with React Query cache propagation and HomeRoute would briefly see the stale (no-roleId) user and bounce back.
+- `App.tsx` `HomeRoute` only checks the legacy `mosh_force_role_select` sessionStorage flag (set by auth-page on login/register) when the user has no `roleId`; once they have a role, the flag is cleared and they land on the dashboard.
 - `shared/roles.ts` defines `ROLE_CONFIGS` with a `facilityType` field of `"hospital" | "asc"`.
 - 10 hospital roles + 6 ASC roles seeded automatically by `seedRoles()` in `server/storage.ts` (iterates ROLE_CONFIGS).
 - ASC roles are organized one-per-published-chapter under a single department `"AAAHC Standards"`. Slugs: `asc_governance_track`, `asc_patient_rights_track`, `asc_clinical_records_track`, `asc_credentialing_track`, `asc_quality_management_track`, `asc_infection_prevention_track`. Each is `DEPT` scope and maps to exactly one chapter; users wanting full coverage tap "Select all roles".

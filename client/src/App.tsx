@@ -82,14 +82,10 @@ function HomeRoute() {
   }
 
   if (user) {
-    let forceRoleSelect = false;
-    try { forceRoleSelect = sessionStorage.getItem("mosh_force_role_select") === "1"; } catch {}
-    if (forceRoleSelect) {
-      return <Redirect to="/role-select" />;
-    }
     if (!user.roleId && !user.isAdmin) {
       return <Redirect to="/role-select" />;
     }
+    try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
     return <DashboardPage />;
   }
 

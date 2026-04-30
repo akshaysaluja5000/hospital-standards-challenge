@@ -130,6 +130,13 @@ export default function RoleSelectPage() {
   const visibleRoles = useMemo(() => rolesForFacility(facilityType), [facilityType]);
   const visibleIds = useMemo(() => new Set(visibleRoles.map((r) => r.id)), [visibleRoles]);
 
+  const [step, setStep] = useState<1 | 2>(1);
+  const [pendingFacility, setPendingFacility] = useState<FacilityType>(facilityType);
+
+  useEffect(() => {
+    setPendingFacility(facilityType);
+  }, [facilityType]);
+
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem(SELECTION_KEY);
@@ -181,12 +188,12 @@ export default function RoleSelectPage() {
       });
       return res.json();
     },
-    onSuccess: async (updatedUser, ids) => {
+    onSuccess: (updatedUser, ids) => {
       try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
       try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
       queryClient.setQueryData(["/api/auth/me"], updatedUser);
-      await queryClient.invalidateQueries({ queryKey: ["/api/user/assigned-chapters"] });
-      await queryClient.invalidateQueries({ queryKey: ["/api/user/view-scope"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/assigned-chapters"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/view-scope"] });
       const primary = ROLE_CONFIGS.find((r) => r.id === ids[0]);
       if (!primary) {
         toast({ title: "Error", description: "Role configuration is missing.", variant: "destructive" });
@@ -200,7 +207,7 @@ export default function RoleSelectPage() {
           ? `You're set up as ${primary.title} (+${extra} more role${extra > 1 ? "s" : ""}).`
           : `You're set up as ${primary.title}.`,
       });
-      navigate("/");
+      window.location.assign("/");
     },
     onError: (err: any) => {
       toast({ title: "Error", description: err.message || "Failed to save role", variant: "destructive" });
@@ -238,6 +245,31 @@ export default function RoleSelectPage() {
       }
     }
     setRoleMutation.mutate(selectedIds);
+  };
+
+  const handleFacilityContinue = async () => {
+    setShowError(false);
+    if (pendingFacility !== facilityType) {
+      try {
+        await switchFacilityMutation.mutateAsync(pendingFacility);
+      } catch {
+        return;
+      }
+    }
+    setStep(2);
+  };
+
+  const FACILITY_ACCREDITOR: Record<FacilityType, string> = {
+    hospital: "The Joint Commission",
+    asc: "AAAHC",
+  };
+  const FACILITY_DESCRIPTIONS: Record<FacilityType, string> = {
+    hospital: "Inpatient hospital training aligned with The Joint Commission standards. Choose a department role to focus your chapters.",
+    asc: "Ambulatory Surgery Center training aligned with the AAAHC Accreditation Handbook. Pick the chapter tracks that match your responsibilities.",
+  };
+  const FACILITY_ICONS: Record<FacilityType, LucideIcon> = {
+    hospital: Building2,
+    asc: HeartPulse,
   };
 
   if (isLoading) {
@@ -278,14 +310,14 @@ export default function RoleSelectPage() {
               className="mb-4 px-3 py-1 text-xs font-semibold tracking-wider uppercase border-primary/30 text-primary bg-primary/5"
               data-testid="badge-step"
             >
-              Step 1 of 2 — Choose your role
+              {step === 1 ? "Step 1 of 2 — Choose your facility" : "Step 2 of 2 — Choose your role"}
             </Badge>
           </div>
 
           <div className="flex items-center justify-center gap-2 mb-6 text-xs text-muted-foreground" data-testid="text-step-indicator">
-            <span className="font-semibold text-primary">1. Choose your role</span>
+            <span className={step === 1 ? "font-semibold text-primary" : ""}>1. Choose your facility</span>
             <span aria-hidden="true">›</span>
-            <span>2. Start your training</span>
+            <span className={step === 2 ? "font-semibold text-primary" : ""}>2. Choose your role</span>
           </div>
 
           <div className="text-center mb-8 md:mb-10">
@@ -293,17 +325,116 @@ export default function RoleSelectPage() {
               className="text-3xl md:text-4xl font-bold mb-3 tracking-tight"
               data-testid="text-role-select-title"
             >
-              What's your role at MOSH?
+              {step === 1
+                ? (user?.firstName ? `Welcome, ${user.firstName}` : "Welcome to MOSH")
+                : "What's your role?"}
             </h1>
             <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
-              {user?.firstName ? `Welcome, ${user.firstName}. ` : ""}
-              Select your department so we can focus your training on the Joint Commission standards that matter most to your work.
+              {step === 1
+                ? "Pick the facility you work in so we can show you the right accreditation standards. You can change this anytime."
+                : `Select your department so we can focus your training on the ${FACILITY_ACCREDITOR[facilityType]} standards that matter most to your work.`}
             </p>
-            <p className="text-sm text-muted-foreground/80 max-w-xl mx-auto mt-2">
-              You'll go straight to the training that matches this role. You can change your role later from your profile.
-            </p>
+            {step === 2 && (
+              <p className="text-sm text-muted-foreground/80 max-w-xl mx-auto mt-2">
+                You'll go straight to the training that matches this role. You can change your role later from your profile.
+              </p>
+            )}
           </div>
 
+          {step === 1 && (
+            <div className="grid sm:grid-cols-2 gap-4 mb-8" data-testid="grid-facility-cards">
+              {MODULE_IDS.map((m) => {
+                const isSelected = pendingFacility === m;
+                const isCurrent = facilityType === m;
+                const FacilityIcon = FACILITY_ICONS[m];
+                const roleCount = rolesForFacility(m).length;
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    aria-label={`${MODULE_LABELS[m]}. ${FACILITY_DESCRIPTIONS[m]}`}
+                    data-testid={`card-facility-${m}`}
+                    onClick={() => setPendingFacility(m)}
+                    className={`group relative text-left rounded-xl border-2 bg-card p-5 transition-all hover-elevate active-elevate-2 ${
+                      isSelected
+                        ? "border-primary ring-2 ring-primary/20 shadow-sm bg-primary/5"
+                        : "border-border"
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
+                      <div
+                        className={`shrink-0 rounded-lg p-3 transition-colors ${
+                          isSelected
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground"
+                        }`}
+                      >
+                        <FacilityIcon size={24} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-semibold text-lg leading-tight">
+                            {MODULE_LABELS[m]}
+                          </h3>
+                          {isSelected && (
+                            <div
+                              className="shrink-0 rounded-full bg-primary text-primary-foreground p-0.5"
+                              data-testid={`indicator-facility-selected-${m}`}
+                            >
+                              <Check size={14} strokeWidth={3} />
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-xs font-semibold tracking-wider text-primary uppercase mt-1">
+                          {FACILITY_ACCREDITOR[m]}
+                        </p>
+                        <p className="text-sm text-muted-foreground mt-2 leading-snug">
+                          {FACILITY_DESCRIPTIONS[m]}
+                        </p>
+                        <div className="flex flex-wrap gap-1.5 mt-3">
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] font-semibold tracking-wider px-1.5 py-0 h-5"
+                          >
+                            {roleCount} {roleCount === 1 ? "ROLE" : "ROLES"}
+                          </Badge>
+                          {isCurrent && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] font-semibold tracking-wider px-1.5 py-0 h-5 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                            >
+                              YOUR FACILITY
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="flex items-center justify-center gap-2 mb-6 -mt-4">
+              <span className="text-xs text-muted-foreground">
+                Facility: <span className="font-semibold text-foreground">{MODULE_LABELS[facilityType]}</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                data-testid="button-change-facility"
+                className="text-xs text-primary hover:underline font-medium"
+              >
+                Change facility
+              </button>
+            </div>
+          )}
+
+          {step === 2 && (
+          <>
           <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
             <Button
               type="button"
@@ -501,11 +632,13 @@ export default function RoleSelectPage() {
               Tap as many roles as you fill — your first pick is your primary role.
             </p>
           </div>
+          </>
+          )}
         </div>
 
         <div className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-10">
           <div className="max-w-4xl mx-auto px-4 py-4">
-            {showError && selectedIds.length === 0 && (
+            {step === 2 && showError && selectedIds.length === 0 && (
               <div
                 role="alert"
                 data-testid="alert-no-selection"
@@ -517,7 +650,19 @@ export default function RoleSelectPage() {
             )}
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1">
-                {selectedRole ? (
+                {step === 1 ? (
+                  <div data-testid="text-facility-summary">
+                    <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                      Selected facility
+                    </p>
+                    <p className="font-semibold truncate">
+                      {MODULE_LABELS[pendingFacility]}
+                      <span className="text-muted-foreground font-normal">
+                        {" "}· {FACILITY_ACCREDITOR[pendingFacility]}
+                      </span>
+                    </p>
+                  </div>
+                ) : selectedRole ? (
                   <div data-testid="text-role-summary">
                     <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
                       {selectedIds.length > 1
@@ -544,23 +689,43 @@ export default function RoleSelectPage() {
                   </div>
                 )}
               </div>
-              <Button
-                size="lg"
-                className="shrink-0 gap-2"
-                data-testid="button-confirm-role"
-                disabled={setRoleMutation.isPending}
-                onClick={handleContinue}
-              >
-                {setRoleMutation.isPending ? (
-                  <>
-                    <Loader2 className="animate-spin" size={16} /> Saving...
-                  </>
-                ) : (
-                  <>
-                    Continue <ArrowRight size={16} />
-                  </>
-                )}
-              </Button>
+              {step === 1 ? (
+                <Button
+                  size="lg"
+                  className="shrink-0 gap-2"
+                  data-testid="button-confirm-facility"
+                  disabled={switchFacilityMutation.isPending}
+                  onClick={handleFacilityContinue}
+                >
+                  {switchFacilityMutation.isPending ? (
+                    <>
+                      <Loader2 className="animate-spin" size={16} /> Saving...
+                    </>
+                  ) : (
+                    <>
+                      Continue to roles <ArrowRight size={16} />
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  size="lg"
+                  className="shrink-0 gap-2"
+                  data-testid="button-confirm-role"
+                  disabled={setRoleMutation.isPending}
+                  onClick={handleContinue}
+                >
+                  {setRoleMutation.isPending ? (
+                    <>
+                      <Loader2 className="animate-spin" size={16} /> Saving...
+                    </>
+                  ) : (
+                    <>
+                      Continue <ArrowRight size={16} />
+                    </>
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </div>
