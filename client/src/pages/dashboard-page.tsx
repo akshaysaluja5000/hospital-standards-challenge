@@ -607,6 +607,14 @@ export default function DashboardPage() {
                         : "Apply when the service is provided"}
                     </span>
                   </div>
+                  {category === "Selective Standards" && (
+                    <p
+                      className="px-1 text-xs italic text-muted-foreground/80"
+                      data-testid="text-asc-numbering-note"
+                    >
+                      Chapter numbers follow AAAHC's official handbook. Gaps (Ch. 14–17, 21–23) are non-ASC adjunct standards used for other accreditation programs.
+                    </p>
+                  )}
                   <div className="flex flex-col gap-3">
                     {chapters.map((chapter) => (
                       <AscChapterCard
