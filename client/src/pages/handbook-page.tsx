@@ -173,7 +173,7 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
               {chapter.quickReference.map((item, i) => (
                 <div key={i} className="px-4 py-3.5 flex gap-4 text-base" data-testid={`quickref-item-${i}`}>
                   <span className="font-bold text-foreground min-w-[140px] flex-shrink-0">{item.fact}</span>
-                  <span className="text-foreground/70">{item.detail}</span>
+                  <span className="text-foreground/70 whitespace-pre-line leading-relaxed">{item.detail}</span>
                 </div>
               ))}
             </div>

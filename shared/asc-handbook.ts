@@ -1529,4 +1529,91 @@ for (const ch of ascHandbook) {
   if (quiz) ch.quizLevelId = quiz;
 }
 
+// ----- PDF-extraction cleanup -----------------------------------------------
+// The AAAHC PDF was extracted with `pdf-parse`, which leaves a few well-known
+// artifacts in the text:
+//   1. The compliance grid words ("Compliant Compliant", "present present",
+//      "are present", "applies", "Compliance Rating: if N elements apply ...")
+//      get concatenated to the end of paragraphs.
+//   2. Page footers ("32 Accreditation Handbook for Medicare Deemed Status, v42 Chapter 2")
+//      land at the end of the last paragraph on each page.
+//   3. The PDF column break shows up as " — " (space, em-dash, space) inside
+//      otherwise complete sentences, e.g. "approvals needed, if — any, of ...".
+//   4. Some standard headings end with a stray " —" because the next column had
+//      the grid words.
+//   5. CMS Tag YES NO NA grid headers tail along.
+// This normalizer scrubs those artifacts and rebuilds quickReference so each
+// chapter shows the cleaned standard sentence plus the top compliance bullets.
+
+function cleanText(input: string): string {
+  if (!input) return input;
+  let s = input;
+  // Strip common compliance-grid trailers + everything after them.
+  s = s.replace(/\s*(?:Compliance Rating: if .*?elements? apply .*)$/i, "");
+  s = s.replace(/\s*(?:Fully\s+Substantially\s+Partially\s+Minimally\s+Non-?\s*Compliant.*)$/i, "");
+  s = s.replace(/\s*(?:Compliant\s+Compliant.*)$/i, "");
+  s = s.replace(/\s*(?:CMS Tag YES NO NA.*)$/i, "");
+  s = s.replace(/\s*\d+\s+Accreditation Handbook for Medicare Deemed Status,\s*v42.*$/i, "");
+  s = s.replace(/\s*References?\s*\/\s*Notes\s*•.*$/is, "");
+  // Rejoin column-break em-dashes inside a sentence: " — " between two lowercase
+  // halves is almost always a PDF column wrap, never a real em-dash.
+  s = s.replace(/([a-z,;])\s+—\s+([a-z])/g, "$1 $2");
+  // Trailing stray em-dash at the end of a heading.
+  s = s.replace(/\s+—\s*$/g, "");
+  // Trailing "..." truncations from earlier hand-written quickRefs.
+  s = s.replace(/\s*\.{2,}$/g, ".");
+  // Collapse repeat whitespace and tidy punctuation.
+  s = s.replace(/\s+/g, " ").trim();
+  // Drop dangling " ." or "  ;".
+  s = s.replace(/\s+([.,;:])/g, "$1");
+  return s;
+}
+
+function extractElements(content: string): string[] {
+  const cleaned = cleanText(content);
+  // The "Elements of compliance — (1) ... (2) ... (3) ..." pattern.
+  const intro = cleaned.replace(/^Elements of compliance\s*[—:-]?\s*/i, "");
+  if (!/\(\d+\)/.test(intro)) return [];
+  const parts = intro
+    .split(/\s*\((\d+)\)\s*/)
+    .filter((p) => p && !/^\d+$/.test(p));
+  return parts.map((p) => {
+    let t = p.trim().replace(/[;,.]\s*$/, "");
+    // Inline sub-bullets ("a. ... b. ...") are kept inline but tidied.
+    t = t.replace(/\s*;\s*([a-z])\./g, " — $1.");
+    if (t.length > 220) t = t.slice(0, 217).trimEnd() + "…";
+    return t;
+  });
+}
+
+function standardLabel(heading: string): { letter: string; statement: string } {
+  const m = heading.match(/^([A-Z])\.\s*(.*)$/);
+  if (m) return { letter: m[1], statement: m[2].trim() };
+  return { letter: "", statement: heading.trim() };
+}
+
+for (const ch of ascHandbook) {
+  // Clean each section's heading + content in place so the Full Guide tab is
+  // also free of the grid noise.
+  for (const sec of ch.sections) {
+    sec.heading = cleanText(sec.heading);
+    sec.content = cleanText(sec.content);
+  }
+
+  // Rebuild quickReference: one row per standard, with the cleaned standard
+  // statement plus up to three bullet points covering the main compliance
+  // elements. This addresses chapters where the previous quickRef was truncated
+  // (e.g. "...resulting from care provided by t...") or had grid noise.
+  const newQuickRef: { fact: string; detail: string }[] = [];
+  for (const sec of ch.sections) {
+    const { letter, statement } = standardLabel(sec.heading);
+    const fact = letter ? `Standard ${letter}` : "Key point";
+    const elements = extractElements(sec.content);
+    const bullets = elements.slice(0, 3).map((e) => `• ${e}`);
+    const detailParts = [statement, ...bullets].filter(Boolean);
+    newQuickRef.push({ fact, detail: detailParts.join("\n") });
+  }
+  ch.quickReference = newQuickRef;
+}
+
 export const ASC_HANDBOOK_CATEGORY_ORDER: AscHandbookCategory[] = ["Universal Standards", "Selective Standards"];
