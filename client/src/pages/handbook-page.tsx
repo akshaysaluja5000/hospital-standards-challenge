@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AiHandbookSearch } from "@/components/ai-handbook-search";
 import { handbook } from "@shared/handbook";
+import { ascHandbook, ASC_HANDBOOK_CATEGORY_ORDER, type AscHandbookCategory, type AscHandbookChapter } from "@shared/asc-handbook";
 import { findLevelById } from "@shared/all-levels";
+import { useAuth } from "@/lib/auth";
 import type { HandbookChapter, HandbookSection } from "@shared/schema";
 
 function SectionCard({ section, levelColor, index }: { section: HandbookSection; levelColor: string; index: number }) {
@@ -188,37 +190,96 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
   );
 }
 
+function chapterMatchesQuery(ch: HandbookChapter, q: string) {
+  if (ch.title.toLowerCase().includes(q)) return true;
+  if (ch.overview.toLowerCase().includes(q)) return true;
+  return ch.sections.some(
+    (s) =>
+      s.heading.toLowerCase().includes(q) ||
+      s.content.toLowerCase().includes(q) ||
+      s.criticalValues?.some((cv) => cv.value.toLowerCase().includes(q) || cv.label.toLowerCase().includes(q)) ||
+      s.thinkAboutIt?.toLowerCase().includes(q)
+  ) || ch.quickReference.some(
+    (qr) => qr.fact.toLowerCase().includes(q) || qr.detail.toLowerCase().includes(q)
+  );
+}
+
 export default function HandbookPage() {
   const [, params] = useRoute("/handbook/:levelId");
   const [, setLocation] = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
+  const { user } = useAuth();
+
+  const isAsc = user?.organizationType === "asc";
+  const allChapters: HandbookChapter[] = isAsc ? ascHandbook : handbook;
 
   const selectedLevelId = params?.levelId;
   const selectedChapter = selectedLevelId
-    ? handbook.find((ch) => ch.levelId === selectedLevelId)
+    ? allChapters.find((ch) => ch.levelId === selectedLevelId)
     : null;
 
+  const q = searchQuery.trim().toLowerCase();
   const filteredChapters = useMemo(() => {
-    if (!searchQuery.trim()) return handbook;
-    const q = searchQuery.toLowerCase();
-    return handbook.filter((ch) => {
-      if (ch.title.toLowerCase().includes(q)) return true;
-      if (ch.overview.toLowerCase().includes(q)) return true;
-      return ch.sections.some(
-        (s) =>
-          s.heading.toLowerCase().includes(q) ||
-          s.content.toLowerCase().includes(q) ||
-          s.criticalValues?.some((cv) => cv.value.toLowerCase().includes(q) || cv.label.toLowerCase().includes(q)) ||
-          s.thinkAboutIt?.toLowerCase().includes(q)
-      ) || ch.quickReference.some(
-        (qr) => qr.fact.toLowerCase().includes(q) || qr.detail.toLowerCase().includes(q)
-      );
-    });
-  }, [searchQuery]);
+    if (!q) return allChapters;
+    return allChapters.filter((ch) => chapterMatchesQuery(ch, q));
+  }, [q, allChapters]);
+
+  // Group ASC chapters by category (Universal Standards first, then Selective)
+  const ascGroups = useMemo(() => {
+    if (!isAsc) return null;
+    const groups: Record<AscHandbookCategory, AscHandbookChapter[]> = {
+      "Universal Standards": [],
+      "Selective Standards": [],
+    };
+    for (const ch of filteredChapters as AscHandbookChapter[]) {
+      groups[ch.category].push(ch);
+    }
+    for (const cat of ASC_HANDBOOK_CATEGORY_ORDER) {
+      groups[cat].sort((a, b) => a.chapterNumber - b.chapterNumber);
+    }
+    return groups;
+  }, [isAsc, filteredChapters]);
 
   if (selectedChapter) {
     return <ChapterView chapter={selectedChapter} onBack={() => setLocation("/handbook")} />;
   }
+
+  const introCopy = isAsc
+    ? "The full AAAHC Accreditation Handbook for Medicare Deemed Status (v42), organized by chapter exactly as published. Universal Standards apply to every accredited ASC; Selective Standards apply when the listed service is provided."
+    : "Everything you need to know for Joint Commission compliance — organized by topic with detailed explanations, critical values, and real-world scenarios. Use this alongside the quizzes to build deep understanding.";
+
+  const renderChapterCard = (chapter: HandbookChapter) => {
+    const level = findLevelById(chapter.levelId);
+    const color = level?.color || "hsl(152, 82%, 39%)";
+    return (
+      <motion.button
+        key={chapter.levelId}
+        className="w-full text-left rounded-xl border-2 border-card-border bg-card p-4 flex items-center gap-4 hover:bg-accent/30 transition-all shadow-sm hover:shadow-md"
+        onClick={() => setLocation(`/handbook/${chapter.levelId}`)}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        whileHover={{ y: -1 }}
+        whileTap={{ scale: 0.98 }}
+        data-testid={`button-chapter-${chapter.levelId}`}
+      >
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: `${color}20` }}
+        >
+          <BookOpen size={22} style={{ color }} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-base" style={{ color }}>
+            {chapter.title}
+          </h3>
+          <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+            {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
+          </p>
+        </div>
+        <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+      </motion.button>
+    );
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -229,17 +290,20 @@ export default function HandbookPage() {
           </Button>
           <div className="flex items-center gap-2 flex-1">
             <BookOpen size={20} className="text-primary" />
-            <h1 className="font-black text-lg">Compliance Handbook</h1>
+            <h1 className="font-black text-lg" data-testid="text-handbook-title">
+              {isAsc ? "AAAHC Accreditation Handbook" : "Compliance Handbook"}
+            </h1>
           </div>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto w-full px-4 py-6 flex flex-col gap-5">
         <div className="rounded-xl bg-primary/5 border border-primary/20 p-5">
-          <h2 className="font-bold text-base mb-1.5">Your Complete Reference Guide</h2>
+          <h2 className="font-bold text-base mb-1.5" data-testid="text-handbook-subtitle">
+            {isAsc ? "AAAHC Medicare Deemed Status, v42" : "Your Complete Reference Guide"}
+          </h2>
           <p className="text-sm text-foreground/70 leading-relaxed">
-            Everything you need to know for Joint Commission compliance — organized by topic with detailed explanations,
-            critical values, and real-world scenarios. Use this alongside the quizzes to build deep understanding.
+            {introCopy}
           </p>
         </div>
 
@@ -256,48 +320,47 @@ export default function HandbookPage() {
           />
         </div>
 
-        <div className="flex flex-col gap-3">
-          {filteredChapters.map((chapter) => {
-            const level = findLevelById(chapter.levelId);
-            const color = level?.color || "hsl(152, 82%, 39%)";
-
-            return (
-              <motion.button
-                key={chapter.levelId}
-                className="w-full text-left rounded-xl border-2 border-card-border bg-card p-4 flex items-center gap-4 hover:bg-accent/30 transition-all shadow-sm hover:shadow-md"
-                onClick={() => setLocation(`/handbook/${chapter.levelId}`)}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileHover={{ y: -1 }}
-                whileTap={{ scale: 0.98 }}
-                data-testid={`button-chapter-${chapter.levelId}`}
-              >
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ backgroundColor: `${color}20` }}
-                >
-                  <BookOpen size={22} style={{ color }} />
+        {isAsc && ascGroups ? (
+          <div className="flex flex-col gap-6">
+            {ASC_HANDBOOK_CATEGORY_ORDER.map((cat) => {
+              const items = ascGroups[cat];
+              if (items.length === 0) return null;
+              return (
+                <div key={cat} className="flex flex-col gap-3" data-testid={`group-${cat.toLowerCase().replace(/\s+/g, "-")}`}>
+                  <div className="flex items-baseline justify-between px-1">
+                    <h3 className="font-black text-sm uppercase tracking-wide text-primary" data-testid={`heading-${cat.toLowerCase().replace(/\s+/g, "-")}`}>
+                      {cat}
+                    </h3>
+                    <span className="text-xs text-muted-foreground">
+                      {cat === "Universal Standards"
+                        ? "Apply to every accredited ASC"
+                        : "Apply when the service is provided"}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {items.map(renderChapterCard)}
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-base" style={{ color }}>
-                    {chapter.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
-                    {chapter.sections.length} sections · {chapter.quickReference.length} quick reference items
-                  </p>
-                </div>
-                <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-              </motion.button>
-            );
-          })}
-
-          {filteredChapters.length === 0 && (
-            <div className="text-center py-12">
-              <Search size={32} className="mx-auto text-muted-foreground/30 mb-3" />
-              <p className="text-sm text-muted-foreground">No chapters match your search</p>
-            </div>
-          )}
-        </div>
+              );
+            })}
+            {filteredChapters.length === 0 && (
+              <div className="text-center py-12">
+                <Search size={32} className="mx-auto text-muted-foreground/30 mb-3" />
+                <p className="text-sm text-muted-foreground">No chapters match your search</p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {filteredChapters.map(renderChapterCard)}
+            {filteredChapters.length === 0 && (
+              <div className="text-center py-12">
+                <Search size={32} className="mx-auto text-muted-foreground/30 mb-3" />
+                <p className="text-sm text-muted-foreground">No chapters match your search</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
