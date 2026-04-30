@@ -137,21 +137,34 @@ export default function RoleSelectPage() {
     setPendingFacility(facilityType);
   }, [facilityType]);
 
+  const { data: dbRoles, isLoading } = useQuery<{ id: number; slug: string }[]>({
+    queryKey: ["/api/roles"],
+  });
+
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem(SELECTION_KEY);
       if (saved) {
         const parsed: string[] = JSON.parse(saved);
         const valid = parsed.filter((id) => visibleIds.has(id));
-        if (valid.length) setSelectedIds(valid);
+        if (valid.length) {
+          setSelectedIds(valid);
+          return;
+        }
       }
     } catch {}
+    // No saved sessionStorage selection — prefill from the user's already-saved role(s)
+    // so a returning hospital user re-going through the wizard sees their picks pre-selected.
+    if (dbRoles && user?.roleId) {
+      const idToSlug = new Map<number, string>();
+      dbRoles.forEach((r) => idToSlug.set(r.id, r.slug));
+      const ids = [user.roleId, ...((user as any).additionalRoleIds || [])]
+        .map((id: number) => idToSlug.get(id))
+        .filter((slug): slug is string => Boolean(slug) && visibleIds.has(slug as string));
+      if (ids.length) setSelectedIds(ids);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, facilityType]);
-
-  const { data: dbRoles, isLoading } = useQuery<{ id: number; slug: string }[]>({
-    queryKey: ["/api/roles"],
-  });
+  }, [user, facilityType, dbRoles]);
 
   const slugToDbId = useMemo(() => {
     const map = new Map<string, number>();
@@ -256,6 +269,13 @@ export default function RoleSelectPage() {
         return;
       }
     }
+    // ASC users skip role selection — every ASC user sees all AAAHC chapters.
+    if (pendingFacility === "asc") {
+      try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
+      try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
+      window.location.assign("/");
+      return;
+    }
     setStep(2);
   };
 
@@ -310,15 +330,21 @@ export default function RoleSelectPage() {
               className="mb-4 px-3 py-1 text-xs font-semibold tracking-wider uppercase border-primary/30 text-primary bg-primary/5"
               data-testid="badge-step"
             >
-              {step === 1 ? "Step 1 of 2 — Choose your facility" : "Step 2 of 2 — Choose your role"}
+              {step === 1
+                ? (pendingFacility === "asc"
+                    ? "Choose your facility"
+                    : "Step 1 of 2 — Choose your facility")
+                : "Step 2 of 2 — Choose your role"}
             </Badge>
           </div>
 
-          <div className="flex items-center justify-center gap-2 mb-6 text-xs text-muted-foreground" data-testid="text-step-indicator">
-            <span className={step === 1 ? "font-semibold text-primary" : ""}>1. Choose your facility</span>
-            <span aria-hidden="true">›</span>
-            <span className={step === 2 ? "font-semibold text-primary" : ""}>2. Choose your role</span>
-          </div>
+          {pendingFacility !== "asc" && (
+            <div className="flex items-center justify-center gap-2 mb-6 text-xs text-muted-foreground" data-testid="text-step-indicator">
+              <span className={step === 1 ? "font-semibold text-primary" : ""}>1. Choose your facility</span>
+              <span aria-hidden="true">›</span>
+              <span className={step === 2 ? "font-semibold text-primary" : ""}>2. Choose your role</span>
+            </div>
+          )}
 
           <div className="text-center mb-8 md:mb-10">
             <h1
@@ -331,7 +357,9 @@ export default function RoleSelectPage() {
             </h1>
             <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
               {step === 1
-                ? "Pick the facility you work in so we can show you the right accreditation standards. You can change this anytime."
+                ? (pendingFacility === "asc"
+                    ? "Pick the facility you work in. AAAHC accreditation applies the same Universal Standards to every ASC, so there are no separate roles to choose. You can change this anytime."
+                    : "Pick the facility you work in so we can show you the right accreditation standards. You can change this anytime.")
                 : `Select your department so we can focus your training on the ${FACILITY_ACCREDITOR[facilityType]} standards that matter most to your work.`}
             </p>
             {step === 2 && (
@@ -661,6 +689,14 @@ export default function RoleSelectPage() {
                         {" "}· {FACILITY_ACCREDITOR[pendingFacility]}
                       </span>
                     </p>
+                    {pendingFacility === "asc" && (
+                      <p
+                        className="text-xs text-muted-foreground mt-0.5"
+                        data-testid="text-asc-no-roles-note"
+                      >
+                        ASC training applies to every team member — no role to choose.
+                      </p>
+                    )}
                   </div>
                 ) : selectedRole ? (
                   <div data-testid="text-role-summary">
@@ -703,7 +739,7 @@ export default function RoleSelectPage() {
                     </>
                   ) : (
                     <>
-                      Continue to roles <ArrowRight size={16} />
+                      {pendingFacility === "asc" ? "Continue to dashboard" : "Continue to roles"} <ArrowRight size={16} />
                     </>
                   )}
                 </Button>

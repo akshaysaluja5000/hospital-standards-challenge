@@ -9,6 +9,19 @@ export type AscHandbookCategory = "Universal Standards" | "Selective Standards";
 export type AscHandbookChapter = HandbookChapter & {
   chapterNumber: number;
   category: AscHandbookCategory;
+  quizLevelId?: string;
+};
+
+// Maps each AAAHC handbook chapter to its existing question bank, when one exists.
+// Chapters without a mapping are reading-only on the dashboard.
+const QUIZ_MAP: Record<string, string> = {
+  asc_hb_patient_rights: "asc_patient_rights",
+  asc_hb_governance: "asc_governance",
+  asc_hb_quality_mgmt: "asc_quality_management",
+  asc_hb_clinical_records: "asc_clinical_records",
+  asc_hb_infection_prevention: "asc_infection_prevention_safety",
+  asc_hb_facilities_environment: "asc_facilities_environment",
+  asc_hb_anesthesia: "asc_anesthesia_surgery_services",
 };
 
 export const ascHandbook: AscHandbookChapter[] = [
@@ -1509,5 +1522,11 @@ export const ascHandbook: AscHandbookChapter[] = [
     ],
   },
 ];
+
+// Attach quizLevelId from QUIZ_MAP so dashboard can decide between "Read" + "Practice".
+for (const ch of ascHandbook) {
+  const quiz = QUIZ_MAP[ch.levelId];
+  if (quiz) ch.quizLevelId = quiz;
+}
 
 export const ASC_HANDBOOK_CATEGORY_ORDER: AscHandbookCategory[] = ["Universal Standards", "Selective Standards"];

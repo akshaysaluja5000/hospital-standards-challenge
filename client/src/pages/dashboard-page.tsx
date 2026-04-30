@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,7 +14,8 @@ import { useAuth } from "@/lib/auth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import type { UserStreak, UserProgress, DailyActivity, QuizSession, DiagnosticResult } from "@shared/schema";
-import { getVisibleLevelsForModule } from "@shared/all-levels";
+import { getVisibleLevelsForModule, findLevelById } from "@shared/all-levels";
+import { ascHandbook, ASC_HANDBOOK_CATEGORY_ORDER, type AscHandbookChapter } from "@shared/asc-handbook";
 import { MODULE_LABELS, type ModuleId } from "@shared/schema";
 import { getRoleConfig } from "@shared/roles";
 
@@ -27,6 +28,110 @@ const PATHWAY_DISCLAIMERS: Record<ModuleId, string> = {
   hospital: "Not affiliated with The Joint Commission. For educational purposes only.",
   asc: "Not affiliated with AAAHC, The Joint Commission, or CMS. For educational purposes only.",
 };
+
+function AscChapterCard({
+  chapter,
+  progressMap,
+  sessionsMap,
+  onRead,
+  onPlay,
+  onStudy,
+}: {
+  chapter: AscHandbookChapter;
+  progressMap: Map<string, UserProgress>;
+  sessionsMap: Map<string, QuizSession>;
+  onRead: () => void;
+  onPlay: (quizId: string) => void;
+  onStudy: (quizId: string) => void;
+}) {
+  const quizId = chapter.quizLevelId;
+  const quizLevel = quizId ? findLevelById(quizId) : undefined;
+  const totalQuestions = quizLevel?.questions.filter((q) => !q.draft).length ?? 0;
+  // Only treat as "has a quiz" if there's a real published quiz with shippable questions.
+  const hasPublishedQuiz = Boolean(quizId && quizLevel && totalQuestions > 0);
+  const progress = hasPublishedQuiz ? progressMap.get(quizId!) : undefined;
+  const session = hasPublishedQuiz ? sessionsMap.get(quizId!) : undefined;
+  const bestScore = progress?.bestScore ?? 0;
+  const hasPlayed = progress && progress.totalQuestions > 0;
+  const percentage = totalQuestions > 0 ? Math.round((bestScore / totalQuestions) * 100) : 0;
+
+  return (
+    <motion.div
+      className="w-full rounded-2xl border-2 border-border bg-card p-5 shadow-sm hover:shadow-md transition-all"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      data-testid={`card-asc-chapter-${chapter.levelId}`}
+    >
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
+          <span className="font-black text-xl">{chapter.chapterNumber}</span>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <h3 className="font-black text-base leading-tight" data-testid={`text-asc-chapter-title-${chapter.levelId}`}>
+              {chapter.title}
+            </h3>
+            {hasPublishedQuiz && hasPlayed && (
+              <span
+                className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center gap-1"
+                data-testid={`badge-best-score-${chapter.levelId}`}
+              >
+                <Trophy size={12} />
+                Best: {percentage}%
+              </span>
+            )}
+            {!hasPublishedQuiz && (
+              <span
+                className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-bold"
+                data-testid={`badge-reading-only-${chapter.levelId}`}
+              >
+                Reading
+              </span>
+            )}
+          </div>
+          <p className="text-sm text-foreground/70 mt-1.5 line-clamp-2 leading-snug">
+            {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
+          </p>
+          <div className="flex gap-2 mt-3 flex-wrap">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-sm font-semibold"
+              onClick={onRead}
+              data-testid={`button-asc-read-${chapter.levelId}`}
+            >
+              <FileText size={15} className="mr-1.5" />
+              Read in Handbook
+            </Button>
+            {quizId && totalQuestions > 0 ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-sm font-semibold"
+                  onClick={() => onStudy(quizId)}
+                  data-testid={`button-asc-study-${chapter.levelId}`}
+                >
+                  <BookOpen size={15} className="mr-1.5" />
+                  Study
+                </Button>
+                <Button
+                  size="sm"
+                  className="text-sm font-semibold"
+                  onClick={() => onPlay(quizId)}
+                  data-testid={`button-asc-practice-${chapter.levelId}`}
+                >
+                  <Play size={15} className="mr-1.5" />
+                  {session ? "Continue Quiz" : hasPlayed ? "Play Again" : "Practice Quiz"}
+                </Button>
+              </>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -85,11 +190,22 @@ export default function DashboardPage() {
   progress?.forEach((p) => progressMap.set(p.levelId, p));
 
   const userModule: ModuleId = (user?.organizationType as ModuleId) || "hospital";
+  const isAsc = userModule === "asc";
   const moduleLevels = getVisibleLevelsForModule(userModule);
 
-  const assignedFilteredLevels = (assignedData?.chapters && assignedData.chapters.length > 0)
-    ? moduleLevels.filter(l => assignedData.chapters.includes(l.id))
-    : moduleLevels;
+  // Hospital users still respect role-based assigned chapters. ASC users always see every AAAHC chapter.
+  const assignedFilteredLevels = isAsc
+    ? moduleLevels
+    : (assignedData?.chapters && assignedData.chapters.length > 0)
+      ? moduleLevels.filter(l => assignedData.chapters.includes(l.id))
+      : moduleLevels;
+
+  const ascChapterGroups = ASC_HANDBOOK_CATEGORY_ORDER.map((cat) => ({
+    category: cat,
+    chapters: ascHandbook
+      .filter((c) => c.category === cat)
+      .sort((a, b) => a.chapterNumber - b.chapterNumber),
+  }));
 
   const sessionsMap = new Map<string, QuizSession>();
   savedSessions?.forEach((s) => sessionsMap.set(s.levelId, s));
@@ -180,7 +296,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 pt-6 flex flex-col gap-6">
-        {user?.roleId && (() => {
+        {!isAsc && user?.roleId && (() => {
           const dbRole = rolesList?.find((r) => r.id === user.roleId);
           const cfg = dbRole ? getRoleConfig(dbRole.slug) : undefined;
           const title = cfg?.title || dbRole?.name || assignedData?.role?.name || "Your role";
@@ -435,7 +551,7 @@ export default function DashboardPage() {
               Questions are <span className="font-semibold text-foreground">shuffled each time</span> you play, so you'll get a different order every session.
             </p>
           </div>
-          {assignedData?.role && (
+          {!isAsc && assignedData?.role && (
             <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-muted border border-border" data-testid="text-role-banner">
               <Briefcase size={16} className="text-muted-foreground flex-shrink-0" />
               <p className="text-sm flex-1 min-w-[180px] text-foreground">
@@ -465,34 +581,73 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
-          <div className="flex flex-col gap-3">
-            {assignedFilteredLevels.length === 0 ? (
-              <div
-                className="rounded-2xl border-2 border-dashed border-border bg-muted/30 p-6 text-center"
-                data-testid="empty-state-pathway-domains"
-              >
-                <p className="font-semibold text-base mb-1">
-                  {MODULE_LABELS[userModule]} content is in development
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Domains for the {MODULE_LABELS[userModule]} pathway are set up, but training questions and study material aren't published yet. Check back soon.
-                </p>
-              </div>
-            ) : (
-              assignedFilteredLevels.map((level, index) => (
-                <LevelCard
-                  key={level.id}
-                  level={level}
-                  progress={progressMap.get(level.id)}
-                  savedSession={sessionsMap.get(level.id)}
-                  isUnlocked={isLevelUnlocked(index)}
-                  index={index}
-                  onPlay={() => setLocation(`/play/${level.id}`)}
-                  onStudy={() => setLocation(`/study/${level.id}`)}
-                />
-              ))
-            )}
-          </div>
+          {isAsc ? (
+            <div className="flex flex-col gap-6">
+              {ascChapterGroups.map(({ category, chapters }) => (
+                <div
+                  key={category}
+                  className="flex flex-col gap-3"
+                  data-testid={`group-dashboard-${category.toLowerCase().replace(/\s+/g, "-")}`}
+                >
+                  <div className="flex items-baseline justify-between px-1">
+                    <h3
+                      className="font-black text-sm uppercase tracking-wide text-primary"
+                      data-testid={`heading-dashboard-${category.toLowerCase().replace(/\s+/g, "-")}`}
+                    >
+                      {category}
+                    </h3>
+                    <span className="text-xs text-muted-foreground">
+                      {category === "Universal Standards"
+                        ? "Apply to every accredited ASC"
+                        : "Apply when the service is provided"}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {chapters.map((chapter) => (
+                      <AscChapterCard
+                        key={chapter.levelId}
+                        chapter={chapter}
+                        progressMap={progressMap}
+                        sessionsMap={sessionsMap}
+                        onRead={() => setLocation(`/handbook/${chapter.levelId}`)}
+                        onPlay={(quizId) => setLocation(`/play/${quizId}`)}
+                        onStudy={(quizId) => setLocation(`/study/${quizId}`)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {assignedFilteredLevels.length === 0 ? (
+                <div
+                  className="rounded-2xl border-2 border-dashed border-border bg-muted/30 p-6 text-center"
+                  data-testid="empty-state-pathway-domains"
+                >
+                  <p className="font-semibold text-base mb-1">
+                    {MODULE_LABELS[userModule]} content is in development
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Domains for the {MODULE_LABELS[userModule]} pathway are set up, but training questions and study material aren't published yet. Check back soon.
+                  </p>
+                </div>
+              ) : (
+                assignedFilteredLevels.map((level, index) => (
+                  <LevelCard
+                    key={level.id}
+                    level={level}
+                    progress={progressMap.get(level.id)}
+                    savedSession={sessionsMap.get(level.id)}
+                    isUnlocked={isLevelUnlocked(index)}
+                    index={index}
+                    onPlay={() => setLocation(`/play/${level.id}`)}
+                    onStudy={() => setLocation(`/study/${level.id}`)}
+                  />
+                ))
+              )}
+            </div>
+          )}
         </div>
 
         {masteryEligibility?.eligible && (
