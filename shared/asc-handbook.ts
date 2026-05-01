@@ -17,11 +17,15 @@ export type AscHandbookChapter = HandbookChapter & {
 const QUIZ_MAP: Record<string, string> = {
   asc_hb_patient_rights: "asc_patient_rights",
   asc_hb_governance: "asc_governance",
+  asc_hb_administration: "asc_administration",
+  asc_hb_quality_of_care: "asc_quality_of_care",
   asc_hb_quality_mgmt: "asc_quality_management",
   asc_hb_clinical_records: "asc_clinical_records",
   asc_hb_infection_prevention: "asc_infection_prevention_safety",
   asc_hb_facilities_environment: "asc_facilities_environment",
   asc_hb_anesthesia: "asc_anesthesia_surgery_services",
+  asc_hb_surgical_services: "asc_anesthesia_surgery_services",
+  asc_hb_pharmaceutical: "asc_pharmaceutical_services",
 };
 
 export const ascHandbook: AscHandbookChapter[] = [

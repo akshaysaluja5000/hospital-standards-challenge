@@ -1,128 +1,40 @@
 # Hospital Standards Challenge - Joint Commission Compliance Training Game
 
 ## Overview
-A gamified SaaS learning app that turns Joint Commission compliance audits into an engaging game. Built with a Duolingo-inspired design featuring streaks, XP, levels, and swipeable cards. Designed for per-facility licensing to hospitals. Deployed to accreditationready.ai.
+This project is a gamified SaaS learning application designed to transform Joint Commission compliance audits into an engaging educational experience. Inspired by Duolingo, it incorporates features like streaks, XP, levels, and swipeable cards to enhance user engagement. The application is licensed per facility to hospitals and is deployed at accreditationready.ai. The business vision is to provide an intuitive and effective platform for healthcare professionals to master compliance standards, ultimately improving patient safety and operational excellence within healthcare facilities. The market potential lies in offering a scalable and user-friendly solution to a critical and often dry aspect of hospital administration.
 
-## Architecture
-- **Frontend**: React + TypeScript + Tailwind CSS + Framer Motion
-- **Backend**: Express.js with session-based auth (passport-local)
-- **Database**: PostgreSQL (Drizzle ORM)
-- **Routing**: wouter
-- **State Management**: TanStack React Query
+## User Preferences
+I prefer iterative development with clear communication on major architectural decisions. When making changes, please ask for confirmation before proceeding with significant modifications to the codebase or feature set. I value detailed explanations of complex functionalities, especially concerning AI integrations and database interactions.
 
-## Key Features
-- Username/password authentication (no email required)
-- Facility-based isolation: users register with a facility code, leaderboards and admin stats scoped per facility
-- Public marketing landing page for unauthenticated visitors (no guest gameplay access)
-- Username-based password reset (forgot password flow)
-- Profile page with username/password change functionality
-- 11 levels based on Joint Commission audit domains (20 questions each, 220 total) — ALL unlocked from start (no sequential gating)
-- No pass/fail threshold — every completion is recorded, with tiered feedback (Excellent 80%+, Good 50%+, Keep Studying)
-- Study Mode with key concepts before each level (5 study cards per level)
-- Multiple choice questions (4 options) + Yes/No swipe cards (2 options)
-- Quiz session persistence: users can leave mid-level and resume where they left off (question order, answers, XP all preserved)
-- Quit dialog during gameplay: Save & Exit, Start Over (new question order), Quit Without Saving, Continue Playing
-- Dashboard level cards show "In Progress" badge with Continue/Start Over buttons when a saved session exists
-- Questions are shuffled each playthrough (randomized order); shuffle note displayed on dashboard and completion screen
-- Compliance Handbook: searchable reference guide with 11 chapters, expandable sections, critical values tables, "Think About It" scenarios, and quick reference view
-- Leaderboard: all logged-in users can see rankings by XP, accuracy, levels completed, streaks — scoped by facility
-- Streak system with animated flame icon
-- XP/leveling system
-- Daily goals with progress tracking (reminders toggle is UI-only, no emails sent)
-- Activity calendar
-- Admin dashboard for user tracking (facility-scoped)
-- Terms of Use / Privacy / Disclaimer page (public, no auth required)
-- "Not affiliated with The Joint Commission" disclaimer on dashboard and landing page
-- **Deep Dive Tracer**: Branching follow-up question mode — answer a base question correctly to unlock a deeper expert-level follow-up. Earns "Expert XP" for deeper knowledge. Full game flow with shuffled questions, session save/restore, save-and-exit, quit dialog (Save & Exit, Start Over, Quit Without Saving, Continue Playing), and pick-up-where-you-left-off. ALL 11 sections covered (20 questions each, 220 total): Transport of Instruments, Environment & Surfaces, Clean/Dirty Segregation, Sterile Storage & Handling, Instruments & Inspection, Facility Safety & Equipment, SPD & Decontamination, OR & Sterile Technique, Surgical Safety & Consent, Patient Care & Documentation, EOC & Safety Compliance. Questions randomized each playthrough.
-- **Visual refresh**: Vivid Professional palette — more saturated primary greens, deeper purples, real shadows (not zero), game-card styling with hover effects, gradient progress bars
-- **AI Tutor**: Anthropic-powered (Claude Haiku) multi-depth explanations for quiz questions (regular quiz, Deep Dive Tracer). "Ask AI Tutor" button appears after answering any question. 3 progressive depth levels: Level 1 (practical explanation, 7-8 sentences), Level 2 "Go Deeper" (regulatory history, surveyor evaluation, common citations), Level 3 "Go Even Deeper" (expert masterclass — sentinel events, best practices, leadership dimensions). Each level has a text-to-speech speaker button (Web Speech API). Rate-limited to 30 calls/user/hour shared across all AI features. Uses Replit AI Integrations (no external API key needed).
-- **AI Micro-Debriefs**: After completing a 20-question level, managers can generate an AI debrief summarizing strengths/weaknesses, a suggested huddle topic, and sample huddle questions. "Generate Manager Micro-Debrief" button on completion screen.
-- **AI Handbook Search**: "Ask About Standards" search box on the Handbook page. Users type a question, AI searches curated handbook content and answers with inline references to handbook sections. For education and preparation only.
-- **AI Leadership Coach**: Admin-only feature on the Admin Dashboard. Aggregates per-level quiz performance across all facility staff and generates AI-powered leadership insights: unit readiness snapshot, priority focus areas, recommended actions (in-services, practice assignments), and engagement insights. Facility-scoped (only shows data for admin's facility). Uses shared 30 calls/user/hour rate limit.
+## System Architecture
+The application is built with a modern web stack. The **Frontend** uses React, TypeScript, Tailwind CSS for styling, and Framer Motion for animations, providing a dynamic and visually appealing user interface. The **Backend** is powered by Express.js, handling API requests and session-based authentication via `passport-local`. **PostgreSQL** serves as the database, managed with Drizzle ORM for type-safe database interactions. Routing is handled by `wouter`, and state management leverages TanStack React Query for efficient data fetching and caching.
 
-- **Diagnostic Quiz**: ~25-question pre-test (2 per section + 3 random extras, all 11 topics). No correct/incorrect feedback during quiz — just pick and move on. Score and section breakdown shown at end. Encourages new users to take it first. Dashboard CTA shown to users who haven't taken it yet. Different teal/cyan color scheme. Supports back-navigation (change previous answers), explicit Next button, Save & Exit with resume on return. Question bank: 165 questions (15 per section) with balanced answer lengths and randomized correct-answer positions.
-- **Final Assessment (Mastery Exam)**: ~25-question post-test (2 per section + 3 random extras, all 11 topics). No per-question feedback — results shown only at end. Requires completing at least 10 questions per section to unlock (admin bypass for akshaysaluja and rsaluja). Dashboard CTA shown when eligible. Different amber/orange color scheme. Supports back-navigation, Save & Exit with resume on return. Question bank: 165 questions (15 per section) with balanced answer lengths and randomized correct-answer positions.
+**Core Features & Design:**
+- **Authentication**: Username/password authentication with facility-based isolation ensuring data segregation.
+- **Gamification**: 11 levels based on Joint Commission audit domains, each with 20 questions, and a "Deep Dive Tracer" mode for advanced learning. Features streaks, XP, and leveling systems.
+- **Study & Practice**: "Study Mode" with key concepts, multiple-choice questions, and Yes/No swipe cards. Quiz sessions are persistent, allowing users to resume gameplay.
+- **Compliance Handbook**: A searchable reference guide with 11 chapters, expandable sections, and critical value tables.
+- **Leaderboard & Analytics**: Facility-scoped leaderboards, daily goals, activity calendar, and an admin dashboard for user tracking.
+- **AI Integrations**:
+    - **AI Tutor (Anthropic Claude Haiku)**: Provides multi-depth explanations for quiz questions (Level 1: practical, Level 2: regulatory/common citations, Level 3: expert masterclass). Includes text-to-speech functionality.
+    - **AI Micro-Debriefs**: Summarizes level performance for managers, suggesting huddle topics and questions.
+    - **AI Handbook Search**: Allows users to query the handbook content with AI-powered answers and inline references.
+    - **AI Leadership Coach (Admin-only)**: Generates leadership insights based on staff performance, identifying focus areas and recommended actions.
+- **Assessments**:
+    - **Diagnostic Quiz**: A pre-test to assess initial knowledge across all topics, providing a score breakdown without in-quiz feedback.
+    - **Final Assessment (Mastery Exam)**: A post-test requiring completion of certain content to unlock, evaluating mastery without per-question feedback.
+- **UI/UX**: Features a "Vivid Professional" color palette with saturated greens, deep purples, and real shadows. Uses the Nunito font for a friendly appearance.
+- **Module Separation**: Supports both "Hospital" and "ASC" (Ambulatory Surgical Center) modules with distinct content, user roles, and segregated data on leaderboards and statistics. A role-selection wizard guides users to choose their facility type and specific roles.
+- **ASC Module Coverage (May 2026)**: 11 published ASC chapter quizzes (165 questions total): Patient Rights, Governance, Credentialing, Administration, Quality of Care, Quality Management (QAPI), Clinical Records, Infection Prevention, Facilities & Environment, Anesthesia & Surgical Services (covers AAAHC Ch 9 + Ch 10), and Pharmaceutical Services. Elective chapters intentionally Reading-only: Pathology (Ch 12), Imaging (Ch 13), Teaching (Ch 18), Research (Ch 19), Overnight Care (Ch 20), Radiation Oncology (Ch 24). Chapter numbers follow AAAHC's official handbook; gaps (Ch 14–17, 21–23) are non-ASC adjunct standards.
 
-## Database Tables
-- `facilities` - Hospital/facility registry (name, unique code)
-- `users` - Auth and profile data, with facilityId foreign key
-- `user_progress` - Level completion and scores
-- `user_streaks` - Current/longest streaks and total XP
-- `quiz_sessions` - In-progress quiz state (question order, answers, current position) per user per level
-- `daily_activity` - Daily question/answer tracking
-- `diagnostic_results` - Diagnostic quiz attempts (score, total, answers JSON, timestamp)
-- `mastery_results` - Mastery exam attempts (score, total, answers JSON, timestamp)
-- `diagnostic_sessions` - In-progress diagnostic quiz state (question order, answers, current position) per user
-- `mastery_sessions` - In-progress final assessment state (question order, answers, current position) per user
-
-## File Structure
-- `shared/schema.ts` - Database schemas and TypeScript types
-- `shared/questions.ts` - Question bank organized by levels
-- `server/routes.ts` - API endpoints with auth middleware
-- `server/storage.ts` - Database CRUD operations
-- `client/src/pages/` - Landing, Auth, Dashboard, Play, Study, Profile, Admin, Leaderboard, Handbook, Terms, DeepDiveSelect, DeepDive, DiagnosticQuiz, MasteryExam pages
-- `shared/handbook.ts` - Compliance Handbook content (11 chapters with sections, critical values, scenarios)
-- `shared/deep-dive-questions.ts` - Deep Dive consolidation file (imports and re-exports all 11 sections)
-- `shared/deep-dive-questions-*.ts` - Deep Dive branching question content split across multiple files (transport, sterile, part1, part2, part3a-d)
-- `client/src/components/` - SwipeCard, QuizCard, AiTutorBox, StreakFlame, XpBar, LevelCard, DailyCalendar
-- `server/replit_integrations/` - Anthropic AI integration (chat routes, batch processing utilities)
-- `client/src/lib/auth.tsx` - Auth context provider
-
-## Theme
-- Primary: Vibrant green (Duolingo-inspired)
-- Font: Nunito (rounded, friendly)
-- Color-coded levels: green, blue, purple, orange, pink, teal, yellow, red, emerald, indigo
-
-## Facility System
-- Default facility: "Midwest Orthopedic Specialty Hospital" (code: SITE486045)
-- Users register with optional facility code to join a facility
-- Leaderboard and admin stats are scoped to the user's facility
-- Supports multi-hospital deployment with one codebase
-
-## Admin
-- First registered user automatically becomes admin with access to /admin dashboard
-- Admin user: akshaysaluja (facilityId: 1, SITE486045)
-- Admin sees only users from their own facility
-
-## Routes
-- `/` - Landing page (public) or Dashboard (authenticated)
-- `/auth` - Login / Register
-- `/terms` - Terms, Privacy, Disclaimer (public)
-- `/play/:levelId` - Quiz gameplay (auth required)
-- `/study/:levelId` - Study mode (auth required)
-- `/handbook` - Compliance Handbook (auth required)
-- `/deep-dive` - Deep Dive topic selection (auth required)
-- `/deep-dive/:levelId` - Deep Dive gameplay with branching questions (auth required)
-- `/leaderboard` - Rankings (auth required)
-- `/profile` - User profile & settings (auth required)
-- `/admin` - Admin dashboard (admin only)
-- `/diagnostic` - Diagnostic Quiz pre-test (auth required)
-- `/mastery` - Mastery Exam post-test (auth required, eligibility-gated)
-
-## ASC Module
-- Source: AAAHC Accreditation Handbook for Medicare Deemed Status v42 (full PDF extracted to /tmp/handbook.txt). All ASC content is plain-English original — no verbatim handbook text.
-- Activated by `users.organization_type = 'asc'`. `/api/user/assigned-chapters` returns `[]` for non-hospital users so the dashboard shows all published ASC chapters.
-- Schema additions (backward-compatible, optional): `Question.tutor` ({ whyCorrect, whyWrong: A-D, operationalContext }), `Question.cmsTag`, `Level.chapterSummary`.
-- quiz-card and swipe-card render structured tutor blocks under the existing explanation: "Why your answer was off" (only on wrong), "Why the correct answer is right", "On the floor", and a CMS reference line. Existing AI Tutor box still renders below.
-- Published chapters (6): `asc_patient_rights`, `asc_infection_prevention_safety`, `asc_governance`, `asc_clinical_records`, `asc_credentialing`, `asc_quality_management` — each 15 Qs with full tutors + chapterSummary.
-- Draft chapters: `asc_anesthesia_surgery_services`, `asc_facilities_environment`, `asc_medicare_conditions_for_coverage`.
-- Pre/Post tests: `/asc-pretest` and `/asc-posttest`, 25 Qs each, server-authoritative grading via `asc_test_sessions` table with peek→validate→claim flow (DELETE…RETURNING for atomicity), `requireAsc` middleware, bound-checked selectedIndex, locked totalQuestions.
-- Test admin: `rsaluja` (id 42, organization_type=asc, view_scope=all). Credential is stored in the secrets manager — do not hardcode here.
-
-## Roles & Facility Filtering
-- `MODULE_IDS = ["hospital", "asc"]` in `shared/schema.ts`. The clinic facility module has been completely removed (no /clinics route, no clinic role configs, no clinic question bank).
-- `/role-select` is a 2-step wizard: Step 1 = Choose facility (Hospital or ASC cards, current facility highlighted as "YOUR FACILITY"); Step 2 = Choose role(s) for that facility. Step 1 always shows first when the page mounts, even if the user already has an `organizationType` set from signup. A "Change facility" link on Step 2 returns to Step 1. Picking a different facility on Step 1 PATCHes `/api/user/organization-type` before advancing.
-- After successful role save, role-select-page uses `window.location.assign("/")` for a hard reload — wouter's `navigate("/")` was racing with React Query cache propagation and HomeRoute would briefly see the stale (no-roleId) user and bounce back.
-- `App.tsx` `HomeRoute` only checks the legacy `mosh_force_role_select` sessionStorage flag (set by auth-page on login/register) when the user has no `roleId`; once they have a role, the flag is cleared and they land on the dashboard.
-- `shared/roles.ts` defines `ROLE_CONFIGS` with a `facilityType` field of `"hospital" | "asc"`.
-- 10 hospital roles + 6 ASC roles seeded automatically by `seedRoles()` in `server/storage.ts` (iterates ROLE_CONFIGS).
-- ASC roles are organized one-per-published-chapter under a single department `"AAAHC Standards"`. Slugs: `asc_governance_track`, `asc_patient_rights_track`, `asc_clinical_records_track`, `asc_credentialing_track`, `asc_quality_management_track`, `asc_infection_prevention_track`. Each is `DEPT` scope and maps to exactly one chapter; users wanting full coverage tap "Select all roles".
-- `/role-select` filters cards to roles whose `facilityType` matches the user's `organizationType`. Department order comes from `DEPARTMENT_ORDER_BY_FACILITY[facilityType]`.
-- `POST /api/auth/role` enforces facility match server-side: rejects with HTTP 403 if a role's `facilityType` doesn't match the user's `organizationType` (applies to both primary `roleSlug` and `additionalRoleSlugs`).
-- Pathway menu (`client/src/components/pathway-menu.tsx`) is auth-aware: logged-in users get an in-place facility switch that invalidates `/api/levels` and ASC results queries instead of being signed out.
-
-## Module Separation (Leaderboard / XP)
-- Hospital users see only hospital users on the leaderboard with hospital-only XP/stats; ASC users see only ASC users with ASC-only XP/stats. `getOrganizationTypeFilter` in `server/routes.ts` mirrors `getFacilityFilter` and is applied alongside it on `/api/game/leaderboard`.
-- Per-user stats (questionsAnswered, accuracy, levelsCompleted, totalXp) are computed against each user's own module's level IDs (from `getVisibleLevelsForModule(module, { includeDraft: true })`). `totalXp` is the sum of `quiz_sessions.xpEarned` over module-relevant sessions; sessions persist past completion so this captures both in-progress and finished levels without leaking the other module's XP.
-- Bypass admins (`akshaysaluja`, `rsaluja`) skip both filters and see ALL users across all facilities and both org types. Each user is still scored on their native module's level set so cross-module entries show meaningful XP.
-- Dashboard `displayXp` and Profile `XpBar` both compute module-specific XP the same way (filter `savedSessions` by current module's level ID set, sum `xpEarned`). Streaks (currentStreak/longestStreak) intentionally remain global since `daily_activity` has no module column.
+## External Dependencies
+- **Anthropic (Claude Haiku)**: Integrated for AI Tutor, AI Micro-Debriefs, AI Handbook Search, and AI Leadership Coach functionalities via Replit AI Integrations.
+- **PostgreSQL**: The primary database for storing all application data, managed through Drizzle ORM.
+- **Express.js**: Used as the backend framework for handling API requests and server-side logic.
+- **React**: The main library for building the user interface.
+- **TypeScript**: Provides type safety across the frontend and backend.
+- **Tailwind CSS**: Used for rapid UI development and styling.
+- **Framer Motion**: Utilized for animations and interactive UI components.
+- **TanStack React Query**: Manages server state and data fetching.
+- **Passport.js (passport-local strategy)**: Handles user authentication.
+- **wouter**: A minimalist routing library for the React frontend.
