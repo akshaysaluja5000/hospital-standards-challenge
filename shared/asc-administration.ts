@@ -72,6 +72,34 @@ export const ascAdministrationLevel: Level = {
       keyPoint:
         "Patient satisfaction survey data that never reaches the governing body is data that doesn't exist for survey purposes.",
     },
+    {
+      title: "Fiscal control policies cover five named areas — write one for each",
+      content:
+        "Under 42 CFR 416.51(c), the ASC needs written policies covering accounts receivable, accounts payable, cash payments and credit arrangements, unpaid accounts/collections, and the purchase, distribution, and security of supplies and equipment. 'We don't take cash' is not a substitute for a cash policy — write one paragraph that says when cash is accepted (e.g., copays only), how it's secured, and how it's reconciled. Even if the parent company runs the books, the ASC owns its fiscal controls and has to be able to point to its own policies. The five-policy structure is a survey checklist; surveyors literally look for one of each.",
+      keyPoint:
+        "If a surveyor asks for fiscal control policies, you should be able to hand them five documents — one per named topic — even if some are short.",
+    },
+    {
+      title: "Contractors, per-diem, and locum staff still need an ASC personnel file",
+      content:
+        "The agency credentialing packet is for the agency, not the ASC. Every clinician working in the facility — agency RN, locum CRNA, contracted radiology tech, per-diem PACU nurse — needs an ASC-side record with a primary source license verification, an ASC-specific orientation to equipment and emergency procedures, and a competency attestation against the role they perform. A sign-in sheet at shift start is not orientation. The 'they work for the agency' answer is one of the most common ways small ASCs lose Q-0246 and 42 CFR 416.51(c) findings on patient-care personnel.",
+      keyPoint:
+        "Anyone touching a patient in the ASC needs a file at the ASC — the agency owns its files, but the ASC owns the verification.",
+    },
+    {
+      title: "Job descriptions, performance evals, and competency assessment are one loop",
+      content:
+        "Personnel compliance under 42 CFR 416.51(c) is a continuous cycle: the job description defines what the person does and what they need to do it; orientation/training prepares them; competency assessment verifies they can do it (at hire and periodically thereafter, plus whenever a new procedure or piece of equipment shows up); the performance evaluation appraises overall job performance against that description on a defined cadence. A 5-year-old job description that doesn't match current duties breaks the whole chain — there's nothing to assess competency against. Required certifications (BLS/ACLS/PALS as applicable) have to stay current; an expired card means the staff member doesn't meet the ASC's own competency requirement and shouldn't be on the patient-care assignment.",
+      keyPoint:
+        "If a surveyor asks how the ASC knows a nurse is currently competent, the answer is a current job description, current certifications, a recent competency assessment, and a recent performance evaluation — all four, all dated, all in the file.",
+    },
+    {
+      title: "Q-0246 — bylaws, governing body minutes, and corporate documents must be retrievable",
+      content:
+        "Q-0246 (under 42 CFR 416.51(c)) requires that organizational records — bylaws, governing body meeting minutes, corporate formation documents, the Medicare provider agreement, and personnel files — be properly filed, secured, and safeguarded. 'Safeguarded' includes 'retrievable on request': records nobody can find on survey day functionally don't exist. Surveyors typically ask for the past 24 months of governing body minutes, current bylaws, and the org chart within the first hour. Same applies to nursing assignment evidence — a whiteboard erased throughout the day with no archive doesn't preserve the record, so photograph the board at the start of the day and after every material change and file the images.",
+      keyPoint:
+        "If a surveyor asks for the bylaws or last year's minutes, you should be able to put hands on them in minutes — not promise to email them by end of day.",
+    },
   ],
   questions: [
     {

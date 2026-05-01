@@ -72,6 +72,27 @@ export const ascCredentialingLevel: Level = {
       keyPoint:
         "If you don't have an expirables tracker that auto-suspends, you have a citation waiting to happen.",
     },
+    {
+      title: "Reappointment every 2 years is a re-verification, not a refile",
+      content:
+        "Privileges are time-limited — typically every 2 years (42 CFR 416.45(b)) — and reappointment is the moment the ASC confirms that everything in the file is still true today. That means a fresh primary source license check, a new DEA verification, a current ABMS or specialty board check, a new NPDB query, an updated malpractice certificate of insurance, refreshed peer references, and a current OPPE summary that drives the privilege decision. Photocopying the original packet from two years ago is one of the fastest ways to lose a credentialing finding under Q-0091. Surveyors specifically look at the verification dates on the reappointment file — anything older than ~30 days from the medical staff committee meeting is suspect.",
+      keyPoint:
+        "If a surveyor asks 'when was this license re-verified for reappointment?' the answer needs to be a recent date with a saved verification, not 'we already had it on file.'",
+    },
+    {
+      title: "Allied health & non-physician practitioners are privileged too",
+      content:
+        "CRNAs, NPs, PAs, podiatrists, dentists, oral surgeons, and any other independent licensed practitioner providing patient care at the ASC must go through the same credentialing and privileging process as physicians — application, primary source verification, NPDB query, peer references, defined privilege list, governing body grant, FPPE, OPPE, and reappointment. A job description is an HR document; it does not authorize patient care. The privilege list has to be specific to that role: which anesthesia techniques the CRNA is authorized to deliver, which procedures the PA may perform or assist on, which sedation level the NP may administer. A clean file for a CRNA looks structurally identical to a clean file for a surgeon.",
+      keyPoint:
+        "If a non-physician practitioner is putting hands on patients in your ASC, they need a governing-body-granted privilege list — not just a job description.",
+    },
+    {
+      title: "Temporary, emergency, locum, and telemedicine privileges still go through the process",
+      content:
+        "There is no time-based or volume-based exemption from credentialing in 42 CFR 416.45. Locum tenens, temporary, emergency, and telemedicine clinicians all need PSV, NPDB query, malpractice verification, and a governing body privilege grant before they put hands (or a video link) on a patient. Most ASCs handle this through credentialing-by-proxy with a vetted locum agency or a distant-site telemedicine hospital under a written agreement that defines what verification each side performs — but the ASC's governing body still has to formally accept those privileges. For telemedicine specifically, the clinician must hold an active license in the state where the patient is physically located, not just their home state. 'We didn't have time for a full file' is not a defense surveyors accept.",
+      keyPoint:
+        "Short engagement, emergency coverage, or video visit — every clinician touching your patients needs a governing-body privilege grant. Credentialing-by-proxy is allowed; skipping is not.",
+    },
   ],
   questions: [
     {

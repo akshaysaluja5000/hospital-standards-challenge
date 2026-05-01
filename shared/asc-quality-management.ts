@@ -66,9 +66,72 @@ export const ascQualityManagementLevel: Level = {
     {
       title: "The governing body feedback loop",
       content:
-        "QAPI reports go to the governing body at every meeting — not as data dumps, but as decision packages. Each report identifies what's working, what's not, what's been done about it, and what the governing body needs to decide or fund. The governing body's response is documented in minutes. Without that loop, QAPI is paperwork; with it, QAPI is governance.",
+        "QAPI reports go to the governing body at every meeting — not as data dumps, but as decision packages. Each report identifies what's working, what's not, what's been done about it, and what the governing body needs to decide or fund. The governing body's response is documented in minutes. Without that loop, QAPI is paperwork; with it, QAPI is governance. 42 CFR 416.43(e) puts the implementation responsibility squarely on the governing body, not the QAPI chair.",
       keyPoint:
         "Every QAPI report ends with: 'Decisions requested:' and the governing body answers in writing.",
+    },
+    {
+      title: "The written QI program is its own deliverable",
+      content:
+        "Beyond the QAPI plan, surveyors expect a written quality improvement program document that names the responsible committee(s) and individuals, describes the full scope of services covered, identifies at least one physician (or dentist) participant, defines purpose and objectives, describes data collection processes, and explains how peer review, risk management, and infection prevention integrate into QAPI. The program has to be evaluated annually for effectiveness — was the design sound, did it meet its objectives, what gets adjusted next year. A QAPI plan that doesn't name the committee, the physician participant, or the integration points is a documentation gap regardless of how much data is being collected.",
+      keyPoint:
+        "If a surveyor asks 'show me your written QI program,' the answer is a single document, not a stack of dashboards.",
+    },
+    {
+      title: "Peer review feeds QAPI and credentialing — both",
+      content:
+        "Peer review is one of the strongest data sources QAPI has, and 42 CFR 416.43 expects QAPI to integrate it. Findings flow two ways: de-identified system themes go to QAPI for process improvement, and clinician-specific findings go into OPPE/FPPE for credentialing and reappointment decisions. Filing peer review reports without action — or running peer review in a silo separate from QAPI — defeats the purpose and creates a documentation gap. The deliberative process is confidential; the outputs are not exempt from action.",
+      keyPoint:
+        "Peer review confidentiality protects the discussion, not the obligation to act on the findings.",
+    },
+    {
+      title: "Infection prevention and NHSN data live inside QAPI",
+      content:
+        "Infection prevention is not a parallel program — it is one of QAPI's required data inputs under 42 CFR 416.43(a)(2). Surveillance data (SSI, endophthalmitis, bloodstream, GI scope-related infections), hand hygiene audits, sterilization metrics, and NHSN-derived rates and SIRs should appear on the QAPI agenda with discussion and decisions documented. Submitting to NHSN and then summarizing it as 'data submitted, no concerns' wastes the external benchmarking value. The QAPI committee should review the SIR, the trend, peer comparisons, and any procedure-specific signal each cycle.",
+      keyPoint:
+        "If NHSN data isn't discussed in QAPI minutes, the integration is broken even if the submission is on time.",
+    },
+    {
+      title: "Risk management policies that surveyors actually open",
+      content:
+        "The risk management subchapter requires written policies covering several specific scenarios: how a patient may be dismissed or refused care, what happens if a clinician becomes incapacitated mid-procedure, how an impaired clinician is addressed, after-hours coverage and clinical advice documentation, restrictions on observers in patient care areas, and consent for any non-staff present in clinical space. Add the operational policies: encouraging near-miss reporting, communicating reportable events as required by law, periodic litigation review, complaints/grievances response times, timely notice to the liability carrier, and periodic clinical record review. Missing any one of these is a standard-level finding even if the underlying scenario has never occurred.",
+      keyPoint:
+        "The risk management binder has to exist before the event, not get written after one.",
+    },
+    {
+      title: "Adverse event and near-miss definitions drive what gets analyzed",
+      content:
+        "Risk management policy has to define both 'incident' and 'adverse event' — and crucially, the definition of incident has to include near-miss events (anything that could have caused harm but didn't). Adverse events include unexpected death or serious injury, process variations that carry significant risk of recurrence, breaches in care or administrative procedures, and reactions to drugs and materials. All of these get reviewed; near-misses and adverse events both get analyzed for causal factors, with system improvements implemented where indicated. A program that only tracks events with documented harm misses the warning signals.",
+      keyPoint:
+        "Near-misses are gifts — they show you the system failure without the patient injury. Track them like the real thing.",
+    },
+    {
+      title: "Prioritize by high-risk, high-volume, problem-prone",
+      content:
+        "42 CFR 416.43(c)(1) tells the ASC to set QAPI priorities based on three buckets: high-risk activities (anesthesia events, sentinel-level outcomes), high-volume procedures (whatever dominates the case mix — cataracts, colonoscopy, joint injections), and problem-prone areas (anything with elevated complications in the past 12 months). Priorities also have to consider incidence, prevalence, and severity, and they have to connect to health outcomes, patient safety, and quality of care. A QAPI plan that ignores the procedure that is 60% of the schedule is misaligned with the actual practice — surveyors notice that mismatch immediately.",
+      keyPoint:
+        "If your top procedure isn't named in the QAPI plan, your priorities don't reflect your facility.",
+    },
+    {
+      title: "External benchmarking with valid comparators",
+      content:
+        "QAPI requires comparison to external benchmarks based on valid local, state, national, or published data — NHSN, AAAHC peer data, specialty society registries, or ASC Quality Collaboration measures all qualify. Pick measures that are actually relevant to the procedures performed, collect data on them on an ongoing basis, compare internal performance, and feed the results back into QAPI improvement work and into governing body reports. 'We are above average' is not a finding-proof statement on its own — surveyors want to see the comparison data, the trend, and what the program did with it.",
+      keyPoint:
+        "Benchmarking without action is research; benchmarking that drives a PIP is QAPI.",
+    },
+    {
+      title: "Quality improvement studies and the PDSA cycle",
+      content:
+        "Standard G expects ongoing QI studies that follow a recognized improvement methodology — PDSA (Plan-Do-Study-Act) is the most common, but Six Sigma DMAIC and Lean A3 also work. At least one current study has to demonstrate that improvement occurred and was sustained. 'Current' means within the accreditation term (or within the past 12 months for an initial survey). The study documentation has to include the reason it was launched, the methods, the results, and the dissemination of findings to the governing body and throughout the organization. A 'study' that has no methodology, no measurable outcome, or no sustained result is not a study.",
+      keyPoint:
+        "Surveyors will ask: 'Show me one QI study from this year that produced sustained improvement.' Have one ready.",
+    },
+    {
+      title: "Don't drown the program in indicators",
+      content:
+        "A QAPI program with 40+ indicators tracked monthly tends to produce monitoring without action — every indicator gets a brief mention, no PIP gets driven to closure, and the committee never digs deep enough to design a real intervention. The defensible structure is tiered: 5–10 priority indicators tied to active PIPs reviewed monthly, 10–15 standing indicators reviewed quarterly, broader surveillance reviewed annually. Each indicator has to justify its place: linked PIP, regulatory requirement, sentinel-event surveillance, or known risk monitoring. Prune the list every year.",
+      keyPoint:
+        "Tracking everything is the same as prioritizing nothing — focus is the QAPI design choice.",
     },
   ],
   questions: [

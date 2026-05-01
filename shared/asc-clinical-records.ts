@@ -71,6 +71,34 @@ export const ascClinicalRecordsLevel: Level = {
       keyPoint:
         "Lock it, retain it for the longer of state or federal minimum, and release it to the patient within 30 days when asked.",
     },
+    {
+      title: "Allergies in a prominent, consistent location on every chart",
+      content:
+        "42 CFR 416.47(b)(5) and Q-0162 require that the presence — or absence — of allergies, sensitivities, and reactions to drugs, food, and environmental agents be documented in a prominent, consistently defined location on every chart. 'Consistent' means the surveyor can pick up any chart, look in the same place, and find it. Patients have to be asked at every encounter, the specific reaction has to be captured (rash vs. anaphylaxis matters), and updates have to be reconciled — not just appended. 'NKDA' is an answer; a blank field is not.",
+      keyPoint:
+        "Same location on every chart. Asked every visit. Reaction described, not just the allergen named.",
+    },
+    {
+      title: "Corrections are addenda, never edits to a signed entry",
+      content:
+        "Once a chart entry has been authenticated (signed), it is part of the legal record and cannot be altered. If something is wrong, the fix is a dated, timed, signed addendum that identifies the original entry, states what was incorrect, and provides the correct information. Editing the original — even by the original author — destroys the audit trail and is treated as documentation falsification. EHRs should be configured to lock authenticated notes and force a one-click 'Add Addendum' workflow.",
+      keyPoint:
+        "Signed = locked. Corrections live in a new addendum, not on top of the old entry.",
+    },
+    {
+      title: "The designated record set lives at the ASC, even for contracted clinicians",
+      content:
+        "HIPAA requires the ASC to define and maintain a designated record set, and 42 CFR 416.47 requires that the medical record be available at the facility. That includes the anesthesia record, contracted radiology readings, pathology reports, and any other clinical documentation generated during the case — regardless of who employs the clinician. Letting a contract anesthesia group take their records back to their office creates a custody gap that fails on survey, billing, and clinical-handoff grounds. Contracts have to require all documentation to be filed in the ASC's record system before the contractor leaves the building.",
+      keyPoint:
+        "If care happened at the ASC, the record lives at the ASC — contractor or not.",
+    },
+    {
+      title: "Vendors with PHI access need a written BAA — every one of them",
+      content:
+        "Any vendor that creates, receives, maintains, or transmits protected health information for the ASC is a Business Associate under 45 CFR 164.502(e), and a written Business Associate Agreement (BAA) is required before PHI changes hands. That covers shredding companies, off-site storage vendors, IT support, billing services, transcription, and the EHR vendor itself. A 'we've trusted them for years' verbal arrangement is a HIPAA violation from day one — not from the day of a breach. A BAA inventory, with renewal dates tracked by the privacy officer, is the audit-proof artifact.",
+      keyPoint:
+        "No BAA, no PHI. The privacy officer should be able to produce a current BAA for every vendor on the list.",
+    },
   ],
   questions: [
     {

@@ -98,6 +98,34 @@ export const ascInfectionPreventionLevel: Level = {
       keyPoint:
         "New device = pre-use training = designated owner. Vendor rep alone is not enough; the ASC must own the competency check.",
     },
+    {
+      title: "Cross-Infection Safeguards and Communicable Disease Referral",
+      content:
+        "Standard F under the IPC subchapter requires written policies that tell front-desk and clinical staff exactly what to do when a patient presents with a possible communicable disease — varicella vesicles in the waiting room, suspected active TB cough on intake, a febrile rash on a pediatric pre-op. The policy must define how the patient is isolated or referred for appropriate care, who notifies the surgeon and the IP director, and how reportable conditions are escalated to the state or local public health authority. There also has to be a written policy identifying who is authorized in patient care areas (no roaming vendors or family members in the OR core) and surveillance activities aimed at minimizing sources and transmission.",
+      keyPoint:
+        "If a surveyor asks 'show me what registration does when a patient walks in coughing blood,' you should hand over a one-page communicable disease triage SOP — not improvise.",
+    },
+    {
+      title: "Environmental Cleaning: Before, Between, and Terminal",
+      content:
+        "Written cleaning policies have to address four moments: cleaning before first use of the day, cleaning between every patient/case turnover, terminal cleaning at a frequency tied to how the area is used, and the requirement that EVS staff use the cleaning/disinfectant product per the manufacturer's IFU (correct dilution, correct contact/dwell time, correct surface). Surveyors will pull the SDS, look at the bottle, time the dwell, and watch a turnover. The most common citation is staff wiping surfaces dry before the contact time has elapsed, which means the disinfectant never actually killed anything.",
+      keyPoint:
+        "Cleaning compliance lives or dies on dwell time. If the wet-time on the label is 3 minutes, the surface stays visibly wet for 3 minutes — period.",
+    },
+    {
+      title: "OSHA Bloodborne Pathogens, Hep B, TB Plan, and Employee Health",
+      content:
+        "Standards N, O, P, and Q under the Safety subchapter pull together everything OSHA already requires for healthcare workers: a written exposure control plan reviewed and updated at least annually (including evaluation of safer engineered sharps), a Hepatitis B vaccination program offered to at-risk staff, post-exposure evaluation and treatment protocols, an immunization program tied back to the IP risk assessment, a TB detection and prevention plan that follows local public health authority requirements (or CDC if no local rule exists), and a documented investigation/recordkeeping process for any work injury or illness. The governing body has to approve these policies (Q-0246, 42 CFR 416.51(c)).",
+      keyPoint:
+        "OSHA + CDC + governing-body approval. Pull the exposure control plan and ask: when was it last reviewed, and did the review include safer-sharps evaluation? If the answer is 'three years ago,' you have a finding.",
+    },
+    {
+      title: "Construction, Renovation, and the ICRA",
+      content:
+        "The Safety subchapter requires a proactive, documented risk assessment BEFORE any demolition, construction, or renovation while the facility is occupied — not just OR-area work. The assessment has to identify risks to occupant health and safety (dust migration, HVAC pressurization changes, water shutoffs affecting hand hygiene, noise, debris paths), the mitigation steps (barriers, negative pressure, HEPA, after-hours work), and the monitoring plan during the project, with an update mechanism if scope changes. This is also where the Infection Control Risk Assessment (ICRA) lives — the IP director, facilities lead, and safety officer should jointly sign the document before crews break ground.",
+      keyPoint:
+        "If construction is happening with patients in the building and there is no signed pre-construction/ICRA document, that is a Standard-level finding regardless of how 'isolated' the work area looks.",
+    },
   ],
   questions: [
     {

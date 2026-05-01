@@ -87,6 +87,48 @@ export const ascPatientRightsLevel: Level = {
       keyPoint:
         "Privacy at check-in and in treatment areas, real interpretation services (not just family), and shared decision-making — with a defined fallback when the patient cannot receive information directly.",
     },
+    {
+      title: "Freedom from Discrimination and Reprisal",
+      content:
+        "Under 42 CFR 416.50(e)(1)(i) every patient has the right to receive care free of discrimination and free of any retaliation for exercising their rights — including filing a grievance. Surveyors look for a non-discrimination statement embedded in the notice of rights, a policy that explicitly prohibits reprisal against patients who complain, and staff who can articulate that nobody loses access to care or gets treated differently because they spoke up. The grievance log is the single best place to demonstrate this: a patient who filed a complaint and then returned for a follow-up visit shows the no-reprisal policy is real.",
+      keyPoint:
+        "Q-0227 hits when staff treat a complaining patient differently or when the rights notice has no anti-discrimination/anti-reprisal language.",
+    },
+    {
+      title: "Safe Setting and Freedom from Abuse/Harassment",
+      content:
+        "42 CFR 416.50(f)(2) and (f)(3) — Q-0232 and Q-0233 — require the ASC to provide care in a physically safe environment and to keep patients free from abuse, neglect, mistreatment, and harassment of any kind. Operationally this shows up in pre-employment screening (background checks, OIG/SAM exclusion checks), staff training on recognizing and reporting abuse, a confidential reporting pathway, and immediate escalation of any allegation to a person in authority. Substantiated allegations have to be reported to the appropriate state or local authority — not just handled internally.",
+      keyPoint:
+        "If a surveyor asks 'how do you keep patients safe from harm here?' you should be able to point to background checks, abuse-recognition training, and a documented escalation/reporting path — not just say 'our staff are good people.'",
+    },
+    {
+      title: "Posting the Written Notice — Q-0220 in the Waiting Room",
+      content:
+        "The notice of rights doesn't only travel in the registration packet. A copy of the written notice has to be physically posted in places where patients waiting for treatment, or their representatives, will actually see it. Q-0220 is the standard-level finding that catches ASCs whose only 'posting' is a binder behind the front desk or a folder a patient has to ask for. The fix is a framed copy at adult eye level in the waiting area, plus copies in pre-op bays and at any check-in kiosk.",
+      keyPoint:
+        "Q-0220 is the 'is it actually on the wall?' tag. Available on request is not the same as posted in plain view.",
+    },
+    {
+      title: "Informed Consent as a Substantive Right (Q-0229)",
+      content:
+        "42 CFR 416.50(e)(1)(iii) gives the patient the right to be fully informed about the procedure and expected outcome before it happens. The signed consent form is documentation of a conversation, not a substitute for one. Surveyors look for evidence that the operating practitioner — not pre-op nursing — discussed the nature of the procedure, the expected outcome, the material risks, the benefits, and the reasonable alternatives, and that the discussion happened with enough lead time for the patient to actually deliberate. A patient signing in pre-op ten minutes before incision, with no prior office-based consent conversation, is a Q-0229 problem regardless of how clean the form looks.",
+      keyPoint:
+        "The signed form proves the conversation happened — it does not replace it. The surgeon owns the consent discussion.",
+    },
+    {
+      title: "Organization Information — Credentials, Fees, Malpractice",
+      content:
+        "Standard I of the Patient Rights chapter requires the ASC to make practical information about itself available to patients: the services offered, after-hours and emergency arrangements, fees for services, payment policies, the credentials of the health care professionals who will provide care, and — if applicable — the absence of malpractice coverage. Surveyors check the registration packet, the website, and the posted disclosures for these items. Vague answers like 'patients can ask the front desk' don't satisfy the standard; the information has to be available without the patient having to push for it.",
+      keyPoint:
+        "If a patient asks who the surgeon is, what they're licensed to do, what they'll be charged, and whether the practitioner carries malpractice — the ASC should already have those answers documented and accessible.",
+    },
+    {
+      title: "Exercise of Rights by Representative or Guardian (Q-0230)",
+      content:
+        "42 CFR 416.50(e)(2) and (e)(3) cover what happens when the patient cannot exercise their own rights. If a court of proper jurisdiction has adjudicated the patient incompetent, the rights are exercised by the person appointed under state law — typically a court-appointed guardian, with the order on file. If there is no court adjudication, any legal representative or surrogate the patient designated under state law (healthcare power of attorney, advance directive proxy) may exercise the patient's rights to the extent state law allows. Defaulting to 'the adult child in the waiting room' is not compliant — the ASC has to verify and document the legal authority before consent.",
+      keyPoint:
+        "Before consent, verify and copy the guardianship order or POA. Q-0230 hits when the chart shows a family member 'consented' with no documented legal authority.",
+    },
   ],
   questions: [
     {

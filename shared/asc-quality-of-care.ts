@@ -72,6 +72,34 @@ export const ascQualityOfCareLevel: Level = {
       keyPoint:
         "The transfer agreement and the periodic written notice are two different requirements — and the notice is the one ASCs forget.",
     },
+    {
+      title: "H&P, informed consent, and medication reconciliation — three pieces, one chart",
+      content:
+        "Before any procedure, the chart has to show a current history and physical, an informed consent that names the actual procedure being performed, and a documented medication reconciliation. Standard E (high-quality health care provided) wants surveyors to see that the diagnosis, the planned treatment, and the patient's full medication list line up — including supplements, OTC drugs, and anything the patient stopped taking pre-op. A consent that says 'right knee arthroscopy' when the op note says 'left knee' is a wrong-site setup. A med rec that lists only prescription drugs misses the warfarin, the ginkgo, and the GLP-1 the patient forgot to mention until pre-op.",
+      keyPoint:
+        "If a surveyor asks 'show me the H&P, the consent, and the med rec for this case,' all three should be in the chart, dated before the case, and consistent with each other.",
+    },
+    {
+      title: "Biological products follow the manufacturer — and a temp excursion is a quarantine event",
+      content:
+        "Standard D extends beyond specimens to cover biological products: vaccines, blood derivatives, biologic injectables. Storage and transport have to follow the manufacturer's package insert and any applicable program rules (CDC's Vaccine Storage and Handling Toolkit, VFC if you're a VFC site). The trap is the overnight temperature excursion: staff see the alarm, return the fridge to range, and keep using the product. That is not the standard. The product gets quarantined, the manufacturer (and VFC coordinator) gets called, the disposition gets documented, and only then does the product return to inventory or get discarded.",
+      keyPoint:
+        "A temperature excursion is a triggering event for an investigation, not a self-resolving alarm. The surveyor will ask for the excursion log and the disposition note.",
+    },
+    {
+      title: "Immediate post-op assessment and the abandoned procedure — both belong in the chart",
+      content:
+        "Standard E and the surgical-services standards together require a documented post-anesthesia assessment by a qualified provider before the patient moves out of Phase I recovery, and a separate discharge assessment before the patient leaves the ASC. Vital signs, level of consciousness, pain, nausea, and any complications all have to be captured by the named clinician at named times. When a procedure is started and abandoned (case canceled mid-procedure for clinical or equipment reasons), the chart has to document why it was stopped, what was done before stopping, the patient's condition at the time, who made the decision, and what the follow-up plan is — these are not 'incomplete' charts; they are complete charts of a case that ended early.",
+      keyPoint:
+        "If a surveyor asks 'who assessed this patient post-op and when,' you should be able to point to a named provider, a timestamp, and a documented set of assessment elements — not 'the nurse signed off.'",
+    },
+    {
+      title: "Professional practice principles and ethical conduct — the floor under every other standard",
+      content:
+        "Chapter 4 opens with the principle that the ASC provides care in accordance with professional practice and ethical conduct. Operationally that means: no dual-relationship conflicts (a surgeon cannot be the proceduralist and the sole anesthesia provider on a case requiring sedation), no procedures performed for financial reasons that aren't clinically indicated, no privileging shortcuts, and a culture where staff can raise concerns without retaliation. Surveyors look for the policy, but they also look at the chart and the schedule for patterns — high volumes of marginally indicated cases, repeated scope drift, or single-provider days where roles overlap improperly all read as ethical-floor problems.",
+      keyPoint:
+        "Standards of care, prevailing laws, and ethical conduct (Standard B / Std. A) are the floor — when they crack, every other Chapter 4 standard becomes vulnerable.",
+    },
   ],
   questions: [
     {

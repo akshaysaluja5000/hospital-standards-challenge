@@ -71,6 +71,55 @@ export const ascAnesthesiaSurgeryLevel: Level = {
       keyPoint:
         "Three signatures matter: pre-anesthesia evaluation (before entry), recovery evaluation (in PACU), and the discharge order signed by the operating physician.",
     },
+    {
+      title: "MH cart readiness: dantrolene in date, supplies co-located, drill annually",
+      content:
+        "If the ASC stocks any malignant hyperthermia trigger (succinylcholine, inhaled volatiles), Standard 9.O treats the MH cart like a code cart. Surveyors check four things in parallel: dantrolene (or Ryanodex) is in date, cooling supplies (ice, NG tube, irrigation, refrigerated saline) are co-located in or directly next to the cart, every clinical staff member has documented MH training, and an MH drill has been conducted and documented within the past 12 months. Each missing element is its own finding because each represents a real failure point during a real event — and dantrolene reconstitution at 2 a.m. with scattered supplies is not a defensible clinical reality.",
+      keyPoint:
+        "If a surveyor asks 'show me the MH cart,' the answer is: in-date drug, co-located cooling, training roster, and last drill date — all on the spot.",
+    },
+    {
+      title: "Counts: when the count is off, closure stops",
+      content:
+        "Standard 10.P requires a written count policy based on nationally recognized guidance (AORN/WHO) covering which procedures require counts of sponges, sharps, and instruments, when counts occur (before start, before closure), how counts are reported to the surgeon, where counts are documented, and — most importantly — what happens when a count is incorrect. The defensible response to an off count is non-negotiable: stop closure, recount, search the field/trash/floor, perform intra-op imaging if the item is not found, document each step, and report per policy. Hiding or deferring a discrepancy is both a clinical risk (retained foreign object is a sentinel event) and a documentation failure that QAPI cannot recover.",
+      keyPoint:
+        "An off count is a stop-the-line event. Continuing closure on an unresolved count is the textbook origin story of a sentinel event.",
+    },
+    {
+      title: "ACLS coverage until the last patient is physically out the door",
+      content:
+        "Standard 9.N requires at least one health care professional with current ACLS training to be present until every patient operated on that day has been physically discharged — out the door, not just cleared by the nurse. The training must include hands-on airway and AED demonstration (AHA or equivalent), and the ASC has to be able to produce both the credential and a written policy that defines coverage. The most common citation pattern is the anesthesia provider leaving after the last case is over but while a patient is still in PACU recovering — that interval is non-compliant.",
+      keyPoint:
+        "ACLS-credentialed coverage starts with the first patient arrival and ends when the last patient walks out — not when the last case ends.",
+    },
+    {
+      title: "Surgical site marking: by the operator, with the patient awake",
+      content:
+        "Standard 10.R requires that any procedure involving level or laterality be marked by the person performing the procedure (or a designated surgical-team member who will be present during the time-out) with the patient or representative involved before anesthesia. Pre-marking by a circulator who will not be operating and may not be in the room for the time-out fails the standard. The mark itself, the policy that defines surgical team, the patient's involvement, and the documentation in the clinical record are all separately reviewed.",
+      keyPoint:
+        "Site marking by the operator, with the patient awake, before sedation — every other workflow is a finding waiting to happen.",
+    },
+    {
+      title: "Specimen handling: the path report has to land in the chart",
+      content:
+        "Standard 10.T requires that when tissue is removed, a pathologist examines it (unless explicitly exempted in writing by the governing body after medical review) and the signed report is incorporated into the patient's clinical record. 'Sent to pathology' in the op note plus a vendor portal nobody opens does not meet incorporation. Surveyors will sample charts with specimens, look for the pathology result inside the patient record (electronic or paper), and verify a tracking workflow exists so results don't sit unread.",
+      keyPoint:
+        "If the pathology report is not in the patient's chart, it does not exist for survey purposes — and the patient may not have been notified.",
+    },
+    {
+      title: "Responsible adult escort: physician exception only, not patient choice",
+      content:
+        "Q-0267 (42 CFR 416.52(c)(3)) requires every patient to be discharged in the company of a responsible adult, except those patients exempted by the attending physician. The exception is a clinical judgment documented by the attending — it is not waived by the recovery nurse, satisfied by a rideshare driver, or overridden by the patient's autonomous request. Confirm the escort at scheduling, again on day-of-surgery before the case starts, and hold the patient if the escort falls through unless the attending physician specifically documents an exception.",
+      keyPoint:
+        "No documented attending-physician exception, no responsible adult, no discharge — the patient stays.",
+    },
+    {
+      title: "Second qualified monitor for moderate/deep sedation and general anesthesia",
+      content:
+        "Standard 9.P requires a written policy prohibiting moderate sedation, deep sedation, or general anesthesia unless a qualified individual in addition to the operator is present whose primary job is monitoring the patient. During moderate sedation the second person may help with minor interruptible tasks, but their role is patient watcher, not assistant scrub. The clinical record has to reflect both the operator and the monitor in every sedated case, and Standard 9.Q adds that if anyone other than an anesthesiologist, OMFS, CRNA, or AA administers a drug without an antagonist (propofol is the classic example), the governing body must have specifically privileged that provider for it.",
+      keyPoint:
+        "An operator focused on the field cannot also be the monitor — the chart must name two people, and propofol-class privileges must be granted by name.",
+    },
   ],
   questions: [
     {

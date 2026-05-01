@@ -71,6 +71,48 @@ export const ascGovernanceLevel: Level = {
       keyPoint:
         "A QAPI program the governing body never sees is a paper program. Surveyors notice immediately.",
     },
+    {
+      title: "Transfer agreement or physician admitting privileges — pick one (Q-0080)",
+      content:
+        "42 CFR 416.41(b) gives the ASC two ways to satisfy the transfer requirement: a current written transfer agreement with a Medicare-participating hospital, OR documented admitting privileges at such a hospital for every physician performing procedures in the ASC. There is no third option. An expired agreement with no physician-privileges fallback is the most common Condition-level transfer finding because it leaves the patient with no defined path the moment something goes wrong. Surveyors will pull the agreement on day one and check the date and the signatures.",
+      keyPoint:
+        "If a surveyor asks 'what happens when a patient needs to be transferred?' point to the current signed agreement OR the privilege letters — never both missing.",
+    },
+    {
+      title: "The 15-day AAAHC notification rule for significant events",
+      content:
+        "AAAHC requires written notification within 15 calendar days of significant organizational, ownership, operational, or quality-of-care events. That includes ownership changes, leadership changes, scope-of-service changes, address changes, and serious quality events. Most ASCs miss this not because of the event itself but because no one owns the calendar — the administrator finds out months later that ownership transferred and the 15-day clock already ran out. A standing 'reportable to AAAHC' checklist with the administrator's signature should live next to the QAPI binder.",
+      keyPoint:
+        "If a surveyor asks 'when did you notify AAAHC of [event]?' the answer should be a date that is no more than 15 calendar days after the event itself.",
+    },
+    {
+      title: "Annual governing body review of accreditation requirements (Standard N)",
+      content:
+        "Once a year, the governing body has to formally review the major elements of the program: patients' rights, delegated administrative responsibilities, the QAPI program, the infection prevention program, the safety program, the policies and procedures, the appointment/reappointment processes, and the scope of services performed (Q-0122, 416.45(b)). The minutes have to show this happened — agenda item by agenda item — with revisions adopted as needed. A perfunctory 'all good, motion carries' is the citation; an itemized walkthrough is the defense.",
+      keyPoint:
+        "If a surveyor asks 'when did the governing body last review accreditation compliance?' the answer should point to a specific dated set of minutes within the past 12 months.",
+    },
+    {
+      title: "Bylaws are the floor — practice has to match (or change them)",
+      content:
+        "Surveyors hold the ASC to the standard the ASC wrote for itself. If the bylaws say the medical director reports quarterly, then there must be quarterly reports. If the bylaws define a 2-year reappointment cycle, every credentialing file must be re-approved within that window. Bylaws that the ASC ignores create a self-inflicted finding that is often more damaging than a missing requirement, because the ASC has both written down and broken its own rule. Either change the bylaws (with documented governing body approval) or change the practice — there is no third option.",
+      keyPoint:
+        "If a surveyor asks 'do you follow your own bylaws?' the answer must be yes, or the bylaws must already be updated to match what you actually do.",
+    },
+    {
+      title: "Quorum, agendas, and corporate governance basics",
+      content:
+        "A governing body is still a corporate body. Without quorum (as defined in the bylaws), the meeting cannot transact business and any 'decisions' made are not binding. Surveyors compare bylaws-defined quorum to attendance recorded in minutes; privileging or contract decisions made without quorum are non-binding and the underlying physicians or vendors are technically unauthorized. The chair should confirm quorum on the record at the start of every meeting and recess if it fails.",
+      keyPoint:
+        "If a surveyor asks 'was a quorum present when this privilege grant was approved?' the minutes must show the answer is yes.",
+    },
+    {
+      title: "Accreditation representation and external communication",
+      content:
+        "The way the ASC describes its accreditation status to patients, payers, and the public has to be accurate. Marketing copy, websites, brochures, and verbal scripts must not overstate scope, capabilities, or accreditation. The governing body owns this — it has to ensure communication channels exist throughout the organization (so policies and changes reach staff) and that external statements about competence are not misleading. Inquiries from government agencies, attorneys, advocates, or media also need a defined response procedure.",
+      keyPoint:
+        "If a surveyor asks 'how do you make sure your website doesn't misrepresent your accreditation?' the answer should be a documented review process the governing body owns.",
+    },
   ],
   questions: [
     {
