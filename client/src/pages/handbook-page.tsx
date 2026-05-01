@@ -131,7 +131,7 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
 
       <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-6 flex flex-col gap-5">
         <div className="rounded-xl p-5 border-2 shadow-sm" style={{ borderColor: `${color}30`, backgroundColor: `${color}08` }}>
-          <p className="text-base leading-relaxed text-foreground/80" data-testid="text-chapter-overview">
+          <p className="text-base leading-relaxed font-bold text-foreground" data-testid="text-chapter-overview">
             {chapter.overview}
           </p>
         </div>
