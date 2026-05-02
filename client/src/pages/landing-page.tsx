@@ -96,9 +96,7 @@ export default function LandingPage() {
             transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-6"
           >
-            <div className="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center">
-              <Shield size={44} className="text-primary-foreground" />
-            </div>
+            <AppLogoMark variant="lg" />
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl" data-testid="text-hero-title">
               Hospital Standards Challenge
             </h1>

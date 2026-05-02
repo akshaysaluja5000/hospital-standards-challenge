@@ -122,7 +122,7 @@ export default function AuthPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <div className="mb-4">
+            <div className="mb-4 flex justify-center">
               <AppLogoMark variant="lg" />
             </div>
             <h1 className="text-3xl font-black tracking-tight">Hospital Standards Challenge</h1>
