@@ -1,0 +1,44 @@
+Terms of Use
+Educational Purpose
+Hospital Standards Challenge is designed exclusively for educational and training purposes. All content is intended to help healthcare professionals prepare for Joint Commission compliance standards and is not a substitute for official training or certification programs.
+
+Per-Facility License
+Access to Hospital Standards Challenge is provided on a per-facility basis. Each facility receives its own isolated environment for tracking staff compliance training progress. Facility codes are provided by your organization's administrator.
+
+Content Restrictions
+All content within Hospital Standards Challenge, including questions, explanations, handbook materials, and training resources, is proprietary. Content cannot be resold, reproduced, or distributed without prior written authorization.
+
+Aggregated Statistics
+Aggregated and anonymized performance statistics may be used for quality improvement purposes, including identifying common knowledge gaps and improving training content effectiveness.
+
+No Patient Data
+Hospital Standards Challenge does not store, collect, or process any patient data or protected health information (PHI). The platform is strictly limited to staff training and compliance readiness.
+
+Privacy Policy
+What We Collect
+We collect limited information necessary for the platform to function:
+
+Username and display name
+Quiz performance and scores
+Activity data (streaks, XP, daily progress)
+Facility association
+How It's Used
+Your data is used for:
+
+Tracking your individual compliance training progress
+Generating facility-level compliance readiness reports
+Quality improvement and content effectiveness analysis
+Gamification features (leaderboards, streaks, levels)
+What We Do NOT Collect
+Hospital Standards Challenge explicitly does not collect:
+
+Patient data of any kind
+Protected Health Information (PHI)
+Personal contact information (email, phone)
+Location or device tracking data
+Disclaimer
+Hospital Standards Challenge is not affiliated with, endorsed by, or sponsored by The Joint Commission. "The Joint Commission" is a registered trademark of The Joint Commission.
+
+All content provided through Hospital Standards Challenge is for educational and training purposes only. It is designed to supplement, not replace, official Joint Commission standards, guidelines, or accreditation processes.
+
+Facility administrators and healthcare professionals should always refer to official Joint Commission publications and resources for authoritative guidance on compliance requirements.
