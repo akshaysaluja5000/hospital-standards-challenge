@@ -43,28 +43,16 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
         fill={`url(#gl-${id})`}
       />
 
-      {/* Cloud — centered vertically in the shield */}
-      <path
-        d="
-          M 8 27
-          C 5.5 27 5.5 24 7 23
-          C 6.5 19.5 9 17.5 12 18
-          C 12.5 16 14.5 15 16.5 15.5
-          C 17.5 14 19.5 13.5 21.5 14.5
-          C 23 13 26.5 13.3 27.5 16
-          C 30 16 31.5 18 31 20.5
-          C 32.5 21 32.5 23.5 31 24.5
-          C 32 25.5 31 27 29.5 27
-          Z
-        "
-        fill="white"
-        fillOpacity="0.97"
-      />
+      {/* Cloud — symmetric, built from overlapping circles + flat base */}
+      <ellipse cx="13" cy="22" rx="5.5" ry="5" fill="white" />
+      <ellipse cx="18" cy="19" rx="6" ry="5.5" fill="white" />
+      <ellipse cx="23" cy="22" rx="5.5" ry="5" fill="white" />
+      <rect x="7.5" y="22" width="21" height="5" fill="white" />
 
       {/* HSC — horizontal, centered inside cloud */}
       <text
-        x="18.5"
-        y="21.5"
+        x="18"
+        y="24"
         textAnchor="middle"
         dominantBaseline="middle"
         fontFamily="'Nunito', 'Arial Black', 'Arial', sans-serif"
