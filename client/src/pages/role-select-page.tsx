@@ -450,12 +450,14 @@ export default function RoleSelectPage() {
                           {FACILITY_DESCRIPTIONS[m]}
                         </p>
                         <div className="flex flex-wrap gap-1.5 mt-3">
-                          <Badge
-                            variant="outline"
-                            className="text-[10px] font-semibold tracking-wider px-1.5 py-0 h-5"
-                          >
-                            {roleCount} {roleCount === 1 ? "ROLE" : "ROLES"}
-                          </Badge>
+                          {roleCount > 0 && (
+                            <Badge
+                              variant="outline"
+                              className="text-[10px] font-semibold tracking-wider px-1.5 py-0 h-5"
+                            >
+                              {roleCount} {roleCount === 1 ? "ROLE" : "ROLES"}
+                            </Badge>
+                          )}
                           {isCurrent && (
                             <Badge
                               variant="outline"
