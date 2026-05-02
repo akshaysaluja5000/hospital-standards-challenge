@@ -413,7 +413,7 @@ export default function DashboardPage() {
 
         <XpBar currentXp={displayXp} />
 
-        {userModule !== "asc" && (!diagnosticResults || diagnosticResults.length === 0) && (
+        {userModule !== "asc" && (
           <motion.button
             className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
             onClick={() => setLocation("/diagnostic")}
@@ -427,13 +427,19 @@ export default function DashboardPage() {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base">New here? Take the Diagnostic Quiz</h3>
+                <h3 className="font-bold text-base">
+                  {diagnosticResults && diagnosticResults.length > 0
+                    ? "Retake the Diagnostic Quiz"
+                    : "New here? Take the Diagnostic Quiz"}
+                </h3>
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">
-                  Start
+                  {diagnosticResults && diagnosticResults.length > 0 ? "Retake" : "Start"}
                 </span>
               </div>
               <p className="text-sm text-muted-foreground mt-0.5">
-                25 questions to benchmark your compliance knowledge — takes about 10 minutes
+                {diagnosticResults && diagnosticResults.length > 0
+                  ? `Last score: ${diagnosticResults[0].score}/${diagnosticResults[0].totalQuestions} — retake anytime to track improvement`
+                  : "25 questions to benchmark your compliance knowledge — takes about 10 minutes"}
               </p>
             </div>
             <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
@@ -639,30 +645,38 @@ export default function DashboardPage() {
         </div>
 
         {masteryEligibility?.eligible && (
-          <motion.button
-            className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10"
-            onClick={() => setLocation("/mastery")}
+          <motion.div
+            className="w-full rounded-2xl border-2 p-5 text-left bg-amber-500/5 border-amber-500/30"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            whileTap={{ scale: 0.98 }}
-            data-testid="button-mastery-cta"
+            data-testid="card-mastery-cta"
           >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
-              <Crown size={24} className="text-white" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base">All sections complete? Take the Final Assessment</h3>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-600 uppercase tracking-wider">
-                  Unlocked
-                </span>
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                <Crown size={28} className="text-white" />
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                25 advanced questions to see how much you've learned — compare your results to your Diagnostic score
-              </p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="font-bold text-lg leading-tight">Final Assessment</h3>
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/15 text-amber-500 uppercase tracking-wider">
+                    Unlocked
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-1 leading-snug">
+                  25 advanced questions to see how much you've learned — compare your results to your Diagnostic score
+                </p>
+              </div>
             </div>
-            <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-          </motion.button>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setLocation("/mastery")}
+                data-testid="button-mastery-cta"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md transition-all active:scale-95"
+              >
+                Take Assessment <ChevronRight size={16} />
+              </button>
+            </div>
+          </motion.div>
         )}
 
         {userModule === "asc" && (
