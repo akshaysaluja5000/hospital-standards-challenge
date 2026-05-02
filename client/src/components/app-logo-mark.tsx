@@ -3,66 +3,82 @@ interface AppLogoMarkProps {
 }
 
 export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
-  const size = variant === "lg" ? 80 : 36;
+  const width = variant === "lg" ? 72 : 34;
+  const height = variant === "lg" ? 80 : 38;
   const id = variant;
 
   return (
     <svg
-      width={size}
-      height={size}
-      viewBox="0 0 48 48"
+      width={width}
+      height={height}
+      viewBox="0 0 36 40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ flexShrink: 0 }}
     >
       <defs>
-        <linearGradient id={`bg-${id}`} x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#2760C8" />
-          <stop offset="100%" stopColor="#0F2860" />
+        <linearGradient id={`g-${id}`} x1="0" y1="0" x2="36" y2="40" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#3068D0" />
+          <stop offset="100%" stopColor="#0C245C" />
         </linearGradient>
-        <linearGradient id={`sheen-${id}`} x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="white" stopOpacity="0.13" />
+        <linearGradient id={`gl-${id}`} x1="18" y1="1" x2="18" y2="15" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="white" stopOpacity="0.15" />
           <stop offset="100%" stopColor="white" stopOpacity="0" />
         </linearGradient>
-        <clipPath id={`clip-${id}`}>
-          <rect width="48" height="48" rx="11" />
-        </clipPath>
+        <filter id={`ds-${id}`} x="-15%" y="-10%" width="130%" height="130%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#0C245C" floodOpacity="0.5" />
+        </filter>
       </defs>
 
-      {/* Background */}
-      <rect width="48" height="48" rx="11" fill={`url(#bg-${id})`} />
-      {/* Top sheen for depth */}
-      <rect width="48" height="26" clipPath={`url(#clip-${id})`} fill={`url(#sheen-${id})`} />
-
-      {/* Large "H" — left anchor */}
-      {/* Left post */}
-      <rect x="5" y="10" width="6.5" height="28" rx="2" fill="white" />
-      {/* Right post */}
-      <rect x="18" y="10" width="6.5" height="28" rx="2" fill="white" />
-      {/* Crossbar */}
-      <rect x="5" y="21.5" width="19.5" height="5.5" rx="2" fill="white" />
-
-      {/* Slim vertical divider */}
-      <rect x="29" y="13" width="1.5" height="22" rx="0.75" fill="white" fillOpacity="0.3" />
-
-      {/* "S" — top right */}
-      {/* Top curve of S */}
+      {/* Shield body */}
       <path
-        d="M43 14.5 C43 12 41 10.5 38 10.5 C35 10.5 33 12 33 14.5 C33 17 35.5 17.5 38 18.5 C40.5 19.5 43 20 43 22.5 C43 25 41 26.5 38 26.5 C35 26.5 33 25 33 22.5"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        fill="none"
+        d="M18 1L2 7V21C2 30.5 9 38 18 40.5C27 38 34 30.5 34 21V7L18 1Z"
+        fill={`url(#g-${id})`}
+        filter={`url(#ds-${id})`}
       />
 
-      {/* "C" — bottom right */}
+      {/* Top sheen for gloss */}
       <path
-        d="M42.5 31.5 C41 29.5 39.5 28.5 37.5 28.5 C34.5 28.5 32.5 30.5 32.5 34 C32.5 37.5 34.5 39.5 37.5 39.5 C39.5 39.5 41 38.5 42.5 36.5"
-        stroke="white"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        fill="none"
+        d="M18 1L2 7V14C6 12 12 10 18 9.5C24 10 30 12 34 14V7L18 1Z"
+        fill={`url(#gl-${id})`}
       />
+
+      {/* Cloud — centered vertically in the shield */}
+      {/*
+        Cloud design: three bumps on top, flat base.
+        Centered at (18, 25), spanning x: 5.5–30.5, y: 19–30.5
+      */}
+      <path
+        d="
+          M 8 30.5
+          C 5.5 30.5 5.5 27.5 7 26.5
+          C 6.5 23 9 21 12 21.5
+          C 12.5 19.5 14.5 18.5 16.5 19
+          C 17.5 17.5 19.5 17 21.5 18
+          C 23 16.5 26.5 16.8 27.5 19.5
+          C 30 19.5 31.5 21.5 31 24
+          C 32.5 24.5 32.5 27 31 28
+          C 32 29 31 30.5 29.5 30.5
+          Z
+        "
+        fill="white"
+        fillOpacity="0.97"
+      />
+
+      {/* HSC — horizontal, centered inside cloud */}
+      <text
+        x="18.5"
+        y="25.8"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontFamily="'Nunito', 'Arial Black', 'Arial', sans-serif"
+        fontWeight="900"
+        fontSize="7.5"
+        fill="#0C245C"
+        letterSpacing="0.6"
+      >
+        HSC
+      </text>
     </svg>
   );
 }
