@@ -18,11 +18,11 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
     >
       <defs>
         <linearGradient id={`g-${id}`} x1="18" y1="0" x2="18" y2="42" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#1A4DA0" />
-          <stop offset="100%" stopColor="#091E52" />
+          <stop offset="0%" stopColor="#60A5FA" />
+          <stop offset="100%" stopColor="#2563EB" />
         </linearGradient>
         <filter id={`ds-${id}`} x="-15%" y="-8%" width="130%" height="125%">
-          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#091E52" floodOpacity="0.5" />
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#1E3A8A" floodOpacity="0.6" />
         </filter>
       </defs>
 

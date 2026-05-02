@@ -63,7 +63,7 @@ export default function LandingPage() {
   return (
     <div
       className="min-h-screen flex flex-col"
-      style={{ background: "linear-gradient(160deg, #2563EB 0%, #1D4ED8 45%, #1E40AF 100%)" }}
+      style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}
     >
       {/* Subtle full-page grid overlay */}
       <div
@@ -77,7 +77,7 @@ export default function LandingPage() {
       {/* ── Header ── */}
       <header
         className="relative z-50 sticky top-0 border-b border-white/20"
-        style={{ background: "rgba(29,78,216,0.92)", backdropFilter: "blur(12px)" }}
+        style={{ background: "rgba(7,22,48,0.95)", backdropFilter: "blur(12px)" }}
       >
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">

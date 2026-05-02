@@ -73,7 +73,7 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     slug: "asc",
     pageTitle: "ASCs — Hospital Standards Challenge",
     audience: "For Ambulatory Surgery Centers",
-    heroIcon: Activity,
+    heroIcon: Building2,
     headline: "ASC Accreditation Training That Sticks.",
     subhead:
       "AAAHC, Joint Commission ASC pathway, and CMS Conditions for Coverage — covered. Built for the pace of an ASC, with fast onboarding for new hires, refreshers for veteran staff, and reporting that multi-site operators like Surgery Partners can use on day one.",
@@ -132,7 +132,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
       {/* Dark hero band */}
       <div
         className="relative"
-        style={{ background: "linear-gradient(160deg, #2563EB 0%, #1D4ED8 45%, #1E40AF 100%)" }}
+        style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}
       >
         {/* Subtle grid overlay */}
         <div
@@ -143,7 +143,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
           }}
         />
 
-        <header className="relative z-10 sticky top-0 border-b border-white/20" style={{ background: "rgba(29,78,216,0.92)", backdropFilter: "blur(12px)" }}>
+        <header className="relative z-10 sticky top-0 border-b border-white/10" style={{ background: "rgba(7,22,48,0.95)", backdropFilter: "blur(12px)" }}>
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <button
               type="button"
