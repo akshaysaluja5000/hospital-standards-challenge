@@ -131,10 +131,15 @@ export default function RoleSelectPage() {
   const visibleIds = useMemo(() => new Set(visibleRoles.map((r) => r.id)), [visibleRoles]);
 
   const [step, setStep] = useState<1 | 2>(1);
-  const [pendingFacility, setPendingFacility] = useState<FacilityType>(facilityType);
+  // Only pre-select the facility for returning users who already have a role set.
+  // New users must actively choose so they don't get defaulted into Hospital.
+  const [pendingFacility, setPendingFacility] = useState<FacilityType | null>(
+    user?.roleId ? facilityType : null
+  );
 
   useEffect(() => {
-    setPendingFacility(facilityType);
+    // Only keep in sync if the user already made a selection — don't auto-select for new users.
+    setPendingFacility((prev) => (prev !== null ? facilityType : prev));
   }, [facilityType]);
 
   const { data: dbRoles, isLoading } = useQuery<{ id: number; slug: string }[]>({
@@ -262,6 +267,10 @@ export default function RoleSelectPage() {
 
   const handleFacilityContinue = async () => {
     setShowError(false);
+    if (!pendingFacility) {
+      setShowError(true);
+      return;
+    }
     if (pendingFacility !== facilityType) {
       try {
         await switchFacilityMutation.mutateAsync(pendingFacility);
@@ -332,17 +341,24 @@ export default function RoleSelectPage() {
             >
               {step === 1
                 ? (pendingFacility === "asc"
-                    ? "Choose your facility"
+                    ? "Step 1 of 1 — Choose your facility"
                     : "Step 1 of 2 — Choose your facility")
                 : "Step 2 of 2 — Choose your role"}
             </Badge>
           </div>
 
-          {pendingFacility !== "asc" && (
+          {pendingFacility !== "asc" && step === 1 && (
             <div className="flex items-center justify-center gap-2 mb-6 text-xs text-muted-foreground" data-testid="text-step-indicator">
-              <span className={step === 1 ? "font-semibold text-primary" : ""}>1. Choose your facility</span>
+              <span className="font-semibold text-primary">1. Choose your facility</span>
               <span aria-hidden="true">›</span>
-              <span className={step === 2 ? "font-semibold text-primary" : ""}>2. Choose your role</span>
+              <span>2. Choose your role</span>
+            </div>
+          )}
+          {step === 2 && (
+            <div className="flex items-center justify-center gap-2 mb-6 text-xs text-muted-foreground" data-testid="text-step-indicator">
+              <span>1. Choose your facility</span>
+              <span aria-hidden="true">›</span>
+              <span className="font-semibold text-primary">2. Choose your role</span>
             </div>
           )}
 
@@ -358,7 +374,7 @@ export default function RoleSelectPage() {
             <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
               {step === 1
                 ? (pendingFacility === "asc"
-                    ? "Pick the facility you work in. AAAHC accreditation applies the same Universal Standards to every ASC, so there are no separate roles to choose. You can change this anytime."
+                    ? "Great — AAAHC accreditation applies the same Universal Standards to every ASC, so there are no separate roles to choose. You can change this anytime."
                     : "Pick the facility you work in so we can show you the right accreditation standards. You can change this anytime.")
                 : `Select your department so we can focus your training on the ${FACILITY_ACCREDITOR[facilityType]} standards that matter most to your work.`}
             </p>
@@ -666,6 +682,16 @@ export default function RoleSelectPage() {
 
         <div className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 z-10">
           <div className="max-w-4xl mx-auto px-4 py-4">
+            {step === 1 && showError && !pendingFacility && (
+              <div
+                role="alert"
+                data-testid="alert-no-facility-selection"
+                className="mb-3 flex items-center gap-2 text-sm text-destructive font-medium"
+              >
+                <AlertCircle size={16} />
+                <span>Please select your facility type to continue.</span>
+              </div>
+            )}
             {step === 2 && showError && selectedIds.length === 0 && (
               <div
                 role="alert"
@@ -683,18 +709,26 @@ export default function RoleSelectPage() {
                     <p className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
                       Selected facility
                     </p>
-                    <p className="font-semibold truncate">
-                      {MODULE_LABELS[pendingFacility]}
-                      <span className="text-muted-foreground font-normal">
-                        {" "}· {FACILITY_ACCREDITOR[pendingFacility]}
-                      </span>
-                    </p>
-                    {pendingFacility === "asc" && (
-                      <p
-                        className="text-xs text-muted-foreground mt-0.5"
-                        data-testid="text-asc-no-roles-note"
-                      >
-                        ASC training applies to every team member — no role to choose.
+                    {pendingFacility ? (
+                      <>
+                        <p className="font-semibold truncate">
+                          {MODULE_LABELS[pendingFacility]}
+                          <span className="text-muted-foreground font-normal">
+                            {" "}· {FACILITY_ACCREDITOR[pendingFacility]}
+                          </span>
+                        </p>
+                        {pendingFacility === "asc" && (
+                          <p
+                            className="text-xs text-muted-foreground mt-0.5"
+                            data-testid="text-asc-no-roles-note"
+                          >
+                            ASC training applies to every team member — no role to choose.
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        Choose Hospital or ASC above
                       </p>
                     )}
                   </div>
@@ -730,7 +764,7 @@ export default function RoleSelectPage() {
                   size="lg"
                   className="shrink-0 gap-2"
                   data-testid="button-confirm-facility"
-                  disabled={switchFacilityMutation.isPending}
+                  disabled={switchFacilityMutation.isPending || !pendingFacility}
                   onClick={handleFacilityContinue}
                 >
                   {switchFacilityMutation.isPending ? (
