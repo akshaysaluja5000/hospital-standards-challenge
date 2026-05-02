@@ -357,7 +357,7 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-white/10 py-6 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-xs text-white/40 leading-relaxed" data-testid="text-disclaimer">
-            Hospital Standards Challenge is not affiliated with, endorsed by, or sponsored by The Joint Commission.
+            Hospital Standards Challenge is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS.
             All content is for educational and training purposes only.
           </p>
           <p className="text-xs text-white/40 mt-2">
