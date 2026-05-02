@@ -233,14 +233,20 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen p-4 max-w-2xl mx-auto">
-        <div className="flex flex-col gap-6 pt-4">
-          <Skeleton className="h-12 w-48" />
-          <div className="grid grid-cols-3 gap-3">
-            {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}
+      <div className="min-h-screen p-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 pt-4">
+          <div className="flex flex-col gap-4">
+            <Skeleton className="h-16 rounded-2xl" />
+            {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-28 rounded-2xl" />)}
           </div>
-          <Skeleton className="h-40 rounded-2xl" />
-          {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-3 gap-3">
+              {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 rounded-2xl" />)}
+            </div>
+            <Skeleton className="h-24 rounded-2xl" />
+            <Skeleton className="h-12 rounded-2xl" />
+            <Skeleton className="h-14 rounded-2xl" />
+          </div>
         </div>
       </div>
     );
@@ -248,8 +254,9 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen pb-20">
+      {/* Sub-header */}
       <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-3 min-w-0">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/15 border border-white/20">
               <span className="font-black text-sm text-white">
@@ -260,497 +267,415 @@ export default function DashboardPage() {
               <h1 className="font-bold text-base text-white truncate" data-testid="text-username">
                 {user?.username}
               </h1>
-              <p className="text-xs text-white/50">
-                Welcome back!
-              </p>
+              <p className="text-xs text-white/50">Welcome back!</p>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <PathwayMenu triggerVariant="outline" triggerSize="sm" />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setLocation("/leaderboard")}
-              data-testid="button-leaderboard"
-            >
+            <Button variant="outline" size="sm" onClick={() => setLocation("/leaderboard")} data-testid="button-leaderboard">
               <Trophy size={16} />
             </Button>
             {user?.isAdmin && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setLocation("/admin")}
-                data-testid="button-admin"
-              >
+              <Button variant="outline" size="sm" onClick={() => setLocation("/admin")} data-testid="button-admin">
                 <BarChart3 size={16} />
               </Button>
             )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setLocation("/profile")}
-              data-testid="button-profile"
-            >
+            <Button variant="outline" size="sm" onClick={() => setLocation("/profile")} data-testid="button-profile">
               <Settings size={16} />
             </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={async () => { await logout(); setLocation("/auth"); }}
-              data-testid="button-logout"
-            >
+            <Button variant="outline" size="sm" onClick={async () => { await logout(); setLocation("/auth"); }} data-testid="button-logout">
               <LogOut size={16} />
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 pt-6 flex flex-col gap-6">
-        {!isAsc && user?.roleId && (() => {
-          const dbRole = rolesList?.find((r) => r.id === user.roleId);
-          const cfg = dbRole ? getRoleConfig(dbRole.slug) : undefined;
-          const title = cfg?.title || dbRole?.name || assignedData?.role?.name || "Your role";
-          const department = cfg?.department || assignedData?.role?.department || "";
-          return (
+      {/* Two-column layout */}
+      <div className="max-w-6xl mx-auto px-6 pt-6 pb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+
+          {/* ── LEFT: Training content ── */}
+          <div className="flex flex-col gap-6">
+
+            {/* Role card */}
+            {!isAsc && user?.roleId && (() => {
+              const dbRole = rolesList?.find((r) => r.id === user.roleId);
+              const cfg = dbRole ? getRoleConfig(dbRole.slug) : undefined;
+              const title = cfg?.title || dbRole?.name || assignedData?.role?.name || "Your role";
+              const department = cfg?.department || assignedData?.role?.department || "";
+              return (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-2xl bg-card border border-card-border p-4 flex items-center gap-3"
+                  data-testid="card-current-role"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Briefcase size={18} className="text-primary" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold leading-none mb-1">Your role</p>
+                    <p className="font-bold text-sm truncate" data-testid="text-current-role-title">{title}</p>
+                    {department && <p className="text-xs text-muted-foreground truncate">{department}</p>}
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => setLocation("/role-select")} data-testid="button-dashboard-change-role">
+                    Change
+                  </Button>
+                </motion.div>
+              );
+            })()}
+
+            {/* Pathway section */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-black flex items-center gap-2" data-testid="text-pathway-header">
+                  <CalendarIcon size={20} className="text-primary" />
+                  {PATHWAY_HEADERS[userModule]}
+                </h2>
+                <span className="text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-full bg-primary/10 text-primary" data-testid="badge-pathway">
+                  {MODULE_LABELS[userModule]}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mb-4 px-3 py-3 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-shuffle-note">
+                <Shuffle size={16} className="text-primary flex-shrink-0" />
+                <p className="text-sm text-muted-foreground">
+                  Questions are <span className="font-semibold text-foreground">shuffled each time</span> you play, so you'll get a different order every session.
+                </p>
+              </div>
+              {!isAsc && assignedData?.role && (
+                <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-muted border border-border" data-testid="text-role-banner">
+                  <Briefcase size={16} className="text-muted-foreground flex-shrink-0" />
+                  <p className="text-sm flex-1 min-w-[180px] text-foreground">
+                    Showing <span className="font-semibold">{assignedFilteredLevels.length}</span> level{assignedFilteredLevels.length === 1 ? "" : "s"} for your role:{" "}
+                    <span className="font-semibold">{assignedData.role.name}</span>
+                  </p>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {assignedData.role.scope === "dual" && (
+                      <Button variant="ghost" size="sm" data-testid="button-toggle-view-scope"
+                        onClick={() => viewScopeMutation.mutate(user?.viewScope === "all" ? "department" : "all")}
+                        disabled={viewScopeMutation.isPending}
+                      >
+                        {user?.viewScope === "all" ? "Show only my role" : "Show all chapters"}
+                      </Button>
+                    )}
+                    <Button variant="outline" size="sm" data-testid="button-banner-change-role" onClick={() => setLocation("/role-select")}>
+                      Change role
+                    </Button>
+                  </div>
+                </div>
+              )}
+
+              {isAsc ? (
+                <div className="flex flex-col gap-6">
+                  {ascChapterGroups.map(({ category, chapters }) => (
+                    <div key={category} className="flex flex-col gap-3" data-testid={`group-dashboard-${category.toLowerCase().replace(/\s+/g, "-")}`}>
+                      <div className="flex items-baseline justify-between px-1">
+                        <h3 className="font-black text-sm uppercase tracking-wide text-primary" data-testid={`heading-dashboard-${category.toLowerCase().replace(/\s+/g, "-")}`}>
+                          {category}
+                        </h3>
+                        <span className="text-xs text-muted-foreground">
+                          {category === "Universal Standards" ? "Apply to every accredited ASC" : "Apply when the service is provided"}
+                        </span>
+                      </div>
+                      {category === "Selective Standards" && (
+                        <p className="px-1 text-xs text-muted-foreground/80" data-testid="text-asc-numbering-note">
+                          All ASC-required chapters included. Apply when the listed service is provided at your facility.
+                        </p>
+                      )}
+                      <div className="flex flex-col gap-3">
+                        {chapters.map((chapter) => (
+                          <AscChapterCard
+                            key={chapter.levelId}
+                            chapter={chapter}
+                            progressMap={progressMap}
+                            sessionsMap={sessionsMap}
+                            onRead={() => setLocation(`/handbook/${chapter.levelId}`)}
+                            onPlay={(quizId) => setLocation(`/play/${quizId}`)}
+                            onStudy={(quizId) => setLocation(`/study/${quizId}`)}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  {assignedFilteredLevels.length === 0 ? (
+                    <div className="rounded-2xl border-2 border-dashed border-border bg-muted/30 p-6 text-center" data-testid="empty-state-pathway-domains">
+                      <p className="font-semibold text-base mb-1">{MODULE_LABELS[userModule]} content is in development</p>
+                      <p className="text-sm text-muted-foreground">
+                        Domains for the {MODULE_LABELS[userModule]} pathway are set up, but training questions and study material aren't published yet. Check back soon.
+                      </p>
+                    </div>
+                  ) : (
+                    assignedFilteredLevels.map((level, index) => (
+                      <LevelCard
+                        key={level.id}
+                        level={level}
+                        progress={progressMap.get(level.id)}
+                        savedSession={sessionsMap.get(level.id)}
+                        isUnlocked={isLevelUnlocked(index)}
+                        index={index}
+                        onPlay={() => setLocation(`/play/${level.id}`)}
+                        onStudy={() => setLocation(`/study/${level.id}`)}
+                      />
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Final Assessment */}
+            {masteryEligibility?.eligible && (
+              <motion.div
+                className="w-full rounded-2xl border-2 p-5 text-left bg-amber-500/5 border-amber-500/30"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                data-testid="card-mastery-cta"
+              >
+                <div className="flex items-start gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                    <Crown size={28} className="text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-lg leading-tight">Final Assessment</h3>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/15 text-amber-500 uppercase tracking-wider">Unlocked</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1 leading-snug">
+                      25 advanced questions to see how much you've learned — compare your results to your Diagnostic score
+                    </p>
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setLocation("/mastery")}
+                    data-testid="button-mastery-cta"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md transition-all active:scale-95"
+                  >
+                    Take Assessment <ChevronRight size={16} />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ASC Posttest */}
+            {userModule === "asc" && (
+              <motion.button
+                className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10"
+                onClick={() => setLocation("/asc-posttest")}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.98 }}
+                data-testid="button-asc-posttest-cta"
+              >
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                  <Trophy size={24} className="text-white" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-base">ASC Posttest</h3>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-700 dark:text-amber-400 uppercase tracking-wider">Check growth</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-0.5">25 fresh questions to compare against your pretest performance</p>
+                </div>
+                <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
+              </motion.button>
+            )}
+
+            {/* Roadmap */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl bg-card border border-card-border p-4 flex items-center gap-3"
-              data-testid="card-current-role"
+              className="rounded-2xl border-2 border-dashed border-primary/20 bg-primary/5 p-5"
+              data-testid="card-roadmap"
             >
-              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                <Briefcase size={18} className="text-primary" />
+              <div className="flex items-center gap-2 mb-1">
+                <BrainCircuit size={18} className="text-primary" />
+                <h3 className="font-bold text-base">Coming Soon: Operational Readiness</h3>
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-primary/10 text-primary uppercase tracking-wider">Roadmap</span>
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold leading-none mb-1">
-                  Your role
-                </p>
-                <p className="font-bold text-sm truncate" data-testid="text-current-role-title">
-                  {title}
-                </p>
-                {department && (
-                  <p className="text-xs text-muted-foreground truncate">{department}</p>
-                )}
+              <p className="text-xs text-muted-foreground mb-4">Beyond training — tools to manage readiness across your facility.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { icon: ClipboardCheck, label: "Corrective Action Tracker", desc: "Assign gaps, track closure, attach evidence" },
+                  { icon: Stethoscope, label: "Mock Tracer Simulator", desc: "Chapter-by-chapter walkthroughs that mirror real survey rounds" },
+                  { icon: FileText, label: "Evidence Locker", desc: "Proof of compliance organized by standard" },
+                  { icon: BarChart3, label: "Facility-Level Reporting", desc: "Completion and accuracy by site, role, and department" },
+                ].map((item) => (
+                  <div key={item.label} className="flex items-start gap-3 rounded-xl bg-card border border-card-border p-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <item.icon size={15} className="text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm">{item.label}</p>
+                      <p className="text-xs text-muted-foreground">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setLocation("/role-select")}
-                data-testid="button-dashboard-change-role"
-              >
-                Change
-              </Button>
             </motion.div>
-          );
-        })()}
-
-        <div className="grid grid-cols-3 gap-3">
-          <motion.div
-            className="game-card p-4 flex flex-col items-center justify-center"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <StreakFlame streak={streak?.currentStreak || 0} size="sm" />
-          </motion.div>
-
-          <motion.div
-            className="game-card p-4 flex flex-col items-center justify-center gap-1"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="flex items-center gap-1">
-              <Zap size={18} className="text-chart-4" fill="currentColor" />
-              <span className="text-2xl font-black" data-testid="text-total-xp">
-                {displayXp}
-              </span>
-            </div>
-            <span className="text-sm text-muted-foreground font-semibold">Total XP</span>
-          </motion.div>
-
-          <motion.div
-            className="game-card p-4 flex flex-col items-center justify-center gap-1"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="flex items-center gap-1">
-              <TrendingUp size={20} className="text-chart-3" />
-              <span className="text-2xl font-black" data-testid="text-longest-streak">
-                {streak?.longestStreak || 0}
-              </span>
-            </div>
-            <span className="text-sm text-muted-foreground font-semibold">Best Streak</span>
-          </motion.div>
-        </div>
-
-        <motion.div
-          className="rounded-2xl bg-card border border-card-border p-5"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="flex items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2">
-              <Target size={20} className="text-primary" />
-              <h3 className="font-bold text-base">Daily Goal</h3>
-            </div>
-            <span className="text-sm font-bold text-primary" data-testid="text-daily-progress">
-              {todayQuestions}/{dailyGoal} questions
-            </span>
           </div>
-          <div className="relative h-4 rounded-full bg-muted overflow-hidden">
-            <motion.div
-              className="absolute inset-y-0 left-0 gradient-progress"
-              initial={{ width: 0 }}
-              animate={{ width: `${goalProgress}%` }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            />
-          </div>
-          {goalProgress >= 100 && (
-            <p className="text-xs text-chart-1 font-bold mt-2">
-              Goal complete! Keep going for bonus XP!
-            </p>
-          )}
-        </motion.div>
 
-        <XpBar currentXp={displayXp} />
+          {/* ── RIGHT SIDEBAR ── */}
+          <div className="flex flex-col gap-4 lg:sticky lg:top-[calc(58px+58px+24px)]">
 
-        {userModule !== "asc" && (
-          <motion.button
-            className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
-            onClick={() => setLocation("/diagnostic")}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileTap={{ scale: 0.98 }}
-            data-testid="button-diagnostic-cta"
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-md">
-              <Stethoscope size={24} className="text-white" />
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-3">
+              <motion.div className="game-card p-4 flex flex-col items-center justify-center" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                <StreakFlame streak={streak?.currentStreak || 0} size="sm" />
+              </motion.div>
+              <motion.div className="game-card p-4 flex flex-col items-center justify-center gap-1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                <div className="flex items-center gap-1">
+                  <Zap size={16} className="text-chart-4" fill="currentColor" />
+                  <span className="text-xl font-black" data-testid="text-total-xp">{displayXp}</span>
+                </div>
+                <span className="text-xs text-muted-foreground font-semibold">Total XP</span>
+              </motion.div>
+              <motion.div className="game-card p-4 flex flex-col items-center justify-center gap-1" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                <div className="flex items-center gap-1">
+                  <TrendingUp size={16} className="text-chart-3" />
+                  <span className="text-xl font-black" data-testid="text-longest-streak">{streak?.longestStreak || 0}</span>
+                </div>
+                <span className="text-xs text-muted-foreground font-semibold">Best Streak</span>
+              </motion.div>
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base">
-                  {diagnosticResults && diagnosticResults.length > 0
-                    ? "Retake the Diagnostic Quiz"
-                    : "New here? Take the Diagnostic Quiz"}
-                </h3>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">
-                  {diagnosticResults && diagnosticResults.length > 0 ? "Retake" : "Start"}
-                </span>
+
+            {/* Daily Goal */}
+            <motion.div className="rounded-2xl bg-card border border-card-border p-4" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <div className="flex items-center gap-2">
+                  <Target size={16} className="text-primary" />
+                  <h3 className="font-bold text-sm">Daily Goal</h3>
+                </div>
+                <span className="text-sm font-bold text-primary" data-testid="text-daily-progress">{todayQuestions}/{dailyGoal} questions</span>
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                {diagnosticResults && diagnosticResults.length > 0
-                  ? `Last score: ${diagnosticResults[0].score}/${diagnosticResults[0].totalQuestions} — retake anytime to track improvement`
-                  : "25 questions to benchmark your compliance knowledge — takes about 10 minutes"}
-              </p>
-            </div>
-            <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-          </motion.button>
-        )}
-
-        {userModule === "asc" && (
-          <motion.button
-            className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
-            onClick={() => setLocation("/asc-pretest")}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileTap={{ scale: 0.98 }}
-            data-testid="button-asc-pretest-cta"
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-md">
-              <Stethoscope size={24} className="text-white" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base">ASC Pretest</h3>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">
-                  Benchmark
-                </span>
+              <div className="relative h-3 rounded-full bg-muted overflow-hidden">
+                <motion.div
+                  className="absolute inset-y-0 left-0 gradient-progress"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${goalProgress}%` }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
               </div>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                25 questions across 6 ASC chapters — see where to focus first
-              </p>
-            </div>
-            <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-          </motion.button>
-        )}
+              {goalProgress >= 100 && (
+                <p className="text-xs text-chart-1 font-bold mt-2">Goal complete! Keep going for bonus XP!</p>
+              )}
+            </motion.div>
 
-        <motion.button
-          className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"
-          onClick={() => setLocation("/handbook")}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileTap={{ scale: 0.98 }}
-          data-testid="button-handbook"
-        >
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">
-            <BookOpen size={24} className="text-primary" />
-          </div>
-          <div className="flex-1">
-            <h3 className="font-bold text-base">Compliance Handbook</h3>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Complete reference guide with detailed explanations, critical values, and scenarios
-            </p>
-          </div>
-          <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-        </motion.button>
+            {/* XP Bar */}
+            <XpBar currentXp={displayXp} />
 
-        <motion.button
-          className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-secondary/5 border-secondary/20 hover:bg-secondary/10"
-          onClick={() => setLocation("/deep-dive")}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileTap={{ scale: 0.98 }}
-          data-testid="button-deep-dive"
-        >
-          <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-secondary/10">
-            <Microscope size={24} className="text-secondary" />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <h3 className="font-bold text-base">Deep Dive Tracer</h3>
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">
-                New
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              Branching follow-up questions — earn <span className="font-bold text-secondary">Expert XP</span> for deeper knowledge
-            </p>
-          </div>
-          <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-        </motion.button>
-
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-black flex items-center gap-2" data-testid="text-pathway-header">
-              <CalendarIcon size={20} className="text-primary" />
-              {PATHWAY_HEADERS[userModule]}
-            </h2>
-            <span
-              className="text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded-full bg-primary/10 text-primary"
-              data-testid="badge-pathway"
-            >
-              {MODULE_LABELS[userModule]}
-            </span>
-          </div>
-          <div className="flex items-center gap-2 mb-4 px-3 py-3 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-shuffle-note">
-            <Shuffle size={16} className="text-primary flex-shrink-0" />
-            <p className="text-sm text-muted-foreground">
-              Questions are <span className="font-semibold text-foreground">shuffled each time</span> you play, so you'll get a different order every session.
-            </p>
-          </div>
-          {!isAsc && assignedData?.role && (
-            <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-muted border border-border" data-testid="text-role-banner">
-              <Briefcase size={16} className="text-muted-foreground flex-shrink-0" />
-              <p className="text-sm flex-1 min-w-[180px] text-foreground">
-                Showing <span className="font-semibold">{assignedFilteredLevels.length}</span> level{assignedFilteredLevels.length === 1 ? "" : "s"} for your role:{" "}
-                <span className="font-semibold">{assignedData.role.name}</span>
-              </p>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {assignedData.role.scope === "dual" && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    data-testid="button-toggle-view-scope"
-                    onClick={() => viewScopeMutation.mutate(user?.viewScope === "all" ? "department" : "all")}
-                    disabled={viewScopeMutation.isPending}
-                  >
-                    {user?.viewScope === "all" ? "Show only my role" : "Show all chapters"}
-                  </Button>
-                )}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  data-testid="button-banner-change-role"
-                  onClick={() => setLocation("/role-select")}
-                >
-                  Change role
-                </Button>
-              </div>
-            </div>
-          )}
-          {isAsc ? (
-            <div className="flex flex-col gap-6">
-              {ascChapterGroups.map(({ category, chapters }) => (
-                <div
-                  key={category}
-                  className="flex flex-col gap-3"
-                  data-testid={`group-dashboard-${category.toLowerCase().replace(/\s+/g, "-")}`}
-                >
-                  <div className="flex items-baseline justify-between px-1">
-                    <h3
-                      className="font-black text-sm uppercase tracking-wide text-primary"
-                      data-testid={`heading-dashboard-${category.toLowerCase().replace(/\s+/g, "-")}`}
-                    >
-                      {category}
+            {/* Diagnostic */}
+            {userModule !== "asc" && (
+              <motion.button
+                className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
+                onClick={() => setLocation("/diagnostic")}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.98 }}
+                data-testid="button-diagnostic-cta"
+              >
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-sm">
+                  <Stethoscope size={18} className="text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <h3 className="font-bold text-sm">
+                      {diagnosticResults && diagnosticResults.length > 0 ? "Retake Diagnostic Quiz" : "Diagnostic Quiz"}
                     </h3>
-                    <span className="text-xs text-muted-foreground">
-                      {category === "Universal Standards"
-                        ? "Apply to every accredited ASC"
-                        : "Apply when the service is provided"}
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">
+                      {diagnosticResults && diagnosticResults.length > 0 ? "Retake" : "Start"}
                     </span>
                   </div>
-                  {category === "Selective Standards" && (
-                    <p
-                      className="px-1 text-xs text-muted-foreground/80"
-                      data-testid="text-asc-numbering-note"
-                    >
-                      All ASC-required chapters included. Apply when the listed service is provided at your facility.
-                    </p>
-                  )}
-                  <div className="flex flex-col gap-3">
-                    {chapters.map((chapter) => (
-                      <AscChapterCard
-                        key={chapter.levelId}
-                        chapter={chapter}
-                        progressMap={progressMap}
-                        sessionsMap={sessionsMap}
-                        onRead={() => setLocation(`/handbook/${chapter.levelId}`)}
-                        onPlay={(quizId) => setLocation(`/play/${quizId}`)}
-                        onStudy={(quizId) => setLocation(`/study/${quizId}`)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {assignedFilteredLevels.length === 0 ? (
-                <div
-                  className="rounded-2xl border-2 border-dashed border-border bg-muted/30 p-6 text-center"
-                  data-testid="empty-state-pathway-domains"
-                >
-                  <p className="font-semibold text-base mb-1">
-                    {MODULE_LABELS[userModule]} content is in development
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    Domains for the {MODULE_LABELS[userModule]} pathway are set up, but training questions and study material aren't published yet. Check back soon.
+                  <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                    {diagnosticResults && diagnosticResults.length > 0
+                      ? `Last: ${diagnosticResults[0].score}/${diagnosticResults[0].totalQuestions}`
+                      : "25 questions · ~10 min"}
                   </p>
                 </div>
-              ) : (
-                assignedFilteredLevels.map((level, index) => (
-                  <LevelCard
-                    key={level.id}
-                    level={level}
-                    progress={progressMap.get(level.id)}
-                    savedSession={sessionsMap.get(level.id)}
-                    isUnlocked={isLevelUnlocked(index)}
-                    index={index}
-                    onPlay={() => setLocation(`/play/${level.id}`)}
-                    onStudy={() => setLocation(`/study/${level.id}`)}
-                  />
-                ))
-              )}
-            </div>
-          )}
-        </div>
+                <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
+              </motion.button>
+            )}
 
-        {masteryEligibility?.eligible && (
-          <motion.div
-            className="w-full rounded-2xl border-2 p-5 text-left bg-amber-500/5 border-amber-500/30"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            data-testid="card-mastery-cta"
-          >
-            <div className="flex items-start gap-4 mb-4">
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
-                <Crown size={28} className="text-white" />
+            {/* ASC Pretest */}
+            {userModule === "asc" && (
+              <motion.button
+                className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
+                onClick={() => setLocation("/asc-pretest")}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.98 }}
+                data-testid="button-asc-pretest-cta"
+              >
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-sm">
+                  <Stethoscope size={18} className="text-white" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="font-bold text-sm">ASC Pretest</h3>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">Benchmark</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">25 questions across 6 ASC chapters</p>
+                </div>
+                <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
+              </motion.button>
+            )}
+
+            {/* Handbook */}
+            <motion.button
+              className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"
+              onClick={() => setLocation("/handbook")}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileTap={{ scale: 0.98 }}
+              data-testid="button-handbook"
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">
+                <BookOpen size={18} className="text-primary" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h3 className="font-bold text-lg leading-tight">Final Assessment</h3>
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/15 text-amber-500 uppercase tracking-wider">
-                    Unlocked
-                  </span>
+                <h3 className="font-bold text-sm">Compliance Handbook</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">Complete reference guide</p>
+              </div>
+              <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
+            </motion.button>
+
+            {/* Deep Dive */}
+            <motion.button
+              className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-secondary/5 border-secondary/20 hover:bg-secondary/10"
+              onClick={() => setLocation("/deep-dive")}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileTap={{ scale: 0.98 }}
+              data-testid="button-deep-dive"
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-secondary/10">
+                <Microscope size={18} className="text-secondary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="font-bold text-sm">Deep Dive Tracer</h3>
+                  <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">New</span>
                 </div>
-                <p className="text-sm text-muted-foreground mt-1 leading-snug">
-                  25 advanced questions to see how much you've learned — compare your results to your Diagnostic score
-                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">Earn Expert XP for deeper knowledge</p>
               </div>
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={() => setLocation("/mastery")}
-                data-testid="button-mastery-cta"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md transition-all active:scale-95"
-              >
-                Take Assessment <ChevronRight size={16} />
-              </button>
-            </div>
-          </motion.div>
-        )}
+              <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
+            </motion.button>
 
-        {userModule === "asc" && (
-          <motion.button
-            className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10"
-            onClick={() => setLocation("/asc-posttest")}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            whileTap={{ scale: 0.98 }}
-            data-testid="button-asc-posttest-cta"
-          >
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
-              <Trophy size={24} className="text-white" />
+            {/* Activity Calendar */}
+            <div className="rounded-2xl bg-card border border-card-border p-4">
+              <h3 className="font-bold text-sm mb-3 flex items-center gap-2">
+                <CalendarIcon size={15} className="text-primary" />
+                Activity Calendar
+              </h3>
+              <DailyCalendar activities={activities || []} dailyGoal={dailyGoal} />
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h3 className="font-bold text-base">ASC Posttest</h3>
-                <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-700 dark:text-amber-400 uppercase tracking-wider">
-                  Check growth
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground mt-0.5">
-                25 fresh questions to compare against your pretest performance
-              </p>
-            </div>
-            <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-          </motion.button>
-        )}
-
-        <div className="rounded-2xl bg-card border border-card-border p-5">
-          <h3 className="font-bold text-base mb-4 flex items-center gap-2">
-            <CalendarIcon size={18} className="text-primary" />
-            Activity Calendar
-          </h3>
-          <DailyCalendar
-            activities={activities || []}
-            dailyGoal={dailyGoal}
-          />
+          </div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border-2 border-dashed border-primary/20 bg-primary/5 p-5"
-          data-testid="card-roadmap"
-        >
-          <div className="flex items-center gap-2 mb-1">
-            <BrainCircuit size={18} className="text-primary" />
-            <h3 className="font-bold text-base">Coming Soon: Operational Readiness</h3>
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-primary/10 text-primary uppercase tracking-wider">Roadmap</span>
-          </div>
-          <p className="text-xs text-muted-foreground mb-4">Beyond training — tools to manage readiness across your facility.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {[
-              { icon: ClipboardCheck, label: "Corrective Action Tracker", desc: "Assign gaps, track closure, attach evidence" },
-              { icon: Stethoscope, label: "Mock Tracer Simulator", desc: "Chapter-by-chapter walkthroughs that mirror real survey rounds" },
-              { icon: FileText, label: "Evidence Locker", desc: "Proof of compliance organized by standard" },
-              { icon: BarChart3, label: "Facility-Level Reporting", desc: "Completion and accuracy by site, role, and department" },
-            ].map((item) => (
-              <div key={item.label} className="flex items-start gap-3 rounded-xl bg-card border border-card-border p-3">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <item.icon size={15} className="text-primary" />
-                </div>
-                <div>
-                  <p className="font-bold text-sm">{item.label}</p>
-                  <p className="text-xs text-muted-foreground">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
       </div>
 
-      <div className="text-center mt-8 mb-4 text-xs text-muted-foreground" data-testid="text-disclaimer-footer">
+      <div className="max-w-6xl mx-auto px-6 mt-4 mb-6 text-xs text-muted-foreground" data-testid="text-disclaimer-footer">
         {PATHWAY_DISCLAIMERS[userModule]}{" "}
         <Link href="/terms" className="underline hover:text-primary">Terms & Privacy</Link>
       </div>
