@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles } from "lucide-react";
 import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { PathwayMenu } from "@/components/pathway-menu";
 
@@ -62,51 +61,57 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Dark hero band — header + hero section share the same navy gradient */}
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ background: "linear-gradient(160deg, #2563EB 0%, #1D4ED8 45%, #1E40AF 100%)" }}
+    >
+      {/* Subtle full-page grid overlay */}
       <div
-        className="relative"
+        className="fixed inset-0 pointer-events-none opacity-[0.06]"
         style={{
-          background: "linear-gradient(160deg, #071630 0%, #0D2659 45%, #1A4DA0 100%)",
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.9) 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
         }}
+      />
+
+      {/* ── Header ── */}
+      <header
+        className="relative z-50 sticky top-0 border-b border-white/20"
+        style={{ background: "rgba(29,78,216,0.92)", backdropFilter: "blur(12px)" }}
       >
-        {/* Subtle grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-
-        <header className="relative z-10 sticky top-0 border-b border-white/10" style={{ background: "rgba(7,22,48,0.92)", backdropFilter: "blur(12px)" }}>
-          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <AppLogoMark variant="sm" />
-              <span className="font-black text-lg tracking-tight text-white" data-testid="text-app-name">Hospital Standards Challenge</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <PathwayMenu />
-              <Button
-                variant="ghost"
-                onClick={() => setLocation("/auth")}
-                className="text-white/80 hover:text-white hover:bg-white/10"
-                data-testid="button-header-signin"
-              >
-                Sign In
-              </Button>
-              <Button
-                onClick={() => setLocation("/auth")}
-                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
-                data-testid="button-header-create-account"
-              >
-                Create Account
-              </Button>
-            </div>
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <AppLogoMark variant="sm" />
+            <span className="font-black text-lg tracking-tight text-white" data-testid="text-app-name">Hospital Standards Challenge</span>
           </div>
-        </header>
+          <div className="flex items-center gap-2">
+            <PathwayMenu />
+            <Button
+              variant="ghost"
+              onClick={() => setLocation("/auth")}
+              className="text-white/80 hover:text-white hover:bg-white/10"
+              data-testid="button-header-signin"
+            >
+              Sign In
+            </Button>
+            <Button
+              onClick={() => setLocation("/auth")}
+              className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
+              data-testid="button-header-create-account"
+            >
+              Create Account
+            </Button>
+          </div>
+        </div>
+      </header>
 
-        <section className="relative z-10 max-w-5xl mx-auto px-4 py-20 md:py-32 text-center">
+      <main className="relative z-10 flex-1">
+
+        {/* ── Hero ── */}
+        <section
+          className="max-w-5xl mx-auto px-4 py-20 md:py-32 text-center"
+          style={{ background: "linear-gradient(180deg, rgba(26,77,160,0.25) 0%, transparent 100%)" }}
+        >
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -117,17 +122,17 @@ export default function LandingPage() {
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
               Hospital Standards Challenge
             </h1>
-            <p className="text-xl md:text-2xl text-white/80 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
+            <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
               Survey readiness training that closes compliance gaps — built for hospital and ASC staff who don't have time for another in-service.
             </p>
-            <p className="text-base text-white/60 max-w-2xl leading-relaxed" data-testid="text-hero-supporting">
+            <p className="text-base text-white/75 max-w-2xl leading-relaxed" data-testid="text-hero-supporting">
               Track staff competency by department, identify weak areas before a surveyor does, and keep your team audit-ready between surveys — in 10–15 minutes a day.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
                 size="lg"
                 onClick={scrollToFeatures}
-                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold shadow-lg shadow-black/20"
+                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold shadow-lg shadow-black/30"
                 data-testid="button-hero-how-it-works"
               >
                 See How It Works
@@ -145,10 +150,9 @@ export default function LandingPage() {
             </div>
           </motion.div>
         </section>
-      </div>
 
-      <main className="flex-1">
-        <section className="bg-accent/30 border-y border-border py-16 md:py-20">
+        {/* ── For Leaders ── */}
+        <section className="border-y border-white/10 py-16 md:py-20" style={{ background: "rgba(255,255,255,0.04)" }}>
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -156,40 +160,40 @@ export default function LandingPage() {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <Users size={22} className="text-primary" />
+                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
+                  <Users size={22} className="text-blue-300" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black tracking-tight" data-testid="text-leaders-heading">
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-leaders-heading">
                   For Nursing, Quality, and Education Leaders
                 </h2>
               </div>
-              <p className="text-base text-muted-foreground leading-relaxed max-w-3xl mb-6" data-testid="text-leaders-description">
+              <p className="text-base text-white/70 leading-relaxed max-w-3xl mb-6" data-testid="text-leaders-description">
                 Hospital Standards Challenge turns standards review into short, gamified sessions staff actually complete&#8212;without adding more in&#8209;service time.
               </p>
               <ul className="space-y-3 mb-8">
                 {leaderBullets.map((bullet, i) => (
                   <li key={i} className="flex items-start gap-3" data-testid={`text-leader-bullet-${i}`}>
-                    <CheckCircle2 size={20} className="text-primary flex-shrink-0 mt-0.5" />
-                    <span className="text-base text-foreground/80 leading-relaxed">{bullet}</span>
+                    <CheckCircle2 size={20} className="text-blue-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-base text-white/80 leading-relaxed">{bullet}</span>
                   </li>
                 ))}
               </ul>
 
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <TrendingUp size={22} className="text-primary" />
+                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
+                  <TrendingUp size={22} className="text-blue-300" />
                 </div>
-                <h3 className="text-xl font-black tracking-tight" data-testid="text-get-started-heading">
+                <h3 className="text-xl font-black tracking-tight text-white" data-testid="text-get-started-heading">
                   How to Get Started
                 </h3>
               </div>
               <ol className="space-y-3">
                 {steps.map((step, i) => (
                   <li key={i} className="flex items-start gap-3" data-testid={`text-step-${i}`}>
-                    <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold mt-0.5">
+                    <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold mt-0.5">
                       {i + 1}
                     </span>
-                    <span className="text-base text-foreground/80 leading-relaxed">{step}</span>
+                    <span className="text-base text-white/80 leading-relaxed">{step}</span>
                   </li>
                 ))}
               </ol>
@@ -197,6 +201,7 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Features Grid ── */}
         <section id="features-section" className="max-w-5xl mx-auto px-4 py-16 md:py-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {features.map((feature, index) => (
@@ -206,21 +211,26 @@ export default function LandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.15 }}
               >
-                <Card className="p-5 flex items-start gap-4" data-testid={`card-feature-${index}`}>
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <feature.icon size={20} className="text-primary" />
+                <div
+                  className="p-5 flex items-start gap-4 rounded-xl border border-white/10"
+                  style={{ background: "rgba(255,255,255,0.06)" }}
+                  data-testid={`card-feature-${index}`}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/25 flex items-center justify-center flex-shrink-0">
+                    <feature.icon size={20} className="text-blue-300" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm">{feature.title}</h3>
-                    <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
+                    <h3 className="font-bold text-sm text-white">{feature.title}</h3>
+                    <p className="text-sm text-white/60 mt-1">{feature.description}</p>
                   </div>
-                </Card>
+                </div>
               </motion.div>
             ))}
           </div>
         </section>
 
-        <section className="py-16 md:py-20 bg-gradient-to-br from-teal-50 via-cyan-50 to-sky-50 dark:from-teal-950/20 dark:via-cyan-950/20 dark:to-sky-950/20 border-y border-teal-200/50 dark:border-teal-800/50">
+        {/* ── Diagnostic Promo ── */}
+        <section className="py-16 md:py-20 border-y border-white/10" style={{ background: "rgba(20,100,90,0.25)" }}>
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -234,25 +244,23 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-teal-800 dark:text-teal-200" data-testid="text-diagnostic-promo-heading">
-                      How survey&#8209;ready are you right now?
-                    </h2>
-                  </div>
-                  <p className="text-base text-teal-700/80 dark:text-teal-300/80 leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
-                    Take our <span className="font-bold text-teal-700 dark:text-teal-200">Diagnostic Quiz</span> &#8212; 25 scenario&#8209;based questions across every compliance domain. No studying needed. Just honest answers to find your starting line. In 10 minutes, you&#x2019;ll know exactly where to focus.
+                  <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white mb-2" data-testid="text-diagnostic-promo-heading">
+                    How survey&#8209;ready are you right now?
+                  </h2>
+                  <p className="text-base text-white/75 leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
+                    Take our <span className="font-bold text-teal-300">Diagnostic Quiz</span> &#8212; 25 scenario&#8209;based questions across every compliance domain. No studying needed. Just honest answers to find your starting line. In 10 minutes, you&#x2019;ll know exactly where to focus.
                   </p>
                   <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
                     <Button
                       size="lg"
-                      className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white shadow-md shadow-teal-500/20 font-bold"
+                      className="bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-400 hover:to-cyan-500 text-white shadow-md shadow-teal-500/20 font-bold"
                       onClick={() => setLocation("/auth")}
                       data-testid="button-diagnostic-promo-signup"
                     >
                       Create Account to Start
                       <ArrowRight size={18} className="ml-2" />
                     </Button>
-                    <div className="flex items-center gap-1.5 text-sm text-teal-600 dark:text-teal-400 font-medium">
+                    <div className="flex items-center gap-1.5 text-sm text-teal-300/80 font-medium">
                       <Lock size={14} />
                       <span>Free with your account</span>
                     </div>
@@ -263,7 +271,8 @@ export default function LandingPage() {
           </div>
         </section>
 
-        <section className="py-16 md:py-20 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-950/20 dark:via-yellow-950/20 dark:to-orange-950/20 border-b border-amber-200/50 dark:border-amber-800/50">
+        {/* ── Mastery Promo ── */}
+        <section className="py-16 md:py-20 border-b border-white/10" style={{ background: "rgba(100,60,10,0.30)" }}>
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -278,33 +287,33 @@ export default function LandingPage() {
                 </div>
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-amber-800 dark:text-amber-200" data-testid="text-mastery-promo-heading">
+                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-mastery-promo-heading">
                       Prove you&#x2019;re survey&#8209;ready with the Final Assessment
                     </h2>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-200 dark:bg-amber-800 text-amber-700 dark:text-amber-200 uppercase tracking-wider">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/30 text-amber-300 border border-amber-400/40 uppercase tracking-wider flex-shrink-0">
                       Earn it
                     </span>
                   </div>
-                  <p className="text-base text-amber-700/80 dark:text-amber-300/80 leading-relaxed mb-3 max-w-xl" data-testid="text-mastery-promo-body">
-                    Finished all the levels? The <span className="font-bold text-amber-700 dark:text-amber-200">Final Assessment</span> unlocks after you complete every section &#8212; 25 advanced questions that go deeper than anything in the training. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
+                  <p className="text-base text-white/75 leading-relaxed mb-3 max-w-xl" data-testid="text-mastery-promo-body">
+                    Finished all the levels? The <span className="font-bold text-amber-300">Final Assessment</span> unlocks after you complete every section &#8212; 25 advanced questions that go deeper than anything in the training. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
                   </p>
                   <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start mb-4">
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
+                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-300/80">
                       <Sparkles size={14} />
                       <span>Expert&#8209;level scenarios</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
+                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-300/80">
                       <CheckCircle2 size={14} />
                       <span>Full results after completion</span>
                     </div>
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-700 dark:text-amber-300">
+                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-300/80">
                       <BarChart3 size={14} />
                       <span>Compare to your diagnostic baseline</span>
                     </div>
                   </div>
                   <Button
                     size="lg"
-                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md shadow-amber-500/20 font-bold"
+                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white shadow-md shadow-amber-500/20 font-bold"
                     onClick={() => setLocation("/auth")}
                     data-testid="button-mastery-promo-signup"
                   >
@@ -317,6 +326,7 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Final CTA ── */}
         <section className="max-w-5xl mx-auto px-4 py-16 md:py-24 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -324,14 +334,15 @@ export default function LandingPage() {
             transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-4"
           >
-            <h2 className="text-2xl font-black tracking-tight">Ready to see the difference?</h2>
-            <p className="text-base text-muted-foreground max-w-lg">
+            <h2 className="text-2xl font-black tracking-tight text-white">Ready to see the difference?</h2>
+            <p className="text-base text-white/65 max-w-lg">
               Sign in to explore the app, or create an account to get started.
             </p>
             <div className="flex items-center gap-3 flex-wrap justify-center">
               <Button
                 size="lg"
                 onClick={() => setLocation("/auth")}
+                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
                 data-testid="button-bottom-signin"
               >
                 Sign In
@@ -341,6 +352,7 @@ export default function LandingPage() {
                 size="lg"
                 variant="outline"
                 onClick={() => setLocation("/auth")}
+                className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
                 data-testid="button-bottom-create-account"
               >
                 Create Account
@@ -350,14 +362,15 @@ export default function LandingPage() {
         </section>
       </main>
 
-      <footer className="border-t border-border py-6 px-4">
+      {/* ── Footer ── */}
+      <footer className="relative z-10 border-t border-white/10 py-6 px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <p className="text-xs text-muted-foreground leading-relaxed" data-testid="text-disclaimer">
+          <p className="text-xs text-white/40 leading-relaxed" data-testid="text-disclaimer">
             Hospital Standards Challenge is not affiliated with, endorsed by, or sponsored by The Joint Commission.
             All content is for educational and training purposes only.
           </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            <a href="/terms" className="underline" data-testid="link-terms-landing">Terms & Privacy</a>
+          <p className="text-xs text-white/40 mt-2">
+            <a href="/terms" className="underline hover:text-white/70" data-testid="link-terms-landing">Terms & Privacy</a>
           </p>
         </div>
       </footer>

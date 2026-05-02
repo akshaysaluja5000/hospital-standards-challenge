@@ -121,7 +121,7 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row" style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #1A4DA0 100%)" }}>
+    <div className="min-h-screen flex flex-col lg:flex-row" style={{ background: "linear-gradient(160deg, #2563EB 0%, #1D4ED8 45%, #1E40AF 100%)" }}>
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
         <div className="w-full max-w-md bg-card rounded-2xl shadow-2xl p-8 lg:p-10">
           <motion.div
