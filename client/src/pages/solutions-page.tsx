@@ -18,6 +18,7 @@ import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
 import { useEffect } from "react";
 import { PathwayMenu } from "@/components/pathway-menu";
+import { AppLogoMark } from "@/components/app-logo-mark";
 
 interface Feature {
   icon: LucideIcon;
@@ -101,6 +102,11 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
   },
 };
 
+const SLUG_TO_MODULE: Record<string, string> = {
+  hospitals: "hospital",
+  asc: "asc",
+};
+
 export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
   const config = SOLUTIONS[slug];
   const [, setLocation] = useLocation();
@@ -112,6 +118,14 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
       document.title = "Hospital Standards Challenge";
     };
   }, [config.pageTitle]);
+
+  const goToAuth = () => {
+    const module = SLUG_TO_MODULE[slug];
+    if (module) {
+      try { sessionStorage.setItem("mosh_intended_facility", module); } catch {}
+    }
+    setLocation("/auth");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -132,13 +146,13 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             <PathwayMenu />
             <Button
               variant="ghost"
-              onClick={() => setLocation("/auth")}
+              onClick={goToAuth}
               data-testid="button-header-signin"
             >
               Sign In
             </Button>
             <Button
-              onClick={() => setLocation("/auth")}
+              onClick={goToAuth}
               data-testid="button-header-create-account"
             >
               Create Account
@@ -179,7 +193,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
                 size="lg"
-                onClick={() => setLocation("/auth")}
+                onClick={goToAuth}
                 data-testid="button-hero-create-account"
               >
                 Create Account
@@ -188,7 +202,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => setLocation("/auth")}
+                onClick={goToAuth}
                 data-testid="button-hero-signin"
               >
                 Sign In
@@ -246,7 +260,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             <div className="flex items-center gap-3 flex-wrap justify-center mt-2">
               <Button
                 size="lg"
-                onClick={() => setLocation("/auth")}
+                onClick={goToAuth}
                 data-testid="button-bottom-create-account"
               >
                 Create Account

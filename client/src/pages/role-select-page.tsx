@@ -131,11 +131,21 @@ export default function RoleSelectPage() {
   const visibleIds = useMemo(() => new Set(visibleRoles.map((r) => r.id)), [visibleRoles]);
 
   const [step, setStep] = useState<1 | 2>(1);
-  // Only pre-select the facility for returning users who already have a role set.
-  // New users must actively choose so they don't get defaulted into Hospital.
-  const [pendingFacility, setPendingFacility] = useState<FacilityType | null>(
-    user?.roleId ? facilityType : null
-  );
+
+  // Determine initial facility selection:
+  // - Returning users (have a roleId): pre-select their current facility.
+  // - New users coming from a solutions page: use the intended facility stored in sessionStorage.
+  // - New users with no context: no pre-selection (they must actively choose).
+  const initialFacility = (() => {
+    if (user?.roleId) return facilityType;
+    try {
+      const v = sessionStorage.getItem("mosh_intended_facility");
+      if (v === "hospital" || v === "asc") return v as FacilityType;
+    } catch {}
+    return null;
+  })();
+
+  const [pendingFacility, setPendingFacility] = useState<FacilityType | null>(initialFacility);
 
   useEffect(() => {
     // Only keep in sync if the user already made a selection — don't auto-select for new users.
@@ -209,6 +219,7 @@ export default function RoleSelectPage() {
     onSuccess: (updatedUser, ids) => {
       try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
       try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
+      try { sessionStorage.removeItem("mosh_intended_facility"); } catch {}
       queryClient.setQueryData(["/api/auth/me"], updatedUser);
       queryClient.invalidateQueries({ queryKey: ["/api/user/assigned-chapters"] });
       queryClient.invalidateQueries({ queryKey: ["/api/user/view-scope"] });
@@ -282,6 +293,7 @@ export default function RoleSelectPage() {
     if (pendingFacility === "asc") {
       try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
       try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
+      try { sessionStorage.removeItem("mosh_intended_facility"); } catch {}
       window.location.assign("/");
       return;
     }

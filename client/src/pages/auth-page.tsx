@@ -30,9 +30,16 @@ export default function AuthPage() {
     defaultValues: { username: "", password: "" },
   });
 
+  const intendedFacility = (() => {
+    try {
+      const v = sessionStorage.getItem("mosh_intended_facility");
+      return v === "hospital" || v === "asc" ? v : "hospital";
+    } catch { return "hospital"; }
+  })();
+
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { username: "", firstName: "", lastName: "", facilityCode: "", organizationType: "hospital", password: "", confirmPassword: "" },
+    defaultValues: { username: "", firstName: "", lastName: "", facilityCode: "", organizationType: intendedFacility as "hospital" | "asc", password: "", confirmPassword: "" },
   });
 
   const resetForm = useForm<z.infer<typeof resetPasswordSchema>>({
