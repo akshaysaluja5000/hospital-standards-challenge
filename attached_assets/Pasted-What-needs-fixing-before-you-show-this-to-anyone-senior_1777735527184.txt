@@ -1,0 +1,116 @@
+What needs fixing before you show this to anyone senior
+1. The value proposition is too weak
+
+The homepage says "Welcome back!" and shows streaks/XP. That's fine for a logged-in user, but if you're demoing this cold to Tamara Nelson, the first screen she sees should scream operational value, not gamification.
+
+What I'd change:
+
+When demoing, start on a different landing page that shows:
+
+"ASC survey readiness in 25 questions"
+
+"Chapter summaries + risk points + practice quizzes"
+
+"Track staff competency across your facility"
+
+"Built on AAAHC v44 + CMS 416 standards"
+
+Don't make her hunt for why this matters. Tell her immediately.
+
+2. "Study" is the wrong framing for B2B
+
+Calling it "Study: Quality of Care Provided" makes it sound like a student flashcard app. For a facility director or VP of clinical operations, the framing should be readiness, competency, audit prep, or tracer simulation—not "study."
+
+Better labels:
+
+"Chapter Overview" (keep this)
+
+"Readiness Review" (instead of "Study")
+
+"Practice Quiz" (keep this)
+
+"Tracer Simulation" or "Mock Survey Questions" (stronger than "quiz" for the final assessment)
+
+3. The "Common Risk Points" section is gold but buried
+
+This is your differentiator. Most platforms don't tell you where facilities actually fail. You do. But it's hidden inside the chapter detail page, which means most users won't see it until they drill in.
+
+What I'd do:
+
+On the main chapter list, add a small preview like:
+
+"Chapter 4: Quality of Care Provided"
+
+"9 standards · 9 quick reference items"
+
+"⚠️ 5 common survey failures" ← This line pulls people in
+
+On the homepage dashboard, add a section:
+
+"Top Risk Areas This Month"
+
+Show 3-5 risk points from across chapters that are most commonly cited in surveys
+
+Makes the platform feel current and valuable every time someone logs in
+
+4. No visible proof of multi-user/facility management
+
+If Surgery Partners is your target buyer, they manage 180+ ASCs. They need to know:
+
+Can we deploy this across multiple facilities?
+
+Can we track completion by site, role, department?
+
+Can we generate reports for each ASC administrator?
+
+Can we customize content by facility type (ortho-focused ASC vs. GI-focused ASC)?
+
+Right now the app looks single-user. You need at least a placeholder admin dashboardshowing:
+
+Facility-level completion tracking
+
+Role-based progress (OR staff vs. front desk vs. leadership)
+
+Weak-area heat map (which chapters have lowest scores across staff)
+
+You don't have to build all of this before the demo, but you need mockups or slides showing it exists or is coming. Otherwise she'll assume this is a consumer app, not an enterprise tool.
+
+5. The "Selective Standards" note is confusing
+
+The app says: "Chapter numbers follow AAAHC's official handbook. Gaps (Ch. 14–17, 21–23) are non-ASC adjunct standards used for other accreditation programs."
+
+That's technically accurate, but it reads like an apology for incomplete content. Most buyers won't care about the chapter numbering gaps—they'll just wonder if the app is missing something important.
+
+Better messaging:
+
+"All ASC-required chapters included. Optional specialty chapters available upon request."
+
+Or just remove the note entirely and let the chapter list speak for itself.
+
+6. No visible link between training and corrective action
+
+You told me earlier you want to add:
+
+Corrective Action Manager
+
+Mock Tracer Engine
+
+Evidence Locker
+
+Device Readiness Manager
+
+None of those are visible in this app yet. If you're presenting to Surgery Partners, you should at least show concept slides or placeholder screens for those features so she knows this isn't just a quiz app—it's a readiness platform.
+
+What I'd add to the demo deck:
+
+Slide: "Beyond Training: Operational Readiness Features"
+
+Corrective Action Tracker (assign gaps, track closure, attach evidence)
+
+Mock Tracer Simulator (chapter-by-chapter walkthroughs)
+
+Device Readiness Monitor (new equipment rollout tracking)
+
+Evidence Locker (proof of compliance by standard)
+
+Show her the roadmap, not just what exists today.
