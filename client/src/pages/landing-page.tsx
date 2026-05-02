@@ -39,10 +39,11 @@ const features = [
 ];
 
 const leaderBullets = [
-  "Aligns with tracer topics: instruments, environment of care, SPD, OR, documentation, EOC, and more.",
-  "Deep Dive Tracer mode lets staff drill into expert\u2011level follow\u2011ups that mirror real survey questioning.",
-  "Built\u2011in streaks and levels keep staff coming back between surveys.",
-  "AI\u2011powered explanations help staff understand the \u2018why\u2019 behind each standard.",
+  "Track completion, accuracy, and knowledge gaps by unit — spot at-risk departments before a surveyor does.",
+  "Built on real AAAHC v44, Joint Commission, and CMS 416 standards — not generic compliance content.",
+  "25-question diagnostic gives every staff member a personalized readiness baseline on day one.",
+  "Deep Dive Tracer mode mirrors real survey questioning so staff aren't surprised when it counts.",
+  "AI-powered explanations close knowledge gaps in plain language, right after each question.",
 ];
 
 const steps = [
@@ -103,10 +104,10 @@ export default function LandingPage() {
               Hospital Standards Challenge
             </h1>
             <p className="text-xl md:text-2xl text-foreground/80 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
-              Gamified accreditation training that helps frontline staff feel survey&#8209;ready in 10&#8211;15 minutes a day.
+              Survey readiness training that closes compliance gaps — built for hospital and ASC staff who don't have time for another in-service.
             </p>
             <p className="text-base text-muted-foreground max-w-2xl leading-relaxed" data-testid="text-hero-supporting">
-              Built from real standards and tracer scenarios for OR, SPD, and inpatient units&#8212;now with AI&#8209;powered explanations and practice.
+              Track staff competency by department, identify weak areas before a surveyor does, and keep your team audit-ready between surveys — in 10–15 minutes a day.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button

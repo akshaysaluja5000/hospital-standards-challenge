@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -89,8 +89,13 @@ function AscChapterCard({
               </span>
             )}
           </div>
-          <p className="text-sm text-foreground/70 mt-1.5 line-clamp-2 leading-snug">
+          <p className="text-sm text-foreground/70 mt-1.5 leading-snug">
             {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
+            {chapter.surveyRiskCount != null && (
+              <span className="ml-2 text-amber-600 dark:text-amber-400 font-semibold">
+                ⚠ {chapter.surveyRiskCount} common survey failures
+              </span>
+            )}
           </p>
           <div className="flex gap-2 mt-3 flex-wrap">
             <Button
@@ -113,7 +118,7 @@ function AscChapterCard({
                   data-testid={`button-asc-study-${chapter.levelId}`}
                 >
                   <BookOpen size={15} className="mr-1.5" />
-                  Study
+                  Readiness Review
                 </Button>
                 <Button
                   size="sm"
@@ -579,10 +584,10 @@ export default function DashboardPage() {
                   </div>
                   {category === "Selective Standards" && (
                     <p
-                      className="px-1 text-xs italic text-muted-foreground/80"
+                      className="px-1 text-xs text-muted-foreground/80"
                       data-testid="text-asc-numbering-note"
                     >
-                      Chapter numbers follow AAAHC's official handbook. Gaps (Ch. 14–17, 21–23) are non-ASC adjunct standards used for other accreditation programs.
+                      All ASC-required chapters included. Apply when the listed service is provided at your facility.
                     </p>
                   )}
                   <div className="flex flex-col gap-3">
@@ -697,6 +702,38 @@ export default function DashboardPage() {
             dailyGoal={dailyGoal}
           />
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="rounded-2xl border-2 border-dashed border-primary/20 bg-primary/3 p-5"
+          data-testid="card-roadmap"
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <BrainCircuit size={18} className="text-primary" />
+            <h3 className="font-bold text-base">Coming Soon: Operational Readiness</h3>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-primary/10 text-primary uppercase tracking-wider">Roadmap</span>
+          </div>
+          <p className="text-xs text-muted-foreground mb-4">Beyond training — tools to manage readiness across your facility.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { icon: ClipboardCheck, label: "Corrective Action Tracker", desc: "Assign gaps, track closure, attach evidence" },
+              { icon: Stethoscope, label: "Mock Tracer Simulator", desc: "Chapter-by-chapter walkthroughs that mirror real survey rounds" },
+              { icon: FileText, label: "Evidence Locker", desc: "Proof of compliance organized by standard" },
+              { icon: BarChart3, label: "Facility-Level Reporting", desc: "Completion and accuracy by site, role, and department" },
+            ].map((item) => (
+              <div key={item.label} className="flex items-start gap-3 rounded-xl bg-card border border-card-border p-3">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <item.icon size={15} className="text-primary" />
+                </div>
+                <div>
+                  <p className="font-bold text-sm">{item.label}</p>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       <div className="text-center mt-8 mb-4 text-xs text-muted-foreground" data-testid="text-disclaimer-footer">

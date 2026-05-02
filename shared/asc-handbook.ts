@@ -10,6 +10,8 @@ export type AscHandbookChapter = HandbookChapter & {
   chapterNumber: number;
   category: AscHandbookCategory;
   quizLevelId?: string;
+  surveyRiskCount?: number;
+  surveyRiskLabel?: string;
 };
 
 // Maps each AAAHC handbook chapter to its existing question bank, when one exists.
@@ -33,6 +35,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_patient_rights",
     chapterNumber: 1,
     category: "Universal Standards",
+    surveyRiskCount: 4,
+    surveyRiskLabel: "grievance process, advance directive gaps, rights posting",
     title: "Chapter 1: Patient Rights and Responsibilities",
     overview: "An accreditable ASC recognizes the basic human rights of patients. In order to meet AAAHC/Medicare Deemed Status requirements, an ASC must meet the Standards of this chapter and the Condition for Coverage (CfC). In addition to complying with the Standards below, the Medicare CfC requires that the ASC inform the patient or the patient’s representative or surrogate of the patient’s rights and must protect and promote the exercise of these rights as set forth in Title 42 CFR 416.50. The ASC must also post the written notice of patient rights in a place or places within the ASC likely to be noticed by patients waiting for treatment or by the patient’s representative or surrogate, if applicable. [§416.50; Q-0219] Note: CMS has indicated that the posting of the written notice, if cited, may be considered a standard level finding at Q-0220.",
     sections: [
@@ -118,6 +122,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_governance",
     chapterNumber: 2,
     category: "Universal Standards",
+    surveyRiskCount: 5,
+    surveyRiskLabel: "governing body composition, policy gaps, physician oversight",
     title: "Chapter 2: Governance",
     overview: "An accreditable organization has a governing body that sets policy and is responsible for the organization. Such an organization meets the following Standards. Subchapter I – General Requirements: This subchapter describes general requirements for an organization and its governing body.",
     sections: [
@@ -299,6 +305,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_administration",
     chapterNumber: 3,
     category: "Universal Standards",
+    surveyRiskCount: 4,
+    surveyRiskLabel: "personnel file completeness, competency verification, training records",
     title: "Chapter 3: Administration",
     overview: "An accreditable organization is administered in a manner that ensures the provision of high-quality health services and that fulfills the organization’s mission, goals, and objectives. Organizations may find it helpful to use the Personnel Records Worksheet, found in the Tools section, to evaluate compliance with some Standards found in this chapter.",
     sections: [
@@ -352,6 +360,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_quality_of_care",
     chapterNumber: 4,
     category: "Universal Standards",
+    surveyRiskCount: 6,
+    surveyRiskLabel: "informed consent elements, time-out documentation, discharge criteria",
     title: "Chapter 4: Quality of Care Provided",
     overview: "An accreditable organization provides high-quality health care services in accordance with the principles of professional practice and ethical conduct, and with concern for the costs of care and for improving the community’s health status. Such an organization meets the following Standards.",
     sections: [
@@ -411,6 +421,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_quality_mgmt",
     chapterNumber: 5,
     category: "Universal Standards",
+    surveyRiskCount: 5,
+    surveyRiskLabel: "QI program documentation, peer review evidence, adverse event reporting",
     title: "Chapter 5: Quality Management and Improvement",
     overview: "In striving to improve the quality of care and to promote more effective and efficient use of facilities and services, an accreditable organization maintains a quality management and improvement program that links peer review, quality improvement activities, infection prevention and safety, and risk management in an organized, systematic way. Organizations may also find it useful to refer to Developing Meaningful Quality Improvement Studies in the Tools section of this Handbook. Note: The intent of this chapter is that administrative and clinical personnel are involved in the quality management and improvement activities of the organization. Subchapter I – Quality Improvement Program: An accreditable organization maintains an active, integrated, organized, ongoing, data-driven, and peer-based quality improvement (QI) program that meets the following Standards.",
     sections: [
@@ -497,6 +509,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_clinical_records",
     chapterNumber: 6,
     category: "Universal Standards",
+    surveyRiskCount: 7,
+    surveyRiskLabel: "record completeness, consent timing, medication reconciliation, H&P requirements",
     title: "Chapter 6: Clinical Records and Health Information",
     overview: "An accreditable organization maintains electronic and/or paper clinical records and a health information system. Such an organization meets the following Standards. The Clinical Records Worksheet, found in the Tools section, may be useful in assessing your organization’s compliance with Chapter 6 Standards.",
     sections: [
@@ -583,6 +597,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_infection_prevention",
     chapterNumber: 7,
     category: "Universal Standards",
+    surveyRiskCount: 9,
+    surveyRiskLabel: "hand hygiene, sterilization failures, safe injection, sharps disposal, PPE use",
     title: "Chapter 7: Infection Prevention and Control and Safety",
     overview: "An accreditable organization provides health care services while adhering to safe practices for patients, staff, and all others. The organization maintains ongoing programs designed to (1) prevent and control infections and communicable diseases, and (2) provide a safe and sanitary environment of care. Surveyors conducting a Medicare Deemed Status Survey are required by CMS to complete the ASC Infection Control Surveyor Worksheet. AAAHC strongly recommends that ASCs in the Deemed Status Program use this worksheet to perform a pre-survey self-assessment. The document can be accessed at https://www.cms.gov/Regulations-and- Guidance/Guidance/Manuals/downloads/som107_exhibit_351.pdf Subchapter I — Infection Prevention and Control: An accreditable organization maintains an active and ongoing infection prevention and control program as evidenced by the following characteristics. [416.51 Condition for Coverage — Infection control] The ASC must maintain an infection control program that seeks to minimize infections and communicable diseases.",
     sections: [
@@ -716,6 +732,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_facilities_environment",
     chapterNumber: 8,
     category: "Universal Standards",
+    surveyRiskCount: 6,
+    surveyRiskLabel: "temperature/humidity logs, emergency equipment checks, fire drill documentation",
     title: "Chapter 8: Facilities and Environment",
     overview: "An accreditable organization provides a functionally safe and sanitary environment for its patients, personnel, and visitors, as demonstrated by meeting the following Standards. Subchapter I – Facilities.",
     sections: [
@@ -844,6 +862,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_anesthesia",
     chapterNumber: 9,
     category: "Selective Standards",
+    surveyRiskCount: 8,
+    surveyRiskLabel: "pre-anesthesia eval, PACU discharge criteria, machine checks, reversal agents",
     title: "Chapter 9: Anesthesia Care Services",
     overview: "In an accreditable organization, qualified health care professionals provide anesthesia care services in a safe and sanitary environment. Such an organization meets the following Standards. The provisions of this chapter apply to all care involving the administration of sedation and anesthesia in all ambulatory settings. The following definitions are used in determining how the Standards of this chapter are applied based on the level of anesthesia and sedation administered by an organization. Definitions Standards A through G of this chapter apply Regional anesthesia is the application of to all organizations, regardless of level(s) of anesthetic medication around the nerve or nerves anesthesia administered. in a major region of the body, which supply the area that is targeted for the abolition of painful Local or topical anesthesia is the application of neural impulses. No interventions are required to local anesthetic agents, in appropriate doses maintain a patent airway, and spontaneous adjusted for weight. ventilation is adequate. Cardiovascular function is usually maintained. Minimal sedation (anxiolysis) is a drug-induced state during which patients respond normally to Deep sedation/analgesia is a drug-induced verbal commands. Although cognitive function depression of consciousness during which and coordination may be impaired, ventilatory patients cannot be easily aroused but respond and cardiovascular functions are unaffected. purposefully following repeated or painful Inhaled nitrous oxide in low concentrations that stimulation. (Note that reflex withdrawal from a would not reasonably be expected to result in painful stimulus is NOT considered a purposeful loss of the patient’s life-preserving protective response.) The ability to independently maintain refle...",
     sections: [
@@ -949,6 +969,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_surgical_services",
     chapterNumber: 10,
     category: "Selective Standards",
+    surveyRiskCount: 10,
+    surveyRiskLabel: "surgical time-out, site marking, skin prep, fire risk, specimen labeling",
     title: "Chapter 10: Surgical and Related Services",
     overview: "Surgical and related services in an accreditable organization are performed in a safe and sanitary environment by qualified health care professionals to whom the governing body has granted privileges to perform procedures. The Standards in this chapter apply to organizations that perform any invasive procedures, such as pain management, endoscopy procedures, cardiac catheterization, lithotripsy, and in- vitro fertilization, as well as surgery. In this chapter and throughout this Handbook, the terms “surgery,” “procedure,” and “operation” are used interchangeably. The use of any of these terms is to reference any such skill, method, or technique that involves cutting, abrading, suturing, lasering, or otherwise physically entering or changing body tissues and organs, including invasive pain management procedures. Note: Some Standards may not apply to organizations that only perform minor, superficial procedures without anesthesia or under local or topical anesthesia. Subchapter I – General Requirements: This subchapter describes general requirements for an organization that provides surgical and related services.",
     sections: [
@@ -1116,6 +1138,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_pharmaceutical",
     chapterNumber: 11,
     category: "Selective Standards",
+    surveyRiskCount: 6,
+    surveyRiskLabel: "controlled substance logs, expiration dates, labeling, storage temps",
     title: "Chapter 11: Pharmaceutical Services",
     overview: "Pharmaceutical services provided by an accreditable organization meet the needs of the patients and are provided in accordance with ethical and professional practices and legal requirements. Note: This chapter applies to any organization that uses drugs or pharmaceutical medical supplies, regardless of the presence or absence of an onsite pharmacy.",
     sections: [
@@ -1207,6 +1231,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_pathology",
     chapterNumber: 12,
     category: "Selective Standards",
+    surveyRiskCount: 3,
+    surveyRiskLabel: "specimen handling, CLIA compliance, result reporting timelines",
     title: "Chapter 12: Pathology and Medical Laboratory Services",
     overview: "Laboratory services provided by an accreditable organization meet the needs of the patients and are provided in accordance with ethical and professional practices and legal requirements. Such an organization has the following characteristics. This chapter apples to ASCs providing services that meet the Clinical Laboratory improvement Amendments (CLIA) of 1988.",
     sections: [
@@ -1300,6 +1326,8 @@ export const ascHandbook: AscHandbookChapter[] = [
     levelId: "asc_hb_imaging",
     chapterNumber: 13,
     category: "Selective Standards",
+    surveyRiskCount: 3,
+    surveyRiskLabel: "equipment maintenance logs, radiation safety, imaging documentation",
     title: "Chapter 13: Diagnostic and Other Imaging Services",
     overview: "Imaging services within an accreditable organization, including those used for screening, diagnosing, monitoring, or assisting with procedures provided, meet the needs of the patients and are provided in accordance with ethical and professional practices and legal requirements. Imaging services may include, but are not limited to radiographic, fluoroscopic, magnetic resonance, and/or ultrasonic imaging. Such an organization meets the following Standards. All Standards apply to organizations that provide imaging services for screening, diagnosing, monitoring, or assisting with procedures. Standards 13.K, L, M and N do not apply if the organization only provides peri-operative imaging services.",
     sections: [

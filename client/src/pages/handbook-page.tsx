@@ -272,9 +272,14 @@ export default function HandbookPage() {
           <h3 className="font-bold text-base" style={{ color }}>
             {chapter.title}
           </h3>
-          <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+          <p className="text-sm text-muted-foreground mt-0.5">
             {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
           </p>
+          {(chapter as AscHandbookChapter).surveyRiskCount != null && (
+            <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold mt-0.5">
+              ⚠ {(chapter as AscHandbookChapter).surveyRiskCount} common survey failures
+            </p>
+          )}
         </div>
         <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
       </motion.button>
@@ -339,10 +344,10 @@ export default function HandbookPage() {
                   </div>
                   {cat === "Selective Standards" && (
                     <p
-                      className="px-1 text-xs italic text-muted-foreground/80"
+                      className="px-1 text-xs text-muted-foreground/80"
                       data-testid="text-handbook-numbering-note"
                     >
-                      Chapter numbers follow AAAHC's official handbook. Gaps (Ch. 14–17, 21–23) are non-ASC adjunct standards used for other accreditation programs.
+                      All ASC-required chapters included. Apply when the listed service is provided at your facility.
                     </p>
                   )}
                   <div className="flex flex-col gap-3">
