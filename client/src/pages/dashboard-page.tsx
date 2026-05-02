@@ -25,8 +25,8 @@ const PATHWAY_HEADERS: Record<ModuleId, string> = {
 };
 
 const PATHWAY_DISCLAIMERS: Record<ModuleId, string> = {
-  hospital: "Not affiliated with or endorsed by The Joint Commission. For educational purposes only.",
-  asc: "Not affiliated with or endorsed by AAAHC, The Joint Commission, or CMS. For educational purposes only.",
+  hospital: "Not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. For educational purposes only.",
+  asc: "Not affiliated with, endorsed by, or sponsored by AAAHC, The Joint Commission, or CMS. For educational purposes only.",
 };
 
 function AscChapterCard({
