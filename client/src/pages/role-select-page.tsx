@@ -24,6 +24,7 @@ import {
   Loader2,
   Check,
   ArrowRight,
+  ArrowLeft,
   AlertCircle,
   Scissors,
   Stethoscope,
@@ -717,6 +718,17 @@ export default function RoleSelectPage() {
               </div>
             )}
             <div className="flex items-center justify-between gap-4">
+              {step === 2 && (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="shrink-0 gap-2"
+                  data-testid="button-back-to-facility"
+                  onClick={() => setStep(1)}
+                >
+                  <ArrowLeft size={16} /> Back
+                </Button>
+              )}
               <div className="min-w-0 flex-1">
                 {step === 1 ? (
                   <div data-testid="text-facility-summary">
