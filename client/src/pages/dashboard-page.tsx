@@ -532,7 +532,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-bold text-sm">Compliance Handbook</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">Complete reference guide</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">Complete reference guide</p>
                 </div>
                 <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
               </motion.button>
@@ -553,7 +553,7 @@ export default function DashboardPage() {
                     <h3 className="font-bold text-sm">Deep Dive Tracer</h3>
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">New</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">Earn Expert XP for deeper knowledge</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">Earn Expert XP for deeper knowledge</p>
                 </div>
                 <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
               </motion.button>
@@ -571,7 +571,7 @@ export default function DashboardPage() {
                 <h3 className="font-bold text-base">Coming Soon: Operational Readiness</h3>
                 <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-primary/10 text-primary uppercase tracking-wider">Roadmap</span>
               </div>
-              <p className="text-xs text-muted-foreground mb-4">Beyond training — tools to manage readiness across your facility.</p>
+              <p className="text-sm text-muted-foreground mb-4">Beyond training — tools to manage readiness across your facility.</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   { icon: ClipboardCheck, label: "Corrective Action Tracker", desc: "Assign gaps, track closure, attach evidence" },
@@ -585,7 +585,7 @@ export default function DashboardPage() {
                     </div>
                     <div>
                       <p className="font-bold text-sm">{item.label}</p>
-                      <p className="text-xs text-muted-foreground">{item.desc}</p>
+                      <p className="text-sm text-muted-foreground">{item.desc}</p>
                     </div>
                   </div>
                 ))}
@@ -660,7 +660,7 @@ export default function DashboardPage() {
                     <h3 className="font-bold text-sm">Diagnostic Quiz</h3>
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">Start</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">25 questions · ~10 min</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">25 questions · ~10 min</p>
                 </div>
                 <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
               </motion.button>
@@ -684,7 +684,7 @@ export default function DashboardPage() {
                     <h3 className="font-bold text-sm">ASC Pretest</h3>
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">Benchmark</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5">25 questions across 6 ASC chapters</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">25 questions across 6 ASC chapters</p>
                 </div>
                 <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
               </motion.button>
