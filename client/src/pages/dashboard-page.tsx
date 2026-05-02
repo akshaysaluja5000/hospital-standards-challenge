@@ -706,7 +706,7 @@ export default function DashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="rounded-2xl border-2 border-dashed border-primary/20 bg-primary/3 p-5"
+          className="rounded-2xl border-2 border-dashed border-primary/20 bg-primary/5 p-5"
           data-testid="card-roadmap"
         >
           <div className="flex items-center gap-2 mb-1">
