@@ -248,34 +248,12 @@ export default function DiagnosticQuizPage() {
             <ArrowLeft size={16} className="mr-1" /> Back to Dashboard
           </Button>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6">
             <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center mb-4 shadow-lg">
               <Stethoscope size={40} className="text-white" />
             </div>
             <h1 className="text-3xl font-black mb-2 bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">Diagnostic Quiz</h1>
             <p className="text-muted-foreground text-lg">See where you stand before you begin</p>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-white/80 dark:bg-card border border-teal-200 dark:border-teal-800 p-6 mb-6 shadow-sm">
-            <h2 className="font-bold text-lg mb-3 text-teal-700 dark:text-teal-300">How it works</h2>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
-                <span>25 questions covering all 11 compliance areas — a focused sample from each topic</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
-                <span>No right/wrong feedback during the quiz — just answer and move on</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
-                <span>You can go back to change previous answers and save your progress to finish later</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">4</span>
-                <span>At the end, see your score with a full section breakdown and question-by-question review</span>
-              </li>
-            </ul>
           </motion.div>
 
           {hasSession && (
@@ -298,26 +276,47 @@ export default function DiagnosticQuizPage() {
             </motion.div>
           )}
 
-          {hasPastResults && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 p-4 mb-6">
-              <div className="flex items-center gap-2 mb-2">
-                <BarChart3 size={18} className="text-teal-600" />
-                <span className="font-semibold text-sm text-teal-700 dark:text-teal-300">Previous attempt</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                You scored <span className="font-bold text-teal-600">{pastResults[0].score}/{pastResults[0].totalQuestions}</span> ({Math.round((pastResults[0].score / pastResults[0].totalQuestions) * 100)}%) on {new Date(pastResults[0].completedAt).toLocaleDateString()}
-              </p>
-            </motion.div>
-          )}
-
           {!hasSession && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }}>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="mb-6">
+              {hasPastResults && (
+                <div className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 p-4 mb-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <BarChart3 size={18} className="text-teal-600" />
+                    <span className="font-semibold text-sm text-teal-700 dark:text-teal-300">Previous attempt</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    You scored <span className="font-bold text-teal-600">{pastResults[0].score}/{pastResults[0].totalQuestions}</span> ({Math.round((pastResults[0].score / pastResults[0].totalQuestions) * 100)}%) on {new Date(pastResults[0].completedAt).toLocaleDateString()}
+                  </p>
+                </div>
+              )}
               <Button className="w-full h-14 text-lg font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl shadow-md" onClick={startFresh} data-testid="button-start-diagnostic">
                 {hasPastResults ? "Retake Diagnostic Quiz" : "Start Diagnostic Quiz"}
                 <ChevronRight size={20} className="ml-2" />
               </Button>
             </motion.div>
           )}
+
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-white/80 dark:bg-card border border-teal-200 dark:border-teal-800 p-6 mb-6 shadow-sm">
+            <h2 className="font-bold text-lg mb-3 text-teal-700 dark:text-teal-300">How it works</h2>
+            <ul className="space-y-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">1</span>
+                <span>25 questions covering all 11 compliance areas — a focused sample from each topic</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">2</span>
+                <span>No right/wrong feedback during the quiz — just answer and move on</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">3</span>
+                <span>You can go back to change previous answers and save your progress to finish later</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="w-6 h-6 rounded-full bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0 text-xs font-bold">4</span>
+                <span>At the end, see your score with a full section breakdown and question-by-question review</span>
+              </li>
+            </ul>
+          </motion.div>
         </div>
       </div>
     );
