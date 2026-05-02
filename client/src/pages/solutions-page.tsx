@@ -245,15 +245,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="flex flex-col items-center gap-4"
           >
-            <CheckCircle2 size={36} className="text-primary" />
-            <h2 className="text-2xl md:text-3xl font-black tracking-tight">
-              See it in action.
-            </h2>
-            <p className="text-base text-muted-foreground max-w-xl">
-              Get a 20-minute walkthrough tailored to your organization. We'll
-              show you the dashboards, content library, and a sample staff
-              experience.
-            </p>
+            <h2 className="text-2xl md:text-3xl font-black tracking-tight">Ready to get started?</h2>
             <div className="flex items-center gap-3 flex-wrap justify-center mt-2">
               <Button
                 size="lg"
