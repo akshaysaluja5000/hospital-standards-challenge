@@ -425,6 +425,40 @@ export default function DashboardPage() {
               )}
             </div>
 
+            {/* Retake Diagnostic — shown in main column once the user has a score */}
+            {userModule !== "asc" && diagnosticResults && diagnosticResults.length > 0 && (
+              <motion.div
+                className="w-full rounded-2xl border-2 p-5 text-left bg-teal-500/5 border-teal-500/20"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                data-testid="card-diagnostic-retake"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-md">
+                    <Stethoscope size={22} className="text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-base leading-tight">Diagnostic Quiz</h3>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/15 text-teal-500 uppercase tracking-wider">
+                        Last score: {diagnosticResults[0].score}/{diagnosticResults[0].totalQuestions}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      Retake anytime to track how your knowledge has improved
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setLocation("/diagnostic")}
+                    data-testid="button-diagnostic-retake"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white shadow-md transition-all active:scale-95"
+                  >
+                    Retake <ChevronRight size={15} />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
             {/* Final Assessment */}
             {masteryEligibility?.eligible && (
               <motion.div
@@ -566,8 +600,8 @@ export default function DashboardPage() {
             {/* XP Bar */}
             <XpBar currentXp={displayXp} />
 
-            {/* Diagnostic */}
-            {userModule !== "asc" && (
+            {/* Diagnostic — sidebar entry only for first-timers; returners see it in the main column */}
+            {userModule !== "asc" && !(diagnosticResults && diagnosticResults.length > 0) && (
               <motion.button
                 className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
                 onClick={() => setLocation("/diagnostic")}
@@ -581,18 +615,10 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
-                    <h3 className="font-bold text-sm">
-                      {diagnosticResults && diagnosticResults.length > 0 ? "Retake Diagnostic Quiz" : "Diagnostic Quiz"}
-                    </h3>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">
-                      {diagnosticResults && diagnosticResults.length > 0 ? "Retake" : "Start"}
-                    </span>
+                    <h3 className="font-bold text-sm">Diagnostic Quiz</h3>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">Start</span>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-0.5 truncate">
-                    {diagnosticResults && diagnosticResults.length > 0
-                      ? `Last: ${diagnosticResults[0].score}/${diagnosticResults[0].totalQuestions}`
-                      : "25 questions · ~10 min"}
-                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">25 questions · ~10 min</p>
                 </div>
                 <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
               </motion.button>
