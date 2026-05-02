@@ -16,45 +16,52 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       style={{ flexShrink: 0 }}
     >
       <defs>
-        <linearGradient id={`grad-${id}`} x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#3B6FCC" />
-          <stop offset="100%" stopColor="#163A80" />
+        <linearGradient id={`bg-${id}`} x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#2760C8" />
+          <stop offset="100%" stopColor="#0F2860" />
         </linearGradient>
-        <filter id={`shadow-${id}`} x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#163A80" floodOpacity="0.4" />
-        </filter>
+        <linearGradient id={`sheen-${id}`} x1="0" y1="0" x2="0" y2="26" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="white" stopOpacity="0.13" />
+          <stop offset="100%" stopColor="white" stopOpacity="0" />
+        </linearGradient>
         <clipPath id={`clip-${id}`}>
           <rect width="48" height="48" rx="11" />
         </clipPath>
       </defs>
 
-      {/* Rounded square background */}
-      <rect width="48" height="48" rx="11" fill={`url(#grad-${id})`} filter={`url(#shadow-${id})`} />
+      {/* Background */}
+      <rect width="48" height="48" rx="11" fill={`url(#bg-${id})`} />
+      {/* Top sheen for depth */}
+      <rect width="48" height="26" clipPath={`url(#clip-${id})`} fill={`url(#sheen-${id})`} />
 
-      {/* Top highlight stripe for depth */}
-      <rect width="48" height="16" rx="11" clipPath={`url(#clip-${id})`} fill="white" fillOpacity="0.08" />
+      {/* Large "H" — left anchor */}
+      {/* Left post */}
+      <rect x="5" y="10" width="6.5" height="28" rx="2" fill="white" />
+      {/* Right post */}
+      <rect x="18" y="10" width="6.5" height="28" rx="2" fill="white" />
+      {/* Crossbar */}
+      <rect x="5" y="21.5" width="19.5" height="5.5" rx="2" fill="white" />
 
-      {/* Shield outline — single clean element */}
+      {/* Slim vertical divider */}
+      <rect x="29" y="13" width="1.5" height="22" rx="0.75" fill="white" fillOpacity="0.3" />
+
+      {/* "S" — top right */}
+      {/* Top curve of S */}
       <path
-        d="M24 10L12 15V24C12 30.6 17.1 36.5 24 38.5C30.9 36.5 36 30.6 36 24V15L24 10Z"
-        fill="white"
-        fillOpacity="0.18"
-      />
-      <path
-        d="M24 10L12 15V24C12 30.6 17.1 36.5 24 38.5C30.9 36.5 36 30.6 36 24V15L24 10Z"
+        d="M43 14.5 C43 12 41 10.5 38 10.5 C35 10.5 33 12 33 14.5 C33 17 35.5 17.5 38 18.5 C40.5 19.5 43 20 43 22.5 C43 25 41 26.5 38 26.5 C35 26.5 33 25 33 22.5"
         stroke="white"
-        strokeOpacity="0.5"
-        strokeWidth="1"
+        strokeWidth="2.5"
+        strokeLinecap="round"
         fill="none"
       />
 
-      {/* Single bold checkmark — the only inner symbol */}
+      {/* "C" — bottom right */}
       <path
-        d="M17.5 24L22 29.5L31 19"
+        d="M42.5 31.5 C41 29.5 39.5 28.5 37.5 28.5 C34.5 28.5 32.5 30.5 32.5 34 C32.5 37.5 34.5 39.5 37.5 39.5 C39.5 39.5 41 38.5 42.5 36.5"
         stroke="white"
-        strokeWidth="3.2"
+        strokeWidth="2.5"
         strokeLinecap="round"
-        strokeLinejoin="round"
+        fill="none"
       />
     </svg>
   );
