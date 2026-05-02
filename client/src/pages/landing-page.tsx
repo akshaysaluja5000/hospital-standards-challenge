@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Shield, CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles } from "lucide-react";
+import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles } from "lucide-react";
+import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLocation } from "wouter";
@@ -65,9 +66,7 @@ export default function LandingPage() {
       <header className="border-b border-border bg-card sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-              <Shield size={20} className="text-primary-foreground" />
-            </div>
+            <AppLogoMark variant="sm" />
             <span className="font-black text-lg tracking-tight" data-testid="text-app-name">Hospital Standards Challenge</span>
           </div>
           <div className="flex items-center gap-2">

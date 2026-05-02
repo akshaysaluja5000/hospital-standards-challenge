@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import {
-  Shield,
   ArrowRight,
   Hospital,
   Activity,
@@ -124,9 +123,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             className="flex items-center gap-2 hover-elevate active-elevate-2 rounded-lg px-2 py-1 -ml-2"
             data-testid="link-home-header"
           >
-            <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-              <Shield size={20} className="text-primary-foreground" />
-            </div>
+            <AppLogoMark variant="sm" />
             <span className="font-black text-lg tracking-tight">
               Hospital Standards Challenge
             </span>

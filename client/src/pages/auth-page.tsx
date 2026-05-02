@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shield, Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, Building2 } from "lucide-react";
+import { Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, Building2 } from "lucide-react";
+import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -121,8 +122,8 @@ export default function AuthPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-primary mb-4">
-              <Shield size={32} className="text-primary-foreground" />
+            <div className="mb-4">
+              <AppLogoMark variant="lg" />
             </div>
             <h1 className="text-3xl font-black tracking-tight">Hospital Standards Challenge</h1>
             <p className="text-muted-foreground mt-1">Master Joint Commission standards</p>
