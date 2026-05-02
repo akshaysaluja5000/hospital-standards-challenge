@@ -11,58 +11,75 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
     <svg
       width={width}
       height={height}
-      viewBox="0 0 36 40"
+      viewBox="0 0 36 42"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ flexShrink: 0 }}
     >
       <defs>
-        <linearGradient id={`g-${id}`} x1="0" y1="0" x2="36" y2="40" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#3068D0" />
-          <stop offset="100%" stopColor="#0C245C" />
+        <linearGradient id={`g-${id}`} x1="18" y1="0" x2="18" y2="42" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#1A4DA0" />
+          <stop offset="100%" stopColor="#091E52" />
         </linearGradient>
-        <linearGradient id={`gl-${id}`} x1="18" y1="1" x2="18" y2="15" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="white" stopOpacity="0.15" />
-          <stop offset="100%" stopColor="white" stopOpacity="0" />
-        </linearGradient>
-        <filter id={`ds-${id}`} x="-15%" y="-10%" width="130%" height="130%">
-          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#0C245C" floodOpacity="0.5" />
+        <filter id={`ds-${id}`} x="-15%" y="-8%" width="130%" height="125%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#091E52" floodOpacity="0.5" />
         </filter>
       </defs>
 
-      {/* Shield body */}
+      {/* Shield body — more heraldic proportions, pointed bottom */}
       <path
-        d="M18 1L2 7V21C2 30.5 9 38 18 40.5C27 38 34 30.5 34 21V7L18 1Z"
+        d="M18 1.5L2 7.5V22C2 31.5 9 39.5 18 42C27 39.5 34 31.5 34 22V7.5L18 1.5Z"
         fill={`url(#g-${id})`}
         filter={`url(#ds-${id})`}
       />
 
-      {/* Top sheen for gloss */}
+      {/* Shield inner border — heraldic inset line */}
       <path
-        d="M18 1L2 7V14C6 12 12 10 18 9.5C24 10 30 12 34 14V7L18 1Z"
-        fill={`url(#gl-${id})`}
+        d="M18 4L5 9V22C5 30 10.5 37 18 39.5C25.5 37 31 30 31 22V9L18 4Z"
+        fill="none"
+        stroke="white"
+        strokeOpacity="0.2"
+        strokeWidth="0.75"
       />
 
-      {/* Cloud — symmetric, built from overlapping circles + flat base */}
-      <ellipse cx="12" cy="22" rx="5.5" ry="5" fill="white" />
-      <ellipse cx="18" cy="18.5" rx="6.5" ry="6" fill="white" />
-      <ellipse cx="24" cy="22" rx="5.5" ry="5" fill="white" />
-      <rect x="6.5" y="22" width="23" height="6" fill="white" />
+      {/* Top section divider line */}
+      <line x1="5" y1="15.5" x2="31" y2="15.5" stroke="white" strokeOpacity="0.35" strokeWidth="0.6" />
 
-      {/* HSC — horizontal, centered inside cloud */}
+      {/* Decorative element in top section — four-point star / diamond */}
+      <path
+        d="M18 7 L19.2 10.5 L23 11.5 L19.2 12.5 L18 16 L16.8 12.5 L13 11.5 L16.8 10.5 Z"
+        fill="white"
+        fillOpacity="0.75"
+      />
+
+      {/* Ribbon / banner across the center — Yale-style notched ends */}
+      <path
+        d="M3.5 19.5 L32.5 19.5 L34.5 22.5 L32.5 25.5 L3.5 25.5 L1.5 22.5 Z"
+        fill="white"
+      />
+
+      {/* HSC — on the banner, bold institutional type */}
       <text
         x="18"
-        y="25.2"
+        y="22.5"
         textAnchor="middle"
         dominantBaseline="middle"
         fontFamily="'Nunito', 'Arial Black', 'Arial', sans-serif"
         fontWeight="900"
         fontSize="9"
-        fill="#0C245C"
-        letterSpacing="0.5"
+        fill="#091E52"
+        letterSpacing="0.8"
       >
         HSC
       </text>
+
+      {/* Bottom section divider line */}
+      <line x1="6.5" y1="28.5" x2="29.5" y2="28.5" stroke="white" strokeOpacity="0.3" strokeWidth="0.6" />
+
+      {/* Bottom decorative dots */}
+      <circle cx="15" cy="33" r="1.2" fill="white" fillOpacity="0.45" />
+      <circle cx="18" cy="33" r="1.2" fill="white" fillOpacity="0.45" />
+      <circle cx="21" cy="33" r="1.2" fill="white" fillOpacity="0.45" />
     </svg>
   );
 }
