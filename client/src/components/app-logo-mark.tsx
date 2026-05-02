@@ -44,22 +44,22 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       />
 
       {/* Cloud — symmetric, built from overlapping circles + flat base */}
-      <ellipse cx="13" cy="22" rx="5.5" ry="5" fill="white" />
-      <ellipse cx="18" cy="19" rx="6" ry="5.5" fill="white" />
-      <ellipse cx="23" cy="22" rx="5.5" ry="5" fill="white" />
-      <rect x="7.5" y="22" width="21" height="5" fill="white" />
+      <ellipse cx="12" cy="22" rx="5.5" ry="5" fill="white" />
+      <ellipse cx="18" cy="18.5" rx="6.5" ry="6" fill="white" />
+      <ellipse cx="24" cy="22" rx="5.5" ry="5" fill="white" />
+      <rect x="6.5" y="22" width="23" height="6" fill="white" />
 
       {/* HSC — horizontal, centered inside cloud */}
       <text
         x="18"
-        y="24"
+        y="25.2"
         textAnchor="middle"
         dominantBaseline="middle"
         fontFamily="'Nunito', 'Arial Black', 'Arial', sans-serif"
         fontWeight="900"
-        fontSize="7.5"
+        fontSize="9"
         fill="#0C245C"
-        letterSpacing="0.6"
+        letterSpacing="0.5"
       >
         HSC
       </text>
