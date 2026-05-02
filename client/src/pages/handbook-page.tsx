@@ -104,9 +104,9 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="bg-card border-b border-card-border sticky top-0 z-50">
+      <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={onBack} data-testid="button-back-handbook">
+          <Button variant="ghost" size="icon" onClick={onBack} className="text-white/70 hover:text-white hover:bg-white/10" data-testid="button-back-handbook">
             <ArrowLeft size={20} />
           </Button>
           <div className="flex-1">
@@ -288,14 +288,14 @@ export default function HandbookPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="bg-card border-b border-card-border sticky top-0 z-50">
+      <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back-home">
+          <Button variant="ghost" size="icon" onClick={() => setLocation("/")} className="text-white/70 hover:text-white hover:bg-white/10" data-testid="button-back-home">
             <ArrowLeft size={20} />
           </Button>
           <div className="flex items-center gap-2 flex-1">
-            <BookOpen size={20} className="text-primary" />
-            <h1 className="font-black text-lg" data-testid="text-handbook-title">
+            <BookOpen size={20} className="text-blue-300" />
+            <h1 className="font-black text-lg text-white" data-testid="text-handbook-title">
               {isAsc ? "AAAHC Accreditation Handbook" : "Compliance Handbook"}
             </h1>
           </div>

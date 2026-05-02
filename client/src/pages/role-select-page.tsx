@@ -326,7 +326,7 @@ export default function RoleSelectPage() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="min-h-screen bg-muted/30 pb-36">
+      <div className="min-h-screen pb-36">
         {user?.roleId && (
           <div className="max-w-4xl mx-auto px-4 pt-4">
             <Button

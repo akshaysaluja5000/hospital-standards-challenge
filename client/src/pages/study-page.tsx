@@ -33,7 +33,7 @@ export default function StudyPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="bg-card border-b border-card-border sticky top-0 z-50">
+      <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
         <div className="max-w-lg mx-auto px-4 py-3 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3">
             <Button

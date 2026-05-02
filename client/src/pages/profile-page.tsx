@@ -125,17 +125,18 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="bg-card border-b border-card-border sticky top-0 z-50">
+      <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setLocation("/")}
+            className="text-white/70 hover:text-white hover:bg-white/10"
             data-testid="button-back"
           >
             <ArrowLeft size={20} />
           </Button>
-          <h1 className="font-bold text-base">Profile & Settings</h1>
+          <h1 className="font-bold text-base text-white">Profile & Settings</h1>
         </div>
       </div>
 

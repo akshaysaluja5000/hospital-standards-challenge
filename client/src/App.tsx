@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { AppShell } from "@/components/app-shell";
 import AuthPage from "@/pages/auth-page";
 import LandingPage from "@/pages/landing-page";
 import DashboardPage from "@/pages/dashboard-page";
@@ -41,12 +42,12 @@ function ProtectedRoute({ component: Component }: { component: () => JSX.Element
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 size={32} className="animate-spin text-primary" />
-          <p className="text-muted-foreground font-medium">Loading...</p>
+      <AppShell>
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <Loader2 size={32} className="animate-spin text-white/60" />
+          <p className="text-white/50 font-medium">Loading...</p>
         </div>
-      </div>
+      </AppShell>
     );
   }
 
@@ -66,7 +67,7 @@ function ProtectedRoute({ component: Component }: { component: () => JSX.Element
     return <Redirect to="/role-select" />;
   }
 
-  return <Component />;
+  return <AppShell><Component /></AppShell>;
 }
 
 function AuthRoute() {
@@ -92,9 +93,12 @@ function HomeRoute() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-primary" />
-      </div>
+      <AppShell>
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <Loader2 size={32} className="animate-spin text-white/60" />
+          <p className="text-white/50 font-medium">Loading...</p>
+        </div>
+      </AppShell>
     );
   }
 
@@ -109,7 +113,7 @@ function HomeRoute() {
       return <Redirect to="/role-select" />;
     }
     try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
-    return <DashboardPage />;
+    return <AppShell><DashboardPage /></AppShell>;
   }
 
   return <LandingPage />;
@@ -118,22 +122,24 @@ function HomeRoute() {
 function RoleErrorRoute() {
   const [, navigate] = useLocation();
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="max-w-md text-center flex flex-col items-center gap-4">
-        <div className="rounded-full bg-destructive/10 text-destructive p-3">
-          <AlertCircle size={28} />
+    <AppShell>
+      <div className="flex items-center justify-center p-6 py-20">
+        <div className="max-w-md text-center flex flex-col items-center gap-4">
+          <div className="rounded-full bg-destructive/20 text-destructive p-3">
+            <AlertCircle size={28} />
+          </div>
+          <h1 className="text-2xl font-bold text-white" data-testid="text-role-error-title">
+            We couldn't start your training
+          </h1>
+          <p className="text-white/60">
+            The role you selected isn't available. Please choose a different role to continue.
+          </p>
+          <Button data-testid="button-role-error-change" onClick={() => navigate("/role-select")}>
+            Change role
+          </Button>
         </div>
-        <h1 className="text-2xl font-bold" data-testid="text-role-error-title">
-          We couldn't start your training
-        </h1>
-        <p className="text-muted-foreground">
-          The role you selected isn't available. Please choose a different role to continue.
-        </p>
-        <Button data-testid="button-role-error-change" onClick={() => navigate("/role-select")}>
-          Change role
-        </Button>
       </div>
-    </div>
+    </AppShell>
   );
 }
 
@@ -141,13 +147,16 @@ function RoleSelectRoute() {
   const { user, isLoading } = useAuth();
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-primary" />
-      </div>
+      <AppShell>
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <Loader2 size={32} className="animate-spin text-white/60" />
+          <p className="text-white/50 font-medium">Loading...</p>
+        </div>
+      </AppShell>
     );
   }
   if (!user) return <Redirect to="/auth" />;
-  return <RoleSelectPage />;
+  return <AppShell><RoleSelectPage /></AppShell>;
 }
 
 function Router() {

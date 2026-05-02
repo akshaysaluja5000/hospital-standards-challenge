@@ -364,7 +364,7 @@ export default function MasteryExamPage() {
           </div>
         )}
 
-        <div className="sticky top-0 z-50 bg-white/90 dark:bg-card/90 backdrop-blur border-b border-amber-200 dark:border-amber-800">
+        <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
           <div className="max-w-2xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between mb-2">
               <button onClick={() => setShowExitDialog(true)} className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wide hover:text-amber-800 transition-colors" data-testid="button-exit-mastery">

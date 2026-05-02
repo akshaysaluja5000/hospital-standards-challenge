@@ -35,7 +35,7 @@ export default function DeepDiveSelectPage() {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="bg-card border-b border-card-border sticky top-0 z-50">
+      <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button
             onClick={() => setLocation("/")}
