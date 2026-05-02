@@ -52,23 +52,23 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       {/* Divider between star and HSC banner */}
       <line x1="5" y1="19" x2="31" y2="19" stroke="white" strokeOpacity="0.25" strokeWidth="0.6" />
 
-      {/* HSC ribbon / banner */}
+      {/* HSC ribbon / banner — taller so text fits comfortably */}
       <path
-        d="M3.5 22 L32.5 22 L34.5 25 L32.5 28 L3.5 28 L1.5 25 Z"
+        d="M3.5 20.5 L32.5 20.5 L35 25 L32.5 29.5 L3.5 29.5 L1 25 Z"
         fill="white"
       />
 
       {/* HSC text on the banner */}
       <text
         x="18"
-        y="25"
+        y="25.2"
         textAnchor="middle"
         dominantBaseline="middle"
         fontFamily="'Nunito', 'Arial Black', 'Arial', sans-serif"
         fontWeight="900"
-        fontSize="9"
+        fontSize="6.5"
         fill="#091E52"
-        letterSpacing="0.8"
+        letterSpacing="1.2"
       >
         HSC
       </text>
