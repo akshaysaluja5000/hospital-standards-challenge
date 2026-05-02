@@ -517,6 +517,48 @@ export default function DashboardPage() {
               </motion.button>
             )}
 
+            {/* Handbook + Deep Dive — two-up row */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <motion.button
+                className="rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"
+                onClick={() => setLocation("/handbook")}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.98 }}
+                data-testid="button-handbook"
+              >
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">
+                  <BookOpen size={20} className="text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-sm">Compliance Handbook</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">Complete reference guide</p>
+                </div>
+                <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
+              </motion.button>
+
+              <motion.button
+                className="rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-secondary/5 border-secondary/20 hover:bg-secondary/10"
+                onClick={() => setLocation("/deep-dive")}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileTap={{ scale: 0.98 }}
+                data-testid="button-deep-dive"
+              >
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-secondary/10">
+                  <Microscope size={20} className="text-secondary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="font-bold text-sm">Deep Dive Tracer</h3>
+                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">New</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">Earn Expert XP for deeper knowledge</p>
+                </div>
+                <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
+              </motion.button>
+            </div>
+
             {/* Roadmap */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -647,47 +689,6 @@ export default function DashboardPage() {
                 <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
               </motion.button>
             )}
-
-            {/* Handbook */}
-            <motion.button
-              className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"
-              onClick={() => setLocation("/handbook")}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileTap={{ scale: 0.98 }}
-              data-testid="button-handbook"
-            >
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">
-                <BookOpen size={18} className="text-primary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold text-sm">Compliance Handbook</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Complete reference guide</p>
-              </div>
-              <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
-            </motion.button>
-
-            {/* Deep Dive */}
-            <motion.button
-              className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-secondary/5 border-secondary/20 hover:bg-secondary/10"
-              onClick={() => setLocation("/deep-dive")}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileTap={{ scale: 0.98 }}
-              data-testid="button-deep-dive"
-            >
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-secondary/10">
-                <Microscope size={18} className="text-secondary" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5">
-                  <h3 className="font-bold text-sm">Deep Dive Tracer</h3>
-                  <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">New</span>
-                </div>
-                <p className="text-xs text-muted-foreground mt-0.5">Earn Expert XP for deeper knowledge</p>
-              </div>
-              <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
-            </motion.button>
 
             {/* Activity Calendar */}
             <div className="rounded-2xl bg-card border border-card-border p-4">
