@@ -129,40 +129,55 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-border bg-card sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <button
-            type="button"
-            onClick={() => setLocation("/")}
-            className="flex items-center gap-2 hover-elevate active-elevate-2 rounded-lg px-2 py-1 -ml-2"
-            data-testid="link-home-header"
-          >
-            <AppLogoMark variant="sm" />
-            <span className="font-black text-lg tracking-tight">
-              Hospital Standards Challenge
-            </span>
-          </button>
-          <div className="flex items-center gap-2">
-            <PathwayMenu />
-            <Button
-              variant="ghost"
-              onClick={goToAuth}
-              data-testid="button-header-signin"
-            >
-              Sign In
-            </Button>
-            <Button
-              onClick={goToAuth}
-              data-testid="button-header-create-account"
-            >
-              Create Account
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Dark hero band */}
+      <div
+        className="relative"
+        style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 45%, #1A4DA0 100%)" }}
+      >
+        {/* Subtle grid overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
 
-      <main className="flex-1">
-        <section className="max-w-5xl mx-auto px-4 py-16 md:py-24 text-center">
+        <header className="relative z-10 sticky top-0 border-b border-white/10" style={{ background: "rgba(7,22,48,0.92)", backdropFilter: "blur(12px)" }}>
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <button
+              type="button"
+              onClick={() => setLocation("/")}
+              className="flex items-center gap-2 rounded-lg px-2 py-1 -ml-2 hover:bg-white/10 transition-colors"
+              data-testid="link-home-header"
+            >
+              <AppLogoMark variant="sm" />
+              <span className="font-black text-lg tracking-tight text-white">
+                Hospital Standards Challenge
+              </span>
+            </button>
+            <div className="flex items-center gap-2">
+              <PathwayMenu />
+              <Button
+                variant="ghost"
+                onClick={goToAuth}
+                className="text-white/80 hover:text-white hover:bg-white/10"
+                data-testid="button-header-signin"
+              >
+                Sign In
+              </Button>
+              <Button
+                onClick={goToAuth}
+                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
+                data-testid="button-header-create-account"
+              >
+                Create Account
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        <section className="relative z-10 max-w-5xl mx-auto px-4 py-20 md:py-32 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -170,22 +185,22 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             className="flex flex-col items-center gap-6"
           >
             <span
-              className="text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 px-3 py-1 rounded-full"
+              className="text-xs font-bold tracking-widest uppercase text-white/70 bg-white/10 border border-white/20 px-3 py-1 rounded-full"
               data-testid="text-audience"
             >
               {config.audience}
             </span>
-            <div className="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center">
-              <HeroIcon size={44} className="text-primary-foreground" />
+            <div className="w-20 h-20 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center backdrop-blur-sm">
+              <HeroIcon size={44} className="text-white" />
             </div>
             <h1
-              className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl"
+              className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white"
               data-testid="text-hero-headline"
             >
               {config.headline}
             </h1>
             <p
-              className="text-lg md:text-xl text-foreground/80 max-w-2xl leading-relaxed"
+              className="text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed"
               data-testid="text-hero-subhead"
             >
               {config.subhead}
@@ -194,6 +209,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               <Button
                 size="lg"
                 onClick={goToAuth}
+                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold shadow-lg shadow-black/20"
                 data-testid="button-hero-create-account"
               >
                 Create Account
@@ -203,6 +219,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
                 size="lg"
                 variant="outline"
                 onClick={goToAuth}
+                className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
                 data-testid="button-hero-signin"
               >
                 Sign In
@@ -210,7 +227,9 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             </div>
           </motion.div>
         </section>
+      </div>
 
+      <main className="flex-1">
         <section className="bg-accent/30 border-y border-border py-16 md:py-20">
           <div className="max-w-5xl mx-auto px-4">
             <div className="text-center mb-10">

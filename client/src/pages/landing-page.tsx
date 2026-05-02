@@ -63,53 +63,71 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-border bg-card sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <AppLogoMark variant="sm" />
-            <span className="font-black text-lg tracking-tight" data-testid="text-app-name">Hospital Standards Challenge</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <PathwayMenu />
-            <Button
-              variant="ghost"
-              onClick={() => setLocation("/auth")}
-              data-testid="button-header-signin"
-            >
-              Sign In
-            </Button>
-            <Button
-              onClick={() => setLocation("/auth")}
-              data-testid="button-header-create-account"
-            >
-              Create Account
-            </Button>
-          </div>
-        </div>
-      </header>
+      {/* Dark hero band — header + hero section share the same navy gradient */}
+      <div
+        className="relative"
+        style={{
+          background: "linear-gradient(160deg, #071630 0%, #0D2659 45%, #1A4DA0 100%)",
+        }}
+      >
+        {/* Subtle grid overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+          }}
+        />
 
-      <main className="flex-1">
-        <section className="max-w-5xl mx-auto px-4 py-16 md:py-24 text-center">
+        <header className="relative z-10 sticky top-0 border-b border-white/10" style={{ background: "rgba(7,22,48,0.92)", backdropFilter: "blur(12px)" }}>
+          <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <AppLogoMark variant="sm" />
+              <span className="font-black text-lg tracking-tight text-white" data-testid="text-app-name">Hospital Standards Challenge</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <PathwayMenu />
+              <Button
+                variant="ghost"
+                onClick={() => setLocation("/auth")}
+                className="text-white/80 hover:text-white hover:bg-white/10"
+                data-testid="button-header-signin"
+              >
+                Sign In
+              </Button>
+              <Button
+                onClick={() => setLocation("/auth")}
+                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
+                data-testid="button-header-create-account"
+              >
+                Create Account
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        <section className="relative z-10 max-w-5xl mx-auto px-4 py-20 md:py-32 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.25 }}
             className="flex flex-col items-center gap-6"
           >
             <AppLogoMark variant="lg" />
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl" data-testid="text-hero-title">
+            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
               Hospital Standards Challenge
             </h1>
-            <p className="text-xl md:text-2xl text-foreground/80 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
+            <p className="text-xl md:text-2xl text-white/80 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
               Survey readiness training that closes compliance gaps — built for hospital and ASC staff who don't have time for another in-service.
             </p>
-            <p className="text-base text-muted-foreground max-w-2xl leading-relaxed" data-testid="text-hero-supporting">
+            <p className="text-base text-white/60 max-w-2xl leading-relaxed" data-testid="text-hero-supporting">
               Track staff competency by department, identify weak areas before a surveyor does, and keep your team audit-ready between surveys — in 10–15 minutes a day.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
                 size="lg"
                 onClick={scrollToFeatures}
+                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold shadow-lg shadow-black/20"
                 data-testid="button-hero-how-it-works"
               >
                 See How It Works
@@ -119,6 +137,7 @@ export default function LandingPage() {
                 size="lg"
                 variant="outline"
                 onClick={() => setLocation("/auth")}
+                className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
                 data-testid="button-hero-create-account"
               >
                 Create Account
@@ -126,7 +145,9 @@ export default function LandingPage() {
             </div>
           </motion.div>
         </section>
+      </div>
 
+      <main className="flex-1">
         <section className="bg-accent/30 border-y border-border py-16 md:py-20">
           <div className="max-w-4xl mx-auto px-4">
             <motion.div

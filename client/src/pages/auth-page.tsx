@@ -121,9 +121,9 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row">
+    <div className="min-h-screen flex flex-col lg:flex-row" style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #1A4DA0 100%)" }}>
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md bg-card rounded-2xl shadow-2xl p-8 lg:p-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -521,32 +521,31 @@ export default function AuthPage() {
         </div>
       </div>
 
-      <div className="hidden lg:flex flex-1 items-center justify-center p-12 bg-primary/5 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: "radial-gradient(circle at 25% 25%, hsl(var(--primary)) 0%, transparent 50%), radial-gradient(circle at 75% 75%, hsl(var(--chart-3)) 0%, transparent 50%)",
-          }}
-        />
+      <div className="hidden lg:flex flex-1 items-center justify-center p-12 relative overflow-hidden">
+        {/* Subtle glow orbs */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full opacity-20" style={{ background: "radial-gradient(circle, #3B82F6 0%, transparent 70%)" }} />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 rounded-full opacity-15" style={{ background: "radial-gradient(circle, #8B5CF6 0%, transparent 70%)" }} />
+
         <div className="relative z-10 max-w-md text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.2 }}
           >
-            <h2 className="text-4xl font-black mb-6 leading-tight">
+            <h2 className="text-4xl font-black mb-6 leading-tight text-white">
               Master hospital standards through a{" "}
-              <span className="text-primary">game you'll love</span>
+              <span className="text-blue-300">game you'll love</span>
             </h2>
-            <p className="text-lg text-muted-foreground mb-10">
+            <p className="text-lg text-white/60 mb-10">
               Answer, challenge yourself, and level up your Joint Commission knowledge. Build streaks, earn XP, and become the compliance expert your team needs.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-3 gap-6">
             {[
-              { icon: Flame, label: "Daily Streaks", color: "text-chart-4" },
-              { icon: Zap, label: "Earn XP", color: "text-chart-4" },
-              { icon: Trophy, label: "Level Up", color: "text-chart-3" },
+              { icon: Flame, label: "Daily Streaks", color: "text-amber-400" },
+              { icon: Zap, label: "Earn XP", color: "text-amber-400" },
+              { icon: Trophy, label: "Level Up", color: "text-violet-400" },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -555,10 +554,10 @@ export default function AuthPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <div className="w-14 h-14 rounded-2xl bg-card border border-card-border flex items-center justify-center">
+                <div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center backdrop-blur-sm">
                   <item.icon size={24} className={item.color} />
                 </div>
-                <span className="text-sm font-bold">{item.label}</span>
+                <span className="text-sm font-bold text-white/80">{item.label}</span>
               </motion.div>
             ))}
           </div>
