@@ -21,7 +21,7 @@ function SectionCard({ section, levelColor, index }: { section: HandbookSection;
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ duration: 0.15 }}
       className="rounded-xl border-2 border-card-border bg-card overflow-hidden shadow-sm hover:shadow-md transition-shadow"
     >
       <button

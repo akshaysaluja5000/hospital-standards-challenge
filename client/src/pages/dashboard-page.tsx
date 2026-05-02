@@ -352,7 +352,6 @@ export default function DashboardPage() {
             className="game-card p-4 flex flex-col items-center justify-center gap-1"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
           >
             <div className="flex items-center gap-1">
               <Zap size={18} className="text-chart-4" fill="currentColor" />
@@ -367,7 +366,6 @@ export default function DashboardPage() {
             className="game-card p-4 flex flex-col items-center justify-center gap-1"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
           >
             <div className="flex items-center gap-1">
               <TrendingUp size={20} className="text-chart-3" />
@@ -383,7 +381,6 @@ export default function DashboardPage() {
           className="rounded-2xl bg-card border border-card-border p-5"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
         >
           <div className="flex items-center justify-between gap-2 mb-3">
             <div className="flex items-center gap-2">

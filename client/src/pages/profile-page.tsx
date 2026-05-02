@@ -331,7 +331,7 @@ export default function ProfilePage() {
               className="rounded-2xl bg-card border border-card-border p-4 flex flex-col items-center gap-2"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ duration: 0.15 }}
             >
               <stat.icon size={20} className={stat.color} />
               <span className="text-xl font-black">{stat.value}</span>

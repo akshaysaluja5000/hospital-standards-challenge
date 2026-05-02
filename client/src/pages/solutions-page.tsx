@@ -155,7 +155,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-6"
           >
             <span
@@ -216,7 +216,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
                   key={feature.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.15 + index * 0.1, duration: 0.4 }}
+                  transition={{ duration: 0.15 }}
                 >
                   <Card
                     className="p-6 h-full flex flex-col gap-3"
@@ -242,7 +242,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-4"
           >
             <h2 className="text-2xl md:text-3xl font-black tracking-tight">Ready to get started?</h2>

@@ -89,7 +89,7 @@ export default function DeepDiveSelectPage() {
               onClick={() => setLocation(`/deep-dive/${level.id}`)}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ duration: 0.15 }}
               whileTap={{ scale: 0.98 }}
               data-testid={`button-deep-dive-topic-${level.id}`}
             >

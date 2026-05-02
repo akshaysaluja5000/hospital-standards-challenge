@@ -523,7 +523,7 @@ export default function AuthPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ duration: 0.2 }}
           >
             <h2 className="text-4xl font-black mb-6 leading-tight">
               Master hospital standards through a{" "}
@@ -545,7 +545,7 @@ export default function AuthPage() {
                 className="flex flex-col items-center gap-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + i * 0.15 }}
+                transition={{ duration: 0.2 }}
               >
                 <div className="w-14 h-14 rounded-2xl bg-card border border-card-border flex items-center justify-center">
                   <item.icon size={24} className={item.color} />

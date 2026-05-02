@@ -256,7 +256,7 @@ export default function DiagnosticQuizPage() {
             <p className="text-muted-foreground text-lg">See where you stand before you begin</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-2xl bg-white/80 dark:bg-card border border-teal-200 dark:border-teal-800 p-6 mb-6 shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-white/80 dark:bg-card border border-teal-200 dark:border-teal-800 p-6 mb-6 shadow-sm">
             <h2 className="font-bold text-lg mb-3 text-teal-700 dark:text-teal-300">How it works</h2>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-3">
@@ -279,7 +279,7 @@ export default function DiagnosticQuizPage() {
           </motion.div>
 
           {hasSession && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border-2 border-teal-400 dark:border-teal-600 p-5 mb-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border-2 border-teal-400 dark:border-teal-600 p-5 mb-6">
               <div className="flex items-center gap-2 mb-3">
                 <Save size={18} className="text-teal-600" />
                 <span className="font-bold text-sm text-teal-700 dark:text-teal-300">You have a saved quiz in progress</span>
@@ -299,7 +299,7 @@ export default function DiagnosticQuizPage() {
           )}
 
           {hasPastResults && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 p-4 mb-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 p-4 mb-6">
               <div className="flex items-center gap-2 mb-2">
                 <BarChart3 size={18} className="text-teal-600" />
                 <span className="font-semibold text-sm text-teal-700 dark:text-teal-300">Previous attempt</span>
@@ -311,7 +311,7 @@ export default function DiagnosticQuizPage() {
           )}
 
           {!hasSession && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }}>
               <Button className="w-full h-14 text-lg font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl shadow-md" onClick={startFresh} data-testid="button-start-diagnostic">
                 {hasPastResults ? "Retake Diagnostic Quiz" : "Start Diagnostic Quiz"}
                 <ChevronRight size={20} className="ml-2" />
@@ -440,13 +440,13 @@ export default function DiagnosticQuizPage() {
             <p className="text-muted-foreground">Here's your baseline — now let's build on it</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-2xl bg-white dark:bg-card border border-teal-200 dark:border-teal-800 p-6 mb-6 shadow-sm text-center">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-white dark:bg-card border border-teal-200 dark:border-teal-800 p-6 mb-6 shadow-sm text-center">
             <div className="text-5xl font-black mb-2"><span className={gradeColor}>{percentage}%</span></div>
             <p className="text-lg font-bold mb-1">{result.score} out of {result.totalQuestions} correct</p>
             <p className={`text-sm font-semibold ${gradeColor}`}>{grade}</p>
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="rounded-2xl bg-white dark:bg-card border border-teal-200 dark:border-teal-800 p-5 mb-6 shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-white dark:bg-card border border-teal-200 dark:border-teal-800 p-5 mb-6 shadow-sm">
             <h3 className="font-bold text-sm mb-4 text-teal-700 dark:text-teal-300">Section Breakdown</h3>
             <div className="space-y-3">
               {sortedSections.map(([sectionId, scores]) => {
@@ -472,7 +472,7 @@ export default function DiagnosticQuizPage() {
           </motion.div>
 
           {weakSections.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 p-5 mb-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 p-5 mb-6">
               <div className="flex items-center gap-2 mb-3">
                 <TrendingDown size={18} className="text-red-500" />
                 <span className="font-bold text-sm text-red-700 dark:text-red-300">Areas to Focus On</span>
@@ -488,7 +488,7 @@ export default function DiagnosticQuizPage() {
           )}
 
           {strongSections.length > 0 && (
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 p-5 mb-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 p-5 mb-6">
               <div className="flex items-center gap-2 mb-3">
                 <TrendingUp size={18} className="text-emerald-500" />
                 <span className="font-bold text-sm text-emerald-700 dark:text-emerald-300">Your Strengths</span>
@@ -503,7 +503,7 @@ export default function DiagnosticQuizPage() {
             </motion.div>
           )}
 
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }} className="rounded-2xl bg-white dark:bg-card border border-teal-200 dark:border-teal-800 p-5 mb-6 shadow-sm">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-white dark:bg-card border border-teal-200 dark:border-teal-800 p-5 mb-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-bold text-sm text-teal-700 dark:text-teal-300">
                 {showAllQuestions ? "All Questions" : `Questions You Missed (${wrongQuestions.length})`}

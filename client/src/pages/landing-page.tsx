@@ -93,7 +93,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-6"
           >
             <div className="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center">
@@ -134,7 +134,7 @@ export default function LandingPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
+              transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -185,7 +185,7 @@ export default function LandingPage() {
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
+                transition={{ duration: 0.15 }}
               >
                 <Card className="p-5 flex items-start gap-4" data-testid={`card-feature-${index}`}>
                   <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -206,7 +206,7 @@ export default function LandingPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
+              transition={{ duration: 0.2 }}
             >
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="flex-shrink-0">
@@ -249,7 +249,7 @@ export default function LandingPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.5 }}
+              transition={{ duration: 0.2 }}
             >
               <div className="flex flex-col md:flex-row-reverse items-center gap-8">
                 <div className="flex-shrink-0">
@@ -302,7 +302,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
+            transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-4"
           >
             <h2 className="text-2xl font-black tracking-tight">Ready to see the difference?</h2>

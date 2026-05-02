@@ -118,7 +118,6 @@ export default function LeaderboardPage() {
                 className="flex flex-col items-center gap-2 w-24"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
               >
                 <div className="w-16 h-16 rounded-full bg-gray-300/20 border-2 border-gray-400 flex items-center justify-center">
                   <span className="text-xl font-black">{initials(topThree[1])}</span>
@@ -147,7 +146,6 @@ export default function LeaderboardPage() {
                 className="flex flex-col items-center gap-2 w-24"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
               >
                 <div className="w-16 h-16 rounded-full bg-amber-700/20 border-2 border-amber-700 flex items-center justify-center">
                   <span className="text-xl font-black">{initials(topThree[2])}</span>
@@ -176,7 +174,7 @@ export default function LeaderboardPage() {
                   className={`flex items-center gap-3 px-4 py-3 ${isMe ? "bg-primary/5" : ""}`}
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.03 }}
+                  transition={{ duration: 0.15 }}
                   data-testid={`row-leaderboard-${entry.id}`}
                 >
                   <div className="w-8 text-center flex-shrink-0">
