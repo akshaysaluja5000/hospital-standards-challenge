@@ -44,21 +44,17 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       />
 
       {/* Cloud — centered vertically in the shield */}
-      {/*
-        Cloud design: three bumps on top, flat base.
-        Centered at (18, 25), spanning x: 5.5–30.5, y: 19–30.5
-      */}
       <path
         d="
-          M 8 30.5
-          C 5.5 30.5 5.5 27.5 7 26.5
-          C 6.5 23 9 21 12 21.5
-          C 12.5 19.5 14.5 18.5 16.5 19
-          C 17.5 17.5 19.5 17 21.5 18
-          C 23 16.5 26.5 16.8 27.5 19.5
-          C 30 19.5 31.5 21.5 31 24
-          C 32.5 24.5 32.5 27 31 28
-          C 32 29 31 30.5 29.5 30.5
+          M 8 27
+          C 5.5 27 5.5 24 7 23
+          C 6.5 19.5 9 17.5 12 18
+          C 12.5 16 14.5 15 16.5 15.5
+          C 17.5 14 19.5 13.5 21.5 14.5
+          C 23 13 26.5 13.3 27.5 16
+          C 30 16 31.5 18 31 20.5
+          C 32.5 21 32.5 23.5 31 24.5
+          C 32 25.5 31 27 29.5 27
           Z
         "
         fill="white"
@@ -68,7 +64,7 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       {/* HSC — horizontal, centered inside cloud */}
       <text
         x="18.5"
-        y="25.8"
+        y="21.5"
         textAnchor="middle"
         dominantBaseline="middle"
         fontFamily="'Nunito', 'Arial Black', 'Arial', sans-serif"
