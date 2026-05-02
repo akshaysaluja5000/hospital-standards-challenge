@@ -65,15 +65,6 @@ export default function LandingPage() {
       className="min-h-screen flex flex-col"
       style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}
     >
-      {/* Subtle full-page grid overlay */}
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.06]"
-        style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.9) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.9) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
       {/* ── Header ── */}
       <header
         className="relative z-50 sticky top-0 border-b border-white/20"

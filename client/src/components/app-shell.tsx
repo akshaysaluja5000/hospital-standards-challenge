@@ -11,15 +11,6 @@ export function AppShell({ children }: AppShellProps) {
       className="min-h-screen flex flex-col relative"
       style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}
     >
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
       <header
         className="sticky top-0 z-50 border-b border-white/10 flex-shrink-0"
         style={{ background: "rgba(7,22,48,0.92)", backdropFilter: "blur(12px)" }}

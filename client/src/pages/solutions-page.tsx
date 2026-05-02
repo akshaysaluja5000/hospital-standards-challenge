@@ -134,15 +134,6 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
         className="relative"
         style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}
       >
-        {/* Subtle grid overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
-        />
-
         <header className="relative z-10 sticky top-0 border-b border-white/10" style={{ background: "rgba(7,22,48,0.95)", backdropFilter: "blur(12px)" }}>
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <button
