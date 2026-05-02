@@ -3,52 +3,59 @@ interface AppLogoMarkProps {
 }
 
 export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
-  const isLarge = variant === "lg";
-  const container = isLarge
-    ? "w-20 h-20 rounded-2xl"
-    : "w-9 h-9 rounded-xl";
-  const svgSize = isLarge ? 52 : 22;
+  const size = variant === "lg" ? 80 : 36;
+  const id = variant;
 
   return (
-    <div
-      className={`${container} bg-primary flex items-center justify-center flex-shrink-0`}
-      style={{
-        background: "linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(218 75% 42%) 100%)",
-        boxShadow: isLarge
-          ? "0 4px 20px hsl(var(--primary) / 0.35), inset 0 1px 0 rgba(255,255,255,0.15)"
-          : "0 2px 8px hsl(var(--primary) / 0.3), inset 0 1px 0 rgba(255,255,255,0.12)",
-      }}
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ flexShrink: 0 }}
     >
-      <svg
-        width={svgSize}
-        height={svgSize}
-        viewBox="0 0 40 46"
+      <defs>
+        <linearGradient id={`grad-${id}`} x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#3B6FCC" />
+          <stop offset="100%" stopColor="#163A80" />
+        </linearGradient>
+        <filter id={`shadow-${id}`} x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="2" stdDeviation="3" floodColor="#163A80" floodOpacity="0.4" />
+        </filter>
+        <clipPath id={`clip-${id}`}>
+          <rect width="48" height="48" rx="11" />
+        </clipPath>
+      </defs>
+
+      {/* Rounded square background */}
+      <rect width="48" height="48" rx="11" fill={`url(#grad-${id})`} filter={`url(#shadow-${id})`} />
+
+      {/* Top highlight stripe for depth */}
+      <rect width="48" height="16" rx="11" clipPath={`url(#clip-${id})`} fill="white" fillOpacity="0.08" />
+
+      {/* Shield outline — single clean element */}
+      <path
+        d="M24 10L12 15V24C12 30.6 17.1 36.5 24 38.5C30.9 36.5 36 30.6 36 24V15L24 10Z"
+        fill="white"
+        fillOpacity="0.18"
+      />
+      <path
+        d="M24 10L12 15V24C12 30.6 17.1 36.5 24 38.5C30.9 36.5 36 30.6 36 24V15L24 10Z"
+        stroke="white"
+        strokeOpacity="0.5"
+        strokeWidth="1"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Outer shield glow/depth layer */}
-        <path
-          d="M20 2L4 8.5V22C4 32.5 11 41.3 20 44C29 41.3 36 32.5 36 22V8.5L20 2Z"
-          fill="white"
-          fillOpacity="0.12"
-        />
-        {/* Main shield body */}
-        <path
-          d="M20 5L7 10.5V22C7 30.8 12.9 38.6 20 41C27.1 38.6 33 30.8 33 22V10.5L20 5Z"
-          fill="white"
-        />
-        {/* Medical cross at top of shield */}
-        <rect x="18" y="13.5" width="4" height="9" rx="1.5" fill="hsl(218, 68%, 32%)" />
-        <rect x="14.5" y="17" width="11" height="4" rx="1.5" fill="hsl(218, 68%, 32%)" />
-        {/* Bold checkmark at bottom */}
-        <path
-          d="M13.5 28L17.5 32.5L27 24"
-          stroke="hsl(218, 68%, 32%)"
-          strokeWidth="2.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </div>
+      />
+
+      {/* Single bold checkmark — the only inner symbol */}
+      <path
+        d="M17.5 24L22 29.5L31 19"
+        stroke="white"
+        strokeWidth="3.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
