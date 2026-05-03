@@ -121,7 +121,7 @@ export default function StudyPage() {
                   {summary.cmsTags.map((tag, i) => (
                     <span
                       key={i}
-                      className="text-[11px] font-mono px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border"
+                      className="text-[11px] px-2 py-0.5 rounded bg-muted text-muted-foreground border border-border"
                       data-testid={`text-chapter-cms-tag-${i}`}
                     >
                       {tag}
