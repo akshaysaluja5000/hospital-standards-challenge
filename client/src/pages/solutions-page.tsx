@@ -40,7 +40,7 @@ interface SolutionConfig {
 const SOLUTIONS: Record<string, SolutionConfig> = {
   hospitals: {
     slug: "hospitals",
-    pageTitle: "Hospitals — Hospital Standards Challenge",
+    pageTitle: "Hospitals — Survey Readiness Platform",
     audience: "For Hospital Compliance Directors",
     heroIcon: Hospital,
     headline: "Compliance Training Built for Hospitals.",
@@ -71,7 +71,7 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
   },
   asc: {
     slug: "asc",
-    pageTitle: "ASCs — Hospital Standards Challenge",
+    pageTitle: "ASCs — Survey Readiness Platform",
     audience: "For Ambulatory Surgery Centers",
     heroIcon: Building2,
     headline: "ASC Accreditation Training That Sticks.",
@@ -115,7 +115,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
   useEffect(() => {
     document.title = config.pageTitle;
     return () => {
-      document.title = "Hospital Standards Challenge";
+      document.title = "Survey Readiness Platform";
     };
   }, [config.pageTitle]);
 
@@ -144,7 +144,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             >
               <AppLogoMark variant="sm" />
               <span className="font-black text-lg tracking-tight text-white">
-                Hospital Standards Challenge
+                Survey Readiness Platform
               </span>
             </button>
             <div className="flex items-center gap-2">
@@ -324,7 +324,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             </a>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Hospital Standards Challenge is not affiliated with, endorsed by, or
+            Survey Readiness Platform is not affiliated with, endorsed by, or
             sponsored by The Joint Commission, AAAHC, or CMS. All content is for
             educational and training purposes only.
           </p>

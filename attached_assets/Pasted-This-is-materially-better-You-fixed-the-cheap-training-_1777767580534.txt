@@ -1,0 +1,31 @@
+This is materially better. You fixed the “cheap training app” problem. It now looks much more like a serious SaaS product with a clearer enterprise story, stronger hierarchy, and a more credible roadmap. The dark blue system, the stronger cards, the improved landing page, and the explicit “operational readiness” section all move it closer to something you could show to an executive without apologizing first.
+
+What improved
+The biggest improvement is that the product finally looks like it knows what it is. The new landing page speaks to nursing, quality, and education leaders, explains how to get started, and frames the app as survey readiness and gap-closing rather than just gamified trivia. That is a huge step up in maturity.
+
+The in-app ASC domain view is also much stronger now. I like that each chapter shows common survey failures directly in the list, and “Readiness Review” is much better language than the old “Study” phrasing. That makes the product feel operational instead of academic.
+
+The addition of the Operational Readiness roadmap is smart. It tells the buyer this is not just a quiz product and starts to bridge toward corrective action, evidence locker, mock tracer, and facility reporting. That was missing before.
+
+What still needs work
+Now the hard part: it’s better, but it still isn’t fully high-end.
+
+First, the hero section is too generic and slightly crowded. “Hospital Standards Challenge” still sounds like a game title, not a serious compliance platform. That may work internally, but it weakens your executive pitch because it sounds smaller than the actual value proposition.
+
+Second, the dark blue theme is more credible than the old version, but it is still a bit too heavy and saturated across long screens. The issue isn’t that dark mode is wrong; the issue is that everything is similarly dark-blue-toned, so the hierarchy flattens over time. Cards, background, and sections need slightly more tonal separation.
+
+Third, the font and logo still do not feel premium enough. The typography is much improved, but the branding still feels more startup/app-like than executive healthcare platform. It’s competent, not elite.
+
+Fourth, there is still a little too much “feature listing” and not quite enough proof and outcomes. The roadmap is good, but the landing page still needs stronger language around:
+
+reducing survey prep burden,
+
+identifying weak units,
+
+proving competency,
+
+standardizing readiness across facilities.
+
+What I would change next
+Rename the product display
+“Hospital Standards Challenge” is holding you back. It sounds educational, but not enterprise.

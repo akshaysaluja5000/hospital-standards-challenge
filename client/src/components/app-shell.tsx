@@ -18,7 +18,7 @@ export function AppShell({ children }: AppShellProps) {
         <div className="px-4 h-[58px] flex items-center gap-3">
           <AppLogoMark variant="sm" />
           <span className="text-white font-black text-sm tracking-wide">
-            Hospital Standards Challenge
+            Survey Readiness Platform
           </span>
         </div>
       </header>

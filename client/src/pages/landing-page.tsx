@@ -73,7 +73,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <AppLogoMark variant="sm" />
-            <span className="font-black text-lg tracking-tight text-white" data-testid="text-app-name">Hospital Standards Challenge</span>
+            <span className="font-black text-lg tracking-tight text-white" data-testid="text-app-name">Survey Readiness Platform</span>
           </div>
           <div className="flex items-center gap-2">
             <PathwayMenu />
@@ -111,7 +111,7 @@ export default function LandingPage() {
           >
             <AppLogoMark variant="lg" />
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
-              Hospital Standards Challenge
+              Survey Readiness Platform
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
               Survey readiness training that closes compliance gaps — built for hospital and ASC staff who don't have time for another in-service.
@@ -159,7 +159,7 @@ export default function LandingPage() {
                 </h2>
               </div>
               <p className="text-base text-white/70 leading-relaxed max-w-3xl mb-6" data-testid="text-leaders-description">
-                Hospital Standards Challenge turns standards review into short, gamified sessions staff actually complete&#8212;without adding more in&#8209;service time.
+                Survey Readiness Platform turns standards review into short, focused sessions staff actually complete&#8212;without adding more in&#8209;service time.
               </p>
               <ul className="space-y-3 mb-8">
                 {leaderBullets.map((bullet, i) => (
@@ -357,7 +357,7 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-white/10 py-6 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-xs text-white/40 leading-relaxed" data-testid="text-disclaimer">
-            Hospital Standards Challenge is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS.
+            Survey Readiness Platform is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS.
             All content is for educational and training purposes only.
           </p>
           <p className="text-xs text-white/40 mt-2">

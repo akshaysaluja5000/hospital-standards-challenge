@@ -1,0 +1,86 @@
+At minimum, keep the internal game language inside the app, but the public-facing landing page should use the more executive name.
+
+Improve tonal separation
+Keep the dark theme if you want, but make it more refined:
+
+background: very deep navy,
+
+cards: charcoal-navy,
+
+panels: slightly lighter blue-black,
+
+accent blue: more restrained,
+
+gold/orange only for assessment or high-value actions.
+
+Right now the colors are better, but still a little too uniformly blue.
+
+Tighten the homepage copy
+The homepage is much better, but some lines still read like feature inventory instead of value.
+
+For example, instead of:
+
+“Gamified 20-question levels”
+
+Say:
+
+Role-based readiness checks staff actually complete
+
+Instead of:
+
+“Pre-built Joint Commission tracer content”
+
+Say:
+
+Tracer-style questions modeled on real survey workflows
+
+That is sharper and more executive-facing.
+
+Make the dashboard proof-oriented
+The in-app screen is stronger now, but it still needs one obvious operational panel such as:
+
+“Top risk chapters this month”
+
+“Units with lowest readiness”
+
+“Most-missed standards”
+
+“Completion by role”
+
+That would make the dashboard feel like a management tool instead of a learning interface with a sidebar.
+
+What I like most
+The best thing on the whole screen, honestly, is the repeated surfacing of common survey failures. That is your wedge. That is useful. That is differentiating. Most products give standards and questions; yours is getting closer to saying, “Here is where real facilities screw up.” Keep pushing that.
+
+I also like the final assessment / posttest / handbook / deep dive tracer cluster. That grouping makes sense and suggests a learning path rather than random modules.
+
+My blunt verdict
+This is now credible enough to keep developing seriously and good enough to show Fawn. It is no longer embarrassing. That’s real progress.
+
+But I still would not show it to a high-level external buyer as the finished aesthetic. It still needs:
+
+stronger naming,
+
+more premium typography/branding,
+
+cleaner homepage copy,
+
+more contrast hierarchy,
+
+and one dashboard view that screams “managerial value.”
+
+The next smartest move
+You are now at the point where random feedback is less useful than precise direction. The right next step is for me to give you a specific redesign punch list for AK:
+
+exact naming changes,
+
+exact homepage copy swaps,
+
+exact color refinements,
+
+exact component changes,
+
+exact dashboard modules to add.
+
+That would be far more useful than vague design talk.
+

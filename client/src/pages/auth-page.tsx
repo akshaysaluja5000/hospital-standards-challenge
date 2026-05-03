@@ -82,7 +82,7 @@ export default function AuthPage() {
       await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode, data.organizationType);
       toast({
         title: "Account created!",
-        description: "Welcome to Hospital Standards Challenge!",
+        description: "Welcome to Survey Readiness Platform!",
       });
     } catch (error: any) {
       try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
@@ -132,7 +132,7 @@ export default function AuthPage() {
             <div className="mb-4 flex justify-center">
               <AppLogoMark variant="lg" />
             </div>
-            <h1 className="text-3xl font-black tracking-tight">Hospital Standards Challenge</h1>
+            <h1 className="text-3xl font-black tracking-tight">Survey Readiness Platform</h1>
             <p className="text-muted-foreground mt-1">Master Joint Commission standards</p>
           </motion.div>
 
