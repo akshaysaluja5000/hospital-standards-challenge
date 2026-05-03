@@ -1,0 +1,126 @@
+Yes. Common risks should be more visually dominant than “what you’ll be expected to do.” Why? Because users act on threat and error faster than on abstract expectations, especially in compliance training. Right now your interface is telling them the safe/neutral content is primary and the high-liability content is secondary. That’s backwards.Screenshot-2026-05-03-111147.jpg
+What’s wrong with the current hierarchy
+The “What you’ll be expected to do” card is darker, higher on the page, and visually heavier, so it wins attention first. The “Common Risk Points” box has red text, but it sits lower, has less weight, and looks like an optional callout instead of the main danger zone.Screenshot-2026-05-03-111147.jpg
+That means the user’s eye path is:
+Page title
+Tabs
+Expected behaviors
+Maybe risks
+You want:
+Page title
+Top 3 common risks
+What correct behavior looks like
+Quiz / action
+Best interface fix
+Put risks first, not second
+Move Common Risk Points above What You’ll Be Expected To Do. This is the biggest fix. Don’t overthink it.
+Better section order:
+Critical risk points
+What surveyors expect
+Study cards / quiz CTA
+If you keep risks below, users will unconsciously treat them as supplemental.Screenshot-2026-05-03-111147.jpg
+Split risk severity visually
+Don’t show all risk bullets with the same weight. That’s lazy UI.
+Use a tiered pattern:
+Critical risk — red filled badge or tinted card
+Frequent citation — amber/orange badge
+Watch item — muted warning style
+Even if everything is “important,” not everything is equally dangerous. If you flatten risk, users won’t know what to prioritize.Screenshot-2026-05-03-111147.jpg
+Better component structure
+Option 1: Risk summary bar above everything
+Right under the chapter title, add a compact strip like:
+Top risks in this chapter
+5 frequent citations
+2 immediate safety threats
+Most-missed item: oxygen cylinder storage
+This gives instant orientation before they read a wall of bullets.Screenshot-2026-05-03-111147.jpg
+Option 2: Two-column contrast card
+Instead of stacked cards, make one unified module:
+Left: What surveyors expect
+Right: Where teams get cited
+This works because it creates direct comparison:
+Expectation
+Failure mode
+That is cognitively cleaner than separated blocks.Screenshot-2026-05-03-111147.jpg
+Option 3: “Risk-first” accordion
+For mobile especially:
+Top Common Risks expanded by default
+“What you’ll be expected to do” collapsed or secondary
+That forces attention where it belongs.Screenshot-2026-05-03-111147.jpg
+Specific UI changes I’d make
+1. Make the risk container a filled surface, not just a red outline
+Right now it looks too polite. Use:
+dark red / burgundy tinted background
+subtle glow or elevated surface
+strong icon row at top
+bold header like Frequent Survey Risks or Most Common Citations
+Outlined boxes are weak. Filled surfaces command attention.Screenshot-2026-05-03-111147.jpg
+2. Reduce the length of the risk bullets
+Each risk line is too verbose. That kills scanability.
+Instead of:
+“Temperature logs showing only check marks with no documented corrective action when an excursion occurred.”
+Do:
+Missing corrective action on temp excursions
+Blanket warmer above validated maximum
+Unsecured oxygen cylinders
+Extension cords used as permanent wiring
+Expired PM stickers on active equipment
+Then let users tap for explanation if needed.
+Your current bullets are written like handbook prose, not interface copy.Screenshot-2026-05-03-111147.jpg
+3. Add a risk count chip
+At the top of the risk box:
+5 common citation risks
+or
+5 high-risk failure points
+This helps the section feel like a measurable object, not just a list.Screenshot-2026-05-03-111147.jpg
+4. Use icon differentiation
+Not every bullet needs the same red exclamation.
+Try:
+triangle alert for citation risk
+flame/electric symbol for immediate safety hazard
+clipboard/x for documentation failures
+That makes the content chunk faster.Screenshot-2026-05-03-111147.jpg
+5. Tie the CTA to risk
+Your bottom CTA currently says:
+Study Cards
+Start Quiz
+That’s generic.
+Make the primary CTA risk-aware:
+Quiz Me on These Risks
+Practice High-Risk Scenarios
+Test My Weak Spots
+That aligns action with what just got highlighted.Screenshot-2026-05-03-111147.jpg
+Recommended layout
+Here’s the version I’d use:
+Header
+Study: Facilities & Equipment
+First card: Frequent Survey Risks
+red-tinted filled panel
+header: Most Common Citation Risks
+small chip: 5 high-risk misses
+short bullets only
+optional “Why this gets cited” expanders
+Second card: What Surveyors Expect
+neutral/dark panel
+concise expectation bullets
+calmer styling
+Footer buttons
+Practice High-Risk Quiz (primary)
+Study Cards (secondary)
+That would fix the hierarchy immediately.Screenshot-2026-05-03-111147.jpg
+Copy fix too
+Also, “Common Risk Points” is weak phrasing. Sounds generic and academic.
+Use one of these instead:
+Most Common Citation Risks
+Frequent Survey Failures
+High-Risk Mistakes
+Where Teams Get Cited
+Most-Missed Requirements
+“Where Teams Get Cited” is especially strong because it is concrete and emotionally sticky.Screenshot-2026-05-03-111147.jpg
+My blunt recommendation
+Do these 4 things first:
+Move the risk section above expectations.
+Change the title to Most Common Citation Risks.
+Use a filled warning surface, not an outlined box.
+Shorten every bullet to a scannable phrase.
+That alone will make the right information feel important.
