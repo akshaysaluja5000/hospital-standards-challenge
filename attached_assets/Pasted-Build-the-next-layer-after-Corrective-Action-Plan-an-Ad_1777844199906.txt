@@ -1,0 +1,114 @@
+Build the next layer after Corrective Action Plan: an Admin / Executive reporting view for action plans.
+
+Goal:
+Create a reporting dashboard for Admin and CEO users that summarizes corrective actions at a high level and allows drill-down into the underlying action plans. This should be a real UI layer connected to the Corrective Action Plan mock data or existing data structure.
+
+Scope:
+Do not build Mock Tracer, Evidence Locker, or Facility-Level Reporting as separate modules.
+This reporting layer should be based only on Corrective Action Plan data.
+
+Requirements:
+
+1. Create a new page or dashboard section called:
+   Executive Readiness Report
+
+2. Intended users:
+   Admin
+   CEO
+   Quality Leader
+
+3. Show these top summary KPI cards:
+   - Open Actions
+   - Overdue Actions
+   - Closed This Month
+   - High Priority Open Actions
+   - Average Days to Close
+
+4. Add one trend section:
+   - Actions opened over time
+   - Actions closed over time
+   - Optional: closure rate this month vs prior month
+
+5. Add one department/facility breakdown section:
+   - Open actions by department
+   - Overdue actions by department
+   - High priority actions by department
+
+6. Add one “Needs Attention” table showing only the most important items:
+   Columns:
+   - Action Title
+   - Department
+   - Owner
+   - Priority
+   - Due Date
+   - Status
+   - Days Overdue (if overdue)
+
+   Default sort:
+   overdue first, then high priority, then nearest due date
+
+7. Add filters at the top:
+   - Facility
+   - Department
+   - Status
+   - Priority
+   - Date Range
+
+8. Add export controls:
+   - Export PDF
+   - Export CSV
+
+9. Add a drill-down action from the report table:
+   - “View Action Plan”
+   This should open the underlying corrective action detail page or modal.
+
+10. Keep the same existing app style:
+   - dark navy/blue theme
+   - rounded cards
+   - subtle border/glow
+   - same typography and spacing system
+
+11. Use mock data if needed, but structure it so it can later be replaced by backend data.
+
+12. If there is role logic already, only show this report to Admin / CEO / Quality Leader roles.
+   If role logic does not exist yet, scaffold the role-based visibility clearly in the code.
+
+13. Important:
+   This page should feel like an executive summary, not a task manager.
+   Do not dump every field from the action plan object into the main screen.
+   Keep the top layer concise, with drill-down to details.
+
+Data expectations for each corrective action:
+- id
+- title
+- standard
+- department
+- facility
+- owner
+- priority
+- status
+- createdAt
+- dueDate
+- closedAt
+- daysOpen
+- daysOverdue
+- validationStatus
+
+Statuses:
+- Open
+- In Progress
+- Pending Validation
+- Closed
+
+Priorities:
+- Low
+- Medium
+- High
+- Critical
+
+After implementation, show me:
+- which files were created or edited
+- the report component/page name
+- the mock data structure used
+- where the KPI calculations are defined
+- where export actions are wired
