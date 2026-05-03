@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "aEc3XbGxJ-7g2NlCofRHJ"
+uri = "file://survey-readiness-platform.zip"
+type = "unspecified"
+title = "Survey Readiness Platform — Source Code"
