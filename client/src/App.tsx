@@ -23,6 +23,7 @@ import AscPretestPage from "@/pages/asc-pretest-page";
 import AscPosttestPage from "@/pages/asc-posttest-page";
 import RoleSelectPage from "@/pages/role-select-page";
 import CorrectiveActionPage from "@/pages/corrective-action-page";
+import ExecutiveReportPage from "@/pages/executive-report-page";
 import { HospitalsPage, AscPage } from "@/pages/solutions-page";
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
@@ -213,6 +214,9 @@ function Router() {
       </Route>
       <Route path="/corrective-actions">
         {() => <ProtectedRoute component={CorrectiveActionPage} />}
+      </Route>
+      <Route path="/executive-report">
+        {() => <ProtectedRoute component={ExecutiveReportPage} />}
       </Route>
       <Route component={NotFound} />
     </Switch>

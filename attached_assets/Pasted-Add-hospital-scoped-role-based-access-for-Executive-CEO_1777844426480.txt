@@ -1,0 +1,85 @@
+Add hospital-scoped role-based access for Executive / CEO reporting.
+
+Goal:
+A CEO should be able to log in and see only the corrective action data and reports for their own hospital/facility, not for any other customer or hospital in the system.
+
+Requirements:
+
+1. Add tenant/facility scoping to the data model.
+Every relevant record should include:
+- facilityId
+- facilityName
+
+This includes:
+- users
+- corrective actions
+- executive report aggregates
+- any department-level summaries
+
+2. Add role-based access control with these roles:
+- staff
+- manager
+- admin
+- ceo
+
+3. Define permissions:
+- staff: view only their assigned or relevant items
+- manager: view department-level action plans and reports
+- admin: view all data for their hospital/facility
+- ceo: view executive reports and action plans for their hospital/facility only
+
+4. Important security rule:
+A ceo or admin from Hospital A must never be able to see data from Hospital B.
+All queries, filters, and report calculations must be scoped to the logged-in user’s facilityId.
+
+5. Create or update a sample authenticated user object like:
+{
+  id: "user_001",
+  name: "Jane Smith",
+  role: "ceo",
+  facilityId: "facility_mosh",
+  facilityName: "Midwest Orthopedic Specialty Hospital"
+}
+
+6. Use this authenticated user context to filter:
+- KPI cards
+- action plan tables
+- department breakdowns
+- exports
+- drill-down views
+
+7. Add a visible label at the top of the executive dashboard:
+Executive Readiness Report
+for [Facility Name]
+
+8. If there is a facility selector, only show it to super-admin users.
+Do not allow ceo users to switch to another hospital.
+
+9. Add audit logging scaffolding for sensitive access:
+Whenever a ceo/admin opens the executive report or exports a report, create an audit log entry with:
+- userId
+- role
+- facilityId
+- action
+- timestamp
+
+10. Build the UI so that the CEO can:
+- view summary KPI cards
+- view overdue/high-priority action plans
+- filter by department within their own hospital
+- export PDF/CSV for their own hospital only
+- click through to underlying action plans within their own hospital only
+
+11. If mock data is used, create at least two facilities in the mock data set to prove the filtering works.
+Example:
+- facility_mosh
+- facility_demo_hospital
+
+But when logged in as the ceo for facility_mosh, only facility_mosh data should display.
+
+12. Show me after implementation:
+- which files were changed
+- where role logic is defined
+- where facility filtering is enforced
+- where audit log events are created
+- how to change the mocked logged-in user for testing

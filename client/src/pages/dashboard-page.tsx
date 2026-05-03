@@ -280,6 +280,11 @@ export default function DashboardPage() {
                 <BarChart3 size={16} />
               </Button>
             )}
+            {(user?.isAdmin || ["enterprise", "own_plus_all"].includes(getRoleConfig(user?.roleId)?.reportingScope ?? "")) && (
+              <Button variant="outline" size="sm" onClick={() => setLocation("/executive-report")} data-testid="button-executive-report">
+                <TrendingUp size={16} />
+              </Button>
+            )}
             <Button variant="outline" size="sm" onClick={() => setLocation("/profile")} data-testid="button-profile">
               <Settings size={16} />
             </Button>
