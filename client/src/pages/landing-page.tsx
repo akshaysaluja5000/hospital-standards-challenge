@@ -18,13 +18,13 @@ const features = [
   },
   {
     icon: FileText,
-    title: "Tracer-style questions modeled on real survey workflows",
-    description: "Questions built from the same standards surveyors cite, not generic compliance trivia.",
+    title: "Practice the exact questions surveyors ask",
+    description: "Questions built from the same standards surveyors cite — not generic compliance trivia.",
   },
   {
     icon: BookOpen,
-    title: "Integrated standards handbook",
-    description: "Full reference guide embedded in the platform — so staff can study the standard, not just guess at it.",
+    title: "Reference the standard while you learn it",
+    description: "Full standards handbook embedded in the platform — so staff study the rule, not just guess at the answer.",
   },
   {
     icon: Search,
@@ -33,8 +33,8 @@ const features = [
   },
   {
     icon: BrainCircuit,
-    title: "AI-powered gap closing",
-    description: "Missed a question? An AI tutor explains why in plain language, with real bedside context.",
+    title: "Understand why you missed it, not just what's right",
+    description: "An AI tutor explains every missed question in plain language, with real bedside context.",
   },
 ];
 
@@ -111,7 +111,7 @@ export default function LandingPage() {
           >
             <AppLogoMark variant="lg" />
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
-              Survey Readiness Platform
+              Close compliance gaps before the surveyor arrives
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
               Survey readiness training that closes compliance gaps — built for hospital and ASC staff who don't have time for another in-service.

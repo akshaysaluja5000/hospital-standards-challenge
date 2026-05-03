@@ -127,7 +127,7 @@ function AscChapterCard({
                   data-testid={`button-asc-practice-${chapter.levelId}`}
                 >
                   <Play size={15} className="mr-1.5" />
-                  {session ? "Continue Quiz" : hasPlayed ? "Play Again" : "Practice Quiz"}
+                  {hasPlayed || session ? "Play Again" : "Practice Quiz"}
                 </Button>
               </>
             ) : null}

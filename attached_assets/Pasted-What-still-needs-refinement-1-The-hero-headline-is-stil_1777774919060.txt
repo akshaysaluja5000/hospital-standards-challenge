@@ -1,0 +1,72 @@
+What still needs refinement
+1. The hero headline is still too generic
+"Survey Readiness Platform" is better than "Hospital Standards Challenge," but it's still not sharp enough. It describes what the product is, not why anyone should care.
+
+The subhead is better:
+
+"Survey readiness training that closes compliance gaps — built for hospital and ASC staff who don't have time for another in-service."
+
+That's a real value prop. But the headline should hit harder.
+
+Better options:
+
+"Close compliance gaps before the surveyor arrives"
+
+"Survey readiness training staff actually complete"
+
+"Find your survey risks in 10 minutes a week"
+
+The headline should be outcome-focused, not category-defining. You're not establishing a new category; you're solving a pain.
+
+
+
+I LIKE:  Close compliance gaps before the surveyor arrives"
+
+
+2. The feature cards are better but still slightly feature-listy
+The copy improvements are good, but some cards are still describing what the feature is instead of what problem it solves.
+
+For example:
+
+"Tracer-style questions modeled on real survey workflows" → Better: "Practice the exact questions surveyors ask"
+
+"Integrated standards handbook" → Better: "Reference the standard while you learn it"
+
+"AI-powered gap closing" → Better: "Understand why you missed it, not just what's right"
+
+3. The logo and branding are functional but not premium
+The "SRP" shield logo is serviceable, but it doesn't feel like a $50K+ enterprise platform. It still reads slightly consumer-app or startup-y. For an executive buyer, the logo should signal authority, credibility, and clinical precision.
+
+You don't need to change it immediately, but when you have budget for design work, this should be on the list.
+
+4. Mobile is great; desktop hierarchy is unclear from these screens
+I'm seeing mobile-first screens, which is smart for user experience. But I can't tell from these images whether the desktop version has a clear management dashboard that surfaces:
+
+Units with lowest readiness scores
+
+Most-missed standards across the facility
+
+Completion rates by department and role
+
+Trends over time
+
+That's what an executive or quality leader needs to see immediately. If the desktop view just shows the same chapter list at a larger size, that's a missed opportunity.
+
+5. "Continue Quiz" vs "Practice Quiz" button inconsistency
+On one screen I see "Continue Quiz" and on others "Practice Quiz." Pick one label and use it consistently. "Practice Quiz" is better because it sounds lower-stakes and repeatable. "Continue" implies you're resuming something you started, which creates anxiety if the user doesn't remember starting it.
+
+The blunt verdict
+This is now good enough to show Fawn and get real user feedback. It's also good enough to start conversations with potential pilot customers. It is not yet good enough to show to a high-level external executive buyer as the finished product, but it's very close.
+
+The mobile experience is polished. The value proposition is clearer. The roadmap tells a credible growth story. The "common survey failures" hook is differentiated and useful.
+
+The remaining work is:
+
+Sharper hero messaging,
+
+Desktop dashboard with management-level insights,
+
+Slightly more premium branding when budget allows,
+
+Tighter feature-to-benefit language in a few spots.
+
