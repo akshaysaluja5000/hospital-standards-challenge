@@ -19,7 +19,7 @@ import { ascPosttestQuestions } from "@shared/asc-posttest";
 import { levels } from "@shared/questions";
 import { findLevelById, getVisibleLevelsForModule } from "@shared/all-levels";
 import type { ModuleId } from "@shared/schema";
-import { getRoleConfig } from "@shared/roles";
+import { getRoleConfig, ROLE_CONFIGS } from "@shared/roles";
 
 const BYPASS_USERNAMES = ["akshaysaluja", "rsaluja"] as const;
 
@@ -1594,7 +1594,15 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
   app.get("/api/diagnostic/questions", requireAuth, async (req, res) => {
     const DIAG_PER_SECTION = 2;
     const DIAG_EXTRAS = 3;
-    const assignedChapters = await storage.getUserAssignedChapters(req.user!.id);
+    let assignedChapters = await storage.getUserAssignedChapters(req.user!.id);
+    // Fallback: if DB chapter mapping is empty, derive chapters directly from ROLE_CONFIGS
+    if (assignedChapters.length === 0 && req.user!.roleId) {
+      const dbRole = await storage.getRoleById(req.user!.roleId);
+      if (dbRole) {
+        const roleConfig = ROLE_CONFIGS.find(r => r.id === dbRole.slug);
+        if (roleConfig) assignedChapters = roleConfig.chapters;
+      }
+    }
     const pool = assignedChapters.length > 0
       ? diagnosticQuestions.filter(q => assignedChapters.includes(q.sectionId))
       : diagnosticQuestions;

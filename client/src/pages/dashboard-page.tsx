@@ -325,6 +325,36 @@ export default function DashboardPage() {
               );
             })()}
 
+            {/* ASC Pretest — main column, mirrors hospital diagnostic placement */}
+            {userModule === "asc" && (
+              <motion.div
+                className="w-full rounded-2xl border-2 p-5 text-left bg-teal-500/5 border-teal-500/20"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                data-testid="card-asc-pretest-main"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-md">
+                    <Stethoscope size={22} className="text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-base leading-tight">ASC Pretest</h3>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/15 text-teal-500 uppercase tracking-wider">Benchmark</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-0.5">25 questions across 6 AAAHC chapters — establish your baseline</p>
+                  </div>
+                  <button
+                    onClick={() => setLocation("/asc-pretest")}
+                    data-testid="button-asc-pretest-main"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white shadow-md transition-all active:scale-95"
+                  >
+                    Start <ChevronRight size={15} />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
             {/* Retake Diagnostic — shown near top once the user has a score */}
             {userModule !== "asc" && diagnosticResults && diagnosticResults.length > 0 && (
               <motion.div
@@ -751,30 +781,6 @@ export default function DashboardPage() {
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">Start</span>
                   </div>
                   <p className="text-sm text-muted-foreground mt-0.5">25 questions · ~10 min</p>
-                </div>
-                <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
-              </motion.button>
-            )}
-
-            {/* ASC Pretest */}
-            {userModule === "asc" && (
-              <motion.button
-                className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
-                onClick={() => setLocation("/asc-pretest")}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileTap={{ scale: 0.98 }}
-                data-testid="button-asc-pretest-cta"
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-sm">
-                  <Stethoscope size={18} className="text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="font-bold text-sm">ASC Pretest</h3>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">Benchmark</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-0.5">25 questions across 6 ASC chapters</p>
                 </div>
                 <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
               </motion.button>
