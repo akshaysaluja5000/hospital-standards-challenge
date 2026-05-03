@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy } from "lucide-react";
+import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { Level, UserProgress, QuizSession } from "@shared/schema";
@@ -26,6 +27,8 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
   const hasInProgress = !!savedSession;
   const inProgressQuestion = savedSession?.currentQuestion || 0;
   const hasPlayed = progress && progress.totalQuestions > 0;
+  const [riskExpanded, setRiskExpanded] = useState(false);
+  const riskPoints = level.chapterSummary?.commonRiskPoints;
 
   const handleStartOver = async () => {
     try {
@@ -143,6 +146,30 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
               </Button>
             )}
           </div>
+
+          {riskPoints && riskPoints.length > 0 && (
+            <div className="mt-4 border-t border-border/60 pt-3">
+              <button
+                className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
+                onClick={() => setRiskExpanded(!riskExpanded)}
+                data-testid={`button-risk-toggle-${level.id}`}
+              >
+                <AlertTriangle size={13} />
+                {riskPoints.length} Common Survey Risk Points
+                {riskExpanded ? <ChevronUp size={13} className="ml-auto" /> : <ChevronDown size={13} className="ml-auto" />}
+              </button>
+              {riskExpanded && (
+                <ul className="mt-2 flex flex-col gap-1.5" data-testid={`list-risk-points-${level.id}`}>
+                  {riskPoints.map((point, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground leading-snug">
+                      <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-amber-500/70" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </motion.div>

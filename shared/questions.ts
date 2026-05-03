@@ -8,6 +8,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "Truck",
     color: "hsl(152, 82%, 39%)",
     requiredScore: 0,
+    chapterSummary: {
+      chapterTitle: "Transport of Instruments",
+      plainLanguageSummary: "Instruments must be handled safely from the moment a case ends to the moment they reach SPD decontamination. Gross bioburden must be removed at the point of use, hinged instruments must be open, containers must be sealed, and transport must follow designated soiled pathways.",
+      keyOperationalExpectations: [
+        "Remove gross bioburden (blood, tissue) at the point of use before transport.",
+        "Place all hinged instruments in the open/unhinged position.",
+        "Transport in closed, leak-proof containers with secured lids.",
+        "Use designated soiled corridors — never clean corridors or patient care areas.",
+        "Wear full PPE (gloves, gown, face shield/goggles, mask) when handling soiled instruments.",
+      ],
+      commonRiskPoints: [
+        "Gross bioburden left on instruments — dried-on tissue and blood makes SPD decontamination significantly less effective.",
+        "Hinged instruments locked closed during transport, blocking cleaning solution from reaching box locks and jaw areas.",
+        "Lids left unsecured on transport containers, creating splash and contamination risk in soiled corridors.",
+        "Transport through clean corridors or shared elevators with clean supply carts.",
+        "Clean red bins stored in the soiled utility room instead of the clean supply room.",
+      ],
+      cmsTags: ["IC.02.02.01", "ST79"],
+    },
     studyMaterial: [
       {
         title: "Point-of-Use Cleaning",
@@ -325,6 +344,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "Building2",
     color: "hsl(217, 91%, 52%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "Environment & Surfaces",
+      plainLanguageSummary: "All clinical surfaces must be intact, impervious, and free of visible dust. Stained ceiling tiles, cracked walls, tape residue, and dust on overhead surfaces are common Joint Commission citations during Environment of Care rounds.",
+      keyOperationalExpectations: [
+        "Walls, countertops, and floors must be intact and impervious — cracks, holes, and peeling surfaces are citation risks.",
+        "Ceiling tiles must be intact, unstained, and properly seated — staining indicates water damage above.",
+        "All overhead surfaces (lights, booms, vents, shelves) must be free of visible dust.",
+        "Cove base must be intact and sealed to prevent moisture infiltration and mold.",
+        "EOC rounds must include overhead and hard-to-reach surfaces, not just floor-level inspection.",
+      ],
+      commonRiskPoints: [
+        "Stained ceiling tiles dismissed as 'cosmetic' — surveyors treat any stain as evidence of a potential active water leak or mold risk.",
+        "Tape residue on clinical walls creating surfaces that cannot be effectively disinfected.",
+        "Visible dust on overhead lights, boom arms, IV poles, and ventilation grilles.",
+        "Damaged or unsealed cove base at floor-wall junctions allowing moisture infiltration behind walls.",
+        "EOC rounds that focus only on obvious floor-level items and miss overhead and behind-equipment surfaces.",
+      ],
+      cmsTags: ["EC.02.06.01", "IC.02.02.01"],
+    },
     studyMaterial: [
       {
         title: "Wall & Surface Integrity",
@@ -642,6 +680,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "ArrowLeftRight",
     color: "hsl(270, 60%, 55%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "Clean vs. Dirty Segregation",
+      plainLanguageSummary: "Clean and soiled items must never share the same pathways, storage areas, or transport conveyances. This applies to corridors, elevators, utility rooms, and how staff handle items after touching soiled materials.",
+      keyOperationalExpectations: [
+        "Clean and soiled items must be physically separated — different corridors, rooms, and transport trips.",
+        "Soiled utility rooms are for soiled items only — clean supplies must never be stored or staged there.",
+        "Clean supply rooms are for clean items only — soiled items must never enter.",
+        "Staff must change gloves and perform hand hygiene after handling soiled items before touching clean supplies.",
+        "Clean and soiled items must never share the same elevator trip simultaneously.",
+      ],
+      commonRiskPoints: [
+        "Clean supplies stored in or passed through soiled utility rooms during workflow shortcuts.",
+        "Staff handling soiled items and then touching clean supply packaging without changing gloves.",
+        "Clean and soiled carts sharing the same elevator simultaneously.",
+        "Soiled instrument containers staged temporarily in clean corridors while waiting for transport.",
+        "Soiled utility rooms used for both soiled disposal and clean supply staging due to space constraints.",
+      ],
+      cmsTags: ["IC.02.02.01", "EC.02.06.01"],
+    },
     studyMaterial: [
       {
         title: "Clean/Dirty Separation Principle",
@@ -959,6 +1016,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "Package",
     color: "hsl(32, 95%, 55%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "Sterile Storage",
+      plainLanguageSummary: "Sterile supplies must be stored in conditions that maintain sterility until point of use. Packages must be inspected on receipt and before use. Event-related sterility means any package that is compromised — torn, wet, crushed, or expired — must be removed from service immediately.",
+      keyOperationalExpectations: [
+        "Sterile packages must be stored off the floor, away from walls, below ceiling sprinklers, and in areas with controlled temperature and humidity.",
+        "All sterile packages must be inspected on receipt and again before use — any compromise removes the package from service.",
+        "Event-related sterility: a package is sterile until an event (tear, moisture, expiration, compression) compromises it.",
+        "FIFO (First In, First Out) rotation must be followed to prevent outdated items from accumulating.",
+        "Expired or compromised items must be clearly quarantined and removed from circulation immediately.",
+      ],
+      commonRiskPoints: [
+        "Sterile packages stored on the floor or directly against exterior walls where moisture and temperature fluctuations compromise sterility.",
+        "Compressed or crushed peel pack corners used anyway because the item 'looks fine inside' — compression compromises seal integrity.",
+        "No documented inspection process on receipt — items placed directly into sterile storage without condition review.",
+        "Outdated items remaining on shelves mixed with current stock because FIFO rotation is not enforced.",
+        "Sterile packages stored in rooms without monitored temperature or humidity, particularly in OR sub-sterile corridors.",
+      ],
+      cmsTags: ["IC.02.02.01", "ST79", "EC.02.06.01"],
+    },
     studyMaterial: [
       {
         title: "Event-Related Sterility",
@@ -1276,6 +1352,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "Wrench",
     color: "hsl(340, 82%, 50%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "Instrument Integrity",
+      plainLanguageSummary: "Instruments with visible rust, pitting, broken tips, or compromised packaging must be removed from service immediately. Surveyors inspect peel packs at the point of opening and instrument trays before use. A single rusted or damaged instrument in a tray is a citation.",
+      keyOperationalExpectations: [
+        "Instruments must be visually inspected after each reprocessing cycle before packaging and before use.",
+        "Rust, pitting, cracks, broken tips, or misaligned jaws require immediate removal from service.",
+        "Peel packs must show intact seals on all edges — any peel-away or broken seal makes the item non-sterile.",
+        "Instruments packaged in peel packs must not exceed half the pack's thickness to maintain seal integrity.",
+        "Chemical indicator (CI) must be present and have changed color inside every sealed package.",
+      ],
+      commonRiskPoints: [
+        "Instruments with visible rust or pitting returned to service because 'a little rust is normal' — any visible rust is a citation and a patient safety issue.",
+        "Peel packs with one partially open seal used anyway because the other three edges are intact.",
+        "Multiple instrument sets double-pouched too tightly, compressing the pack and breaking seal integrity.",
+        "No internal chemical indicator inside peel packs, so there is no evidence that sterilization conditions were reached.",
+        "Inspection performed only before packaging, not again at point of use immediately before the case.",
+      ],
+      cmsTags: ["IC.02.02.01", "ST79", "AAMI ST79"],
+    },
     studyMaterial: [
       {
         title: "Visual Inspection Basics",
@@ -1593,6 +1688,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "Thermometer",
     color: "hsl(195, 80%, 45%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "Facilities & Equipment",
+      plainLanguageSummary: "Equipment used in patient care must be monitored, maintained, and documented. Temperature logs for warmers and refrigerators must show not just readings but what happened when readings were out of range. Oxygen tanks and electrical equipment must meet specific safety requirements.",
+      keyOperationalExpectations: [
+        "Blanket and fluid warmer temperatures must be logged continuously and stay within the manufacturer's validated range.",
+        "Medication refrigerator temperature logs must include documented action taken on any out-of-range reading — not just the reading itself.",
+        "Oxygen cylinders must be secured upright with chains or brackets and stored separately from flammable materials.",
+        "Extension cords must not be used as permanent wiring — only surge-protected power strips approved for clinical use.",
+        "All patient care equipment must have documented preventive maintenance on schedule.",
+      ],
+      commonRiskPoints: [
+        "Temperature logs showing only check marks with no documented corrective action when an excursion occurred.",
+        "Blanket warmers set above the manufacturer's maximum temperature limit, creating burn risk.",
+        "Oxygen cylinders stored unsecured against a wall or laying horizontal without chain or bracket.",
+        "Extension cords used as permanent wiring for patient care equipment — a fire and electrical safety citation.",
+        "Preventive maintenance stickers missing or expired on patient care equipment still in active use.",
+      ],
+      cmsTags: ["EC.02.04.01", "EC.02.05.01", "EC.02.06.01"],
+    },
     studyMaterial: [
       {
         title: "Blanket & Fluid Warmers",
@@ -1910,6 +2024,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "FlaskConical",
     color: "hsl(45, 90%, 50%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "SPD & Decontamination",
+      plainLanguageSummary: "Sterile processing is one of the highest-scrutiny areas in a Joint Commission survey. Surveyors verify that decontamination follows manufacturer IFU, that biological and chemical indicators are used correctly, that personnel follow the one-way dirty-to-clean workflow, and that implants are held until biological indicator results are confirmed.",
+      keyOperationalExpectations: [
+        "All instrument reprocessing must follow the manufacturer's IFU — deviations are a citation regardless of whether they seem minor.",
+        "Biological indicators (BIs) must be run with every load containing implants; results must be confirmed before implant release.",
+        "Chemical indicators (CIs) must be placed inside every package and checked on load review.",
+        "Decontamination room personnel must not cross to the clean side without changing PPE and performing hand hygiene.",
+        "Sterilizer load records must be retained and traceable to specific loads and specific patient cases.",
+      ],
+      commonRiskPoints: [
+        "Personnel crossing from the dirty side of SPD to the clean side without removing soiled PPE — a one-way workflow violation.",
+        "Implants released before biological indicator results are confirmed, because the BI was run but results weren't waited for.",
+        "Instruments reprocessed using a cleaning cycle shorter than the manufacturer IFU requires ('we've always done it this way').",
+        "BI results logged but not reviewed by a qualified person before load release — documentation without oversight.",
+        "Sterilizer load logs incomplete or missing the load number, content description, or cycle parameters.",
+      ],
+      cmsTags: ["IC.02.02.01", "ST79", "AAMI ST79"],
+    },
     studyMaterial: [
       {
         title: "Decontamination Room Environment",
@@ -2227,6 +2360,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "HeartPulse",
     color: "hsl(0, 75%, 55%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "OR & Sterile Technique",
+      plainLanguageSummary: "The sterile field must be maintained from creation through case completion. Surveyors observe attire compliance, sterile field behavior, and skin prep technique. Any break in sterile technique — even if caught — must be corrected before the case proceeds.",
+      keyOperationalExpectations: [
+        "Surgical attire (mask, hair covering, shoe covers) must be worn correctly in all restricted OR zones — masks fully covering mouth and nose, hair completely covered.",
+        "The sterile field must never be left unattended; if a sterile field must be left, it must be covered.",
+        "Personnel must not walk between two sterile fields or reach across a sterile field.",
+        "Skin prep must dry fully before draping — pooling of prep solution under drapes is a fire and chemical burn risk.",
+        "Non-sterile personnel must maintain the correct distance and never reach over the sterile field.",
+      ],
+      commonRiskPoints: [
+        "Surgical masks worn below the nose — one of the most frequently cited OR attire violations.",
+        "Sterile field left uncovered and unattended during a brief pause or room changeover.",
+        "Personnel walking between two sterile fields, passing through the sterile zone.",
+        "Skin prep solution pooling under the patient before draping — a fire risk with electrocautery.",
+        "Non-sterile circulator reaching over or into the sterile field to hand items directly to the scrub tech.",
+      ],
+      cmsTags: ["IC.02.02.01", "RC.02.01.01", "NPSG.07.05.01"],
+    },
     studyMaterial: [
       {
         title: "Sterile Field Integrity",
@@ -2544,6 +2696,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "ClipboardCheck",
     color: "hsl(160, 70%, 40%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "Surgical Safety & Consent",
+      plainLanguageSummary: "The Universal Protocol (pre-procedure verification, site marking, and time-out) is one of the Joint Commission's National Patient Safety Goals. Surveyors trace time-out documentation in charts, observe actual time-outs, and verify site marking policies. Any step skipped or done after the wrong point is a citation.",
+      keyOperationalExpectations: [
+        "Pre-procedure verification must confirm correct patient, procedure, and site before the patient enters the OR.",
+        "Surgical site must be marked by the operating surgeon with the patient awake and involved — not by nursing alone.",
+        "Time-Out must be performed immediately before incision, with all team members participating and stopping other tasks.",
+        "Time-Out must be documented in the medical record, including who participated and what was verified.",
+        "Consent must be obtained before any sedating medication is administered.",
+      ],
+      commonRiskPoints: [
+        "Time-Out performed while the team continues prepping the patient rather than pausing all activity.",
+        "Time-Out not documented in the chart — verbal time-out done but no written record created.",
+        "Site marking delegated to nursing or a resident without the attending surgeon's direct involvement.",
+        "Consent signed after pre-op benzodiazepine was administered, making the consent presumptively defective.",
+        "Time-Out done after incision has started ('we do it while we're starting') — the universal protocol requires immediately before incision.",
+      ],
+      cmsTags: ["NPSG.01.01.01", "UP.01.01.01", "UP.01.02.01", "UP.01.03.01"],
+    },
     studyMaterial: [
       {
         title: "Universal Protocol & Time-Out",
@@ -2861,6 +3032,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "FileText",
     color: "hsl(280, 65%, 55%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "Patient Care & Documentation",
+      plainLanguageSummary: "Post-operative care must be documented completely and contemporaneously. Surveyors trace the chart from consent through discharge — looking for post-anesthesia evaluation, pain assessment, discharge criteria, medication documentation, and patient education. Gaps in the chart are treated as gaps in care.",
+      keyOperationalExpectations: [
+        "Post-anesthesia evaluation by a qualified provider must be documented before discharge — not just a nursing note.",
+        "Pain must be assessed and documented at defined intervals post-procedure.",
+        "Discharge criteria must be met and documented — the reason for discharge readiness must be in the chart.",
+        "Discharge instructions must be patient-specific and documented as given to the patient or designee.",
+        "Medication errors and near-misses must be reported through the event reporting system.",
+      ],
+      commonRiskPoints: [
+        "Post-anesthesia evaluation not documented by a qualified provider — nursing discharge assessment alone does not satisfy the requirement.",
+        "Pain assessment documented only once on admission with no repeat documentation during PACU stay.",
+        "Discharge instructions the same generic printout for every patient, without individualization for the specific procedure or patient needs.",
+        "Medication given without a current order documented in the chart ('verbal order, to be followed by written order' never completed).",
+        "Adverse medication events documented in nursing notes but not entered into the event reporting system for QAPI review.",
+      ],
+      cmsTags: ["RC.02.01.01", "PC.04.02.01", "MM.04.01.01"],
+    },
     studyMaterial: [
       {
         title: "Post-Anesthesia & Post-Op Evaluation",
@@ -3178,6 +3368,25 @@ const hospitalLevelsRaw: Level[] = [
     icon: "ShieldCheck",
     color: "hsl(210, 70%, 50%)",
     requiredScore: 60,
+    chapterSummary: {
+      chapterTitle: "EOC & Safety Compliance",
+      plainLanguageSummary: "Environment of Care safety covers sharps disposal, vendor access, emergency equipment readiness, patient privacy, and hazardous materials management. Surveyors walk the facility looking for overfilled sharps containers, unescorted vendors in clinical areas, crash carts without check logs, and OSHA labeling gaps.",
+      keyOperationalExpectations: [
+        "Sharps containers must be puncture-resistant, mounted at the correct height, and replaced at the manufacturer's fill line — never overfilled.",
+        "Vendor representatives must be badged, escorted, and documented when in clinical areas.",
+        "Crash carts and defibrillators must have documented daily or shift checks with logs available for surveyor review.",
+        "All hazardous materials must be labeled per OSHA HazCom standards — secondary containers require labels, not just the original manufacturer container.",
+        "Patient privacy must be protected in waiting areas, check-in, and clinical spaces — conversations and records must not be overheard or visible to unauthorized persons.",
+      ],
+      commonRiskPoints: [
+        "Sharps containers overfilled past the fill line because staff wait until sharps are visibly protruding before requesting replacement.",
+        "Vendor representatives accessing procedure rooms or sterile storage areas without escort or facility badge.",
+        "Crash cart check logs with gaps — days missing documentation because the check was done verbally but not recorded.",
+        "Secondary containers (spray bottles, transfer containers) of hazardous chemicals without facility labels — only the original manufacturer bottle is labeled.",
+        "Patient check-in and registration conducted where other waiting patients can hear the conversation, creating privacy violations.",
+      ],
+      cmsTags: ["EC.02.02.01", "EC.02.04.01", "EC.02.06.01", "RI.01.02.01"],
+    },
     studyMaterial: [
       {
         title: "Sharps Safety & Disposal",

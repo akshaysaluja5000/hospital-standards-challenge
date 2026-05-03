@@ -76,7 +76,7 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     heroIcon: Building2,
     headline: "ASC Accreditation Training That Sticks.",
     subhead:
-      "AAAHC, Joint Commission ASC pathway, and CMS Conditions for Coverage — covered. Built for the pace of an ASC, with fast onboarding for new hires, refreshers for veteran staff, and reporting that multi-site operators like Surgery Partners can use on day one.",
+      "AAAHC, Joint Commission ASC pathway, and CMS Conditions for Coverage — covered. Built for the pace of an ASC, with fast onboarding for new hires, refreshers for veteran staff, and reporting designed for multi-site ASC operators.",
     features: [
       {
         icon: ShieldCheck,
@@ -94,7 +94,7 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
         icon: Building2,
         title: "Built for multi-site operators",
         description:
-          "Roles, reporting scopes, and dashboards designed for groups like Surgery Partners and other multi-site ASC operators — corporate, regional, and center-level leaders all see what they need.",
+          "Roles, reporting scopes, and dashboards designed for multi-site ASC operators — corporate, regional, and center-level leaders all see what they need.",
       },
     ],
     bottomLine:
