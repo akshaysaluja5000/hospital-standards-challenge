@@ -27,6 +27,33 @@ The application is built with a modern web stack. The **Frontend** uses React, T
 - **Module Separation**: Supports both "Hospital" and "ASC" (Ambulatory Surgical Center) modules with distinct content, user roles, and segregated data on leaderboards and statistics. A role-selection wizard guides users to choose their facility type and specific roles.
 - **ASC Module Coverage (May 2026)**: 11 published ASC chapter quizzes (165 questions total): Patient Rights, Governance, Credentialing, Administration, Quality of Care, Quality Management (QAPI), Clinical Records, Infection Prevention, Facilities & Environment, Anesthesia & Surgical Services (covers AAAHC Ch 9 + Ch 10), and Pharmaceutical Services. Elective chapters intentionally Reading-only: Pathology (Ch 12), Imaging (Ch 13), Teaching (Ch 18), Research (Ch 19), Overnight Care (Ch 20), Radiation Oncology (Ch 24). Chapter numbers follow AAAHC's official handbook; gaps (Ch 14–17, 21–23) are non-ASC adjunct standards.
 
+## Compliance Operations Layer (CAP + Executive Report)
+
+### Facility-Scoped Role System (`shared/facility-roles.ts`)
+Five facility roles orthogonal to the study/training roles: `staff`, `manager`, `admin`, `ceo`, `super_admin`. Each has a `FacilityPermissions` object controlling: `canViewExecutiveReport`, `canViewAllDepartments`, `canViewAllFacilities`, `canExportReports`, `canSwitchFacility`, `canCreateActions`, `canViewAuditLog`.
+
+Mock facility catalog: `facility_mosh` (Midwest Orthopedic Specialty Hospital), `facility_ohw` (Orthopedic Hospital of Wisconsin), `facility_ascension` (Ascension SE Wisconsin).
+
+### Facility Auth Hook (`client/src/lib/facility-auth.ts`)
+`useFacilityAuth()` wraps `useAuth()` and returns `{ facilityId, facilityName, facilityRole, permissions, isSuperAdmin }`. Controlled by `MOCK_PERSONA` constant at the top of the file — change it to test different personas. When `MOCK_PERSONA` is null, derives role from real auth (`isAdmin` → super_admin, `reportingScope: enterprise` → admin, `own_plus_all` → manager).
+
+### Audit Log Scaffold (`client/src/lib/audit-log.ts`)
+`auditLog({ userId, role, facilityId, facilityName, action, meta? })` records sensitive events (report views, CSV/PDF exports, action creation) to an in-memory store and `console.info`. Has a TODO stub for the future POST to `/api/audit-log`. `getAuditLog()` returns the full in-memory log.
+
+### Corrective Action Plan (`client/src/pages/corrective-action-page.tsx`)
+All 10 mock actions now have `facilityId` + `facilityName`. 7 for `facility_mosh`, 3 for `facility_ohw`. Page uses `useFacilityAuth()`: non-super_admin users only see their own hospital's actions. Create Action dialog stamps new actions with the user's facilityId. Create button hidden for CEO role (`canCreateActions: false`). Facility name shown as a badge on each card when super_admin is viewing all.
+
+### Executive Readiness Report (`client/src/pages/executive-report-page.tsx`)
+- Header subtitle shows "for [Facility Name]" using `scopedFacilityName`
+- Facility selector in filters only rendered for `isSuperAdmin`
+- `filtered` useMemo pre-filters by `facilityId` before any user-applied filters
+- Access gate uses `permissions.canViewExecutiveReport` (ceo, admin, super_admin pass)
+- `useEffect` fires `auditLog("executive_report_viewed")` on mount
+- CSV export fires `auditLog("executive_report_csv_export")` and stamps filename with facility name
+- PDF print fires `auditLog("executive_report_pdf_export")`
+- Narrative says "at [Facility Name]" for scoped users, "across N facilities" for super_admin
+- Facility scope pill shown in Executive Summary signal pills when not super_admin
+
 ## External Dependencies
 - **Anthropic (Claude Haiku)**: Integrated for AI Tutor, AI Micro-Debriefs, AI Handbook Search, and AI Leadership Coach functionalities via Replit AI Integrations.
 - **PostgreSQL**: The primary database for storing all application data, managed through Drizzle ORM.

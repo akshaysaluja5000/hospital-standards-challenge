@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -6,7 +6,7 @@ import {
   Flag, Building2, TrendingUp, TrendingDown, Filter, X,
   ChevronRight, ClipboardCheck, Circle, Printer, FileText,
   ShieldCheck, ShieldAlert, ShieldX, ChevronDown, ChevronUp,
-  Minus
+  Minus, Lock
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -14,8 +14,9 @@ import {
 } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAuth } from "@/lib/auth";
-import { getRoleConfig } from "@shared/roles";
+import { useFacilityAuth } from "@/lib/facility-auth";
+import { auditLog } from "@/lib/audit-log";
+import { MOCK_FACILITIES } from "@shared/facility-roles";
 import { format, parseISO, startOfWeek, subWeeks } from "date-fns";
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -31,6 +32,7 @@ interface ExecAction {
   standard: string;
   department: string;
   facility: string;
+  facilityId: string;
   owner: string;
   priority: ActionPriority;
   status: ActionStatus;
@@ -45,6 +47,10 @@ interface ExecAction {
 interface TrendPoint { week: string; opened: number; closed: number; }
 
 // ── Mock Data ──────────────────────────────────────────────────────────────
+// Two facilities to prove facility-scoped filtering:
+//   facility_mosh      = Midwest Orthopedic Specialty Hospital
+//   facility_ohw       = Orthopedic Hospital of Wisconsin
+//   facility_ascension = Ascension SE Wisconsin
 
 const TODAY = new Date();
 const d = (offset: number) => {
@@ -56,73 +62,85 @@ const d = (offset: number) => {
 const EXEC_MOCK_ACTIONS: ExecAction[] = [
   {
     id: "cap-001", title: "Document corrective action for temp excursion — med fridge #3",
-    standard: "EC.02.05.07", department: "Pharmacy", facility: "Midwest Orthopedic Specialty Hospital",
+    standard: "EC.02.05.07", department: "Pharmacy",
+    facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
     owner: "Maria Chen", priority: "Critical", status: "Open",
     createdAt: d(-21), dueDate: d(-4), daysOpen: 21, daysOverdue: 4, validationStatus: null,
   },
   {
     id: "cap-002", title: "Secure oxygen cylinders in procedure room 2 with approved brackets",
-    standard: "EC.02.06.01", department: "Perioperative", facility: "Midwest Orthopedic Specialty Hospital",
+    standard: "EC.02.06.01", department: "Perioperative",
+    facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
     owner: "James Okafor", priority: "Critical", status: "In Progress",
     createdAt: d(-14), dueDate: d(-2), daysOpen: 14, daysOverdue: 2, validationStatus: null,
   },
   {
     id: "cap-003", title: "Replace extension cord used as permanent wiring at nurse station B",
-    standard: "EC.02.05.01", department: "Nursing", facility: "Orthopedic Hospital of Wisconsin",
+    standard: "EC.02.05.01", department: "Nursing",
+    facility: "Orthopedic Hospital of Wisconsin", facilityId: "facility_ohw",
     owner: "Priya Nair", priority: "High", status: "Open",
     createdAt: d(-10), dueDate: d(4), daysOpen: 10, daysOverdue: 0, validationStatus: null,
   },
   {
     id: "cap-004", title: "Update blanket warmer logs to document temp range and corrective steps",
-    standard: "EC.02.05.07", department: "Perioperative", facility: "Ascension SE Wisconsin – Franklin",
+    standard: "EC.02.05.07", department: "Perioperative",
+    facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
     owner: "Derek Walsh", priority: "High", status: "Pending Validation",
     createdAt: d(-18), dueDate: d(7), daysOpen: 18, daysOverdue: 0, validationStatus: "Pending",
   },
   {
     id: "cap-005", title: "Attach current PM sticker to EKG machine in cardiology suite",
-    standard: "EC.02.04.01", department: "Cardiology", facility: "Midwest Orthopedic Specialty Hospital",
+    standard: "EC.02.04.01", department: "Cardiology",
+    facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
     owner: "Sandra Brooks", priority: "Medium", status: "Closed",
     createdAt: d(-30), dueDate: d(-5), closedAt: d(-3), daysOpen: 27, daysOverdue: 0, validationStatus: "Approved",
   },
   {
     id: "cap-006", title: "Post hand hygiene compliance data in staff break room",
-    standard: "IC.02.01.01", department: "Infection Control", facility: "Orthopedic Hospital of Wisconsin",
+    standard: "IC.02.01.01", department: "Infection Control",
+    facility: "Orthopedic Hospital of Wisconsin", facilityId: "facility_ohw",
     owner: "Tom Reyes", priority: "Medium", status: "Open",
     createdAt: d(-7), dueDate: d(17), daysOpen: 7, daysOverdue: 0, validationStatus: null,
   },
   {
     id: "cap-007", title: "Complete fire drill documentation for Q1 — missing patient count signatures",
-    standard: "EC.02.03.03", department: "Facilities", facility: "Ascension SE Wisconsin – Elmbrook",
+    standard: "EC.02.03.03", department: "Facilities",
+    facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
     owner: "Linda Park", priority: "Low", status: "Closed",
     createdAt: d(-45), dueDate: d(-18), closedAt: d(-20), daysOpen: 25, daysOverdue: 0, validationStatus: "Approved",
   },
   {
     id: "cap-008", title: "Reconcile missing entries in medication administration record for unit 3B",
-    standard: "RC.02.01.01", department: "Nursing", facility: "Ascension SE Wisconsin – Franklin",
+    standard: "RC.02.01.01", department: "Nursing",
+    facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
     owner: "Yolanda Morris", priority: "Critical", status: "Open",
     createdAt: d(-5), dueDate: d(1), daysOpen: 5, daysOverdue: 0, validationStatus: null,
   },
   {
     id: "cap-009", title: "Resolve expired credentials on file for two contracted physicians",
-    standard: "HR.01.05.03", department: "Medical Staff Office", facility: "Midwest Orthopedic Specialty Hospital",
+    standard: "HR.01.05.03", department: "Medical Staff Office",
+    facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
     owner: "Grace Patel", priority: "High", status: "In Progress",
     createdAt: d(-12), dueDate: d(-1), daysOpen: 12, daysOverdue: 1, validationStatus: null,
   },
   {
     id: "cap-010", title: "Update fire extinguisher inspection tags — 3 expired in OR corridor",
-    standard: "EC.02.03.05", department: "Facilities", facility: "Orthopedic Hospital of Wisconsin",
+    standard: "EC.02.03.05", department: "Facilities",
+    facility: "Orthopedic Hospital of Wisconsin", facilityId: "facility_ohw",
     owner: "Marcus Webb", priority: "Medium", status: "Closed",
     createdAt: d(-38), dueDate: d(-10), closedAt: d(-12), daysOpen: 26, daysOverdue: 0, validationStatus: "Approved",
   },
   {
     id: "cap-011", title: "Train staff on updated restraint use policy — 6 staff not yet complete",
-    standard: "PC.03.05.01", department: "Nursing", facility: "Ascension SE Wisconsin – Elmbrook",
+    standard: "PC.03.05.01", department: "Nursing",
+    facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
     owner: "Rachel Kim", priority: "High", status: "In Progress",
     createdAt: d(-9), dueDate: d(5), daysOpen: 9, daysOverdue: 0, validationStatus: null,
   },
   {
     id: "cap-012", title: "Document informed consent variance for elective case on 4/28",
-    standard: "RI.01.03.01", department: "Perioperative", facility: "Midwest Orthopedic Specialty Hospital",
+    standard: "RI.01.03.01", department: "Perioperative",
+    facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
     owner: "James Okafor", priority: "Critical", status: "Open",
     createdAt: d(-6), dueDate: d(-1), daysOpen: 6, daysOverdue: 1, validationStatus: null,
   },
@@ -182,11 +200,15 @@ function calcRiskStatus(actions: ExecAction[], trendData: TrendPoint[]): RiskLev
 function generateNarrative(
   actions: ExecAction[],
   kpis: ReturnType<typeof calcKpis>,
-  trendData: TrendPoint[]
+  trendData: TrendPoint[],
+  facilityName: string,
+  isSuperAdmin: boolean,
 ): string {
   const facilityCount = new Set(actions.map((a) => a.facility)).size;
+  const scopeLabel = isSuperAdmin
+    ? `across ${facilityCount} facilit${facilityCount !== 1 ? "ies" : "y"}`
+    : `at ${facilityName}`;
 
-  // Top departments by open load
   const deptMap: Record<string, number> = {};
   for (const a of actions.filter((a) => a.status !== "Closed")) {
     deptMap[a.department] = (deptMap[a.department] || 0) + 1;
@@ -196,13 +218,12 @@ function generateNarrative(
     .slice(0, 2)
     .map(([d]) => d);
 
-  // Trend direction
   const recent = trendData.slice(-4);
   const recentOpened = recent.reduce((s, w) => s + w.opened, 0);
   const recentClosed = recent.reduce((s, w) => s + w.closed, 0);
   const trendImproving = recentClosed >= recentOpened;
 
-  let text = `As of ${format(TODAY, "MMMM d, yyyy")}, there are ${kpis.open} open corrective action${kpis.open !== 1 ? "s" : ""} across ${facilityCount} facilit${facilityCount !== 1 ? "ies" : "y"}.`;
+  let text = `As of ${format(TODAY, "MMMM d, yyyy")}, there are ${kpis.open} open corrective action${kpis.open !== 1 ? "s" : ""} ${scopeLabel}.`;
 
   if (kpis.overdue > 0) {
     text += ` ${kpis.overdue} item${kpis.overdue !== 1 ? "s are" : " is"} past due`;
@@ -305,29 +326,22 @@ const RISK_CONFIG = {
 
 // ── Export Helpers ─────────────────────────────────────────────────────────
 
-function exportCsv(actions: ExecAction[]) {
+function exportCsv(actions: ExecAction[], facilityName: string) {
   const headers = ["ID", "Title", "Standard", "Department", "Facility", "Owner", "Priority", "Status", "Due Date", "Days Open", "Days Overdue"];
   const rows = actions.map((a) => [a.id, `"${a.title}"`, a.standard, a.department, a.facility, a.owner, a.priority, a.status, a.dueDate, a.daysOpen, a.daysOverdue]);
   const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
   const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  link.href = url; link.download = `executive-report-${format(TODAY, "yyyy-MM-dd")}.csv`;
-  link.click(); URL.revokeObjectURL(url);
-}
-
-// ── Role Gate ──────────────────────────────────────────────────────────────
-
-function canViewReport(user: { isAdmin?: boolean; roleId?: string | null } | null) {
-  if (!user) return false;
-  if (user.isAdmin) return true;
-  const role = getRoleConfig(user.roleId);
-  return role?.reportingScope === "enterprise" || role?.reportingScope === "own_plus_all";
+  const slug = facilityName.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  link.href = url;
+  link.download = `executive-report-${slug}-${format(TODAY, "yyyy-MM-dd")}.csv`;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const ALL_FACILITIES = ["All Facilities", ...Array.from(new Set(EXEC_MOCK_ACTIONS.map((a) => a.facility)))];
 const ALL_DEPARTMENTS = ["All Departments", ...Array.from(new Set(EXEC_MOCK_ACTIONS.map((a) => a.department))).sort()];
 const ALL_STATUSES: (ActionStatus | "All")[] = ["All", "Open", "In Progress", "Pending Validation", "Closed"];
 const ALL_PRIORITIES: (ActionPriority | "All")[] = ["All", "Critical", "High", "Medium", "Low"];
@@ -335,30 +349,58 @@ const ALL_PRIORITIES: (ActionPriority | "All")[] = ["All", "Critical", "High", "
 // ── Main Page ──────────────────────────────────────────────────────────────
 
 export default function ExecutiveReportPage() {
-  const { user } = useAuth();
+  const facilityAuth = useFacilityAuth();
+  const { user, facilityId: scopedFacilityId, facilityName: scopedFacilityName, permissions, isSuperAdmin } = facilityAuth;
   const [, setLocation] = useLocation();
 
-  const [facility, setFacility] = useState("All Facilities");
+  // Facility selector only meaningful for super_admin
+  const [selectedFacility, setSelectedFacility] = useState("All Facilities");
   const [department, setDepartment] = useState("All Departments");
   const [status, setStatus] = useState<ActionStatus | "All">("All");
   const [priority, setPriority] = useState<ActionPriority | "All">("All");
   const [tableExpanded, setTableExpanded] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const filtered = useMemo(() => EXEC_MOCK_ACTIONS.filter((a) =>
-    (facility === "All Facilities" || a.facility === facility) &&
-    (department === "All Departments" || a.department === department) &&
-    (status === "All" || a.status === status) &&
-    (priority === "All" || a.priority === priority)
-  ), [facility, department, status, priority]);
+  // Audit log when executive report is opened
+  useEffect(() => {
+    if (permissions.canViewExecutiveReport && user !== undefined) {
+      auditLog({
+        userId: user?.id ?? null,
+        role: facilityAuth.facilityRole,
+        facilityId: scopedFacilityId,
+        facilityName: scopedFacilityName,
+        action: "executive_report_viewed",
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const filtered = useMemo(() => {
+    return EXEC_MOCK_ACTIONS.filter((a) => {
+      // Always enforce facility scope — CEO/admin never see another hospital's data
+      if (!isSuperAdmin && scopedFacilityId && a.facilityId !== scopedFacilityId) return false;
+      // Super-admin can optionally filter by facility via the selector
+      if (isSuperAdmin && selectedFacility !== "All Facilities" && a.facility !== selectedFacility) return false;
+      // User-applied filters (department, status, priority)
+      if (department !== "All Departments" && a.department !== department) return false;
+      if (status !== "All" && a.status !== status) return false;
+      if (priority !== "All" && a.priority !== priority) return false;
+      return true;
+    });
+  }, [isSuperAdmin, scopedFacilityId, selectedFacility, department, status, priority]);
 
   const kpis = useMemo(() => calcKpis(filtered), [filtered]);
   const trendData = useMemo(() => buildTrendData(filtered), [filtered]);
   const deptBreakdown = useMemo(() => buildDeptBreakdown(filtered), [filtered]);
   const attentionList = useMemo(() => sortForAttention(filtered), [filtered]);
   const riskLevel = useMemo(() => calcRiskStatus(filtered, trendData), [filtered, trendData]);
-  const narrative = useMemo(() => generateNarrative(filtered, kpis, trendData), [filtered, kpis, trendData]);
-  const hasFilters = facility !== "All Facilities" || department !== "All Departments" || status !== "All" || priority !== "All";
+  const narrative = useMemo(
+    () => generateNarrative(filtered, kpis, trendData, scopedFacilityName, isSuperAdmin),
+    [filtered, kpis, trendData, scopedFacilityName, isSuperAdmin]
+  );
+
+  const hasFilters = (isSuperAdmin && selectedFacility !== "All Facilities")
+    || department !== "All Departments" || status !== "All" || priority !== "All";
 
   const recent = trendData.slice(-4);
   const recentOpened = recent.reduce((s, w) => s + w.opened, 0);
@@ -368,15 +410,18 @@ export default function ExecutiveReportPage() {
   const riskCfg = RISK_CONFIG[riskLevel];
   const RiskIcon = riskCfg.Icon;
 
-  if (!canViewReport(user)) {
+  // ── Access gate ────────────────────────────────────────────────────────────
+  if (!permissions.canViewExecutiveReport) {
     return (
       <div className="min-h-screen flex items-center justify-center p-6">
         <div className="max-w-sm text-center flex flex-col items-center gap-4">
           <div className="w-14 h-14 rounded-2xl bg-destructive/15 flex items-center justify-center">
-            <AlertTriangle size={28} className="text-destructive" />
+            <Lock size={28} className="text-destructive" />
           </div>
           <h2 className="text-xl font-bold" data-testid="text-access-denied">Access Restricted</h2>
-          <p className="text-sm text-muted-foreground">This report is available to Admin, Compliance Officer, and Leadership roles only.</p>
+          <p className="text-sm text-muted-foreground">
+            The Executive Readiness Report is available to Admin, CEO, and Compliance Officer roles only.
+          </p>
           <Button variant="outline" onClick={() => setLocation("/")} data-testid="button-go-home">
             <ArrowLeft size={14} className="mr-1.5" /> Back to Dashboard
           </Button>
@@ -394,21 +439,29 @@ export default function ExecutiveReportPage() {
           <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
             <ArrowLeft size={20} />
           </Button>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <TrendingUp size={16} className="text-primary" />
               <h2 className="font-bold text-base" data-testid="text-page-title">Executive Readiness Report</h2>
             </div>
-            <p className="text-xs text-muted-foreground">Corrective Action Plan · {format(TODAY, "MMMM d, yyyy")}</p>
+            <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
+              {scopedFacilityName} &middot; {format(TODAY, "MMMM d, yyyy")}
+            </p>
           </div>
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => setFiltersOpen((v) => !v)} data-testid="button-toggle-filters">
               <Filter size={13} className="mr-1.5" /> Filters {hasFilters && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-primary inline-block" />}
             </Button>
-            <Button variant="outline" size="sm" onClick={() => exportCsv(filtered)} data-testid="button-export-csv">
+            <Button variant="outline" size="sm" onClick={() => {
+              exportCsv(filtered, scopedFacilityName);
+              auditLog({ userId: user?.id ?? null, role: facilityAuth.facilityRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_csv_export", meta: { count: filtered.length } });
+            }} data-testid="button-export-csv">
               <Download size={13} className="mr-1.5" /> CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={() => window.print()} data-testid="button-export-pdf">
+            <Button variant="outline" size="sm" onClick={() => {
+              window.print();
+              auditLog({ userId: user?.id ?? null, role: facilityAuth.facilityRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_pdf_export" });
+            }} data-testid="button-export-pdf">
               <Printer size={13} className="mr-1.5" /> PDF
             </Button>
           </div>
@@ -424,16 +477,26 @@ export default function ExecutiveReportPage() {
               className="overflow-hidden border-t border-white/8"
             >
               <div className="max-w-4xl mx-auto px-4 py-3 flex flex-wrap gap-2 items-center" data-testid="container-filters">
-                <Select value={facility} onValueChange={setFacility}>
-                  <SelectTrigger className="h-8 text-xs w-52" data-testid="select-facility">
-                    <Building2 size={11} className="mr-1.5 text-muted-foreground flex-shrink-0" />
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>{ALL_FACILITIES.map((f) => <SelectItem key={f} value={f}>{f}</SelectItem>)}</SelectContent>
-                </Select>
+
+                {/* Facility selector — super_admin only */}
+                {isSuperAdmin && (
+                  <Select value={selectedFacility} onValueChange={setSelectedFacility}>
+                    <SelectTrigger className="h-8 text-xs w-56" data-testid="select-facility">
+                      <Building2 size={11} className="mr-1.5 text-muted-foreground flex-shrink-0" />
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="All Facilities">All Facilities</SelectItem>
+                      {MOCK_FACILITIES.map((f) => (
+                        <SelectItem key={f.id} value={f.name}>{f.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+
                 <Select value={department} onValueChange={setDepartment}>
                   <SelectTrigger className="h-8 text-xs w-44" data-testid="select-department"><SelectValue /></SelectTrigger>
-                  <SelectContent>{ALL_DEPARTMENTS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}</SelectContent>
+                  <SelectContent>{ALL_DEPARTMENTS.map((dep) => <SelectItem key={dep} value={dep}>{dep}</SelectItem>)}</SelectContent>
                 </Select>
                 <Select value={status} onValueChange={(v) => setStatus(v as ActionStatus | "All")}>
                   <SelectTrigger className="h-8 text-xs w-40" data-testid="select-status"><SelectValue /></SelectTrigger>
@@ -446,7 +509,7 @@ export default function ExecutiveReportPage() {
                   <SelectContent>{ALL_PRIORITIES.map((p) => <SelectItem key={p} value={p}>{p === "All" ? "All Priorities" : p}</SelectItem>)}</SelectContent>
                 </Select>
                 {hasFilters && (
-                  <button onClick={() => { setFacility("All Facilities"); setDepartment("All Departments"); setStatus("All"); setPriority("All"); }}
+                  <button onClick={() => { setSelectedFacility("All Facilities"); setDepartment("All Departments"); setStatus("All"); setPriority("All"); }}
                     className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1" data-testid="button-clear-filters">
                     <X size={11} /> Clear all
                   </button>
@@ -513,6 +576,11 @@ export default function ExecutiveReportPage() {
             {kpis.criticalOverdue === 0 && kpis.overdue === 0 && (
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border bg-green-500/10 border-green-500/25 text-green-400" data-testid="pill-on-track">
                 <CheckCircle2 size={11} /> All actions on track
+              </span>
+            )}
+            {!isSuperAdmin && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border bg-muted/40 border-border text-muted-foreground" data-testid="pill-facility-scope">
+                <Building2 size={11} /> {scopedFacilityName}
               </span>
             )}
           </div>
@@ -707,4 +775,3 @@ export default function ExecutiveReportPage() {
     </div>
   );
 }
-

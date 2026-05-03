@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -13,6 +13,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
+import { useFacilityAuth } from "@/lib/facility-auth";
+import { auditLog } from "@/lib/audit-log";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -28,6 +30,8 @@ interface CorrectiveAction {
   dueDate: string;
   status: ActionStatus;
   priority: ActionPriority;
+  facilityId: string;
+  facilityName: string;
   notes?: string;
 }
 
@@ -42,8 +46,12 @@ interface CreateActionForm {
 }
 
 // ── Mock Data ──────────────────────────────────────────────────────────────
+// Two facilities to prove scoped filtering:
+//   facility_mosh = Midwest Orthopedic Specialty Hospital
+//   facility_ohw  = Orthopedic Hospital of Wisconsin
 
 const MOCK_ACTIONS: CorrectiveAction[] = [
+  // ── facility_mosh ──────────────────────────────────────────────────────
   {
     id: "cap-001",
     title: "Document corrective action for temp excursion — med fridge #3",
@@ -53,6 +61,8 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     dueDate: "2026-05-10",
     status: "Open",
     priority: "Critical",
+    facilityId: "facility_mosh",
+    facilityName: "Midwest Orthopedic Specialty Hospital",
     notes: "Temp log showed 42°F for 4 hours. No corrective action was documented.",
   },
   {
@@ -64,6 +74,8 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     dueDate: "2026-05-08",
     status: "In Progress",
     priority: "Critical",
+    facilityId: "facility_mosh",
+    facilityName: "Midwest Orthopedic Specialty Hospital",
     notes: "Two cylinders found unsecured against wall. Bracket order placed.",
   },
   {
@@ -75,6 +87,8 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     dueDate: "2026-05-14",
     status: "Open",
     priority: "High",
+    facilityId: "facility_mosh",
+    facilityName: "Midwest Orthopedic Specialty Hospital",
     notes: "",
   },
   {
@@ -86,6 +100,8 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     dueDate: "2026-05-20",
     status: "Pending Validation",
     priority: "High",
+    facilityId: "facility_mosh",
+    facilityName: "Midwest Orthopedic Specialty Hospital",
     notes: "New log template distributed. Supervisor needs to verify compliance.",
   },
   {
@@ -97,6 +113,8 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     dueDate: "2026-04-28",
     status: "Closed",
     priority: "Medium",
+    facilityId: "facility_mosh",
+    facilityName: "Midwest Orthopedic Specialty Hospital",
     notes: "Biomedical completed PM and affixed updated sticker on 4/27.",
   },
   {
@@ -108,6 +126,8 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     dueDate: "2026-05-30",
     status: "Open",
     priority: "Medium",
+    facilityId: "facility_mosh",
+    facilityName: "Midwest Orthopedic Specialty Hospital",
     notes: "",
   },
   {
@@ -119,7 +139,50 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     dueDate: "2026-04-15",
     status: "Closed",
     priority: "Low",
+    facilityId: "facility_mosh",
+    facilityName: "Midwest Orthopedic Specialty Hospital",
     notes: "All signatures collected and filed.",
+  },
+
+  // ── facility_ohw ───────────────────────────────────────────────────────
+  {
+    id: "cap-ohw-001",
+    title: "Update fire extinguisher inspection tags — 3 expired in OR corridor",
+    standard: "EC.02.03.05",
+    department: "Facilities",
+    owner: "Marcus Webb",
+    dueDate: "2026-05-12",
+    status: "Open",
+    priority: "High",
+    facilityId: "facility_ohw",
+    facilityName: "Orthopedic Hospital of Wisconsin",
+    notes: "Biomedical to schedule re-inspection before 5/12.",
+  },
+  {
+    id: "cap-ohw-002",
+    title: "Train staff on updated restraint use policy — 6 staff not yet complete",
+    standard: "PC.03.05.01",
+    department: "Nursing",
+    owner: "Rachel Kim",
+    dueDate: "2026-05-18",
+    status: "In Progress",
+    priority: "High",
+    facilityId: "facility_ohw",
+    facilityName: "Orthopedic Hospital of Wisconsin",
+    notes: "Online module assigned. 6 staff have not completed as of last check.",
+  },
+  {
+    id: "cap-ohw-003",
+    title: "Reconcile missing entries in medication administration record for unit 3B",
+    standard: "RC.02.01.01",
+    department: "Nursing",
+    owner: "Yolanda Morris",
+    dueDate: "2026-05-09",
+    status: "Open",
+    priority: "Critical",
+    facilityId: "facility_ohw",
+    facilityName: "Orthopedic Hospital of Wisconsin",
+    notes: "Three entries missing date/time signature from April shift.",
   },
 ];
 
@@ -178,10 +241,14 @@ function CreateActionDialog({
   open,
   onClose,
   onSave,
+  defaultFacilityId,
+  defaultFacilityName,
 }: {
   open: boolean;
   onClose: () => void;
   onSave: (action: CorrectiveAction) => void;
+  defaultFacilityId: string;
+  defaultFacilityName: string;
 }) {
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreateActionForm>({
     defaultValues: { title: "", standard: "", department: "", owner: "", dueDate: "", priority: "Medium", notes: "" },
@@ -201,6 +268,8 @@ function CreateActionDialog({
       dueDate: data.dueDate,
       status: "Open",
       priority: data.priority,
+      facilityId: defaultFacilityId,
+      facilityName: defaultFacilityName,
       notes: data.notes,
     };
     onSave(newAction);
@@ -343,7 +412,7 @@ function CreateActionDialog({
 
 // ── Action Card ────────────────────────────────────────────────────────────
 
-function ActionCard({ action }: { action: CorrectiveAction }) {
+function ActionCard({ action, showFacility }: { action: CorrectiveAction; showFacility: boolean }) {
   const sc = statusConfig(action.status);
   const pc = priorityConfig(action.priority);
   const overdue = isOverdue(action);
@@ -370,6 +439,12 @@ function ActionCard({ action }: { action: CorrectiveAction }) {
           <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border bg-destructive/15 border-destructive/25 text-destructive" data-testid={`badge-overdue-${action.id}`}>
             <AlertTriangle size={10} />
             Overdue
+          </span>
+        )}
+        {showFacility && (
+          <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-muted/30 border-border text-muted-foreground" data-testid={`badge-facility-${action.id}`}>
+            <Building2 size={9} />
+            {action.facilityName}
           </span>
         )}
       </div>
@@ -413,18 +488,27 @@ function ActionCard({ action }: { action: CorrectiveAction }) {
 
 export default function CorrectiveActionPage() {
   const [, setLocation] = useLocation();
+  const facilityAuth = useFacilityAuth();
+  const { facilityId: scopedFacilityId, facilityName: scopedFacilityName, isSuperAdmin, permissions } = facilityAuth;
+
   const [actions, setActions] = useState<CorrectiveAction[]>(MOCK_ACTIONS);
   const [activeStatus, setActiveStatus] = useState<ActionStatus | "All">("All");
   const [activePriority, setActivePriority] = useState<ActionPriority | "All">("All");
   const [createOpen, setCreateOpen] = useState(false);
 
-  const openCount = actions.filter((a) => a.status === "Open").length;
-  const inProgressCount = actions.filter((a) => a.status === "In Progress").length;
-  const pendingCount = actions.filter((a) => a.status === "Pending Validation").length;
-  const closedCount = actions.filter((a) => a.status === "Closed").length;
-  const overdueCount = actions.filter(isOverdue).length;
+  // Facility-scoped base list — CEO/admin never see another hospital's data
+  const facilityActions = useMemo(() => {
+    if (isSuperAdmin || !scopedFacilityId) return actions;
+    return actions.filter((a) => a.facilityId === scopedFacilityId);
+  }, [actions, isSuperAdmin, scopedFacilityId]);
 
-  const filtered = actions.filter((a) => {
+  const openCount = facilityActions.filter((a) => a.status === "Open").length;
+  const inProgressCount = facilityActions.filter((a) => a.status === "In Progress").length;
+  const pendingCount = facilityActions.filter((a) => a.status === "Pending Validation").length;
+  const closedCount = facilityActions.filter((a) => a.status === "Closed").length;
+  const overdueCount = facilityActions.filter(isOverdue).length;
+
+  const filtered = facilityActions.filter((a) => {
     const matchStatus = activeStatus === "All" || a.status === activeStatus;
     const matchPriority = activePriority === "All" || a.priority === activePriority;
     return matchStatus && matchPriority;
@@ -432,6 +516,14 @@ export default function CorrectiveActionPage() {
 
   function handleSave(action: CorrectiveAction) {
     setActions((prev) => [action, ...prev]);
+    auditLog({
+      userId: facilityAuth.user?.id ?? null,
+      role: facilityAuth.facilityRole,
+      facilityId: scopedFacilityId,
+      facilityName: scopedFacilityName,
+      action: "corrective_action_created",
+      meta: { actionId: action.id, priority: action.priority },
+    });
   }
 
   return (
@@ -442,17 +534,21 @@ export default function CorrectiveActionPage() {
           <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
             <ArrowLeft size={20} />
           </Button>
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <ClipboardCheck size={16} className="text-primary" />
               <h2 className="font-bold text-base" data-testid="text-page-title">Corrective Action Plan</h2>
             </div>
-            <p className="text-xs text-muted-foreground">Track gaps, assign fixes, document closure</p>
+            <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
+              {scopedFacilityName} &middot; Track gaps, assign fixes, document closure
+            </p>
           </div>
-          <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-action-header">
-            <Plus size={14} className="mr-1.5" />
-            Create Action
-          </Button>
+          {permissions.canCreateActions && (
+            <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-action-header">
+              <Plus size={14} className="mr-1.5" />
+              Create Action
+            </Button>
+          )}
         </div>
       </div>
 
@@ -550,12 +646,16 @@ export default function CorrectiveActionPage() {
               <ClipboardCheck size={32} className="text-muted-foreground/40" />
               <p className="text-sm font-semibold text-muted-foreground">No actions match this filter</p>
               <p className="text-xs text-muted-foreground/60">Try clearing filters or create a new action</p>
-              <Button size="sm" className="mt-2" onClick={() => setCreateOpen(true)} data-testid="button-create-from-empty">
-                <Plus size={13} className="mr-1" /> Create Action
-              </Button>
+              {permissions.canCreateActions && (
+                <Button size="sm" className="mt-2" onClick={() => setCreateOpen(true)} data-testid="button-create-from-empty">
+                  <Plus size={13} className="mr-1" /> Create Action
+                </Button>
+              )}
             </div>
           ) : (
-            filtered.map((action) => <ActionCard key={action.id} action={action} />)
+            filtered.map((action) => (
+              <ActionCard key={action.id} action={action} showFacility={isSuperAdmin} />
+            ))
           )}
         </div>
       </div>
@@ -565,6 +665,8 @@ export default function CorrectiveActionPage() {
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onSave={handleSave}
+        defaultFacilityId={scopedFacilityId ?? "facility_mosh"}
+        defaultFacilityName={scopedFacilityName}
       />
     </div>
   );
