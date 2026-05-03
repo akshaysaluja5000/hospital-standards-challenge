@@ -8,33 +8,33 @@ import { PathwayMenu } from "@/components/pathway-menu";
 const features = [
   {
     icon: CalendarCheck,
-    title: "Gamified 20-question levels",
-    description: "Bite-sized quizzes covering real Joint Commission standards, built for busy schedules",
+    title: "Role-based readiness checks staff actually complete",
+    description: "Short, focused sessions mapped to real standards — built for staff who can't afford a 4-hour in-service.",
   },
   {
     icon: BarChart3,
-    title: "Real-time unit dashboards",
-    description: "Track team compliance readiness at a glance",
+    title: "Department readiness at a glance",
+    description: "See completion rates, accuracy, and knowledge gaps by unit — before a surveyor does.",
   },
   {
     icon: FileText,
-    title: "Pre-built Joint Commission tracer content",
-    description: "Expertly crafted questions covering key standards",
+    title: "Tracer-style questions modeled on real survey workflows",
+    description: "Questions built from the same standards surveyors cite, not generic compliance trivia.",
   },
   {
     icon: BookOpen,
-    title: "Compliance Handbook reference guide",
-    description: "Comprehensive study materials always at your fingertips",
+    title: "Integrated standards handbook",
+    description: "Full reference guide embedded in the platform — so staff can study the standard, not just guess at it.",
   },
   {
     icon: Search,
     title: "Deep Dive Tracer Mode",
-    description: "Go beyond the basics\u2014answer correctly to unlock expert\u2011level follow\u2011up questions that mirror real Joint Commission tracer rounds",
+    description: "Correct answers unlock expert follow-up questions that mirror real tracer rounds — so staff aren't surprised when it counts.",
   },
   {
     icon: BrainCircuit,
-    title: "AI\u2011Enhanced Learning",
-    description: "AI tutor that explains missed questions in plain language and bedside scenarios",
+    title: "AI-powered gap closing",
+    description: "Missed a question? An AI tutor explains why in plain language, with real bedside context.",
   },
 ];
 

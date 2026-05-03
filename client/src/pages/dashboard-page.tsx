@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -638,6 +638,96 @@ export default function DashboardPage() {
                 <p className="text-xs text-chart-1 font-bold mt-2">Goal complete! Keep going for bonus XP!</p>
               )}
             </motion.div>
+
+            {/* Readiness Gaps Panel */}
+            {(() => {
+              const attempted = assignedFilteredLevels
+                .map(level => ({ level, prog: progressMap.get(level.id) }))
+                .filter(({ prog }) => prog && prog.totalQuestions > 0)
+                .map(({ level, prog }) => ({
+                  level,
+                  pct: prog!.totalQuestions > 0 ? Math.round((prog!.bestScore / prog!.totalQuestions) * 100) : 0,
+                }))
+                .sort((a, b) => a.pct - b.pct);
+
+              const weakest = attempted.filter(x => x.pct < 80).slice(0, 3);
+
+              const diagWeak: string[] = [];
+              if (diagnosticResults && diagnosticResults.length > 0 && (diagnosticResults[0] as any).sectionScores) {
+                const ss = (diagnosticResults[0] as any).sectionScores as Record<string, { correct: number; total: number }>;
+                Object.entries(ss)
+                  .filter(([, s]) => s.total > 0 && s.correct / s.total < 0.6)
+                  .sort((a, b) => (a[1].correct / a[1].total) - (b[1].correct / b[1].total))
+                  .slice(0, 2)
+                  .forEach(([id]) => diagWeak.push(id));
+              }
+
+              const SECTION_NAMES: Record<string, string> = {
+                transport: "Transport of Instruments", environment: "Environment & Surfaces",
+                segregation: "Clean vs. Dirty", sterile_storage: "Sterile Storage",
+                instruments: "Instrument Integrity", facilities: "Facilities & Equipment",
+                spd_decontam: "SPD & Decontamination", or_sterile_field: "OR & Sterile Technique",
+                universal_protocol: "Surgical Safety & Consent", patient_care_docs: "Patient Care & Docs",
+                eoc_safety: "EOC & Safety Compliance",
+              };
+
+              if (weakest.length === 0 && diagWeak.length === 0) return null;
+
+              return (
+                <motion.div
+                  className="rounded-2xl bg-card border border-card-border p-4"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  data-testid="card-readiness-gaps"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <ShieldAlert size={15} className="text-amber-500" />
+                    <h3 className="font-bold text-sm">Focus Areas</h3>
+                  </div>
+
+                  {weakest.length > 0 && (
+                    <div className="space-y-2 mb-3">
+                      {weakest.map(({ level, pct }) => (
+                        <div key={level.id} className="flex items-center gap-2" data-testid={`row-gap-${level.id}`}>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-semibold truncate">{level.title}</p>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                              <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${pct >= 60 ? "bg-amber-500" : "bg-red-500"}`}
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                              <span className={`text-[10px] font-bold ${pct >= 60 ? "text-amber-500" : "text-red-500"}`}>{pct}%</span>
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => setLocation(`/play/${level.id}`)}
+                            className="flex-shrink-0 text-[10px] font-bold px-2 py-1 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+                            data-testid={`button-gap-retry-${level.id}`}
+                          >
+                            Retry
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {diagWeak.length > 0 && (
+                    <div className="border-t border-border pt-2 mt-2">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">Diagnostic gaps</p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {diagWeak.map(id => (
+                          <span key={id} className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-red-500/10 text-red-500 border border-red-500/20">
+                            {SECTION_NAMES[id] || id}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })()}
 
             {/* XP Bar */}
             <XpBar currentXp={displayXp} />
