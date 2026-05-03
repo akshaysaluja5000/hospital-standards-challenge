@@ -3,69 +3,38 @@ interface AppLogoMarkProps {
 }
 
 export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
-  const width = variant === "lg" ? 72 : 34;
-  const height = variant === "lg" ? 80 : 38;
-  const id = variant;
+  const size = variant === "lg" ? 64 : 34;
 
   return (
     <svg
-      width={width}
-      height={height}
-      viewBox="0 0 36 42"
+      width={size}
+      height={size}
+      viewBox="0 0 44 44"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       style={{ flexShrink: 0 }}
     >
-      <defs>
-        <linearGradient id={`g-${id}`} x1="18" y1="0" x2="18" y2="42" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#60A5FA" />
-          <stop offset="100%" stopColor="#2563EB" />
-        </linearGradient>
-        <filter id={`ds-${id}`} x="-15%" y="-8%" width="130%" height="125%">
-          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#1E3A8A" floodOpacity="0.6" />
-        </filter>
-        <clipPath id={`c-${id}`}>
-          <circle cx="18" cy="21" r="17" />
-        </clipPath>
-      </defs>
-
-      {/* Circle body */}
-      <circle cx="18" cy="21" r="17" fill={`url(#g-${id})`} filter={`url(#ds-${id})`} />
-
-      {/* Circle inner border */}
-      <circle cx="18" cy="21" r="16.3" fill="none" stroke="white" strokeOpacity="0.2" strokeWidth="0.75" />
-
-      {/* Compliance checkmark */}
+      {/* Circle arc with ~60° gap at 1 o'clock position
+          Center (22,22) radius 18 — arc from 2 o'clock clockwise to 12 o'clock */}
       <path
-        d="M13 12.5 L16.5 16 L23 9"
+        d="M 37.6 13 A 18 18 0 1 1 22 4"
         stroke="white"
-        strokeWidth="2.4"
+        strokeWidth="3"
         strokeLinecap="round"
-        strokeLinejoin="round"
         fill="none"
       />
-
-      {/* SRP band — simple rectangle clipped to circle */}
-      <rect
-        x="1" y="20.5" width="34" height="9"
-        fill="white"
-        clipPath={`url(#c-${id})`}
-      />
-
-      {/* SRP text */}
+      {/* AR monogram */}
       <text
-        x="18"
-        y="25.2"
+        x="22"
+        y="25"
         textAnchor="middle"
         dominantBaseline="middle"
-        fontFamily="'Nunito', 'Arial Black', 'Arial', sans-serif"
+        fontFamily="'Arial Black', 'Arial', 'Helvetica', sans-serif"
         fontWeight="900"
-        fontSize="6.5"
-        fill="#091E52"
-        letterSpacing="1.2"
-      >
-        SRP
-      </text>
+        fontSize="17"
+        fill="white"
+        letterSpacing="-1"
+      >AR</text>
     </svg>
   );
 }

@@ -40,7 +40,7 @@ interface SolutionConfig {
 const SOLUTIONS: Record<string, SolutionConfig> = {
   hospitals: {
     slug: "hospitals",
-    pageTitle: "Hospitals — Survey Readiness Platform",
+    pageTitle: "Hospitals — AccreditationReady",
     audience: "For Hospital Compliance Directors",
     heroIcon: Hospital,
     headline: "Compliance Training Built for Hospitals.",
@@ -71,7 +71,7 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
   },
   asc: {
     slug: "asc",
-    pageTitle: "ASCs — Survey Readiness Platform",
+    pageTitle: "ASCs — AccreditationReady",
     audience: "For Ambulatory Surgery Centers",
     heroIcon: Building2,
     headline: "ASC Accreditation Training That Sticks.",
@@ -115,7 +115,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
   useEffect(() => {
     document.title = config.pageTitle;
     return () => {
-      document.title = "Survey Readiness Platform";
+      document.title = "AccreditationReady";
     };
   }, [config.pageTitle]);
 
@@ -143,8 +143,8 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               data-testid="link-home-header"
             >
               <AppLogoMark variant="sm" />
-              <span className="font-black text-lg tracking-tight text-white">
-                Survey Readiness Platform
+              <span className="text-white text-sm tracking-tight">
+                <span className="font-semibold">Accreditation</span><span className="font-bold italic"> Ready</span>
               </span>
             </button>
             <div className="flex items-center gap-2">
@@ -324,7 +324,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             </a>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            Survey Readiness Platform is not affiliated with, endorsed by, or
+            AccreditationReady is not affiliated with, endorsed by, or
             sponsored by The Joint Commission, AAAHC, or CMS. All content is for
             educational and training purposes only.
           </p>

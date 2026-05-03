@@ -1,0 +1,102 @@
+Hero Section
+Headline:
+Know your gaps. Close them before the surveyor does.
+
+Subhead:
+AccreditationReady turns Joint Commission, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
+
+Primary CTA: Start Free Diagnostic
+Secondary CTA: See How It Works
+
+Supporting Line:
+Built on real JC, AAAHC, and CMS standards · No in-service time required
+
+Positioning Strip
+Accreditation readiness shouldn't live in a binder. Now it doesn't.
+
+Problem Section
+Heading:
+Most teams aren't unprepared — they're undertrained.
+
+Body:
+Policies exist. Binders are full. But when a surveyor walks through the door and asks your staff nurse to explain your fall prevention protocol, the answer matters.
+
+In-services are too infrequent and too long to retain
+
+Knowledge gaps stay invisible until survey day
+
+Leaders can't see where their real risk is by department
+
+Solution Section
+Heading:
+Continuous readiness, built into the workday.
+
+Body:
+AccreditationReady converts accreditation standards into short, role-based training sessions staff complete in 10–15 minutes — and gives quality leaders a live readiness dashboard across every unit.
+
+Core Features Section
+Measure Readiness from Day One
+A 25-question diagnostic gives every staff member a personalized baseline. You'll know exactly where your gaps are before a surveyor ever asks.
+
+Train Without Pulling Staff Off the Floor
+Role-based sessions take 10–15 minutes. They fit into real workflows — not ideal schedules that never happen.
+
+See Risk Before Surveyors Do
+Track completion, accuracy, and knowledge gaps by unit. Flag at-risk departments weeks before your survey window.
+
+Simulate Real Survey Scenarios
+Deep Dive Tracer Mode mirrors how surveyors actually probe — so staff aren't caught off guard by unexpected questions.
+
+Understand, Don't Just Memorize
+AI-powered explanations break down missed questions in plain language, with real clinical context your team can actually apply.
+
+How It Works Section
+Heading:
+From baseline to audit-ready in 4 weeks.
+
+Take the diagnostic — know your gaps immediately
+
+Deploy targeted training by department
+
+Monitor readiness on your dashboard weekly
+
+Walk into survey week with documented proof of preparation
+
+Supporting Line:
+Most teams see measurable improvement within the first month.
+
+Proof / Outcome Section
+Heading:
+Stop guessing. Start measuring.
+
+Body:
+Before AccreditationReady, most quality leaders go into survey week with instinct and hope. After:
+
+Baseline vs. final scores show exactly how far you've come
+
+Department-level dashboards show where risk still lives
+
+Staff walk in knowing what surveyors will ask — and how to answer
+
+Diagnostic CTA Section
+Heading:
+How ready is your team right now?
+
+Body:
+Find out in 10 minutes. Take a free 25-question diagnostic across every compliance domain — no studying, no prep, just honest answers that show you where to focus.
+
+CTA: Start Free Diagnostic
+Supporting Line: Instant results · No account required to start
+
+Final CTA Section
+Heading:
+Build readiness that holds up on survey day.
+
+Subhead:
+Give your team a consistent, measurable way to stay accreditation-ready — year-round, not just the week before.
+
+Primary CTA: Create Account
+Secondary CTA: Sign In
+
+Footer Disclaimer
+AccreditationReady is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.

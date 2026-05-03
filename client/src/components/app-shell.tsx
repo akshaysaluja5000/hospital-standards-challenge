@@ -15,10 +15,10 @@ export function AppShell({ children }: AppShellProps) {
         className="sticky top-0 z-50 border-b border-white/10 flex-shrink-0"
         style={{ background: "rgba(7,22,48,0.92)", backdropFilter: "blur(12px)" }}
       >
-        <div className="px-4 h-[58px] flex items-center justify-center gap-3">
+        <div className="px-4 h-[58px] flex items-center justify-center gap-2.5">
           <AppLogoMark variant="sm" />
-          <span className="text-white font-black text-sm tracking-wide">
-            Survey Readiness Platform
+          <span className="text-white text-sm tracking-tight">
+            <span className="font-semibold">Accreditation</span><span className="font-bold italic"> Ready</span>
           </span>
         </div>
       </header>

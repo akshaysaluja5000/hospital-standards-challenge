@@ -41,15 +41,15 @@ export default function TermsPage() {
             <div className="flex flex-col gap-4 text-sm text-muted-foreground leading-relaxed">
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-educational">Educational Purpose</h3>
-                <p>Survey Readiness Platform is designed exclusively for educational and training purposes. Content covers two pathways: hospital compliance aligned with The Joint Commission standards, and ambulatory surgery center (ASC) accreditation aligned with AAAHC, The Joint Commission ASC pathway, and CMS Conditions for Coverage. All content is intended to help healthcare professionals prepare for survey readiness and is not a substitute for official training, certification, or accreditation programs.</p>
+                <p>AccreditationReady is designed exclusively for educational and training purposes. Content covers two pathways: hospital compliance aligned with The Joint Commission standards, and ambulatory surgery center (ASC) accreditation aligned with AAAHC, The Joint Commission ASC pathway, and CMS Conditions for Coverage. All content is intended to help healthcare professionals prepare for survey readiness and is not a substitute for official training, certification, or accreditation programs.</p>
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-license">Per-Facility License</h3>
-                <p>Access to Survey Readiness Platform is provided on a per-facility basis. Each facility receives its own isolated environment for tracking staff compliance training progress. Facility codes are provided by your organization's administrator.</p>
+                <p>Access to AccreditationReady is provided on a per-facility basis. Each facility receives its own isolated environment for tracking staff compliance training progress. Facility codes are provided by your organization's administrator.</p>
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-content">Content Restrictions</h3>
-                <p>All content within Survey Readiness Platform, including questions, explanations, handbook materials, and training resources, is proprietary. Content cannot be resold, reproduced, or distributed without prior written authorization.</p>
+                <p>All content within AccreditationReady, including questions, explanations, handbook materials, and training resources, is proprietary. Content cannot be resold, reproduced, or distributed without prior written authorization.</p>
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-stats">Aggregated Statistics</h3>
@@ -57,7 +57,7 @@ export default function TermsPage() {
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-terms-no-patient">No Patient Data</h3>
-                <p>Survey Readiness Platform does not store, collect, or process any patient data or protected health information (PHI). The platform is strictly limited to staff training and compliance readiness.</p>
+                <p>AccreditationReady does not store, collect, or process any patient data or protected health information (PHI). The platform is strictly limited to staff training and compliance readiness.</p>
               </div>
             </div>
           </Card>
@@ -97,7 +97,7 @@ export default function TermsPage() {
               </div>
               <div>
                 <h3 className="font-bold text-foreground mb-1" data-testid="text-privacy-not-collected">What We Do NOT Collect</h3>
-                <p>Survey Readiness Platform explicitly does not collect:</p>
+                <p>AccreditationReady explicitly does not collect:</p>
                 <ul className="list-disc list-inside mt-1 flex flex-col gap-1">
                   <li>Patient data of any kind</li>
                   <li>Protected Health Information (PHI)</li>
@@ -122,10 +122,10 @@ export default function TermsPage() {
             </div>
             <div className="flex flex-col gap-3 text-sm text-muted-foreground leading-relaxed">
               <p>
-                Survey Readiness Platform is <span className="font-bold text-foreground">not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS</span>. "The Joint Commission" is a registered trademark of The Joint Commission. "AAAHC" refers to the Accreditation Association for Ambulatory Health Care. CMS refers to the Centers for Medicare &amp; Medicaid Services.
+                AccreditationReady is <span className="font-bold text-foreground">not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS</span>. "The Joint Commission" is a registered trademark of The Joint Commission. "AAAHC" refers to the Accreditation Association for Ambulatory Health Care. CMS refers to the Centers for Medicare &amp; Medicaid Services.
               </p>
               <p>
-                All content provided through Survey Readiness Platform is for educational and training purposes only. It is designed to supplement, not replace, official accreditation standards, guidelines, or processes — including those published by The Joint Commission, AAAHC, and CMS.
+                All content provided through AccreditationReady is for educational and training purposes only. It is designed to supplement, not replace, official accreditation standards, guidelines, or processes — including those published by The Joint Commission, AAAHC, and CMS.
               </p>
               <p>
                 Facility administrators and healthcare professionals should always refer to official publications from the relevant accrediting or regulatory body for authoritative guidance on compliance requirements. Hospital pathway content references The Joint Commission standards. ASC pathway content references AAAHC Accreditation Handbook standards and CMS Conditions for Coverage.

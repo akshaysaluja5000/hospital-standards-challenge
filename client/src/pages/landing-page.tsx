@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles } from "lucide-react";
+import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck } from "lucide-react";
 import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
@@ -7,50 +7,43 @@ import { PathwayMenu } from "@/components/pathway-menu";
 
 const features = [
   {
+    icon: Stethoscope,
+    title: "Measure Readiness from Day One",
+    description: "A 25-question diagnostic gives every staff member a personalized baseline. You'll know exactly where your gaps are before a surveyor ever asks.",
+  },
+  {
     icon: CalendarCheck,
-    title: "Role-based readiness checks staff actually complete",
-    description: "Short, focused sessions mapped to real standards — built for staff who can't afford a 4-hour in-service.",
+    title: "Train Without Pulling Staff Off the Floor",
+    description: "Role-based sessions take 10–15 minutes. They fit into real workflows — not ideal schedules that never happen.",
   },
   {
     icon: BarChart3,
-    title: "Department readiness at a glance",
-    description: "See completion rates, accuracy, and knowledge gaps by unit — before a surveyor does.",
-  },
-  {
-    icon: FileText,
-    title: "Practice the exact questions surveyors ask",
-    description: "Questions built from the same standards surveyors cite — not generic compliance trivia.",
-  },
-  {
-    icon: BookOpen,
-    title: "Reference the standard while you learn it",
-    description: "Full standards handbook embedded in the platform — so staff study the rule, not just guess at the answer.",
+    title: "See Risk Before Surveyors Do",
+    description: "Track completion, accuracy, and knowledge gaps by unit. Flag at-risk departments weeks before your survey window.",
   },
   {
     icon: Search,
-    title: "Deep Dive Tracer Mode",
-    description: "Correct answers unlock expert follow-up questions that mirror real tracer rounds — so staff aren't surprised when it counts.",
+    title: "Simulate Real Survey Scenarios",
+    description: "Deep Dive Tracer Mode mirrors how surveyors actually probe — so staff aren't caught off guard by unexpected questions.",
   },
   {
     icon: BrainCircuit,
-    title: "Understand why you missed it, not just what's right",
-    description: "An AI tutor explains every missed question in plain language, with real bedside context.",
+    title: "Understand, Don't Just Memorize",
+    description: "AI-powered explanations break down missed questions in plain language, with real clinical context your team can actually apply.",
   },
 ];
 
-const leaderBullets = [
-  "Track completion, accuracy, and knowledge gaps by unit — spot at-risk departments before a surveyor does.",
-  "Built on real AAAHC v44, Joint Commission, and CMS 416 standards — not generic compliance content.",
-  "25-question diagnostic gives every staff member a personalized readiness baseline on day one.",
-  "Deep Dive Tracer mode mirrors real survey questioning so staff aren't surprised when it counts.",
-  "AI-powered explanations close knowledge gaps in plain language, right after each question.",
+const howItWorksSteps = [
+  "Take the diagnostic — know your gaps immediately",
+  "Deploy targeted training by department",
+  "Monitor readiness on your dashboard weekly",
+  "Walk into survey week with documented proof of preparation",
 ];
 
-const steps = [
-  "Pick one unit to start with.",
-  "Invite 10+ staff members to play 10\u201315 minutes a week for 4 weeks.",
-  "Review the dashboard to see who\u2019s engaging and where knowledge gaps are.",
-  "Use the data to focus your next in\u2011service or mock tracer.",
+const proofPoints = [
+  "Baseline vs. final scores show exactly how far you've come",
+  "Department-level dashboards show where risk still lives",
+  "Staff walk in knowing what surveyors will ask — and how to answer",
 ];
 
 export default function LandingPage() {
@@ -71,9 +64,11 @@ export default function LandingPage() {
         style={{ background: "rgba(7,22,48,0.95)", backdropFilter: "blur(12px)" }}
       >
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <AppLogoMark variant="sm" />
-            <span className="font-black text-lg tracking-tight text-white" data-testid="text-app-name">Survey Readiness Platform</span>
+            <span className="text-white text-sm tracking-tight" data-testid="text-app-name">
+              <span className="font-semibold">Accreditation</span><span className="font-bold italic"> Ready</span>
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <PathwayMenu />
@@ -111,35 +106,84 @@ export default function LandingPage() {
           >
             <AppLogoMark variant="lg" />
             <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
-              Close compliance gaps before the surveyor arrives
+              Know your gaps. Close them before the surveyor does.
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
-              Survey readiness training built for hospital and ASC staff who don't have time for another in-service. Track competency by department, identify weak areas, and keep your team audit-ready — in 10–15 minutes a day.
+              AccreditationReady turns Joint Commission, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
                 size="lg"
-                onClick={scrollToFeatures}
+                onClick={() => setLocation("/auth")}
                 className="bg-white text-[#0D2659] hover:bg-white/90 font-bold shadow-lg shadow-black/30"
-                data-testid="button-hero-how-it-works"
+                data-testid="button-hero-diagnostic"
               >
-                See How It Works
+                Start Free Diagnostic
                 <ArrowRight size={18} className="ml-2" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                onClick={() => setLocation("/auth")}
+                onClick={scrollToFeatures}
                 className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
-                data-testid="button-hero-create-account"
+                data-testid="button-hero-how-it-works"
               >
-                Create Account
+                See How It Works
               </Button>
             </div>
+            <p className="text-sm text-white/50 mt-1" data-testid="text-hero-supporting">
+              Built on real JC, AAAHC, and CMS standards · No in-service time required
+            </p>
           </motion.div>
         </section>
 
-        {/* ── For Leaders ── */}
+        {/* ── Positioning Strip ── */}
+        <section className="border-y border-white/10 py-8" style={{ background: "rgba(255,255,255,0.04)" }}>
+          <div className="max-w-5xl mx-auto px-4 text-center">
+            <p className="text-lg md:text-xl font-semibold text-white/80" data-testid="text-positioning-strip">
+              Accreditation readiness shouldn't live in a binder. Now it doesn't.
+            </p>
+          </div>
+        </section>
+
+        {/* ── Problem Section ── */}
+        <section className="py-16 md:py-20">
+          <div className="max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-400/20 flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle size={20} className="text-red-400" />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-problem-heading">
+                  Most teams aren't unprepared — they're undertrained.
+                </h2>
+              </div>
+              <p className="text-base text-white/70 leading-relaxed mb-6 max-w-3xl" data-testid="text-problem-body">
+                Policies exist. Binders are full. But when a surveyor walks through the door and asks your staff nurse to explain your fall prevention protocol, the answer matters.
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "In-services are too infrequent and too long to retain",
+                  "Knowledge gaps stay invisible until survey day",
+                  "Leaders can't see where their real risk is by department",
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-3" data-testid={`text-problem-bullet-${i}`}>
+                    <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                    </div>
+                    <span className="text-base text-white/75 leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── Solution Section ── */}
         <section className="border-y border-white/10 py-16 md:py-20" style={{ background: "rgba(255,255,255,0.04)" }}>
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
@@ -148,43 +192,16 @@ export default function LandingPage() {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
-                  <Users size={22} className="text-blue-300" />
+                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck size={20} className="text-blue-300" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-leaders-heading">
-                  For Nursing, Quality, and Education Leaders
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-solution-heading">
+                  Continuous readiness, built into the workday.
                 </h2>
               </div>
-              <p className="text-base text-white/70 leading-relaxed max-w-3xl mb-6" data-testid="text-leaders-description">
-                Survey Readiness Platform turns standards review into short, focused sessions staff actually complete&#8212;without adding more in&#8209;service time.
+              <p className="text-base text-white/70 leading-relaxed max-w-3xl" data-testid="text-solution-body">
+                AccreditationReady converts accreditation standards into short, role-based training sessions staff complete in 10–15 minutes — and gives quality leaders a live readiness dashboard across every unit.
               </p>
-              <ul className="space-y-3 mb-8">
-                {leaderBullets.map((bullet, i) => (
-                  <li key={i} className="flex items-start gap-3" data-testid={`text-leader-bullet-${i}`}>
-                    <CheckCircle2 size={20} className="text-blue-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-base text-white/80 leading-relaxed">{bullet}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center">
-                  <TrendingUp size={22} className="text-blue-300" />
-                </div>
-                <h3 className="text-xl font-black tracking-tight text-white" data-testid="text-get-started-heading">
-                  How to Get Started
-                </h3>
-              </div>
-              <ol className="space-y-3">
-                {steps.map((step, i) => (
-                  <li key={i} className="flex items-start gap-3" data-testid={`text-step-${i}`}>
-                    <span className="flex-shrink-0 w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold mt-0.5">
-                      {i + 1}
-                    </span>
-                    <span className="text-base text-white/80 leading-relaxed">{step}</span>
-                  </li>
-                ))}
-              </ol>
             </motion.div>
           </div>
         </section>
@@ -200,7 +217,7 @@ export default function LandingPage() {
                 transition={{ duration: 0.15 }}
               >
                 <div
-                  className="p-5 flex items-start gap-4 rounded-xl border border-white/10"
+                  className="p-5 flex items-start gap-4 rounded-xl border border-white/10 h-full"
                   style={{ background: "rgba(255,255,255,0.06)" }}
                   data-testid={`card-feature-${index}`}
                 >
@@ -217,7 +234,71 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── Diagnostic Promo ── */}
+        {/* ── How It Works ── */}
+        <section className="border-y border-white/10 py-16 md:py-20" style={{ background: "rgba(255,255,255,0.04)" }}>
+          <div className="max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp size={20} className="text-blue-300" />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-how-it-works-heading">
+                  From baseline to audit-ready in 4 weeks.
+                </h2>
+              </div>
+              <ol className="space-y-4 mb-6">
+                {howItWorksSteps.map((step, i) => (
+                  <li key={i} className="flex items-start gap-4" data-testid={`text-step-${i}`}>
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span className="text-base text-white/80 leading-relaxed pt-1">{step}</span>
+                  </li>
+                ))}
+              </ol>
+              <p className="text-sm text-white/50 pl-12" data-testid="text-how-it-works-supporting">
+                Most teams see measurable improvement within the first month.
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── Proof Section ── */}
+        <section className="py-16 md:py-20">
+          <div className="max-w-4xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-400/20 flex items-center justify-center flex-shrink-0">
+                  <Target size={20} className="text-emerald-400" />
+                </div>
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-proof-heading">
+                  Stop guessing. Start measuring.
+                </h2>
+              </div>
+              <p className="text-base text-white/70 leading-relaxed mb-6 max-w-3xl" data-testid="text-proof-body">
+                Before AccreditationReady, most quality leaders go into survey week with instinct and hope. After:
+              </p>
+              <ul className="space-y-3">
+                {proofPoints.map((point, i) => (
+                  <li key={i} className="flex items-start gap-3" data-testid={`text-proof-point-${i}`}>
+                    <CheckCircle2 size={20} className="text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span className="text-base text-white/80 leading-relaxed">{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── Diagnostic CTA ── */}
         <section className="py-16 md:py-20 border-y border-white/10" style={{ background: "rgba(20,100,90,0.25)" }}>
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
@@ -233,10 +314,10 @@ export default function LandingPage() {
                 </div>
                 <div className="flex-1 text-center md:text-left">
                   <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white mb-2" data-testid="text-diagnostic-promo-heading">
-                    How survey&#8209;ready are you right now?
+                    How ready is your team right now?
                   </h2>
                   <p className="text-base text-white/75 leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
-                    Take our <span className="font-bold text-teal-300">Diagnostic Quiz</span> &#8212; 25 scenario&#8209;based questions across every compliance domain. No studying needed. Just honest answers to find your starting line. In 10 minutes, you&#x2019;ll know exactly where to focus.
+                    Find out in 10 minutes. Take a free 25-question diagnostic across every compliance domain — no studying, no prep, just honest answers that show you where to focus.
                   </p>
                   <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
                     <Button
@@ -245,69 +326,14 @@ export default function LandingPage() {
                       onClick={() => setLocation("/auth")}
                       data-testid="button-diagnostic-promo-signup"
                     >
-                      Create Account to Start
+                      Start Free Diagnostic
                       <ArrowRight size={18} className="ml-2" />
                     </Button>
                     <div className="flex items-center gap-1.5 text-sm text-teal-300/80 font-medium">
                       <Lock size={14} />
-                      <span>Free with your account</span>
+                      <span>Instant results · No account required to start</span>
                     </div>
                   </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* ── Mastery Promo ── */}
-        <section className="py-16 md:py-20 border-b border-white/10" style={{ background: "rgba(100,60,10,0.30)" }}>
-          <div className="max-w-4xl mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="flex flex-col md:flex-row-reverse items-center gap-8">
-                <div className="flex-shrink-0">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/20">
-                    <Crown size={48} className="text-white" />
-                  </div>
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
-                    <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-mastery-promo-heading">
-                      Prove you&#x2019;re survey&#8209;ready with the Final Assessment
-                    </h2>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-amber-500/30 text-amber-300 border border-amber-400/40 uppercase tracking-wider flex-shrink-0">
-                      Earn it
-                    </span>
-                  </div>
-                  <p className="text-base text-white/75 leading-relaxed mb-3 max-w-xl" data-testid="text-mastery-promo-body">
-                    Finished all the levels? The <span className="font-bold text-amber-300">Final Assessment</span> unlocks after you complete every section &#8212; 25 advanced questions that go deeper than anything in the training. See exactly how far you&#x2019;ve come since your Diagnostic, and walk into your next survey with confidence.
-                  </p>
-                  <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start mb-4">
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-300/80">
-                      <Sparkles size={14} />
-                      <span>Expert&#8209;level scenarios</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-300/80">
-                      <CheckCircle2 size={14} />
-                      <span>Full results after completion</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-sm font-medium text-amber-300/80">
-                      <BarChart3 size={14} />
-                      <span>Compare to your diagnostic baseline</span>
-                    </div>
-                  </div>
-                  <Button
-                    size="lg"
-                    className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white shadow-md shadow-amber-500/20 font-bold"
-                    onClick={() => setLocation("/auth")}
-                    data-testid="button-mastery-promo-signup"
-                  >
-                    Create Account to Get Started
-                    <ArrowRight size={18} className="ml-2" />
-                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -322,18 +348,20 @@ export default function LandingPage() {
             transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-4"
           >
-            <h2 className="text-2xl font-black tracking-tight text-white">Ready to see the difference?</h2>
-            <p className="text-base text-white/65 max-w-lg">
-              Sign in to explore the app, or create an account to get started.
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white" data-testid="text-final-cta-heading">
+              Build readiness that holds up on survey day.
+            </h2>
+            <p className="text-base text-white/65 max-w-lg" data-testid="text-final-cta-subhead">
+              Give your team a consistent, measurable way to stay accreditation-ready — year-round, not just the week before.
             </p>
-            <div className="flex items-center gap-3 flex-wrap justify-center">
+            <div className="flex items-center gap-3 flex-wrap justify-center mt-2">
               <Button
                 size="lg"
                 onClick={() => setLocation("/auth")}
                 className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
-                data-testid="button-bottom-signin"
+                data-testid="button-bottom-create-account"
               >
-                Sign In
+                Create Account
                 <ArrowRight size={18} className="ml-2" />
               </Button>
               <Button
@@ -341,9 +369,9 @@ export default function LandingPage() {
                 variant="outline"
                 onClick={() => setLocation("/auth")}
                 className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
-                data-testid="button-bottom-create-account"
+                data-testid="button-bottom-signin"
               >
-                Create Account
+                Sign In
               </Button>
             </div>
           </motion.div>
@@ -354,8 +382,7 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-white/10 py-6 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-xs text-white/40 leading-relaxed" data-testid="text-disclaimer">
-            Survey Readiness Platform is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS.
-            All content is for educational and training purposes only.
+            AccreditationReady is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.
           </p>
           <p className="text-xs text-white/40 mt-2">
             <a href="/terms" className="underline hover:text-white/70" data-testid="link-terms-landing">Terms & Privacy</a>
