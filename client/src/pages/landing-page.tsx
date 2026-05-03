@@ -327,10 +327,6 @@ export default function LandingPage() {
                       Start Free Diagnostic
                       <ArrowRight size={18} className="ml-2" />
                     </Button>
-                    <div className="flex items-center gap-1.5 text-sm text-teal-300/80 font-medium">
-                      <Lock size={14} />
-                      <span>Instant results · No account required to start</span>
-                    </div>
                   </div>
                 </div>
               </div>
