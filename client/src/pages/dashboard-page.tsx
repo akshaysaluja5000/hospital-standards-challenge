@@ -525,26 +525,33 @@ export default function DashboardPage() {
 
             {/* ASC Posttest */}
             {userModule === "asc" && (
-              <motion.button
-                className="w-full rounded-2xl border-2 p-4 flex items-center gap-4 transition-colors text-left bg-amber-500/5 border-amber-500/20 hover:bg-amber-500/10"
-                onClick={() => setLocation("/asc-posttest")}
+              <motion.div
+                className="w-full rounded-2xl border-2 p-4 bg-amber-500/5 border-amber-500/20"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileTap={{ scale: 0.98 }}
-                data-testid="button-asc-posttest-cta"
               >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
-                  <Trophy size={24} className="text-white" />
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-base">ASC Posttest</h3>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-700 dark:text-amber-400 uppercase tracking-wider">Check growth</span>
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                    <Trophy size={24} className="text-white" />
                   </div>
-                  <p className="text-sm text-muted-foreground mt-0.5">25 fresh questions to compare against your pretest performance</p>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-lg leading-tight">ASC Posttest</h3>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-700 dark:text-amber-400 uppercase tracking-wider">Check growth</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-1 leading-snug">25 fresh questions to compare against your pretest performance</p>
+                  </div>
                 </div>
-                <ChevronRight size={18} className="text-muted-foreground flex-shrink-0" />
-              </motion.button>
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setLocation("/asc-posttest")}
+                    data-testid="button-asc-posttest-cta"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md transition-all active:scale-95"
+                  >
+                    Take Assessment <ChevronRight size={16} />
+                  </button>
+                </div>
+              </motion.div>
             )}
 
             {/* Handbook + Deep Dive — two-up row */}
