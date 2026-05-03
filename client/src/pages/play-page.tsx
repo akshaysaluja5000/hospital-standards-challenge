@@ -357,7 +357,7 @@ export default function PlayPage() {
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-replay-shuffle-note">
               <Shuffle size={14} className="text-primary flex-shrink-0" />
               <p className="text-xs text-muted-foreground">
-                Play again for a <span className="font-semibold text-foreground">fresh question order</span> each time!
+                Play again for <span className="font-semibold text-foreground">fresh questions</span> each time — drawn from a larger pool every session.
               </p>
             </div>
 

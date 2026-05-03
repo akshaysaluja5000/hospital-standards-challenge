@@ -403,7 +403,7 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 mb-4 px-3 py-3 rounded-xl bg-primary/5 border border-primary/10" data-testid="text-shuffle-note">
                 <Shuffle size={16} className="text-primary flex-shrink-0" />
                 <p className="text-sm text-muted-foreground">
-                  Questions are <span className="font-semibold text-foreground">shuffled each time</span> you play, so you'll get a different order every session.
+                  You get <span className="font-semibold text-foreground">fresh questions</span> every session — drawn from a larger pool each time you play.
                 </p>
               </div>
               {!isAsc && assignedData?.role && (
