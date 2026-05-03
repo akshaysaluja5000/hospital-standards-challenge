@@ -131,7 +131,7 @@ export default function RoleSelectPage() {
   const visibleRoles = useMemo(() => rolesForFacility(facilityType), [facilityType]);
   const visibleIds = useMemo(() => new Set(visibleRoles.map((r) => r.id)), [visibleRoles]);
 
-  const [step, setStep] = useState<1 | 2>(1);
+  const [step, setStep] = useState<1 | 2>(() => user?.roleId ? 2 : 1);
 
   // Determine initial facility selection:
   // - Returning users (have a roleId): pre-select their current facility.
