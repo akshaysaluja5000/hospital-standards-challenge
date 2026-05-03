@@ -18,14 +18,14 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       {/* Clipped-square badge */}
       <polygon
         points="10,0 30,0 40,10 40,30 30,40 10,40 0,30 0,10"
-        fill="#0D2659"
+        fill="#4A9FD4"
       />
       {/* Subtle inner border */}
       <polygon
         points="10,0 30,0 40,10 40,30 30,40 10,40 0,30 0,10"
         fill="none"
         stroke="white"
-        strokeOpacity="0.18"
+        strokeOpacity="0.25"
         strokeWidth="1"
       />
       {/* AR monogram */}
