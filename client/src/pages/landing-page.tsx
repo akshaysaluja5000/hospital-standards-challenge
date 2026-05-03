@@ -379,11 +379,11 @@ export default function LandingPage() {
       {/* ── Footer ── */}
       <footer className="relative z-10 border-t border-white/10 py-6 px-4">
         <div className="max-w-5xl mx-auto text-center">
-          <p className="text-xs text-white/40 leading-relaxed" data-testid="text-disclaimer">
+          <p className="text-sm text-white/60 leading-relaxed" data-testid="text-disclaimer">
             Accreditation <em>Ready</em> is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.
           </p>
-          <p className="text-xs text-white/40 mt-2">
-            <a href="/terms" className="underline hover:text-white/70" data-testid="link-terms-landing">Terms & Privacy</a>
+          <p className="text-sm text-white/60 mt-2">
+            <a href="/terms" className="underline hover:text-white/80" data-testid="link-terms-landing">Terms & Privacy</a>
           </p>
         </div>
       </footer>
