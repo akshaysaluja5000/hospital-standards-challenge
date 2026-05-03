@@ -93,7 +93,7 @@ const EXEC_MOCK_ACTIONS: ExecAction[] = [
     standard: "EC.02.04.01", department: "Cardiology",
     facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
     owner: "Sandra Brooks", priority: "Medium", status: "Closed",
-    createdAt: d(-30), dueDate: d(-5), closedAt: d(-3), daysOpen: 27, daysOverdue: 0, validationStatus: "Approved",
+    createdAt: d(-30), dueDate: d(-5), closedAt: d(-1), daysOpen: 29, daysOverdue: 0, validationStatus: "Approved",
   },
   {
     id: "cap-006", title: "Post hand hygiene compliance data in staff break room",
@@ -143,6 +143,43 @@ const EXEC_MOCK_ACTIONS: ExecAction[] = [
     facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
     owner: "James Okafor", priority: "Critical", status: "Open",
     createdAt: d(-6), dueDate: d(-1), daysOpen: 6, daysOverdue: 1, validationStatus: null,
+  },
+
+  // ── facility_demo_hospital ─────────────────────────────────────────────
+  {
+    id: "cap-demo-001", title: "Update sterile supply expiration tracking log — OR suite B",
+    standard: "IC.02.02.01", department: "Perioperative",
+    facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
+    owner: "Keisha Hammond", priority: "High", status: "Open",
+    createdAt: d(-8), dueDate: d(3), daysOpen: 8, daysOverdue: 0, validationStatus: null,
+  },
+  {
+    id: "cap-demo-002", title: "Replace missing eyewash station signage in lab corridor",
+    standard: "EC.02.02.01", department: "Laboratory",
+    facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
+    owner: "Troy Nkemdirim", priority: "Medium", status: "Open",
+    createdAt: d(-4), dueDate: d(10), daysOpen: 4, daysOverdue: 0, validationStatus: null,
+  },
+  {
+    id: "cap-demo-003", title: "Obtain missing QAPI committee sign-off for Q1 improvement plan",
+    standard: "PI.01.01.01", department: "Quality",
+    facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
+    owner: "Angela Ross", priority: "Critical", status: "Open",
+    createdAt: d(-16), dueDate: d(-3), daysOpen: 16, daysOverdue: 3, validationStatus: null,
+  },
+  {
+    id: "cap-demo-004", title: "Correct staff credentialing file — two licenses expired last quarter",
+    standard: "HR.01.05.03", department: "Medical Staff Office",
+    facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
+    owner: "Diana Cho", priority: "High", status: "In Progress",
+    createdAt: d(-11), dueDate: d(-2), daysOpen: 11, daysOverdue: 2, validationStatus: null,
+  },
+  {
+    id: "cap-demo-005", title: "Re-label hazardous waste containers in central supply per OSHA update",
+    standard: "EC.02.02.01", department: "Central Supply",
+    facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
+    owner: "Jared Osei", priority: "Medium", status: "Closed",
+    createdAt: d(-28), dueDate: d(-7), closedAt: d(-2), daysOpen: 26, daysOverdue: 0, validationStatus: "Approved",
   },
 ];
 
@@ -341,8 +378,9 @@ function exportCsv(actions: ExecAction[], facilityName: string) {
 }
 
 // ── Constants ──────────────────────────────────────────────────────────────
+// NOTE: ALL_DEPARTMENTS is computed inside the component from facility-scoped data
+// to avoid leaking department names from other hospitals into the filter dropdown.
 
-const ALL_DEPARTMENTS = ["All Departments", ...Array.from(new Set(EXEC_MOCK_ACTIONS.map((a) => a.department))).sort()];
 const ALL_STATUSES: (ActionStatus | "All")[] = ["All", "Open", "In Progress", "Pending Validation", "Closed"];
 const ALL_PRIORITIES: (ActionPriority | "All")[] = ["All", "Critical", "High", "Medium", "Low"];
 
@@ -375,10 +413,22 @@ export default function ExecutiveReportPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Step 1: facility-scoped base — fail-closed (null facilityId sees nothing)
+  const facilityScoped = useMemo(() => {
+    if (isSuperAdmin) return EXEC_MOCK_ACTIONS;
+    if (!scopedFacilityId) return []; // unassigned user sees nothing
+    return EXEC_MOCK_ACTIONS.filter((a) => a.facilityId === scopedFacilityId);
+  }, [isSuperAdmin, scopedFacilityId]);
+
+  // Department list built only from the user's own facility data (no cross-hospital leakage)
+  const ALL_DEPARTMENTS = useMemo(
+    () => ["All Departments", ...Array.from(new Set(facilityScoped.map((a) => a.department))).sort()],
+    [facilityScoped]
+  );
+
+  // Step 2: apply user-controlled filters on top of facility-scoped base
   const filtered = useMemo(() => {
-    return EXEC_MOCK_ACTIONS.filter((a) => {
-      // Always enforce facility scope — CEO/admin never see another hospital's data
-      if (!isSuperAdmin && scopedFacilityId && a.facilityId !== scopedFacilityId) return false;
+    return facilityScoped.filter((a) => {
       // Super-admin can optionally filter by facility via the selector
       if (isSuperAdmin && selectedFacility !== "All Facilities" && a.facility !== selectedFacility) return false;
       // User-applied filters (department, status, priority)
@@ -387,7 +437,7 @@ export default function ExecutiveReportPage() {
       if (priority !== "All" && a.priority !== priority) return false;
       return true;
     });
-  }, [isSuperAdmin, scopedFacilityId, selectedFacility, department, status, priority]);
+  }, [facilityScoped, isSuperAdmin, selectedFacility, department, status, priority]);
 
   const kpis = useMemo(() => calcKpis(filtered), [filtered]);
   const trendData = useMemo(() => buildTrendData(filtered), [filtered]);
@@ -667,9 +717,12 @@ export default function ExecutiveReportPage() {
 
         {/* ── Needs Attention Table (collapsible) ── */}
         <div className="rounded-2xl border-2 border-border bg-card shadow-sm overflow-hidden" data-testid="container-needs-attention">
-          <button
-            className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/3 transition-colors text-left"
+          <div
+            role="button"
+            tabIndex={0}
+            className="w-full flex items-center justify-between px-5 py-4 hover:bg-white/3 transition-colors text-left cursor-pointer"
             onClick={() => setTableExpanded((v) => !v)}
+            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setTableExpanded((v) => !v); }}
             data-testid="button-toggle-table"
           >
             <div className="flex items-center gap-2.5">
@@ -696,7 +749,7 @@ export default function ExecutiveReportPage() {
               </Button>
               {tableExpanded ? <ChevronUp size={15} className="text-muted-foreground" /> : <ChevronDown size={15} className="text-muted-foreground" />}
             </div>
-          </button>
+          </div>
 
           <AnimatePresence initial={false}>
             {tableExpanded && (

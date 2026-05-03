@@ -72,9 +72,10 @@ export interface MockFacility {
 }
 
 export const MOCK_FACILITIES: MockFacility[] = [
-  { id: "facility_mosh",      name: "Midwest Orthopedic Specialty Hospital" },
-  { id: "facility_ohw",       name: "Orthopedic Hospital of Wisconsin" },
-  { id: "facility_ascension", name: "Ascension SE Wisconsin" },
+  { id: "facility_mosh",         name: "Midwest Orthopedic Specialty Hospital" },
+  { id: "facility_ohw",          name: "Orthopedic Hospital of Wisconsin" },
+  { id: "facility_ascension",    name: "Ascension SE Wisconsin" },
+  { id: "facility_demo_hospital", name: "Demo Regional Medical Center" },
 ];
 
 export function getFacilityName(facilityId: string | null): string {

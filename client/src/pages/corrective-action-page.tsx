@@ -144,6 +144,47 @@ const MOCK_ACTIONS: CorrectiveAction[] = [
     notes: "All signatures collected and filed.",
   },
 
+  // ── facility_demo_hospital ─────────────────────────────────────────────
+  {
+    id: "cap-demo-001",
+    title: "Update sterile supply expiration tracking log — OR suite B",
+    standard: "IC.02.02.01",
+    department: "Perioperative",
+    owner: "Keisha Hammond",
+    dueDate: "2026-05-15",
+    status: "Open",
+    priority: "High",
+    facilityId: "facility_demo_hospital",
+    facilityName: "Demo Regional Medical Center",
+    notes: "Supply log missing date entries for 3 items.",
+  },
+  {
+    id: "cap-demo-002",
+    title: "Obtain missing QAPI committee sign-off for Q1 improvement plan",
+    standard: "PI.01.01.01",
+    department: "Quality",
+    owner: "Angela Ross",
+    dueDate: "2026-05-02",
+    status: "Open",
+    priority: "Critical",
+    facilityId: "facility_demo_hospital",
+    facilityName: "Demo Regional Medical Center",
+    notes: "Q1 plan submitted but committee sign-off page missing.",
+  },
+  {
+    id: "cap-demo-003",
+    title: "Correct staff credentialing file — two licenses expired last quarter",
+    standard: "HR.01.05.03",
+    department: "Medical Staff Office",
+    owner: "Diana Cho",
+    dueDate: "2026-05-06",
+    status: "In Progress",
+    priority: "High",
+    facilityId: "facility_demo_hospital",
+    facilityName: "Demo Regional Medical Center",
+    notes: "MSO contacted both staff. Renewals pending.",
+  },
+
   // ── facility_ohw ───────────────────────────────────────────────────────
   {
     id: "cap-ohw-001",
@@ -498,7 +539,10 @@ export default function CorrectiveActionPage() {
 
   // Facility-scoped base list — CEO/admin never see another hospital's data
   const facilityActions = useMemo(() => {
-    if (isSuperAdmin || !scopedFacilityId) return actions;
+    // Fail-closed: super_admin sees all; everyone else is locked to their facilityId.
+    // If a non-super-admin has no facilityId, they see nothing (never leak cross-facility).
+    if (isSuperAdmin) return actions;
+    if (!scopedFacilityId) return [];
     return actions.filter((a) => a.facilityId === scopedFacilityId);
   }, [actions, isSuperAdmin, scopedFacilityId]);
 
