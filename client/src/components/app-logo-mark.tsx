@@ -45,11 +45,10 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       {/* Divider */}
       <line x1="5" y1="19" x2="31" y2="19" stroke="white" strokeOpacity="0.25" strokeWidth="0.6" />
 
-      {/* SRP ribbon — clipped to circle */}
-      <path
-        d="M3.5 20.5 L32.5 20.5 L35 25 L32.5 29.5 L3.5 29.5 L1 25 Z"
+      {/* SRP band — simple rectangle clipped to circle */}
+      <rect
+        x="1" y="20.5" width="34" height="9"
         fill="white"
-        fillOpacity="0.15"
         clipPath={`url(#c-${id})`}
       />
 
