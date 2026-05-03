@@ -489,8 +489,8 @@ export default function DashboardPage() {
               )}
             </div>
 
-            {/* Final Assessment */}
-            {masteryEligibility?.eligible && (
+            {/* Final Assessment — hospital only */}
+            {masteryEligibility?.eligible && userModule !== "asc" && (
               <motion.div
                 className="w-full rounded-2xl border-2 p-5 text-left bg-amber-500/5 border-amber-500/30"
                 initial={{ opacity: 0, y: 10 }}
