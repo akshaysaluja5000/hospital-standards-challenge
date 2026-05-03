@@ -82,7 +82,7 @@ export default function AuthPage() {
       await register(data.username, data.firstName, data.lastName, data.password, data.facilityCode, data.organizationType);
       toast({
         title: "Account created!",
-        description: "Welcome to AccreditationReady!",
+        description: "Welcome to Accreditation Ready!",
       });
     } catch (error: any) {
       try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}

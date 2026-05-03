@@ -40,7 +40,7 @@ interface SolutionConfig {
 const SOLUTIONS: Record<string, SolutionConfig> = {
   hospitals: {
     slug: "hospitals",
-    pageTitle: "Hospitals — AccreditationReady",
+    pageTitle: "Hospitals — Accreditation Ready",
     audience: "For Hospital Compliance Directors",
     heroIcon: Hospital,
     headline: "Compliance Training Built for Hospitals.",
@@ -71,7 +71,7 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
   },
   asc: {
     slug: "asc",
-    pageTitle: "ASCs — AccreditationReady",
+    pageTitle: "ASCs — Accreditation Ready",
     audience: "For Ambulatory Surgery Centers",
     heroIcon: Building2,
     headline: "ASC Accreditation Training That Sticks.",
@@ -115,7 +115,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
   useEffect(() => {
     document.title = config.pageTitle;
     return () => {
-      document.title = "AccreditationReady";
+      document.title = "Accreditation Ready";
     };
   }, [config.pageTitle]);
 
@@ -324,7 +324,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             </a>
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
-            AccreditationReady is not affiliated with, endorsed by, or
+            Accreditation <em>Ready</em> is not affiliated with, endorsed by, or
             sponsored by The Joint Commission, AAAHC, or CMS. All content is for
             educational and training purposes only.
           </p>

@@ -109,7 +109,7 @@ export default function LandingPage() {
               Know your gaps. Close them before the surveyor does.
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
-              AccreditationReady turns Joint Commission, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
+              Accreditation <em>Ready</em> turns Joint Commission, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
@@ -200,7 +200,7 @@ export default function LandingPage() {
                 </h2>
               </div>
               <p className="text-base text-white/70 leading-relaxed max-w-3xl" data-testid="text-solution-body">
-                AccreditationReady converts accreditation standards into short, role-based training sessions staff complete in 10–15 minutes — and gives quality leaders a live readiness dashboard across every unit.
+                Accreditation <em>Ready</em> converts accreditation standards into short, role-based training sessions staff complete in 10–15 minutes — and gives quality leaders a live readiness dashboard across every unit.
               </p>
             </motion.div>
           </div>
@@ -284,7 +284,7 @@ export default function LandingPage() {
                 </h2>
               </div>
               <p className="text-base text-white/70 leading-relaxed mb-6 max-w-3xl" data-testid="text-proof-body">
-                Before AccreditationReady, most quality leaders go into survey week with instinct and hope. After:
+                Before Accreditation <em>Ready</em>, most quality leaders go into survey week with instinct and hope. After:
               </p>
               <ul className="space-y-3">
                 {proofPoints.map((point, i) => (
@@ -382,7 +382,7 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-white/10 py-6 px-4">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-xs text-white/40 leading-relaxed" data-testid="text-disclaimer">
-            AccreditationReady is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.
+            Accreditation <em>Ready</em> is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.
           </p>
           <p className="text-xs text-white/40 mt-2">
             <a href="/terms" className="underline hover:text-white/70" data-testid="link-terms-landing">Terms & Privacy</a>
