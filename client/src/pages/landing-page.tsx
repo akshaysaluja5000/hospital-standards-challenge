@@ -260,9 +260,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ol>
-              <p className="text-sm text-white/50 pl-12" data-testid="text-how-it-works-supporting">
-                Most teams see measurable improvement within the first month.
-              </p>
+
             </motion.div>
           </div>
         </section>
