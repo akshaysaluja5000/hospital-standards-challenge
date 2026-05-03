@@ -105,10 +105,10 @@ export default function LandingPage() {
             className="flex flex-col items-center gap-6"
           >
             <AppLogoMark variant="lg" />
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
               Know your gaps. Close them before the surveyor does.
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
+            <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-normal" data-testid="text-hero-subtitle">
               Accreditation <em>Ready</em> turns Joint Commission, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
