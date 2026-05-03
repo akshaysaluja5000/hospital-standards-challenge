@@ -244,6 +244,7 @@ export interface StudyConcept {
   title: string;
   content: string;
   keyPoint: string;
+  category?: "rule" | "definition" | "scenario" | "mistake" | "number" | "tip";
 }
 
 export interface ChapterSummary {

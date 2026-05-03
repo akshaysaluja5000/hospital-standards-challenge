@@ -12,7 +12,7 @@ The application is built with a modern web stack. The **Frontend** uses React, T
 **Core Features & Design:**
 - **Authentication**: Username/password authentication with facility-based isolation ensuring data segregation.
 - **Gamification**: 11 levels based on Joint Commission audit domains, each with 20 questions, and a "Deep Dive Tracer" mode for advanced learning. Features streaks, XP, and leveling systems.
-- **Study & Practice**: "Study Mode" with key concepts, multiple-choice questions, and Yes/No swipe cards. Quiz sessions are persistent, allowing users to resume gameplay.
+- **Study & Practice**: "Study Mode" with a Quizlet-beating flip-card experience. Cards have front (prompt) + back (answer + key rule) with animated transitions. Category badges color-code each card as Rule/Definition/Scenario/Mistake/Number/Tip. "Got It" (emerald) / "Review Again" (orange) buttons track session progress. Session complete screen shows known vs. review counts with "Run Again" and "Review Marked" actions. Keyboard shortcuts: Space=flip, →=Got It, ←=Back. All 11 hospital levels have been expanded from 5 to 10–12 focused flashcards each. Multiple-choice questions and Yes/No swipe cards also available. Quiz sessions are persistent, allowing users to resume gameplay.
 - **Compliance Handbook**: A searchable reference guide with 11 chapters, expandable sections, and critical value tables.
 - **Leaderboard & Analytics**: Facility-scoped leaderboards, daily goals, activity calendar, and an admin dashboard for user tracking.
 - **AI Integrations**:
