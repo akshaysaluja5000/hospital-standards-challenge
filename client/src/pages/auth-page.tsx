@@ -124,6 +124,15 @@ export default function AuthPage() {
     <div className="min-h-screen flex flex-col lg:flex-row" style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}>
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
         <div className="w-full max-w-md bg-card rounded-2xl shadow-2xl p-8 lg:p-10">
+          <button
+            type="button"
+            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 -mt-2"
+            onClick={() => setLocation("/")}
+            data-testid="button-back-to-home"
+          >
+            <ArrowLeft size={15} />
+            Back to home
+          </button>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
