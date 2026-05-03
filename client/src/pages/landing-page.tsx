@@ -315,7 +315,7 @@ export default function LandingPage() {
                     How ready is your team right now?
                   </h2>
                   <p className="text-base text-white/75 leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
-                    Find out in 10 minutes. Take a free 25-question diagnostic across every compliance domain — no studying, no prep, just honest answers that show you where to focus.
+                    Take a free 25-question diagnostic across every compliance domain — no studying, no prep, just honest answers that show you where to focus.
                   </p>
                   <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
                     <Button
