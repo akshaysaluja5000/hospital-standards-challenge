@@ -114,10 +114,7 @@ export default function LandingPage() {
               Close compliance gaps before the surveyor arrives
             </h1>
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-semibold" data-testid="text-hero-subtitle">
-              Survey readiness training that closes compliance gaps — built for hospital and ASC staff who don't have time for another in-service.
-            </p>
-            <p className="text-base text-white/75 max-w-2xl leading-relaxed" data-testid="text-hero-supporting">
-              Track staff competency by department, identify weak areas before a surveyor does, and keep your team audit-ready between surveys — in 10–15 minutes a day.
+              Survey readiness training built for hospital and ASC staff who don't have time for another in-service. Track competency by department, identify weak areas, and keep your team audit-ready — in 10–15 minutes a day.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
