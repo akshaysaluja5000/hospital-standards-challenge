@@ -37,7 +37,7 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
 
       {/* Compliance checkmark */}
       <path
-        d="M11 12 L15 16.5 L25 7"
+        d="M13 12.5 L16.5 16 L23 9"
         stroke="white"
         strokeWidth="2.4"
         strokeLinecap="round"
