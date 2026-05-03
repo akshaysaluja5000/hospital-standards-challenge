@@ -35,11 +35,14 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       {/* Circle inner border */}
       <circle cx="18" cy="21" r="16.3" fill="none" stroke="white" strokeOpacity="0.2" strokeWidth="0.75" />
 
-      {/* Four-point star */}
+      {/* Compliance checkmark */}
       <path
-        d="M18 8 L19.2 11.5 L23 12.5 L19.2 13.5 L18 17 L16.8 13.5 L13 12.5 L16.8 11.5 Z"
-        fill="white"
-        fillOpacity="0.85"
+        d="M9 13 L15 19 L27 8"
+        stroke="white"
+        strokeWidth="2.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
       />
 
       {/* SRP band — simple rectangle clipped to circle */}
