@@ -49,6 +49,7 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
       <path
         d="M3.5 20.5 L32.5 20.5 L35 25 L32.5 29.5 L3.5 29.5 L1 25 Z"
         fill="white"
+        fillOpacity="0.15"
         clipPath={`url(#c-${id})`}
       />
 
