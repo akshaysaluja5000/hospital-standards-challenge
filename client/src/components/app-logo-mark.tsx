@@ -49,16 +49,16 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
         fillOpacity="0.85"
       />
 
-      {/* Divider between star and HSC banner */}
+      {/* Divider between star and SRP banner */}
       <line x1="5" y1="19" x2="31" y2="19" stroke="white" strokeOpacity="0.25" strokeWidth="0.6" />
 
-      {/* HSC ribbon / banner — taller so text fits comfortably */}
+      {/* SRP ribbon / banner — taller so text fits comfortably */}
       <path
         d="M3.5 20.5 L32.5 20.5 L35 25 L32.5 29.5 L3.5 29.5 L1 25 Z"
         fill="white"
       />
 
-      {/* HSC text on the banner */}
+      {/* SRP text on the banner */}
       <text
         x="18"
         y="25.2"
@@ -70,7 +70,7 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
         fill="#091E52"
         letterSpacing="1.2"
       >
-        HSC
+        SRP
       </text>
     </svg>
   );
