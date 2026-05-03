@@ -634,11 +634,11 @@ export default function DashboardPage() {
               </div>
 
               <div className="flex gap-2">
-                <Button size="sm" className="flex-1 font-semibold" data-testid="button-view-action-plan">
+                <Button size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-view-action-plan">
                   <ClipboardCheck size={14} className="mr-1.5" />
                   View Action Plan
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1 font-semibold" data-testid="button-create-action">
+                <Button variant="outline" size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-create-action">
                   <Plus size={14} className="mr-1.5" />
                   Create Action
                 </Button>

@@ -22,6 +22,7 @@ import MasteryExamPage from "@/pages/mastery-exam-page";
 import AscPretestPage from "@/pages/asc-pretest-page";
 import AscPosttestPage from "@/pages/asc-posttest-page";
 import RoleSelectPage from "@/pages/role-select-page";
+import CorrectiveActionPage from "@/pages/corrective-action-page";
 import { HospitalsPage, AscPage } from "@/pages/solutions-page";
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
@@ -209,6 +210,9 @@ function Router() {
       </Route>
       <Route path="/admin">
         {() => <ProtectedRoute component={AdminPage} />}
+      </Route>
+      <Route path="/corrective-actions">
+        {() => <ProtectedRoute component={CorrectiveActionPage} />}
       </Route>
       <Route component={NotFound} />
     </Switch>
