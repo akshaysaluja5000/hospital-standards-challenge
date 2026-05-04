@@ -665,6 +665,7 @@ export default function CorrectiveActionPage() {
   const [demoPlans, setDemoPlans] = useState<RemediationPlan[]>(DEMO_REMEDIATION_PLANS);
   const [livePlans, setLivePlans] = useState<RemediationPlan[]>([]);
   const [activeStatus, setActiveStatus] = useState<PlanStatus | "All">("All");
+  const [facilityTypeFilter, setFacilityTypeFilter] = useState<"All" | "Hospital" | "ASC">("All");
   const [createOpen, setCreateOpen] = useState(false);
 
   const sourcePlans = dataMode === "demo" ? demoPlans : livePlans;
@@ -676,10 +677,17 @@ export default function CorrectiveActionPage() {
     return sourcePlans.filter((p) => p.facilityId === scopedFacilityId);
   }, [sourcePlans, dataMode, isSuperAdmin, scopedFacilityId]);
 
-  const countOf = (s: PlanStatus) => facilityPlans.filter((p) => p.status === s).length;
-  const overdueCount = facilityPlans.filter(isOverdue).length;
+  const typedPlans = useMemo(() =>
+    facilityTypeFilter === "All"
+      ? facilityPlans
+      : facilityPlans.filter((p) => p.facilityType === facilityTypeFilter),
+    [facilityPlans, facilityTypeFilter]
+  );
 
-  const filtered = facilityPlans.filter((p) =>
+  const countOf = (s: PlanStatus) => typedPlans.filter((p) => p.status === s).length;
+  const overdueCount = typedPlans.filter(isOverdue).length;
+
+  const filtered = typedPlans.filter((p) =>
     activeStatus === "All" || p.status === activeStatus
   );
 
@@ -824,6 +832,33 @@ export default function CorrectiveActionPage() {
           </div>
         )}
 
+        {/* ── Facility Type Tabs ── */}
+        <div className="flex items-center gap-2" data-testid="container-type-filter">
+          {(["All", "Hospital", "ASC"] as const).map((t) => {
+            const count = t === "All" ? facilityPlans.length : facilityPlans.filter((p) => p.facilityType === t).length;
+            const Icon = t === "Hospital" ? Hospital : t === "ASC" ? Stethoscope : null;
+            return (
+              <button
+                key={t}
+                onClick={() => { setFacilityTypeFilter(t); setActiveStatus("All"); }}
+                className={`flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-xl border-2 transition-all ${
+                  facilityTypeFilter === t
+                    ? t === "Hospital"
+                      ? "bg-blue-500/20 border-blue-400/60 text-blue-300"
+                      : t === "ASC"
+                        ? "bg-teal-500/20 border-teal-400/60 text-teal-300"
+                        : "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                }`}
+                data-testid={`filter-type-${t.toLowerCase()}`}
+              >
+                {Icon && <Icon size={13} />}
+                {t === "All" ? `All Facilities (${count})` : `${t} (${count})`}
+              </button>
+            );
+          })}
+        </div>
+
         {/* ── Status Filter Row ── */}
         <div className="flex flex-wrap gap-2.5 items-center" data-testid="container-filters">
           {(["All", ...ALL_STATUSES] as const).map((s) => (
@@ -837,7 +872,7 @@ export default function CorrectiveActionPage() {
               }`}
               data-testid={`filter-status-${s.toLowerCase().replace(/ /g, "-")}`}
             >
-              {s === "All" ? `All (${facilityPlans.length})` : `${s} (${countOf(s)})`}
+              {s === "All" ? `All (${typedPlans.length})` : `${s} (${countOf(s)})`}
             </button>
           ))}
           {activeStatus !== "All" && (
