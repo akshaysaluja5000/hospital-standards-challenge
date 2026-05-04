@@ -117,7 +117,7 @@ export const HOSPITAL_CATEGORIES = [
   "EOC & Safety Compliance",
 ];
 
-export const ASC_CATEGORIES = [
+const ASC_CATEGORIES = [
   "Patient Rights and Responsibilities",
   "Governance",
   "Administration",
@@ -188,6 +188,125 @@ function isOverdue(plan: RemediationPlan) {
 
 function formatDate(iso: string) {
   try { return format(new Date(iso), "MMM d, yyyy"); } catch { return iso; }
+}
+
+// ── Education Plan Directory ────────────────────────────────────────────────
+
+function PlanDirectoryCard({ facilityTypeFilter }: { facilityTypeFilter: "All" | "Hospital" | "ASC" }) {
+  const allCategories = useMemo(() => {
+    const cats = Object.keys(REMEDIATION_LIBRARY);
+    if (facilityTypeFilter === "Hospital") return cats.filter((c) => !c.startsWith("ASC:")).sort();
+    if (facilityTypeFilter === "ASC") return cats.filter((c) => c.startsWith("ASC:")).sort();
+    return cats.sort();
+  }, [facilityTypeFilter]);
+
+  const [selectedCat, setSelectedCat] = useState(() => allCategories[0] ?? "");
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!allCategories.includes(selectedCat)) setSelectedCat(allCategories[0] ?? "");
+  }, [allCategories, selectedCat]);
+
+  const steps = selectedCat ? REMEDIATION_LIBRARY[selectedCat] : null;
+
+  return (
+    <div className="rounded-2xl border border-border bg-card overflow-hidden">
+      <button
+        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-muted/20 transition-colors"
+        onClick={() => setExpanded((v) => !v)}
+        data-testid="button-toggle-directory"
+      >
+        <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
+          <BookOpen size={16} className="text-primary" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-bold">Education Plan Directory</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Browse what steps are assigned per category and score band</p>
+        </div>
+        {expanded
+          ? <ChevronRight size={16} className="text-muted-foreground rotate-90 transition-transform" />
+          : <ChevronRight size={16} className="text-muted-foreground transition-transform" />}
+      </button>
+
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="dir-body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="px-5 pb-5 pt-4 flex flex-col gap-4 border-t border-border/40">
+
+              {/* Category selector */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  Select Category
+                </label>
+                <select
+                  value={selectedCat}
+                  onChange={(e) => setSelectedCat(e.target.value)}
+                  className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  data-testid="select-directory-category"
+                >
+                  {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+
+              {steps && (
+                <div className="flex flex-col gap-4">
+
+                  {/* Step 1 — Score 60–69% */}
+                  <div className="flex flex-col gap-2">
+                    <span className="self-start text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300">
+                      Score 60–69% — Step 1 assigned
+                    </span>
+                    <div className="pl-4 border-l-2 border-amber-400/40 flex flex-col gap-0.5">
+                      <p className="text-sm font-semibold">{steps[0].title}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{steps[0].description}</p>
+                    </div>
+                  </div>
+
+                  {/* Step 2 — Score 50–59% */}
+                  <div className="flex flex-col gap-2">
+                    <span className="self-start text-xs font-bold px-2.5 py-0.5 rounded-full bg-orange-500/10 border border-orange-500/25 text-orange-300">
+                      Score 50–59% — Step 2 also assigned
+                    </span>
+                    <div className="pl-4 border-l-2 border-orange-400/40 flex flex-col gap-0.5">
+                      <p className="text-sm font-semibold">{steps[1].title}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{steps[1].description}</p>
+                    </div>
+                  </div>
+
+                  {/* Reassessment note — below 50% */}
+                  <div className="flex items-start gap-2 rounded-xl border border-orange-500/25 bg-orange-500/8 px-3 py-2.5">
+                    <ShieldAlert size={13} className="text-orange-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-xs text-orange-300 font-semibold leading-relaxed">
+                      Score below 50% — Steps 1 + 2 assigned, plus supervisor reassessment required before the plan can be marked Verified.
+                    </p>
+                  </div>
+
+                  {/* Step 3 — educator-led reinforcement */}
+                  <div className="flex flex-col gap-2">
+                    <span className="self-start text-xs font-bold px-2.5 py-0.5 rounded-full bg-muted/60 border border-border text-muted-foreground">
+                      Step 3 — educator-led reinforcement
+                    </span>
+                    <div className="pl-4 border-l-2 border-border/60 flex flex-col gap-0.5">
+                      <p className="text-sm font-semibold">{steps[2].title}</p>
+                      <p className="text-xs text-muted-foreground leading-relaxed">{steps[2].description}</p>
+                    </div>
+                  </div>
+
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 }
 
 // ── Purpose Banner ─────────────────────────────────────────────────────────
@@ -983,6 +1102,9 @@ export default function CorrectiveActionPage() {
 
         {/* ── How to Read ── */}
         <HowToReadBox />
+
+        {/* ── Education Plan Directory ── */}
+        <PlanDirectoryCard facilityTypeFilter={facilityTypeFilter} />
 
         {/* ── Stat Summary ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" data-testid="container-stats">

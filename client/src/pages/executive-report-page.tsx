@@ -6,7 +6,7 @@ import {
   Building2, TrendingUp, TrendingDown, Filter, X,
   ChevronRight, ClipboardList, Printer, FileText,
   ShieldCheck, ShieldAlert, ShieldX, ChevronDown, ChevronUp,
-  Minus, Lock, GraduationCap, BookOpen,
+  Minus, Lock, GraduationCap, BookOpen, FlaskConical, Database,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -443,6 +443,7 @@ export default function ExecutiveReportPage() {
   const { user, facilityId: scopedFacilityId, facilityName: scopedFacilityName, permissions, isSuperAdmin } = facilityAuth;
   const [, setLocation] = useLocation();
 
+  const [dataMode, setDataMode] = useState<"demo" | "live">("demo");
   const [selectedFacility, setSelectedFacility] = useState("All Facilities");
   const [chapter, setChapter] = useState("All Chapters");
   const [status, setStatus] = useState<PlanStatus | "All">("All");
@@ -463,10 +464,11 @@ export default function ExecutiveReportPage() {
   }, []);
 
   const facilityScoped = useMemo(() => {
+    if (dataMode === "live") return [];
     if (isSuperAdmin) return EXEC_MOCK_PLANS;
     if (!scopedFacilityId) return [];
     return EXEC_MOCK_PLANS.filter((p) => p.facilityId === scopedFacilityId);
-  }, [isSuperAdmin, scopedFacilityId]);
+  }, [dataMode, isSuperAdmin, scopedFacilityId]);
 
   const ALL_CHAPTERS = useMemo(
     () => ["All Chapters", ...Array.from(new Set(facilityScoped.map((p) => p.category))).sort()],
@@ -540,7 +542,28 @@ export default function ExecutiveReportPage() {
               {scopedFacilityName} · {format(TODAY, "MMMM d, yyyy")} · Guided Education Plans
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            {/* Demo / Live toggle */}
+            <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5" data-testid="container-mode-toggle">
+              <button
+                onClick={() => setDataMode("demo")}
+                className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
+                  dataMode === "demo" ? "bg-amber-500/20 text-amber-300" : "text-muted-foreground hover:text-foreground"
+                }`}
+                data-testid="button-exec-mode-demo"
+              >
+                <FlaskConical size={11} /> Demo
+              </button>
+              <button
+                onClick={() => setDataMode("live")}
+                className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
+                  dataMode === "live" ? "bg-green-500/15 text-green-400" : "text-muted-foreground hover:text-foreground"
+                }`}
+                data-testid="button-exec-mode-live"
+              >
+                <Database size={11} /> Live
+              </button>
+            </div>
             <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => setFiltersOpen((v) => !v)} data-testid="button-toggle-filters">
               <Filter size={13} className="mr-1.5" /> Filters {hasFilters && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-primary inline-block" />}
             </Button>
@@ -617,6 +640,38 @@ export default function ExecutiveReportPage() {
       </div>
 
       <div className="flex-1 max-w-4xl mx-auto w-full px-4 py-6 flex flex-col gap-5">
+
+        {/* ── Demo Banner ── */}
+        {dataMode === "demo" && (
+          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/8 px-4 py-3" data-testid="banner-exec-demo-mode">
+            <FlaskConical size={14} className="text-amber-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-amber-300/80 leading-relaxed">
+              <span className="font-bold text-amber-300">Demo Data — </span>
+              Sample guided education plans for demonstration. Switch to <strong className="text-amber-300">Live</strong> to see your facility's real plan data.
+            </p>
+          </div>
+        )}
+
+        {/* ── Live Empty State ── */}
+        {dataMode === "live" && filtered.length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-5 py-24 text-center" data-testid="container-exec-live-empty">
+            <div className="w-16 h-16 rounded-full border-2 border-border flex items-center justify-center bg-muted/20">
+              <GraduationCap size={28} className="text-muted-foreground" />
+            </div>
+            <div className="max-w-md">
+              <h3 className="text-lg font-bold mb-1" data-testid="text-exec-empty-title">No guided education plans yet.</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Plans appear here automatically when a learner scores below the 70% passing threshold on a final test. Switch to Demo mode to explore a sample report.
+              </p>
+            </div>
+            <Button variant="outline" onClick={() => setDataMode("demo")} data-testid="button-exec-switch-demo">
+              <FlaskConical size={14} className="mr-1.5" /> View Demo Report
+            </Button>
+          </div>
+        )}
+
+        {/* ── Main Content (only shown when plans exist) ── */}
+        {filtered.length > 0 && (<>
 
         {/* ── Risk Status Banner ── */}
         <motion.div
@@ -899,6 +954,8 @@ export default function ExecutiveReportPage() {
             )}
           </AnimatePresence>
         </div>
+
+        </>)}
 
       </div>
     </div>
