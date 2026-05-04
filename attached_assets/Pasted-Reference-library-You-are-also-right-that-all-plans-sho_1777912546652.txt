@@ -1,0 +1,61 @@
+Reference library
+You are also right that all plans should exist somewhere as a reference, but not dumped openly into the page. The current screen already feels text-heavy and structurally flat, so exposing the full library inline would make it worse.
+
+The right move is:
+
+Keep the tracker page focused on assigned plans only.
+
+Add a separate Plan Library reference that is available on demand.
+
+Surface it as a dropdown, drawer, or modal rather than a permanent open block.
+
+Best pattern:
+
+Add a top-right secondary control: Browse Plan Library.
+
+Clicking it opens a right-side drawer or modal.
+
+Inside, users can filter by:
+
+Facility type: Hospital / ASC
+
+Category or chapter
+
+Score band: 60–69, 50–59, below 50
+
+Each entry shows the preset plan name plus 1–2 lines of what it includes.
+
+That is better than a dropdown if the content is large. A tiny dropdown works for 5 items. You do not have 5 items. You have a structured library by hospital categories and ASC chapters, so a drawer is cleaner than pretending a giant list is a dropdown.
+
+Recommended UI change
+Here is the cleaner information architecture:
+
+Area	Keep	Change
+Area	Keep	Change
+Dashboard card	Summary counts and CTA 
+Rename to Improvement Plans or Guided Review Plans 
+Tracker page	Assigned items only 
+Remove negative wording and simplify explainer text 
+Reference access	Not currently present in the screenshots 
+Add Plan Library button opening a drawer/modal
+Empty state	Keep centered empty-state layout 
+Change copy to positive language and add a secondary “Browse Library” action
+Best use
+I would use this structure:
+
+Main feature name: Guided Review Plans
+
+Reference area: Guided Review Library or Plan Library
+
+CTA: View Guided Review Plans
+
+Secondary CTA: Browse Review Library
+
+Example copy:
+
+“Guided Review Plans are assigned only when a learner scores below the required threshold on the final test.”
+
+“Browse the Guided Review Library by facility type, category, or chapter.”
+
+My recommendation
+Use Guided Review Plans if you want the product to sound educational, credible, and supportive without sounding fake-positive

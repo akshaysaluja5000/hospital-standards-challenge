@@ -6,16 +6,18 @@ import {
   Clock, X, Calendar, Info, FlaskConical, Database,
   GraduationCap, ShieldCheck, User, ClipboardList,
   Hospital, Stethoscope, ChevronRight, BookOpen, ShieldAlert,
+  Library,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { useFacilityAuth } from "@/lib/facility-auth";
 import { auditLog } from "@/lib/audit-log";
 import { DEMO_REMEDIATION_PLANS } from "@/data/demoCorrectiveActions";
-import { REMEDIATION_LIBRARY } from "@/data/remediationLibrary";
+import { REMEDIATION_LIBRARY, type LibraryStep } from "@/data/remediationLibrary";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 // Remediation plans are assigned ONLY when a learner scores below the required
@@ -194,11 +196,8 @@ function PurposeBanner() {
   return (
     <div className="rounded-2xl border border-primary/25 bg-primary/6 px-5 py-4" data-testid="banner-purpose">
       <p className="text-sm leading-relaxed text-foreground/80">
-        Remediation plans are assigned only when a learner scores below the required passing threshold on the final test.
-        These plans guide targeted review, reinforcement, and reassessment.{" "}
-        <span className="font-semibold text-foreground/95">
-          They do not represent hospital or ASC operational incidents.
-        </span>
+        <span className="font-semibold text-foreground/95">Guided Review Plans</span> are assigned when a learner scores below the required passing threshold on the final test.
+        Each plan provides targeted review steps, reinforcement activities, and — where needed — a supervisor reassessment before the plan is marked complete.
       </p>
     </div>
   );
@@ -345,11 +344,11 @@ function CreatePlanDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg">
             <GraduationCap size={19} className="text-primary" />
-            Create Demo Remediation Plan
+            Create Demo Guided Review Plan
           </DialogTitle>
         </DialogHeader>
         <p className="text-sm text-muted-foreground -mt-1 mb-2 leading-relaxed">
-          Creates a sample plan for demonstration. In production, plans are assigned automatically when a learner scores below the passing threshold on a final test.
+          Creates a sample plan for demonstration. In production, guided review plans are assigned automatically when a learner scores below the passing threshold on a final test.
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
@@ -461,7 +460,7 @@ function CreatePlanDialog({
 
           <div className="flex gap-2 pt-1">
             <Button type="submit" className="flex-1" size="lg" data-testid="button-submit-plan">
-              <Plus size={16} className="mr-1.5" /> Assign Remediation Plan
+              <Plus size={16} className="mr-1.5" /> Assign Guided Review Plan
             </Button>
             <Button type="button" variant="outline" size="lg" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-plan">
               Cancel
@@ -633,23 +632,193 @@ function PlanCard({
   );
 }
 
+// ── Plan Library Drawer ────────────────────────────────────────────────────
+
+function PlanLibraryDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [libFacilityType, setLibFacilityType] = useState<"All" | "Hospital" | "ASC">("All");
+  const [libCategory, setLibCategory] = useState<string>("All");
+  const [libScoreBand, setLibScoreBand] = useState<"all" | "60-69" | "50-59" | "below-50">("all");
+
+  const categoryOptions = useMemo(() => {
+    if (libFacilityType === "Hospital") return ["All", ...HOSPITAL_CATEGORIES];
+    if (libFacilityType === "ASC") return ["All", ...ASC_CATEGORIES];
+    return ["All", ...HOSPITAL_CATEGORIES, ...ASC_CATEGORIES];
+  }, [libFacilityType]);
+
+  useEffect(() => { setLibCategory("All"); }, [libFacilityType]);
+
+  const entries = useMemo(() => {
+    return Object.entries(REMEDIATION_LIBRARY)
+      .filter(([key]) => {
+        const isAsc = key.startsWith("ASC: ");
+        if (libFacilityType === "Hospital" && isAsc) return false;
+        if (libFacilityType === "ASC" && !isAsc) return false;
+        if (libCategory !== "All") {
+          const display = isAsc ? key.replace("ASC: ", "") : key;
+          if (display !== libCategory) return false;
+        }
+        return true;
+      })
+      .map(([key, steps]) => {
+        const isAsc = key.startsWith("ASC: ");
+        const displayCategory = isAsc ? key.replace("ASC: ", "") : key;
+        const type = isAsc ? "ASC" : "Hospital";
+        let shownSteps: LibraryStep[];
+        let showReassessment = false;
+        if (libScoreBand === "60-69") { shownSteps = [steps[0]]; }
+        else if (libScoreBand === "50-59") { shownSteps = [steps[0], steps[1]]; }
+        else if (libScoreBand === "below-50") { shownSteps = [steps[0], steps[1]]; showReassessment = true; }
+        else { shownSteps = [...steps]; }
+        return { key, displayCategory, type, shownSteps, showReassessment };
+      });
+  }, [libFacilityType, libCategory, libScoreBand]);
+
+  return (
+    <Sheet open={open} onOpenChange={(v) => { if (!v) onClose(); }}>
+      <SheetContent side="right" className="w-full max-w-lg flex flex-col p-0 gap-0" data-testid="drawer-plan-library">
+        <SheetHeader className="px-6 pt-6 pb-4 border-b border-border/40 flex-shrink-0">
+          <SheetTitle className="flex items-center gap-2 text-xl">
+            <Library size={20} className="text-primary" /> Guided Review Library
+          </SheetTitle>
+          <SheetDescription className="text-sm leading-relaxed">
+            Browse all preset guided review plans by facility type, category, or score band.
+          </SheetDescription>
+        </SheetHeader>
+
+        {/* ── Filters ── */}
+        <div className="px-6 py-4 border-b border-border/40 flex flex-col gap-4 flex-shrink-0">
+          <div className="flex flex-col gap-2">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Facility Type</p>
+            <div className="flex gap-2 flex-wrap">
+              {(["All", "Hospital", "ASC"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setLibFacilityType(t)}
+                  className={`text-sm font-bold px-3 py-1.5 rounded-lg border transition-all ${
+                    libFacilityType === t
+                      ? t === "Hospital" ? "bg-blue-500/20 border-blue-400/60 text-blue-300"
+                        : t === "ASC" ? "bg-teal-500/20 border-teal-400/60 text-teal-300"
+                        : "bg-primary/20 border-primary/50 text-primary"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  }`}
+                  data-testid={`lib-filter-type-${t.toLowerCase()}`}
+                >
+                  {t === "All" ? "All" : t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Category / Chapter</p>
+            <select
+              value={libCategory}
+              onChange={(e) => setLibCategory(e.target.value)}
+              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              data-testid="lib-filter-category"
+            >
+              {categoryOptions.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Score Band</p>
+            <div className="flex flex-wrap gap-2">
+              {([
+                ["all", "All scores"],
+                ["60-69", "60–69%"],
+                ["50-59", "50–59%"],
+                ["below-50", "Below 50%"],
+              ] as const).map(([val, label]) => (
+                <button
+                  key={val}
+                  onClick={() => setLibScoreBand(val)}
+                  className={`text-sm font-bold px-3 py-1.5 rounded-lg border transition-all ${
+                    libScoreBand === val
+                      ? "bg-primary/20 border-primary/50 text-primary"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-foreground"
+                  }`}
+                  data-testid={`lib-filter-band-${val}`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Entries ── */}
+        <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-4" data-testid="lib-entries-list">
+          {entries.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <BookOpen size={36} className="mx-auto mb-3 opacity-30" />
+              <p className="text-sm">No library entries match the selected filters.</p>
+            </div>
+          ) : (
+            entries.map(({ key, displayCategory, type, shownSteps, showReassessment }) => (
+              <div
+                key={key}
+                className="rounded-xl border border-border bg-card p-4 flex flex-col gap-3"
+                data-testid={`lib-entry-${key.replace(/[\s:]/g, "-").toLowerCase()}`}
+              >
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span
+                    className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${
+                      type === "Hospital"
+                        ? "bg-blue-500/10 border-blue-400/25 text-blue-300"
+                        : "bg-teal-500/10 border-teal-400/25 text-teal-300"
+                    }`}
+                  >
+                    {type === "Hospital" ? <Hospital size={10} /> : <Stethoscope size={10} />} {type}
+                  </span>
+                  <p className="font-bold text-sm">{displayCategory}</p>
+                </div>
+                {shownSteps.map((step, i) => (
+                  <div key={i} className="flex flex-col gap-1 pl-3 border-l-2 border-primary/30">
+                    <p className="text-sm font-semibold">Step {i + 1}: {step.title}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{step.description}</p>
+                  </div>
+                ))}
+                {showReassessment && (
+                  <div className="flex items-start gap-2 rounded-lg bg-orange-500/10 border border-orange-500/25 px-3 py-2">
+                    <ShieldAlert size={12} className="text-orange-400 flex-shrink-0 mt-0.5" />
+                    <p className="text-[11px] text-orange-300 font-semibold">Supervisor reassessment required (score below 50%).</p>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+          <p className="text-center text-xs text-muted-foreground pb-2">
+            {entries.length} entr{entries.length === 1 ? "y" : "ies"} shown
+          </p>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 // ── Live Empty State ───────────────────────────────────────────────────────
 
-function LiveEmptyState({ onCreateDemo }: { onCreateDemo: () => void }) {
+function LiveEmptyState({ onCreateDemo, onBrowseLibrary }: { onCreateDemo: () => void; onBrowseLibrary: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center gap-6 py-20 text-center" data-testid="container-live-empty">
       <div className="w-20 h-20 rounded-full border-2 border-border flex items-center justify-center bg-muted/20">
-        <Database size={36} className="text-muted-foreground" />
+        <GraduationCap size={36} className="text-muted-foreground" />
       </div>
       <div className="max-w-md">
-        <h3 className="text-xl font-bold mb-2" data-testid="text-empty-title">No remediation plans assigned yet.</h3>
+        <h3 className="text-xl font-bold mb-2" data-testid="text-empty-title">All learners are on track.</h3>
         <p className="text-base text-muted-foreground leading-relaxed" data-testid="text-empty-body">
-          Remediation plans appear here only when a learner scores below the required threshold on a final test.
+          Guided Review Plans appear here when a learner scores below the passing threshold on a final test. Browse the library to see what plans are available.
         </p>
       </div>
-      <Button size="lg" variant="outline" onClick={onCreateDemo} data-testid="button-create-plan-empty">
-        <Plus size={16} className="mr-2" /> Create Demo Remediation
-      </Button>
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <Button size="lg" variant="outline" onClick={onBrowseLibrary} data-testid="button-browse-library-empty">
+          <Library size={16} className="mr-2" /> Browse Review Library
+        </Button>
+        <Button size="lg" variant="ghost" onClick={onCreateDemo} data-testid="button-create-plan-empty">
+          <Plus size={16} className="mr-2" /> Create Demo Plan
+        </Button>
+      </div>
     </div>
   );
 }
@@ -667,6 +836,7 @@ export default function CorrectiveActionPage() {
   const [activeStatus, setActiveStatus] = useState<PlanStatus | "All">("All");
   const [facilityTypeFilter, setFacilityTypeFilter] = useState<"All" | "Hospital" | "ASC">("All");
   const [createOpen, setCreateOpen] = useState(false);
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const filterInitialized = useRef(false);
 
   // Auto-default facility type filter to the logged-in user's org type.
@@ -745,7 +915,7 @@ export default function CorrectiveActionPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <GraduationCap size={18} className="text-primary flex-shrink-0" />
-              <h2 className="font-bold text-xl" data-testid="text-page-title">Remediation Plans</h2>
+              <h2 className="font-bold text-xl" data-testid="text-page-title">Guided Review Plans</h2>
               {dataMode === "demo" ? (
                 <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-500/40 bg-amber-500/15 text-amber-300" data-testid="badge-mode-demo">
                   <FlaskConical size={10} /> Demo Data
@@ -760,8 +930,11 @@ export default function CorrectiveActionPage() {
               {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} · Final test only · {PASSING_THRESHOLD}% passing threshold
             </p>
           </div>
+          <Button size="lg" variant="outline" onClick={() => setLibraryOpen(true)} data-testid="button-browse-library-header">
+            <Library size={16} className="mr-2" /> Browse Review Library
+          </Button>
           <Button size="lg" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-header">
-            <Plus size={16} className="mr-2" /> Create Demo Remediation
+            <Plus size={16} className="mr-2" /> Create Demo Plan
           </Button>
         </div>
       </div>
@@ -897,13 +1070,13 @@ export default function CorrectiveActionPage() {
 
         {/* ── Cards area ── */}
         {dataMode === "live" && livePlans.length === 0 ? (
-          <LiveEmptyState onCreateDemo={() => setCreateOpen(true)} />
+          <LiveEmptyState onCreateDemo={() => setCreateOpen(true)} onBrowseLibrary={() => setLibraryOpen(true)} />
         ) : (
           <div data-testid="container-plan-cards">
             {filtered.length === 0 ? (
               <div className="text-center py-16 text-muted-foreground" data-testid="text-no-results">
                 <Database size={40} className="mx-auto mb-4 opacity-30" />
-                <p className="text-lg font-semibold">No remediation plans match the selected filters.</p>
+                <p className="text-lg font-semibold">No guided review plans match the selected filters.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -935,6 +1108,8 @@ export default function CorrectiveActionPage() {
         defaultFacilityId={scopedFacilityId ?? ""}
         defaultFacilityName={scopedFacilityName ?? ""}
       />
+
+      <PlanLibraryDrawer open={libraryOpen} onClose={() => setLibraryOpen(false)} />
     </div>
   );
 }
