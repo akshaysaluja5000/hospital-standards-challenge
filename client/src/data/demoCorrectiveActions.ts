@@ -1,8 +1,15 @@
 import type { RemediationPlan } from "@/pages/corrective-action-page";
+import { REMEDIATION_LIBRARY } from "@/data/remediationLibrary";
 
-// Demo records match the spec exactly.
-// All plans triggered by final test scores below the 70% passing threshold.
-// No diagnostic or drill-based entries should appear here.
+// ── Demo Remediation Plans ─────────────────────────────────────────────────
+// All 6 records are synthetic learner remediation examples only.
+// Steps are drawn directly from the REMEDIATION_LIBRARY.
+// Assignment logic (final test only):
+//   60–69% → 1 step
+//   50–59% → 2 steps
+//   < 50%  → 2 steps + reassessmentRequired: true
+
+const lib = REMEDIATION_LIBRARY;
 
 export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
   // ── Hospital examples ────────────────────────────────────────────────────
@@ -14,14 +21,18 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     assessmentType: "Final Test",
     quizScore: 58,
     passingThreshold: 70,
-    remediationStep: "Guided Instrument Inspection Walkthrough",
+    // 58% → 50–59% → 2 steps
+    remediationSteps: [
+      lib["Instrument Integrity"][0],
+      lib["Instrument Integrity"][1],
+    ],
+    reassessmentRequired: false,
     status: "Assigned",
     assignedDate: "2026-04-18",
     dueDate: "2026-05-20",
     facilityId: "demo",
     facilityName: "Sample Facility",
     assignedBy: "Educator",
-    notes: "",
     isDemo: true,
   },
   {
@@ -32,14 +43,17 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     assessmentType: "Final Test",
     quizScore: 64,
     passingThreshold: 70,
-    remediationStep: "Sterile Storage Standards Review",
+    // 64% → 60–69% → 1 step
+    remediationSteps: [
+      lib["Sterile Storage"][0],
+    ],
+    reassessmentRequired: false,
     status: "In Progress",
     assignedDate: "2026-04-22",
     dueDate: "2026-05-15",
     facilityId: "demo",
     facilityName: "Sample Facility",
     assignedBy: "Educator",
-    notes: "",
     isDemo: true,
   },
   {
@@ -50,7 +64,12 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     assessmentType: "Final Test",
     quizScore: 49,
     passingThreshold: 70,
-    remediationStep: "Safety Checklist Walkthrough",
+    // 49% → below 50% → 2 steps + reassessmentRequired
+    remediationSteps: [
+      lib["EOC & Safety Compliance"][0],
+      lib["EOC & Safety Compliance"][1],
+    ],
+    reassessmentRequired: true,
     status: "Completed",
     assignedDate: "2026-04-05",
     dueDate: "2026-04-30",
@@ -58,7 +77,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     facilityName: "Sample Facility",
     assignedBy: "Educator",
     verifiedBy: "Supervisor",
-    notes: "Learner completed all checklist items. Awaiting final supervisor verification.",
+    notes: "Learner completed all required steps. Supervisor sign-off obtained before marking Completed.",
     isDemo: true,
   },
   // ── ASC examples ──────────────────────────────────────────────────────────
@@ -70,14 +89,17 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     assessmentType: "Final Test",
     quizScore: 61,
     passingThreshold: 70,
-    remediationStep: "Infection Prevention Review + Retest",
+    // 61% → 60–69% → 1 step
+    remediationSteps: [
+      lib["ASC: Infection Prevention and Control and Safety"][0],
+    ],
+    reassessmentRequired: false,
     status: "Assigned",
     assignedDate: "2026-04-20",
     dueDate: "2026-05-25",
     facilityId: "demo",
     facilityName: "Sample ASC Facility",
     assignedBy: "Clinical Educator",
-    notes: "",
     isDemo: true,
   },
   {
@@ -88,14 +110,18 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     assessmentType: "Final Test",
     quizScore: 54,
     passingThreshold: 70,
-    remediationStep: "Governance Concepts Review",
+    // 54% → 50–59% → 2 steps
+    remediationSteps: [
+      lib["ASC: Governance"][0],
+      lib["ASC: Governance"][1],
+    ],
+    reassessmentRequired: false,
     status: "In Progress",
     assignedDate: "2026-04-14",
     dueDate: "2026-05-10",
     facilityId: "demo",
     facilityName: "Sample ASC Facility",
     assignedBy: "Clinical Educator",
-    notes: "",
     isDemo: true,
   },
   {
@@ -106,7 +132,11 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     assessmentType: "Final Test",
     quizScore: 66,
     passingThreshold: 70,
-    remediationStep: "Surgical Services Review + Retest",
+    // 66% → 60–69% → 1 step
+    remediationSteps: [
+      lib["ASC: Surgical and Related Services"][0],
+    ],
+    reassessmentRequired: false,
     status: "Verified",
     assignedDate: "2026-03-20",
     dueDate: "2026-04-15",
@@ -114,7 +144,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     facilityName: "Sample ASC Facility",
     assignedBy: "Clinical Educator",
     verifiedBy: "Clinical Supervisor",
-    notes: "Learner completed review and retest. Score improved to 78%. Verified.",
+    notes: "Learner completed review and retest. Score improved to 78%. Plan verified.",
     isDemo: true,
   },
 ];

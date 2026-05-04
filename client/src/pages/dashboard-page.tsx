@@ -621,7 +621,7 @@ export default function DashboardPage() {
               </p>
 
               <div className="grid grid-cols-3 gap-2 mb-4">
-                <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-open-actions">
+                <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-active-plans">
                   <GraduationCap size={15} className="text-primary" />
                   <span className="text-xl font-black">0</span>
                   <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Active Plans</span>
@@ -631,7 +631,7 @@ export default function DashboardPage() {
                   <span className="text-xl font-black">0</span>
                   <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Overdue</span>
                 </div>
-                <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-closed-this-month">
+                <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-completed">
                   <CheckCircle2 size={15} className="text-green-500" />
                   <span className="text-xl font-black">0</span>
                   <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Completed</span>

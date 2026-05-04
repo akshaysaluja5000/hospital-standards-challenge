@@ -5,7 +5,7 @@
 //   LEVEL_TO_CATEGORY    — levelId → category name (one-to-one)
 //   getRemediationPlan() — levelId + score % → assigned steps + reassessment flag
 //
-// SCORE THRESHOLDS:
+// SCORE THRESHOLDS (final/post-test only):
 //   ≥ 70%     : no remediation
 //   60 – 69%  : 1 plan assigned (primary review)
 //   50 – 59%  : 2 plans assigned (review + reinforcement)
@@ -15,20 +15,20 @@
 //   Supportive educational wording only.
 //   Do not use incident-based or operational corrective action language.
 
-export interface RemediationPlan {
+export interface LibraryStep {
   title: string;
   description: string;
 }
 
 export interface RemediationResult {
   category: string;
-  steps: RemediationPlan[];
+  steps: LibraryStep[];
   reassessmentRequired: boolean;
 }
 
 // ── Category → 3 preset plans ─────────────────────────────────────────────
 
-export const REMEDIATION_LIBRARY: Record<string, [RemediationPlan, RemediationPlan, RemediationPlan]> = {
+export const REMEDIATION_LIBRARY: Record<string, [LibraryStep, LibraryStep, LibraryStep]> = {
 
   "Instrument Integrity": [
     {
@@ -230,8 +230,6 @@ export const REMEDIATION_LIBRARY: Record<string, [RemediationPlan, RemediationPl
 
   // ── ASC Categories (AAAHC/CMS) ─────────────────────────────────────────────
   // Pattern per chapter: Review + Retest | Guided Review + Teach-Back | Checklist/Workflow + Verification
-  // Chapters 12 (Pathology) and 13 (Imaging) are in the library but have no active
-  // quiz level yet — reserved for future unlocks.
 
   "ASC: Patient Rights and Responsibilities": [
     {
@@ -368,7 +366,7 @@ export const REMEDIATION_LIBRARY: Record<string, [RemediationPlan, RemediationPl
     {
       title: "Guided Environment Walkthrough Review",
       description:
-        "Walk through your ASC's clinical and support spaces with a supervisor or facilities coordinator. Identify together what a surveyor would evaluate — emergency exits, medical gas storage, equipment condition, and environmental cleanliness.",
+        "Walk through your ASC's clinical and support spaces with a supervisor or facilities contact. Identify together what a surveyor would evaluate — emergency exits, medical gas storage, equipment condition, and environmental cleanliness.",
     },
     {
       title: "Facilities Readiness Verification",
@@ -392,6 +390,24 @@ export const REMEDIATION_LIBRARY: Record<string, [RemediationPlan, RemediationPl
       title: "Anesthesia and Surgical Workflow Verification",
       description:
         "Review your ASC's anesthesia records, surgical checklists, and Universal Protocol documentation. With your clinical supervisor, identify what the record demonstrates and how it would be evaluated during an AAAHC survey.",
+    },
+  ],
+
+  "ASC: Surgical and Related Services": [
+    {
+      title: "Surgical and Related Services Review + Retest",
+      description:
+        "Review the Surgical Services study cards, focusing on patient preparation requirements, surgical site protocols, instrument and implant documentation, specimen handling, and post-procedure care standards specific to your ASC setting.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Surgical Standards",
+      description:
+        "Walk through your ASC's surgical workflow with your charge nurse or OR supervisor. Explain the key compliance requirements for surgical care in your own words, then ask for feedback on anything that was unclear in the study cards.",
+    },
+    {
+      title: "Surgical Workflow Verification",
+      description:
+        "Using your facility's surgical services checklist or policy index, review the documentation requirements for a typical procedure. With your supervisor, identify what a surveyor would evaluate and confirm that records and practices meet AAAHC expectations.",
     },
   ],
 
@@ -458,33 +474,33 @@ export const REMEDIATION_LIBRARY: Record<string, [RemediationPlan, RemediationPl
 
 export const LEVEL_TO_CATEGORY: Record<string, string> = {
   // ── Hospital (Joint Commission) ───────────────────────────────────────────
-  transport:        "Transport of Instruments",
-  environment:      "Environment & Surfaces",
-  segregation:      "Clean vs. Dirty",
-  sterile_storage:  "Sterile Storage",
-  instruments:      "Instrument Integrity",
-  facilities:       "Facilities & Equipment",
-  spd_decontam:     "SPD & Decontamination",
-  or_sterile_field: "OR & Sterile Technique",
+  transport:          "Transport of Instruments",
+  environment:        "Environment & Surfaces",
+  segregation:        "Clean vs. Dirty",
+  sterile_storage:    "Sterile Storage",
+  instruments:        "Instrument Integrity",
+  facilities:         "Facilities & Equipment",
+  spd_decontam:       "SPD & Decontamination",
+  or_sterile_field:   "OR & Sterile Technique",
   universal_protocol: "Surgical Safety & Consent",
   patient_care_docs:  "Patient Care & Documentation",
   eoc_safety:         "EOC & Safety Compliance",
 
   // ── ASC (AAAHC/CMS) ───────────────────────────────────────────────────────
-  // Active quiz levels mapped to their AAAHC chapter remediation category.
-  // Chapters 12 (Pathology) and 13 (Imaging) have no active quiz level yet;
-  // they are in the library above and will map here when those levels are published.
-  asc_patient_rights:             "ASC: Patient Rights and Responsibilities",
-  asc_governance:                 "ASC: Governance",
-  asc_credentialing:              "ASC: Governance",          // credentialing lives under governance oversight
-  asc_administration:             "ASC: Administration",
-  asc_quality_of_care:            "ASC: Quality of Care Provided",
-  asc_quality_management:         "ASC: Quality Management and Improvement",
-  asc_clinical_records:           "ASC: Clinical Records and Health Information",
-  asc_infection_prevention_safety:"ASC: Infection Prevention and Control and Safety",
-  asc_facilities_environment:     "ASC: Facilities and Environment",
-  asc_anesthesia_surgery_services:"ASC: Anesthesia and Surgical Services",
-  asc_pharmaceutical_services:    "ASC: Pharmaceutical Services",
+  asc_patient_rights:              "ASC: Patient Rights and Responsibilities",
+  asc_governance:                  "ASC: Governance",
+  asc_credentialing:               "ASC: Governance",
+  asc_administration:              "ASC: Administration",
+  asc_quality_of_care:             "ASC: Quality of Care Provided",
+  asc_quality_management:          "ASC: Quality Management and Improvement",
+  asc_clinical_records:            "ASC: Clinical Records and Health Information",
+  asc_infection_prevention_safety: "ASC: Infection Prevention and Control and Safety",
+  asc_facilities_environment:      "ASC: Facilities and Environment",
+  asc_anesthesia_surgery_services: "ASC: Anesthesia and Surgical Services",
+  asc_surgical_related_services:   "ASC: Surgical and Related Services",
+  asc_pharmaceutical_services:     "ASC: Pharmaceutical Services",
+  asc_pathology_lab:               "ASC: Pathology and Medical Laboratory Services",
+  asc_imaging_services:            "ASC: Diagnostic and Other Imaging Services",
 };
 
 // ── Assignment function ────────────────────────────────────────────────────
@@ -492,6 +508,7 @@ export const LEVEL_TO_CATEGORY: Record<string, string> = {
 // Returns null if no remediation is warranted (score ≥ 70%).
 // Otherwise returns the category label, the assigned plan steps,
 // and a flag indicating whether a supervisor reassessment is required.
+// This function applies ONLY to final/post-test scores.
 
 export function getRemediationPlan(
   levelId: string,

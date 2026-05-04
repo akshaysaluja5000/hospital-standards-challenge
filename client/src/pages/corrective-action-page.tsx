@@ -5,21 +5,27 @@ import {
   ArrowLeft, Plus, AlertTriangle, CheckCircle2,
   Clock, X, Calendar, Info, FlaskConical, Database,
   GraduationCap, ShieldCheck, User, ClipboardList,
-  Hospital, Stethoscope,
+  Hospital, Stethoscope, ChevronRight, BookOpen, ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { useFacilityAuth } from "@/lib/facility-auth";
 import { auditLog } from "@/lib/audit-log";
 import { DEMO_REMEDIATION_PLANS } from "@/data/demoCorrectiveActions";
+import { REMEDIATION_LIBRARY } from "@/data/remediationLibrary";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 // Remediation plans are assigned ONLY when a learner scores below the required
 // passing threshold on a final test. Diagnostic, practice quiz, readiness
 // review, and study mode results do NOT trigger remediation.
+
+export interface RemediationStep {
+  title: string;
+  description: string;
+}
 
 export type PlanStatus = "Assigned" | "In Progress" | "Completed" | "Verified";
 
@@ -31,7 +37,8 @@ export interface RemediationPlan {
   assessmentType: string;
   quizScore: number;
   passingThreshold: number;
-  remediationStep: string;
+  remediationSteps: RemediationStep[];
+  reassessmentRequired: boolean;
   status: PlanStatus;
   assignedDate: string;
   dueDate: string;
@@ -55,28 +62,25 @@ interface CreatePlanForm {
 
 type DataMode = "demo" | "live";
 
-const INITIAL_LIVE_PLANS: RemediationPlan[] = [];
-
 // ── Category Options ────────────────────────────────────────────────────────
 
-const HOSPITAL_CATEGORIES = [
-  "Transport of Instruments",
-  "Environment & Surfaces",
-  "Clean vs. Dirty",
-  "Sterile Storage",
+export const HOSPITAL_CATEGORIES = [
   "Instrument Integrity",
   "Facilities & Equipment",
   "SPD & Decontamination",
   "OR & Sterile Technique",
+  "Transport of Instruments",
+  "Environment & Surfaces",
+  "Clean vs. Dirty",
+  "Sterile Storage",
   "Surgical Safety & Consent",
   "Patient Care & Documentation",
   "EOC & Safety Compliance",
 ];
 
-const ASC_CATEGORIES = [
+export const ASC_CATEGORIES = [
   "Patient Rights and Responsibilities",
   "Governance",
-  "Credentialing and Privileging",
   "Administration",
   "Quality of Care Provided",
   "Quality Management and Improvement",
@@ -86,31 +90,55 @@ const ASC_CATEGORIES = [
   "Anesthesia and Surgical Services",
   "Surgical and Related Services",
   "Pharmaceutical Services",
+  "Pathology and Medical Laboratory Services",
+  "Diagnostic and Other Imaging Services",
 ];
 
 const ALL_STATUSES: PlanStatus[] = ["Assigned", "In Progress", "Completed", "Verified"];
-
 const PASSING_THRESHOLD = 70;
 
-// ── Helpers ────────────────────────────────────────────────────────────────
+// ── Library Helpers ────────────────────────────────────────────────────────
+
+function getLibraryKey(facilityType: "Hospital" | "ASC" | "", category: string): string {
+  return facilityType === "ASC" ? `ASC: ${category}` : category;
+}
+
+function getStepsForScore(
+  facilityType: "Hospital" | "ASC" | "",
+  category: string,
+  score: number,
+): RemediationStep[] {
+  if (!facilityType || !category || isNaN(score) || score <= 0) return [];
+  const key = getLibraryKey(facilityType, category);
+  const plans = REMEDIATION_LIBRARY[key];
+  if (!plans) return [];
+  if (score >= 60) return [plans[0]];
+  return [plans[0], plans[1]];
+}
+
+function needsReassessment(score: number): boolean {
+  return score < 50;
+}
+
+// ── UI Helpers ─────────────────────────────────────────────────────────────
 
 function statusConfig(status: PlanStatus) {
   switch (status) {
     case "Assigned":
-      return { color: "text-blue-400", bg: "bg-blue-500/15 border-blue-500/25", icon: ClipboardList };
+      return { color: "text-blue-300", bg: "bg-blue-500/15 border-blue-400/30", icon: ClipboardList, next: "In Progress" as PlanStatus, nextLabel: "Mark In Progress", nextColor: "text-amber-300 border-amber-400/40 hover:bg-amber-500/15" };
     case "In Progress":
-      return { color: "text-amber-400", bg: "bg-amber-500/15 border-amber-500/25", icon: Clock };
+      return { color: "text-amber-300", bg: "bg-amber-500/15 border-amber-400/30", icon: Clock, next: "Completed" as PlanStatus, nextLabel: "Mark Completed", nextColor: "text-green-300 border-green-400/40 hover:bg-green-500/15" };
     case "Completed":
-      return { color: "text-green-400", bg: "bg-green-500/15 border-green-500/25", icon: CheckCircle2 };
+      return { color: "text-green-300", bg: "bg-green-500/15 border-green-400/30", icon: CheckCircle2, next: "Verified" as PlanStatus, nextLabel: "Mark Verified", nextColor: "text-purple-300 border-purple-400/40 hover:bg-purple-500/15" };
     case "Verified":
-      return { color: "text-purple-400", bg: "bg-purple-500/15 border-purple-500/25", icon: ShieldCheck };
+      return { color: "text-purple-300", bg: "bg-purple-500/15 border-purple-400/30", icon: ShieldCheck, next: null, nextLabel: null, nextColor: "" };
   }
 }
 
 function scoreColor(score: number, threshold: number) {
   const gap = threshold - score;
-  if (gap <= 6) return "text-amber-400";
-  if (gap <= 16) return "text-orange-400";
+  if (gap <= 10) return "text-amber-300";
+  if (gap <= 20) return "text-orange-400";
   return "text-red-400";
 }
 
@@ -120,24 +148,18 @@ function isOverdue(plan: RemediationPlan) {
 }
 
 function formatDate(iso: string) {
-  return format(new Date(iso), "MMM d, yyyy");
+  try { return format(new Date(iso), "MMM d, yyyy"); } catch { return iso; }
 }
 
-function autoRemediationStep(score: number, facilityType: "Hospital" | "ASC" | ""): string {
-  if (score < 55) return "Guided Review + Checklist Verification (Supervisor Sign-off Required)";
-  if (score < 65) return "Guided Review + Teach-Back";
-  return "Targeted Review + Retest";
-}
-
-// ── Purpose Statement ───────────────────────────────────────────────────────
+// ── Purpose Banner ─────────────────────────────────────────────────────────
 
 function PurposeBanner() {
   return (
-    <div className="rounded-xl border border-primary/20 bg-primary/5 px-4 py-3" data-testid="banner-purpose">
-      <p className="text-sm text-foreground/75 leading-relaxed">
+    <div className="rounded-2xl border border-primary/25 bg-primary/6 px-5 py-4" data-testid="banner-purpose">
+      <p className="text-sm leading-relaxed text-foreground/80">
         Remediation plans are assigned only when a learner scores below the required passing threshold on the final test.
         These plans guide targeted review, reinforcement, and reassessment.{" "}
-        <span className="font-semibold text-foreground/90">
+        <span className="font-semibold text-foreground/95">
           They do not represent hospital or ASC operational incidents.
         </span>
       </p>
@@ -145,23 +167,20 @@ function PurposeBanner() {
   );
 }
 
-// ── How to Read This Page ───────────────────────────────────────────────────
+// ── How to Read This Page ──────────────────────────────────────────────────
 
 function HowToReadBox() {
   const [open, setOpen] = useState(false);
   return (
-    <div
-      className="rounded-xl border border-border overflow-hidden"
-      data-testid="container-how-to-read"
-    >
+    <div className="rounded-2xl border border-border overflow-hidden" data-testid="container-how-to-read">
       <button
-        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-white/5 transition-colors bg-card"
+        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-white/4 transition-colors bg-card"
         onClick={() => setOpen((v) => !v)}
         data-testid="button-toggle-how-to-read"
       >
-        <Info size={15} className="text-primary flex-shrink-0" />
-        <span className="text-sm font-semibold">How to read this page</span>
-        <span className="ml-auto text-xs text-muted-foreground">{open ? "Hide" : "Show"}</span>
+        <Info size={17} className="text-primary flex-shrink-0" />
+        <span className="text-base font-bold">How to read this page</span>
+        <span className="ml-auto text-sm text-muted-foreground">{open ? "Hide" : "Show"}</span>
       </button>
       <AnimatePresence>
         {open && (
@@ -172,30 +191,30 @@ function HowToReadBox() {
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-4 pt-3 flex flex-col gap-3 text-sm text-muted-foreground leading-relaxed border-t border-border/40 bg-card">
-              <p className="text-foreground/80">
+            <div className="px-5 pb-5 pt-4 flex flex-col gap-4 text-sm text-muted-foreground leading-relaxed border-t border-border/40 bg-card">
+              <p className="text-foreground/80 text-base">
                 Each card represents a learner remediation plan created after a final test score below the required passing threshold.
               </p>
               <div>
-                <p className="font-bold text-foreground/90 mb-1">Status</p>
-                <ul className="space-y-1 pl-1">
-                  <li><span className="font-semibold text-foreground/80">Assigned</span> — the remediation plan has been created and assigned</li>
-                  <li><span className="font-semibold text-foreground/80">In Progress</span> — the learner is completing review or reinforcement steps</li>
-                  <li><span className="font-semibold text-foreground/80">Completed</span> — the learner finished the assigned remediation work</li>
-                  <li><span className="font-semibold text-foreground/80">Verified</span> — a supervisor or educator confirmed completion</li>
+                <p className="font-bold text-foreground/90 mb-2 text-sm uppercase tracking-wide">Status</p>
+                <ul className="space-y-2 pl-1">
+                  <li><span className="font-semibold text-blue-300">Assigned</span> — the remediation plan has been created and assigned</li>
+                  <li><span className="font-semibold text-amber-300">In Progress</span> — the learner is completing review or reinforcement steps</li>
+                  <li><span className="font-semibold text-green-300">Completed</span> — the learner finished the assigned remediation work</li>
+                  <li><span className="font-semibold text-purple-300">Verified</span> — a supervisor or educator confirmed completion</li>
                 </ul>
               </div>
               <div>
-                <p className="font-bold text-foreground/90 mb-1">Final Test Score</p>
+                <p className="font-bold text-foreground/90 mb-1 text-sm uppercase tracking-wide">Final Test Score</p>
                 <p>The learner's score on the formal post-test / final assessment.</p>
               </div>
               <div>
-                <p className="font-bold text-foreground/90 mb-1">Passing Threshold</p>
+                <p className="font-bold text-foreground/90 mb-1 text-sm uppercase tracking-wide">Passing Threshold</p>
                 <p>The minimum score required to pass without remediation.</p>
               </div>
               <div>
-                <p className="font-bold text-foreground/90 mb-1">Assigned Plan</p>
-                <p>The preset educational follow-up selected for the learner's category or chapter.</p>
+                <p className="font-bold text-foreground/90 mb-1 text-sm uppercase tracking-wide">Assigned Plan</p>
+                <p>The preset educational follow-up selected for the learner's category or chapter. One plan is assigned for scores 60–69%; two plans for scores below 60%. Scores below 50% also require supervisor reassessment before the plan can be verified.</p>
               </div>
             </div>
           </motion.div>
@@ -205,7 +224,34 @@ function HowToReadBox() {
   );
 }
 
-// ── Create Demo Remediation Form ───────────────────────────────────────────
+// ── Steps Preview ──────────────────────────────────────────────────────────
+
+function StepsPreview({ facilityType, category, score }: { facilityType: "Hospital" | "ASC" | ""; category: string; score: number; }) {
+  const steps = getStepsForScore(facilityType, category, score);
+  const reassessment = needsReassessment(score);
+  if (!steps.length || !category || !facilityType) return null;
+  return (
+    <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 flex flex-col gap-3">
+      <p className="text-xs font-bold uppercase tracking-wider text-primary/80">
+        Plans that will be assigned ({steps.length} step{steps.length > 1 ? "s" : ""})
+      </p>
+      {steps.map((s, i) => (
+        <div key={i} className="flex flex-col gap-0.5">
+          <p className="text-sm font-semibold">{i + 1}. {s.title}</p>
+          <p className="text-xs text-muted-foreground leading-relaxed">{s.description}</p>
+        </div>
+      ))}
+      {reassessment && (
+        <div className="flex items-start gap-2 rounded-lg bg-orange-500/10 border border-orange-500/25 px-3 py-2">
+          <ShieldAlert size={13} className="text-orange-400 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-orange-300 font-semibold">Supervisor reassessment required before this plan can be marked Verified.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Create Plan Dialog ─────────────────────────────────────────────────────
 
 function CreatePlanDialog({
   open, onClose, onSave, defaultFacilityId, defaultFacilityName,
@@ -216,10 +262,7 @@ function CreatePlanDialog({
   defaultFacilityId: string;
   defaultFacilityName: string;
 }) {
-  const {
-    register, handleSubmit, reset, setValue, watch,
-    formState: { errors },
-  } = useForm<CreatePlanForm>({
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreatePlanForm>({
     defaultValues: { facilityType: "", category: "", learner: "", quizScore: "", dueDate: "", assignedBy: "", notes: "" },
   });
   const facilityType = watch("facilityType");
@@ -227,14 +270,13 @@ function CreatePlanDialog({
   const quizScoreRaw = watch("quizScore");
   const scoreNum = parseInt(quizScoreRaw, 10);
 
-  const categoryOptions = facilityType === "Hospital"
-    ? HOSPITAL_CATEGORIES
-    : facilityType === "ASC"
-    ? ASC_CATEGORIES
-    : [];
+  const categoryOptions = facilityType === "Hospital" ? HOSPITAL_CATEGORIES : facilityType === "ASC" ? ASC_CATEGORIES : [];
+  const previewSteps = getStepsForScore(facilityType as "Hospital" | "ASC" | "", category, scoreNum);
+  const reassessment = needsReassessment(scoreNum);
 
   function onSubmit(data: CreatePlanForm) {
     const score = parseInt(data.quizScore, 10);
+    const steps = getStepsForScore(data.facilityType as "Hospital" | "ASC", data.category, score);
     const newPlan: RemediationPlan = {
       id: `rem-${Date.now()}`,
       learner: data.learner,
@@ -243,7 +285,8 @@ function CreatePlanDialog({
       assessmentType: "Final Test",
       quizScore: score,
       passingThreshold: PASSING_THRESHOLD,
-      remediationStep: autoRemediationStep(score, data.facilityType as "Hospital" | "ASC"),
+      remediationSteps: steps,
+      reassessmentRequired: needsReassessment(score),
       status: "Assigned",
       assignedDate: new Date().toISOString().split("T")[0],
       dueDate: data.dueDate,
@@ -259,30 +302,23 @@ function CreatePlanDialog({
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) { onClose(); reset(); } }}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto" data-testid="dialog-create-plan">
+      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto" data-testid="dialog-create-plan">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <GraduationCap size={18} className="text-primary" />
+          <DialogTitle className="flex items-center gap-2 text-lg">
+            <GraduationCap size={19} className="text-primary" />
             Create Demo Remediation Plan
           </DialogTitle>
         </DialogHeader>
-        <p className="text-xs text-muted-foreground -mt-1 mb-1 leading-relaxed">
-          Creates a sample plan for demonstration only. In production, plans are assigned automatically when a learner scores below the passing threshold on a final test.
+        <p className="text-sm text-muted-foreground -mt-1 mb-2 leading-relaxed">
+          Creates a sample plan for demonstration. In production, plans are assigned automatically when a learner scores below the passing threshold on a final test.
         </p>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 mt-1">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
-          {/* Facility Type */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold">Facility Type</label>
-            <Select
-              value={facilityType}
-              onValueChange={(v) => {
-                setValue("facilityType", v as "Hospital" | "ASC");
-                setValue("category", "");
-              }}
-            >
-              <SelectTrigger className="text-sm" data-testid="select-facility-type">
-                <SelectValue placeholder="Hospital or ASC..." />
+            <label className="text-sm font-bold">Facility Type</label>
+            <Select value={facilityType} onValueChange={(v) => { setValue("facilityType", v as "Hospital" | "ASC"); setValue("category", ""); }}>
+              <SelectTrigger data-testid="select-facility-type">
+                <SelectValue placeholder="Select Hospital or ASC..." />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="Hospital">Hospital (Joint Commission)</SelectItem>
@@ -292,15 +328,10 @@ function CreatePlanDialog({
             {errors.facilityType && <span className="text-xs text-destructive">Required</span>}
           </div>
 
-          {/* Category */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold">Category / Chapter</label>
-            <Select
-              value={category}
-              onValueChange={(v) => setValue("category", v)}
-              disabled={!facilityType}
-            >
-              <SelectTrigger className="text-sm" data-testid="select-chapter">
+            <label className="text-sm font-bold">Category / Chapter</label>
+            <Select value={category} onValueChange={(v) => setValue("category", v)} disabled={!facilityType}>
+              <SelectTrigger data-testid="select-chapter">
                 <SelectValue placeholder={facilityType ? "Select category..." : "Select facility type first"} />
               </SelectTrigger>
               <SelectContent>
@@ -310,95 +341,90 @@ function CreatePlanDialog({
             {errors.category && <span className="text-xs text-destructive">Required</span>}
           </div>
 
-          {/* Learner */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold">Learner</label>
+            <label className="text-sm font-bold">Learner</label>
             <input
               {...register("learner", { required: true })}
               placeholder="e.g. Learner A, OR Circulating Nurse"
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               data-testid="input-learner"
             />
             {errors.learner && <span className="text-xs text-destructive">Required</span>}
           </div>
 
-          {/* Assessment Type (read-only) */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold">Assessment Type</label>
-            <div className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+            <label className="text-sm font-bold">Assessment Type</label>
+            <div className="rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-sm text-muted-foreground flex items-center gap-2">
+              <BookOpen size={13} className="text-primary/60" />
               Final Test
-              <span className="ml-2 text-[10px] text-muted-foreground/60">(only final tests trigger remediation)</span>
+              <span className="ml-1 text-[10px] text-muted-foreground/55">(only final tests trigger remediation)</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {/* Final Test Score */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold">Final Test Score (%)</label>
+              <label className="text-sm font-bold">Final Test Score (%)</label>
               <input
-                type="number"
-                min={1}
-                max={69}
-                {...register("quizScore", {
-                  required: true,
-                  min: { value: 1, message: "Must be at least 1" },
-                  max: { value: 69, message: "Must be below 70% (passing threshold)" },
-                })}
+                type="number" min={1} max={69}
+                {...register("quizScore", { required: true, min: { value: 1, message: "Min 1" }, max: { value: 69, message: "Must be below 70%" } })}
                 placeholder="e.g. 58"
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 data-testid="input-quiz-score"
               />
               {errors.quizScore && <span className="text-xs text-destructive">{errors.quizScore.message || "Required"}</span>}
-              {!isNaN(scoreNum) && scoreNum > 0 && (
-                <p className="text-[10px] text-muted-foreground">Passing threshold: {PASSING_THRESHOLD}% · Gap: {PASSING_THRESHOLD - scoreNum}pts</p>
+              {!isNaN(scoreNum) && scoreNum > 0 && scoreNum < 70 && (
+                <p className="text-[11px] text-muted-foreground">
+                  {scoreNum >= 60 ? "1 step assigned" : "2 steps assigned"}
+                  {scoreNum < 50 ? " + reassessment required" : ""}
+                </p>
               )}
             </div>
-
-            {/* Due Date */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold">Due Date</label>
+              <label className="text-sm font-bold">Due Date</label>
               <input
                 type="date"
                 {...register("dueDate", { required: true })}
-                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                 data-testid="input-plan-due-date"
               />
               {errors.dueDate && <span className="text-xs text-destructive">Required</span>}
             </div>
           </div>
 
-          {/* Assigned By (optional) */}
+          {previewSteps.length > 0 && (
+            <StepsPreview facilityType={facilityType as "Hospital" | "ASC" | ""} category={category} score={scoreNum} />
+          )}
+
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold">
-              Assigned By <span className="text-muted-foreground font-normal">(optional)</span>
+            <label className="text-sm font-bold">
+              Assigned By <span className="font-normal text-muted-foreground">(optional)</span>
             </label>
             <input
               {...register("assignedBy")}
               placeholder="Educator, Clinical Supervisor..."
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               data-testid="input-assigned-by"
             />
           </div>
 
-          {/* Notes (optional) */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold">
-              Notes <span className="text-muted-foreground font-normal">(optional — educational context only)</span>
+            <label className="text-sm font-bold">
+              Notes <span className="font-normal text-muted-foreground">(optional)</span>
             </label>
             <textarea
               {...register("notes")}
               rows={3}
-              placeholder="Educational observations, context, or learner notes..."
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+              placeholder="Educational context or learner notes..."
+              className="w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
               data-testid="textarea-plan-notes"
             />
           </div>
 
           <div className="flex gap-2 pt-1">
-            <Button type="submit" className="flex-1" data-testid="button-submit-plan">
-              <Plus size={15} className="mr-1.5" /> Create Demo Plan
+            <Button type="submit" className="flex-1" size="lg" data-testid="button-submit-plan">
+              <Plus size={16} className="mr-1.5" /> Assign Remediation Plan
             </Button>
-            <Button type="button" variant="outline" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-plan">
+            <Button type="button" variant="outline" size="lg" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-plan">
               Cancel
             </Button>
           </div>
@@ -408,122 +434,129 @@ function CreatePlanDialog({
   );
 }
 
-// ── Remediation Plan Card ──────────────────────────────────────────────────
+// ── Plan Card ──────────────────────────────────────────────────────────────
 
-function PlanCard({ plan, showFacility }: { plan: RemediationPlan; showFacility: boolean }) {
+function PlanCard({
+  plan, showFacility, onStatusChange,
+}: {
+  plan: RemediationPlan;
+  showFacility: boolean;
+  onStatusChange: (id: string, status: PlanStatus) => void;
+}) {
   const sc = statusConfig(plan.status);
-  const ScoreIcon = plan.facilityType === "Hospital" ? Hospital : Stethoscope;
   const StatusIcon = sc.icon;
   const overdue = isOverdue(plan);
+  const TypeIcon = plan.facilityType === "Hospital" ? Hospital : Stethoscope;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border-2 border-border bg-card shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col"
+      className="rounded-2xl border-2 border-border bg-card shadow-sm hover:shadow-md transition-shadow flex flex-col overflow-hidden"
       data-testid={`card-plan-${plan.id}`}
     >
-      {/* ── Card header: type + status + overdue ── */}
-      <div className="px-4 pt-4 pb-3 flex flex-wrap items-center gap-2 border-b border-border/40">
+      {/* ── Header bar ── */}
+      <div className="px-5 pt-5 pb-4 flex flex-wrap items-center gap-2 border-b border-border/40">
         <span
-          className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${
+          className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border ${
             plan.facilityType === "Hospital"
-              ? "bg-blue-500/10 border-blue-500/25 text-blue-300"
-              : "bg-teal-500/10 border-teal-500/25 text-teal-300"
+              ? "bg-blue-500/10 border-blue-400/25 text-blue-300"
+              : "bg-teal-500/10 border-teal-400/25 text-teal-300"
           }`}
           data-testid={`badge-type-${plan.id}`}
         >
-          <ScoreIcon size={10} />
-          {plan.facilityType}
+          <TypeIcon size={11} /> {plan.facilityType}
         </span>
         <span
-          className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${sc.bg} ${sc.color}`}
+          className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border ${sc.bg} ${sc.color}`}
           data-testid={`badge-status-${plan.id}`}
         >
-          <StatusIcon size={10} />
-          {plan.status}
+          <StatusIcon size={11} /> {plan.status}
         </span>
         {overdue && (
-          <span
-            className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border bg-red-500/15 border-red-500/25 text-red-400"
-            data-testid={`badge-overdue-${plan.id}`}
-          >
-            <AlertTriangle size={10} />
-            Overdue
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border bg-red-500/15 border-red-400/30 text-red-400" data-testid={`badge-overdue-${plan.id}`}>
+            <AlertTriangle size={11} /> Overdue
+          </span>
+        )}
+        {plan.reassessmentRequired && (
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border bg-orange-500/15 border-orange-400/30 text-orange-300" data-testid={`badge-reassessment-${plan.id}`}>
+            <ShieldAlert size={11} /> Reassessment Required
           </span>
         )}
         {showFacility && (
-          <span className="ml-auto text-[10px] font-semibold text-muted-foreground" data-testid={`badge-facility-${plan.id}`}>
-            {plan.facilityName}
-          </span>
+          <span className="ml-auto text-xs font-semibold text-muted-foreground" data-testid={`text-facility-${plan.id}`}>{plan.facilityName}</span>
         )}
       </div>
 
-      <div className="px-4 py-3 flex flex-col gap-3">
-        {/* ── Category ── */}
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55 mb-0.5">Category</p>
-          <p className="text-sm font-bold leading-snug" data-testid={`text-plan-category-${plan.id}`}>
-            {plan.category}
-          </p>
+      <div className="px-5 py-4 flex flex-col gap-4 flex-1">
+
+        {/* ── Score + Category ── */}
+        <div className="flex items-start gap-4">
+          <div className="flex-shrink-0 text-center">
+            <div className={`text-5xl font-black leading-none ${scoreColor(plan.quizScore, plan.passingThreshold)}`} data-testid={`text-plan-score-${plan.id}`}>
+              {plan.quizScore}%
+            </div>
+            <div className="text-[11px] text-muted-foreground mt-1 font-semibold">{plan.passingThreshold}% required</div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55 mb-0.5">Category</p>
+            <p className="text-lg font-bold leading-snug" data-testid={`text-plan-category-${plan.id}`}>{plan.category}</p>
+            <p className="text-xs text-muted-foreground mt-0.5" data-testid={`text-plan-assessment-${plan.id}`}>{plan.assessmentType}</p>
+          </div>
         </div>
 
-        {/* ── Assigned Plan ── */}
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55 mb-0.5">Assigned Plan</p>
-          <p className="text-sm font-medium leading-snug text-foreground/85" data-testid={`text-plan-step-${plan.id}`}>
-            {plan.remediationStep}
+        {/* ── Assigned Steps ── */}
+        <div className="flex flex-col gap-3 pt-3 border-t border-border/40">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">
+            Assigned Plan{plan.remediationSteps.length > 1 ? "s" : ""} ({plan.remediationSteps.length} step{plan.remediationSteps.length > 1 ? "s" : ""})
           </p>
+          {plan.remediationSteps.map((step, i) => (
+            <div key={i} className="flex gap-3" data-testid={`container-step-${plan.id}-${i}`}>
+              <div className="w-6 h-6 rounded-full bg-primary/15 border border-primary/25 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-[10px] font-black text-primary">{i + 1}</span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold leading-snug mb-1" data-testid={`text-step-title-${plan.id}-${i}`}>{step.title}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed" data-testid={`text-step-desc-${plan.id}-${i}`}>{step.description}</p>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* ── Meta grid ── */}
-        <div className="grid grid-cols-3 gap-x-4 gap-y-2.5 text-xs pt-1 border-t border-border/40">
-          <div className="flex flex-col gap-0.5 col-span-1" data-testid={`text-plan-learner-${plan.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">Learner</span>
-            <span className="font-semibold text-foreground/85 flex items-center gap-1">
-              <User size={10} className="text-muted-foreground flex-shrink-0" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-3 pt-3 border-t border-border/40 text-sm">
+          <div className="flex flex-col gap-0.5" data-testid={`text-plan-learner-${plan.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">Learner</span>
+            <span className="font-semibold flex items-center gap-1">
+              <User size={11} className="text-muted-foreground flex-shrink-0" />
               {plan.learner}
             </span>
           </div>
-          <div className="flex flex-col gap-0.5 col-span-2" data-testid={`text-plan-score-${plan.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">Score / Threshold</span>
-            <span className="flex items-baseline gap-1.5 flex-wrap">
-              <span className={`text-base font-black ${scoreColor(plan.quizScore, plan.passingThreshold)}`}>
-                {plan.quizScore}%
-              </span>
-              <span className="text-muted-foreground text-[11px]">/ {plan.passingThreshold}% required</span>
-            </span>
-          </div>
-          <div className="flex flex-col gap-0.5" data-testid={`text-plan-assessment-${plan.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">Assessment</span>
-            <span className="text-foreground/80 font-medium">{plan.assessmentType}</span>
-          </div>
-          <div className="flex flex-col gap-0.5" data-testid={`text-plan-assigned-${plan.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">Assigned</span>
-            <span className="flex items-center gap-1 text-foreground/80 font-medium">
-              <Calendar size={9} className="flex-shrink-0" />
-              {plan.assignedDate ? formatDate(plan.assignedDate) : "—"}
+          <div className="flex flex-col gap-0.5" data-testid={`text-plan-assigned-date-${plan.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">Assigned</span>
+            <span className="flex items-center gap-1 font-medium">
+              <Calendar size={11} className="text-muted-foreground flex-shrink-0" />
+              {formatDate(plan.assignedDate)}
             </span>
           </div>
           <div className="flex flex-col gap-0.5" data-testid={`text-plan-due-${plan.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">Due Date</span>
-            <span className={`flex items-center gap-1 font-medium ${overdue ? "text-red-400" : "text-foreground/80"}`}>
-              <Calendar size={9} className="flex-shrink-0" />
-              {plan.dueDate ? formatDate(plan.dueDate) : "—"}
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">Due Date</span>
+            <span className={`flex items-center gap-1 font-medium ${overdue ? "text-red-400" : ""}`}>
+              <Calendar size={11} className={`flex-shrink-0 ${overdue ? "text-red-400" : "text-muted-foreground"}`} />
+              {formatDate(plan.dueDate)}
             </span>
           </div>
           {plan.assignedBy && (
             <div className="flex flex-col gap-0.5" data-testid={`text-plan-assigned-by-${plan.id}`}>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">Assigned By</span>
-              <span className="text-foreground/80 font-medium">{plan.assignedBy}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">Assigned By</span>
+              <span className="font-medium">{plan.assignedBy}</span>
             </div>
           )}
           {plan.verifiedBy && (
             <div className="flex flex-col gap-0.5" data-testid={`text-plan-verified-by-${plan.id}`}>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/55">Verified By</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">Verified By</span>
               <span className="text-purple-300 font-medium flex items-center gap-1">
-                <ShieldCheck size={10} />
-                {plan.verifiedBy}
+                <ShieldCheck size={11} /> {plan.verifiedBy}
               </span>
             </div>
           )}
@@ -531,32 +564,53 @@ function PlanCard({ plan, showFacility }: { plan: RemediationPlan; showFacility:
 
         {/* ── Notes ── */}
         {plan.notes && (
-          <p
-            className="text-xs text-muted-foreground italic border-t border-border/40 pt-2.5 leading-relaxed"
-            data-testid={`text-plan-notes-${plan.id}`}
-          >
+          <p className="text-sm text-muted-foreground italic border-t border-border/40 pt-3 leading-relaxed" data-testid={`text-plan-notes-${plan.id}`}>
             {plan.notes}
           </p>
+        )}
+
+        {/* ── Action buttons ── */}
+        {sc.next && (
+          <div className="pt-2 border-t border-border/30">
+            <button
+              onClick={() => onStatusChange(plan.id, sc.next!)}
+              className={`w-full flex items-center justify-center gap-2 rounded-xl border py-2.5 text-sm font-bold transition-colors ${sc.nextColor}`}
+              data-testid={`button-advance-${plan.id}`}
+            >
+              <ChevronRight size={15} />
+              {sc.nextLabel}
+            </button>
+          </div>
+        )}
+        {plan.status === "Verified" && (
+          <div className="pt-2 border-t border-border/30">
+            <div className="flex items-center justify-center gap-2 rounded-xl border border-purple-400/25 bg-purple-500/8 py-2.5 text-sm font-bold text-purple-300">
+              <ShieldCheck size={15} /> Plan Verified
+            </div>
+          </div>
         )}
       </div>
     </motion.div>
   );
 }
 
-// ── Live Mode Empty State ──────────────────────────────────────────────────
+// ── Live Empty State ───────────────────────────────────────────────────────
 
-function LiveEmptyState() {
+function LiveEmptyState({ onCreateDemo }: { onCreateDemo: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-5 py-14 text-center" data-testid="container-live-empty">
-      <div className="w-14 h-14 rounded-full border border-border flex items-center justify-center bg-muted/20">
-        <Database size={26} className="text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center gap-6 py-20 text-center" data-testid="container-live-empty">
+      <div className="w-20 h-20 rounded-full border-2 border-border flex items-center justify-center bg-muted/20">
+        <Database size={36} className="text-muted-foreground" />
       </div>
-      <div className="max-w-sm">
-        <h3 className="text-base font-bold mb-2" data-testid="text-empty-title">No remediation plans assigned yet.</h3>
-        <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-empty-body">
+      <div className="max-w-md">
+        <h3 className="text-xl font-bold mb-2" data-testid="text-empty-title">No remediation plans assigned yet.</h3>
+        <p className="text-base text-muted-foreground leading-relaxed" data-testid="text-empty-body">
           Remediation plans appear here only when a learner scores below the required threshold on a final test.
         </p>
       </div>
+      <Button size="lg" variant="outline" onClick={onCreateDemo} data-testid="button-create-plan-empty">
+        <Plus size={16} className="mr-2" /> Create Demo Remediation
+      </Button>
     </div>
   );
 }
@@ -569,11 +623,12 @@ export default function CorrectiveActionPage() {
   const { facilityId: scopedFacilityId, facilityName: scopedFacilityName, isSuperAdmin } = facilityAuth;
 
   const [dataMode, setDataMode] = useState<DataMode>("demo");
-  const [livePlans, setLivePlans] = useState<RemediationPlan[]>(INITIAL_LIVE_PLANS);
+  const [demoPlans, setDemoPlans] = useState<RemediationPlan[]>(DEMO_REMEDIATION_PLANS);
+  const [livePlans, setLivePlans] = useState<RemediationPlan[]>([]);
   const [activeStatus, setActiveStatus] = useState<PlanStatus | "All">("All");
   const [createOpen, setCreateOpen] = useState(false);
 
-  const sourcePlans = dataMode === "demo" ? DEMO_REMEDIATION_PLANS : livePlans;
+  const sourcePlans = dataMode === "demo" ? demoPlans : livePlans;
 
   const facilityPlans = useMemo(() => {
     if (dataMode === "demo") return sourcePlans;
@@ -589,13 +644,19 @@ export default function CorrectiveActionPage() {
     activeStatus === "All" || p.status === activeStatus
   );
 
-  function handleSave(plan: RemediationPlan) {
+  function handleStatusChange(id: string, newStatus: PlanStatus) {
     if (dataMode === "demo") {
-      // Demo mode: add to demo list (we prepend to a mutable state for demo)
-      setLivePlans((prev) => [plan, ...prev]);
-      setDataMode("live");
+      setDemoPlans((prev) => prev.map((p) => p.id === id ? { ...p, status: newStatus } : p));
     } else {
+      setLivePlans((prev) => prev.map((p) => p.id === id ? { ...p, status: newStatus } : p));
+    }
+  }
+
+  function handleSave(plan: RemediationPlan) {
+    if (dataMode === "live") {
       setLivePlans((prev) => [plan, ...prev]);
+    } else {
+      setDemoPlans((prev) => [plan, ...prev]);
     }
     auditLog({
       userId: facilityAuth.user?.id ?? null,
@@ -611,61 +672,51 @@ export default function CorrectiveActionPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
+
       {/* ── Header ── */}
       <div
         className="sticky top-[58px] z-40 border-b border-white/10"
         style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}
       >
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
             <ArrowLeft size={20} />
           </Button>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <GraduationCap size={16} className="text-primary flex-shrink-0" />
-              <h2 className="font-bold text-base" data-testid="text-page-title">Remediation Plans</h2>
+            <div className="flex items-center gap-3 flex-wrap">
+              <GraduationCap size={18} className="text-primary flex-shrink-0" />
+              <h2 className="font-bold text-xl" data-testid="text-page-title">Remediation Plans</h2>
               {dataMode === "demo" ? (
-                <span
-                  className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/40 bg-amber-500/15 text-amber-300"
-                  data-testid="badge-mode-demo"
-                >
-                  <FlaskConical size={9} /> Demo Data
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-500/40 bg-amber-500/15 text-amber-300" data-testid="badge-mode-demo">
+                  <FlaskConical size={10} /> Demo Data
                 </span>
               ) : (
-                <span
-                  className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-500/40 bg-green-500/15 text-green-400"
-                  data-testid="badge-mode-live"
-                >
-                  <Database size={9} /> Live Data
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-green-500/40 bg-green-500/15 text-green-400" data-testid="badge-mode-live">
+                  <Database size={10} /> Live Data
                 </span>
               )}
             </div>
-            <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
+            <p className="text-sm text-muted-foreground" data-testid="text-facility-scope">
               {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} · Final test only · {PASSING_THRESHOLD}% passing threshold
             </p>
           </div>
-          {dataMode === "demo" && (
-            <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-header">
-              <Plus size={14} className="mr-1.5" /> Create Demo
-            </Button>
-          )}
+          <Button size="lg" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-header">
+            <Plus size={16} className="mr-2" /> Create Demo Remediation
+          </Button>
         </div>
       </div>
 
-      <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-5 flex flex-col gap-5">
+      <div className="flex-1 max-w-5xl mx-auto w-full px-6 py-7 flex flex-col gap-7">
 
         {/* ── Demo / Live Toggle ── */}
-        <div className="flex flex-col gap-2">
-          <div
-            className="flex items-center gap-2 rounded-xl border border-border bg-card p-1"
-            data-testid="container-data-mode-toggle"
-          >
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-2 rounded-2xl border border-border bg-card p-1.5" data-testid="container-data-mode-toggle">
             <button
               onClick={() => { setDataMode("demo"); setActiveStatus("All"); }}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-all ${
                 dataMode === "demo"
                   ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/4"
               }`}
               data-testid="button-mode-demo"
             >
@@ -673,10 +724,10 @@ export default function CorrectiveActionPage() {
             </button>
             <button
               onClick={() => { setDataMode("live"); setActiveStatus("All"); }}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-all ${
                 dataMode === "live"
                   ? "bg-primary/20 text-primary border border-primary/40"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "text-muted-foreground hover:text-foreground hover:bg-white/4"
               }`}
               data-testid="button-mode-live"
             >
@@ -684,14 +735,11 @@ export default function CorrectiveActionPage() {
             </button>
           </div>
           {dataMode === "demo" && (
-            <div
-              className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/8 px-3 py-2"
-              data-testid="banner-demo-mode"
-            >
-              <FlaskConical size={13} className="text-amber-400 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-300/80">
+            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/8 px-4 py-3" data-testid="banner-demo-mode">
+              <FlaskConical size={14} className="text-amber-400 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-amber-300/80 leading-relaxed">
                 <span className="font-bold text-amber-300">Demo Data — </span>
-                Sample remediation plans shown for demonstration. Real plans are assigned automatically when a learner scores below the passing threshold on a final test.
+                Sample remediation plans for demonstration. In production, plans are assigned automatically when a learner scores below the passing threshold on a final test.
               </p>
             </div>
           )}
@@ -700,11 +748,11 @@ export default function CorrectiveActionPage() {
         {/* ── Purpose Statement ── */}
         <PurposeBanner />
 
-        {/* ── How to Read This Page ── */}
+        {/* ── How to Read ── */}
         <HowToReadBox />
 
         {/* ── Stat Summary ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5" data-testid="container-stats">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" data-testid="container-stats">
           {(["Assigned", "In Progress", "Completed", "Verified"] as PlanStatus[]).map((s) => {
             const cfg = statusConfig(s);
             const Icon = cfg.icon;
@@ -712,16 +760,16 @@ export default function CorrectiveActionPage() {
               <button
                 key={s}
                 onClick={() => setActiveStatus(activeStatus === s ? "All" : s)}
-                className={`rounded-xl border p-3 flex flex-col items-center gap-1 transition-all text-center ${
+                className={`rounded-2xl border-2 p-5 flex flex-col items-center gap-2 transition-all text-center ${
                   activeStatus === s
                     ? "border-primary/40 bg-primary/10"
-                    : "border-border bg-card hover:border-primary/25"
+                    : "border-border bg-card hover:border-primary/25 hover:bg-card/80"
                 }`}
                 data-testid={`stat-${s.toLowerCase().replace(/ /g, "-")}`}
               >
-                <Icon size={15} className={cfg.color} />
-                <span className="text-xl font-black">{countOf(s)}</span>
-                <span className="text-[10px] text-muted-foreground font-semibold leading-tight">{s}</span>
+                <Icon size={18} className={cfg.color} />
+                <span className="text-4xl font-black leading-none">{countOf(s)}</span>
+                <span className="text-xs text-muted-foreground font-bold leading-tight">{s}</span>
               </button>
             );
           })}
@@ -729,78 +777,64 @@ export default function CorrectiveActionPage() {
 
         {/* Overdue callout */}
         {overdueCount > 0 && (
-          <div
-            className="rounded-xl border border-red-500/30 bg-red-500/8 px-4 py-2.5 flex items-center gap-2.5"
-            data-testid="banner-overdue"
-          >
-            <AlertTriangle size={15} className="text-red-400 flex-shrink-0" />
-            <p className="text-sm font-semibold text-red-400">
-              {overdueCount} plan{overdueCount > 1 ? "s are" : " is"} overdue and require learner follow-up.
+          <div className="rounded-2xl border border-red-500/30 bg-red-500/8 px-5 py-3.5 flex items-center gap-3" data-testid="banner-overdue">
+            <AlertTriangle size={18} className="text-red-400 flex-shrink-0" />
+            <p className="text-base font-bold text-red-400">
+              {overdueCount} plan{overdueCount > 1 ? "s are" : " is"} overdue — learner follow-up required.
             </p>
           </div>
         )}
 
-        {/* ── Status Filters ── */}
-        <div className="flex flex-wrap gap-2 items-center" data-testid="container-filters">
+        {/* ── Status Filter Row ── */}
+        <div className="flex flex-wrap gap-2.5 items-center" data-testid="container-filters">
           {(["All", ...ALL_STATUSES] as const).map((s) => (
             <button
               key={s}
               onClick={() => setActiveStatus(s === "All" ? "All" : s as PlanStatus)}
-              className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${
+              className={`text-sm font-bold px-4 py-2 rounded-xl border-2 transition-all ${
                 activeStatus === s
                   ? "bg-primary text-primary-foreground border-primary"
-                  : "bg-card text-muted-foreground border-border hover:border-primary/40"
+                  : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
               }`}
               data-testid={`filter-status-${s.toLowerCase().replace(/ /g, "-")}`}
             >
-              {s}
+              {s === "All" ? `All (${facilityPlans.length})` : `${s} (${countOf(s)})`}
             </button>
           ))}
           {activeStatus !== "All" && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => setActiveStatus("All")}
-              data-testid="button-clear-filters"
-            >
-              <X size={14} />
+            <Button variant="ghost" size="sm" onClick={() => setActiveStatus("All")} data-testid="button-clear-filters">
+              <X size={14} className="mr-1" /> Clear filter
             </Button>
           )}
         </div>
 
         {/* ── Cards area ── */}
         {dataMode === "live" && livePlans.length === 0 ? (
-          <>
-            {dataMode === "live" && (
-              <div className="flex justify-end">
-                <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-empty">
-                  <Plus size={14} className="mr-1.5" /> Create Demo Plan
-                </Button>
-              </div>
-            )}
-            <LiveEmptyState />
-          </>
+          <LiveEmptyState onCreateDemo={() => setCreateOpen(true)} />
         ) : (
-          <div className="flex flex-col gap-3" data-testid="container-plan-cards">
+          <div data-testid="container-plan-cards">
             {filtered.length === 0 ? (
-              <div
-                className="text-center py-10 text-muted-foreground text-sm"
-                data-testid="text-no-results"
-              >
-                No remediation plans match the selected filters.
+              <div className="text-center py-16 text-muted-foreground" data-testid="text-no-results">
+                <Database size={40} className="mx-auto mb-4 opacity-30" />
+                <p className="text-lg font-semibold">No remediation plans match the selected filters.</p>
               </div>
             ) : (
-              filtered.map((plan) => (
-                <PlanCard key={plan.id} plan={plan} showFacility={showFacility} />
-              ))
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {filtered.map((plan) => (
+                  <PlanCard
+                    key={plan.id}
+                    plan={plan}
+                    showFacility={showFacility}
+                    onStatusChange={handleStatusChange}
+                  />
+                ))}
+              </div>
             )}
           </div>
         )}
 
-        {/* Result count */}
         {facilityPlans.length > 0 && filtered.length > 0 && (
-          <p className="text-center text-xs text-muted-foreground pb-4" data-testid="text-result-count">
+          <p className="text-center text-sm text-muted-foreground pb-4" data-testid="text-result-count">
             Showing {filtered.length} of {facilityPlans.length} plan{facilityPlans.length !== 1 ? "s" : ""}
             {dataMode === "demo" && " (demo data)"}
           </p>
