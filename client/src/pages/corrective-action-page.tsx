@@ -116,16 +116,24 @@ function formatDate(iso: string) {
 // ── How to Read This Box ────────────────────────────────────────────────────
 // Rendered in BOTH Demo and Live modes near the top of the page.
 
-function HowToReadBox() {
+function HowToReadBox({ dataMode }: { dataMode: DataMode }) {
   const [open, setOpen] = useState(false);
+  const isDemo = dataMode === "demo";
   return (
-    <div className="rounded-xl border border-border/60 bg-muted/20 overflow-hidden" data-testid="container-how-to-read">
+    <div
+      className={`rounded-xl border overflow-hidden transition-colors ${
+        isDemo
+          ? "border-amber-500/30 bg-amber-500/5 border-l-4 border-l-amber-500/60"
+          : "border-primary/20 bg-primary/5 border-l-4 border-l-primary/50"
+      }`}
+      data-testid="container-how-to-read"
+    >
       <button
-        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-muted/30 transition-colors"
+        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-white/5 transition-colors"
         onClick={() => setOpen((v) => !v)}
         data-testid="button-toggle-how-to-read"
       >
-        <Info size={15} className="text-primary flex-shrink-0" />
+        <Info size={15} className={isDemo ? "text-amber-400 flex-shrink-0" : "text-primary flex-shrink-0"} />
         <span className="text-sm font-semibold">How to read this tracker</span>
         <span className="ml-auto text-xs text-muted-foreground">{open ? "Hide" : "Show"}</span>
       </button>
@@ -522,9 +530,26 @@ export default function CorrectiveActionPage() {
             <ArrowLeft size={20} />
           </Button>
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <ClipboardCheck size={16} className="text-primary" />
+            <div className="flex items-center gap-2 flex-wrap">
+              <ClipboardCheck size={16} className="text-primary flex-shrink-0" />
               <h2 className="font-bold text-base" data-testid="text-page-title">Corrective Action Tracker</h2>
+              {dataMode === "demo" ? (
+                <span
+                  className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/40 bg-amber-500/15 text-amber-300"
+                  data-testid="badge-mode-demo"
+                >
+                  <FlaskConical size={9} />
+                  Demo Data
+                </span>
+              ) : (
+                <span
+                  className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border border-green-500/40 bg-green-500/15 text-green-400"
+                  data-testid="badge-mode-live"
+                >
+                  <Database size={9} />
+                  Live Data
+                </span>
+              )}
             </div>
             <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
               {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} &middot; Assign fixes, track progress, verify closure
@@ -582,9 +607,82 @@ export default function CorrectiveActionPage() {
         </div>
 
         {/* ── How to Read This ── */}
-        <HowToReadBox />
+        <HowToReadBox dataMode={dataMode} />
 
-        {/* ── Live Mode: No records yet ── */}
+        {/* ── Stat Summary — always visible, shows 0s when live is empty ── */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5" data-testid="container-stats">
+          {[
+            { label: "Open", count: openCount, icon: Circle, color: "text-blue-400" },
+            { label: "In Progress", count: inProgressCount, icon: Clock, color: "text-amber-400" },
+            { label: "Awaiting Verification", count: awaitingCount, icon: ClipboardCheck, color: "text-purple-400" },
+            { label: "Closed", count: closedCount, icon: CheckCircle2, color: "text-green-400" },
+          ].map(({ label, count, icon: Icon, color }) => (
+            <button
+              key={label}
+              onClick={() => setActiveStatus(activeStatus === (label as ActionStatus) ? "All" : (label as ActionStatus))}
+              className={`rounded-xl border p-3 flex flex-col items-center gap-1 transition-all text-center ${
+                activeStatus === label
+                  ? "border-primary/40 bg-primary/10"
+                  : "border-border bg-card hover:border-primary/25"
+              }`}
+              data-testid={`stat-${label.toLowerCase().replace(/ /g, "-")}`}
+            >
+              <Icon size={15} className={color} />
+              <span className="text-xl font-black">{count}</span>
+              <span className="text-[10px] text-muted-foreground font-semibold leading-tight">{label}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Overdue callout */}
+        {overdueCount > 0 && (
+          <div className="rounded-xl border border-red-500/30 bg-red-500/8 px-4 py-2.5 flex items-center gap-2.5" data-testid="banner-overdue">
+            <AlertTriangle size={15} className="text-red-400 flex-shrink-0" />
+            <p className="text-sm font-semibold text-red-400">
+              {overdueCount} action{overdueCount > 1 ? "s are" : " is"} overdue and need immediate attention.
+            </p>
+          </div>
+        )}
+
+        {/* ── Filters — always visible ── */}
+        <div className="flex flex-wrap gap-2 items-center" data-testid="container-filters">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {(["All", ...ALL_STATUSES] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setActiveStatus(s === "All" ? "All" : s as ActionStatus)}
+                className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${
+                  activeStatus === s
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card text-muted-foreground border-border hover:border-primary/40"
+                }`}
+                data-testid={`filter-status-${s.toLowerCase().replace(/ /g, "-")}`}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+          <div className="ml-auto flex items-center gap-2">
+            <Select value={activePriority} onValueChange={(v) => setActivePriority(v as ActionPriority | "All")}>
+              <SelectTrigger className="h-8 text-xs w-[130px]" data-testid="filter-priority">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="All">All Priorities</SelectItem>
+                {(["Critical", "High", "Medium", "Low"] as ActionPriority[]).map((p) => (
+                  <SelectItem key={p} value={p}>{p}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {(activeStatus !== "All" || activePriority !== "All") && (
+              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setActiveStatus("All"); setActivePriority("All"); }} data-testid="button-clear-filters">
+                <X size={14} />
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* ── Cards area: empty state (live only) or card list ── */}
         {dataMode === "live" && liveActions.length === 0 ? (
           <>
             {permissions.canCreateActions && (
@@ -597,103 +695,25 @@ export default function CorrectiveActionPage() {
             <LiveEmptyState />
           </>
         ) : (
-          <>
-            {/* ── Stat Summary ── */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5" data-testid="container-stats">
-              {[
-                { label: "Open", count: openCount, icon: Circle, color: "text-blue-400" },
-                { label: "In Progress", count: inProgressCount, icon: Clock, color: "text-amber-400" },
-                { label: "Awaiting Verification", count: awaitingCount, icon: ClipboardCheck, color: "text-purple-400" },
-                { label: "Closed", count: closedCount, icon: CheckCircle2, color: "text-green-400" },
-              ].map(({ label, count, icon: Icon, color }) => (
-                <button
-                  key={label}
-                  onClick={() => setActiveStatus(activeStatus === (label as ActionStatus) ? "All" : (label as ActionStatus))}
-                  className={`rounded-xl border p-3 flex flex-col items-center gap-1 transition-all text-center ${
-                    activeStatus === label
-                      ? "border-primary/40 bg-primary/10"
-                      : "border-border bg-card hover:border-primary/25"
-                  }`}
-                  data-testid={`stat-${label.toLowerCase().replace(/ /g, "-")}`}
-                >
-                  <Icon size={15} className={color} />
-                  <span className="text-xl font-black">{count}</span>
-                  <span className="text-[10px] text-muted-foreground font-semibold leading-tight">{label}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Overdue callout */}
-            {overdueCount > 0 && (
-              <div className="rounded-xl border border-red-500/30 bg-red-500/8 px-4 py-2.5 flex items-center gap-2.5" data-testid="banner-overdue">
-                <AlertTriangle size={15} className="text-red-400 flex-shrink-0" />
-                <p className="text-sm font-semibold text-red-400">
-                  {overdueCount} action{overdueCount > 1 ? "s are" : " is"} overdue and need immediate attention.
-                </p>
+          <div className="flex flex-col gap-3" data-testid="container-action-cards">
+            {filtered.length === 0 ? (
+              <div className="text-center py-10 text-muted-foreground text-sm" data-testid="text-no-results">
+                No actions match your current filters.
               </div>
+            ) : (
+              filtered.map((action) => (
+                <ActionCard key={action.id} action={action} showFacility={showFacility} />
+              ))
             )}
+          </div>
+        )}
 
-            {/* ── Filters ── */}
-            <div className="flex flex-wrap gap-2 items-center" data-testid="container-filters">
-              {/* Status filter chips */}
-              <div className="flex items-center gap-1.5 flex-wrap">
-                {(["All", ...ALL_STATUSES] as const).map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setActiveStatus(s === "All" ? "All" : s as ActionStatus)}
-                    className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${
-                      activeStatus === s
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card text-muted-foreground border-border hover:border-primary/40"
-                    }`}
-                    data-testid={`filter-status-${s.toLowerCase().replace(/ /g, "-")}`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-
-              <div className="ml-auto flex items-center gap-2">
-                <Select value={activePriority} onValueChange={(v) => setActivePriority(v as ActionPriority | "All")}>
-                  <SelectTrigger className="h-8 text-xs w-[130px]" data-testid="filter-priority">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="All">All Priorities</SelectItem>
-                    {(["Critical", "High", "Medium", "Low"] as ActionPriority[]).map((p) => (
-                      <SelectItem key={p} value={p}>{p}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {(activeStatus !== "All" || activePriority !== "All") && (
-                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setActiveStatus("All"); setActivePriority("All"); }} data-testid="button-clear-filters">
-                    <X size={14} />
-                  </Button>
-                )}
-              </div>
-            </div>
-
-            {/* ── Card List ── */}
-            <div className="flex flex-col gap-3" data-testid="container-action-cards">
-              {filtered.length === 0 ? (
-                <div className="text-center py-10 text-muted-foreground text-sm" data-testid="text-no-results">
-                  No actions match your current filters.
-                </div>
-              ) : (
-                filtered.map((action) => (
-                  <ActionCard key={action.id} action={action} showFacility={showFacility} />
-                ))
-              )}
-            </div>
-
-            {/* Filtered count */}
-            {filtered.length > 0 && (
-              <p className="text-center text-xs text-muted-foreground pb-4" data-testid="text-result-count">
-                Showing {filtered.length} of {facilityActions.length} action{facilityActions.length !== 1 ? "s" : ""}
-                {dataMode === "demo" && " (demo data)"}
-              </p>
-            )}
-          </>
+        {/* Filtered count */}
+        {facilityActions.length > 0 && filtered.length > 0 && (
+          <p className="text-center text-xs text-muted-foreground pb-4" data-testid="text-result-count">
+            Showing {filtered.length} of {facilityActions.length} action{facilityActions.length !== 1 ? "s" : ""}
+            {dataMode === "demo" && " (demo data)"}
+          </p>
         )}
       </div>
 
