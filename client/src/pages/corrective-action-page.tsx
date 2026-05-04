@@ -196,7 +196,7 @@ function PurposeBanner() {
   return (
     <div className="rounded-2xl border border-primary/25 bg-primary/6 px-5 py-4" data-testid="banner-purpose">
       <p className="text-sm leading-relaxed text-foreground/80">
-        <span className="font-semibold text-foreground/95">Guided Review Plans</span> are assigned when a learner scores below the required passing threshold on the final test.
+        <span className="font-semibold text-foreground/95">Guided Education Plans</span> are assigned when a learner scores below the required passing threshold on the final test.
         Each plan provides targeted review steps, reinforcement activities, and — where needed — a supervisor reassessment before the plan is marked complete.
       </p>
     </div>
@@ -229,14 +229,14 @@ function HowToReadBox() {
           >
             <div className="px-5 pb-5 pt-4 flex flex-col gap-4 text-sm text-muted-foreground leading-relaxed border-t border-border/40 bg-card">
               <p className="text-foreground/80 text-base">
-                Each card represents a learner remediation plan created after a final test score below the required passing threshold.
+                Each card represents a learner guided education plan created after a final test score below the required passing threshold.
               </p>
               <div>
                 <p className="font-bold text-foreground/90 mb-2 text-sm uppercase tracking-wide">Status</p>
                 <ul className="space-y-2 pl-1">
-                  <li><span className="font-semibold text-blue-300">Assigned</span> — the remediation plan has been created and assigned</li>
+                  <li><span className="font-semibold text-blue-300">Assigned</span> — the guided education plan has been created and assigned</li>
                   <li><span className="font-semibold text-amber-300">In Progress</span> — the learner is completing review or reinforcement steps</li>
-                  <li><span className="font-semibold text-green-300">Completed</span> — the learner finished the assigned remediation work</li>
+                  <li><span className="font-semibold text-green-300">Completed</span> — the learner finished the assigned education activities</li>
                   <li><span className="font-semibold text-purple-300">Verified</span> — a supervisor or educator confirmed completion</li>
                 </ul>
               </div>
@@ -246,7 +246,7 @@ function HowToReadBox() {
               </div>
               <div>
                 <p className="font-bold text-foreground/90 mb-1 text-sm uppercase tracking-wide">Passing Threshold</p>
-                <p>The minimum score required to pass without remediation.</p>
+                <p>The minimum score required to pass without a guided education plan.</p>
               </div>
               <div>
                 <p className="font-bold text-foreground/90 mb-1 text-sm uppercase tracking-wide">Assigned Plan</p>
@@ -344,11 +344,11 @@ function CreatePlanDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg">
             <GraduationCap size={19} className="text-primary" />
-            Create Demo Guided Review Plan
+            Create Demo Guided Education Plan
           </DialogTitle>
         </DialogHeader>
         <p className="text-sm text-muted-foreground -mt-1 mb-2 leading-relaxed">
-          Creates a sample plan for demonstration. In production, guided review plans are assigned automatically when a learner scores below the passing threshold on a final test.
+          Creates a sample plan for demonstration. In production, guided education plans are assigned automatically when a learner scores below the passing threshold on a final test.
         </p>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
@@ -395,7 +395,7 @@ function CreatePlanDialog({
             <div className="rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-sm text-muted-foreground flex items-center gap-2">
               <BookOpen size={13} className="text-primary/60" />
               Final Test
-              <span className="ml-1 text-[10px] text-muted-foreground/55">(only final tests trigger remediation)</span>
+              <span className="ml-1 text-[10px] text-muted-foreground/55">(only final tests trigger a guided education plan)</span>
             </div>
           </div>
 
@@ -460,7 +460,7 @@ function CreatePlanDialog({
 
           <div className="flex gap-2 pt-1">
             <Button type="submit" className="flex-1" size="lg" data-testid="button-submit-plan">
-              <Plus size={16} className="mr-1.5" /> Assign Guided Review Plan
+              <Plus size={16} className="mr-1.5" /> Assign Guided Education Plan
             </Button>
             <Button type="button" variant="outline" size="lg" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-plan">
               Cancel
@@ -678,10 +678,10 @@ function PlanLibraryDrawer({ open, onClose }: { open: boolean; onClose: () => vo
       <SheetContent side="right" className="w-full max-w-lg flex flex-col p-0 gap-0" data-testid="drawer-plan-library">
         <SheetHeader className="px-6 pt-6 pb-4 border-b border-border/40 flex-shrink-0">
           <SheetTitle className="flex items-center gap-2 text-xl">
-            <Library size={20} className="text-primary" /> Guided Review Library
+            <Library size={20} className="text-primary" /> Guided Education Library
           </SheetTitle>
           <SheetDescription className="text-sm leading-relaxed">
-            Browse all preset guided review plans by facility type, category, or score band.
+            Browse all preset guided education plans by facility type, category, or score band.
           </SheetDescription>
         </SheetHeader>
 
@@ -808,12 +808,12 @@ function LiveEmptyState({ onCreateDemo, onBrowseLibrary }: { onCreateDemo: () =>
       <div className="max-w-md">
         <h3 className="text-xl font-bold mb-2" data-testid="text-empty-title">All learners are on track.</h3>
         <p className="text-base text-muted-foreground leading-relaxed" data-testid="text-empty-body">
-          Guided Review Plans appear here when a learner scores below the passing threshold on a final test. Browse the library to see what plans are available.
+          Guided Education Plans appear here when a learner scores below the passing threshold on a final test. Browse the library to see what education plans are available.
         </p>
       </div>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Button size="lg" variant="outline" onClick={onBrowseLibrary} data-testid="button-browse-library-empty">
-          <Library size={16} className="mr-2" /> Browse Review Library
+          <Library size={16} className="mr-2" /> Browse Education Library
         </Button>
         <Button size="lg" variant="ghost" onClick={onCreateDemo} data-testid="button-create-plan-empty">
           <Plus size={16} className="mr-2" /> Create Demo Plan
@@ -915,7 +915,7 @@ export default function CorrectiveActionPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
               <GraduationCap size={18} className="text-primary flex-shrink-0" />
-              <h2 className="font-bold text-xl" data-testid="text-page-title">Guided Review Plans</h2>
+              <h2 className="font-bold text-xl" data-testid="text-page-title">Guided Education Plans</h2>
               {dataMode === "demo" ? (
                 <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-500/40 bg-amber-500/15 text-amber-300" data-testid="badge-mode-demo">
                   <FlaskConical size={10} /> Demo Data
@@ -931,7 +931,7 @@ export default function CorrectiveActionPage() {
             </p>
           </div>
           <Button size="lg" variant="outline" onClick={() => setLibraryOpen(true)} data-testid="button-browse-library-header">
-            <Library size={16} className="mr-2" /> Browse Review Library
+            <Library size={16} className="mr-2" /> Browse Education Library
           </Button>
           <Button size="lg" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-header">
             <Plus size={16} className="mr-2" /> Create Demo Plan
@@ -972,7 +972,7 @@ export default function CorrectiveActionPage() {
               <FlaskConical size={14} className="text-amber-400 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-amber-300/80 leading-relaxed">
                 <span className="font-bold text-amber-300">Demo Data — </span>
-                Sample remediation plans for demonstration. In production, plans are assigned automatically when a learner scores below the passing threshold on a final test.
+                Sample guided education plans for demonstration. In production, plans are assigned automatically when a learner scores below the passing threshold on a final test.
               </p>
             </div>
           )}
@@ -1076,7 +1076,7 @@ export default function CorrectiveActionPage() {
             {filtered.length === 0 ? (
               <div className="text-center py-16 text-muted-foreground" data-testid="text-no-results">
                 <Database size={40} className="mx-auto mb-4 opacity-30" />
-                <p className="text-lg font-semibold">No guided review plans match the selected filters.</p>
+                <p className="text-lg font-semibold">No guided education plans match the selected filters.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

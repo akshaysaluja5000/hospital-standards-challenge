@@ -314,7 +314,7 @@ function generateNarrative(
   const recentCompleted = recent.reduce((s, w) => s + w.completed, 0);
   const trendImproving = recentCompleted >= recentAssigned;
 
-  let text = `As of ${format(TODAY, "MMMM d, yyyy")}, there are ${kpis.active} active remediation plan${kpis.active !== 1 ? "s" : ""} ${scopeLabel}.`;
+  let text = `As of ${format(TODAY, "MMMM d, yyyy")}, there are ${kpis.active} active guided education plan${kpis.active !== 1 ? "s" : ""} ${scopeLabel}.`;
   text += " All plans were triggered by final test scores below the 70% passing threshold.";
 
   if (kpis.overdue > 0) {
@@ -385,7 +385,7 @@ const RISK_CONFIG = {
   green: {
     Icon: ShieldCheck,
     label: "Readiness On Track",
-    sub: "No overdue remediation plans. All learners progressing on schedule.",
+    sub: "No overdue plans. All learners progressing on schedule.",
     bg: "bg-green-500/10 border-green-500/25",
     text: "text-green-400",
     dot: "bg-green-400",
@@ -393,14 +393,14 @@ const RISK_CONFIG = {
   yellow: {
     Icon: ShieldAlert,
     label: "Learner Attention Required",
-    sub: "Some remediation plans are overdue. Learner follow-up recommended.",
+    sub: "Some guided education plans are overdue. Learner follow-up recommended.",
     bg: "bg-amber-500/10 border-amber-500/25",
     text: "text-amber-400",
     dot: "bg-amber-400",
   },
   red: {
     Icon: ShieldX,
-    label: "Remediation Action Required",
+    label: "Guided Education Action Required",
     sub: "Overdue plans with significant score gaps, or completion backlog growing.",
     bg: "bg-destructive/10 border-destructive/30",
     text: "text-destructive",
@@ -427,7 +427,7 @@ function exportCsv(plans: ExecPlan[], facilityName: string) {
   const link = document.createElement("a");
   const slug = facilityName.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
   link.href = url;
-  link.download = `remediation-report-${slug}-${format(TODAY, "yyyy-MM-dd")}.csv`;
+  link.download = `education-report-${slug}-${format(TODAY, "yyyy-MM-dd")}.csv`;
   link.click();
   URL.revokeObjectURL(url);
 }
@@ -537,7 +537,7 @@ export default function ExecutiveReportPage() {
               <h2 className="font-bold text-base" data-testid="text-page-title">Executive Readiness Report</h2>
             </div>
             <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
-              {scopedFacilityName} · {format(TODAY, "MMMM d, yyyy")} · Remediation Plans
+              {scopedFacilityName} · {format(TODAY, "MMMM d, yyyy")} · Guided Education Plans
             </p>
           </div>
           <div className="flex gap-2">

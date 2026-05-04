@@ -606,18 +606,18 @@ export default function DashboardPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="rounded-2xl border-2 border-primary/30 bg-primary/8 p-5 shadow-md"
-              data-testid="card-remediation-plans"
+              data-testid="card-guided-education-plans"
             >
               <div className="flex items-center gap-2.5 mb-1">
                 <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
                   <GraduationCap size={18} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base leading-tight" data-testid="text-cap-title">Remediation Plans</h3>
+                  <h3 className="font-bold text-base leading-tight" data-testid="text-cap-title">Guided Education Plans</h3>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-4 mt-1" data-testid="text-cap-subtitle">
-                Final test scores below 70% generate a preset remediation plan — track learner progress and supervisor sign-off.
+                Final test scores below 70% generate a guided education plan — track learner progress and supervisor sign-off.
               </p>
 
               <div className="grid grid-cols-3 gap-2 mb-4">
@@ -641,11 +641,11 @@ export default function DashboardPage() {
               <div className="flex gap-2">
                 <Button size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-view-action-plan">
                   <GraduationCap size={14} className="mr-1.5" />
-                  View Remediation Plans
+                  View Guided Education Plans
                 </Button>
                 <Button variant="outline" size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-create-action">
                   <Plus size={14} className="mr-1.5" />
-                  Create Demo Remediation
+                  Create Demo Plan
                 </Button>
               </div>
             </motion.div>
