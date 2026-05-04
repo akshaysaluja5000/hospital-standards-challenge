@@ -3,25 +3,25 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Plus, ClipboardCheck, AlertTriangle, CheckCircle2,
-  Clock, Filter, ChevronDown, X, Calendar, User, Building2,
-  FileText, Flag, StickyNote, Circle
+  Clock, X, Calendar, User, Building2,
+  FileText, Flag, StickyNote, Circle, Info, FlaskConical, Database,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { useFacilityAuth } from "@/lib/facility-auth";
 import { auditLog } from "@/lib/audit-log";
+import { DEMO_CORRECTIVE_ACTIONS } from "@/data/demoCorrectiveActions";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
-type ActionStatus = "Open" | "In Progress" | "Pending Validation" | "Closed";
-type ActionPriority = "Critical" | "High" | "Medium" | "Low";
+export type ActionStatus = "Open" | "In Progress" | "Awaiting Verification" | "Closed";
+export type ActionPriority = "Critical" | "High" | "Medium" | "Low";
 
-interface CorrectiveAction {
+export interface CorrectiveAction {
   id: string;
   title: string;
   standard: string;
@@ -33,6 +33,7 @@ interface CorrectiveAction {
   facilityId: string;
   facilityName: string;
   notes?: string;
+  isDemo?: boolean;
 }
 
 interface CreateActionForm {
@@ -45,199 +46,35 @@ interface CreateActionForm {
   notes: string;
 }
 
-// ── Mock Data ──────────────────────────────────────────────────────────────
-// Two facilities to prove scoped filtering:
-//   facility_mosh = Midwest Orthopedic Specialty Hospital
-//   facility_ohw  = Orthopedic Hospital of Wisconsin
+// ── Data Mode Toggle ────────────────────────────────────────────────────────
+// This is the single source of truth for Demo vs Live data mode.
+// To connect to role-based permissions or admin settings later,
+// replace this local useState with a context value or API flag.
 
-const MOCK_ACTIONS: CorrectiveAction[] = [
-  // ── facility_mosh ──────────────────────────────────────────────────────
-  {
-    id: "cap-001",
-    title: "Document corrective action for temp excursion — med fridge #3",
-    standard: "EC.02.05.07 / AAAHC 8.I.C",
-    department: "Pharmacy",
-    owner: "Maria Chen",
-    dueDate: "2026-05-10",
-    status: "Open",
-    priority: "Critical",
-    facilityId: "facility_mosh",
-    facilityName: "Midwest Orthopedic Specialty Hospital",
-    notes: "Temp log showed 42°F for 4 hours. No corrective action was documented.",
-  },
-  {
-    id: "cap-002",
-    title: "Secure oxygen cylinders in procedure room 2 with approved brackets",
-    standard: "EC.02.06.01",
-    department: "Perioperative",
-    owner: "James Okafor",
-    dueDate: "2026-05-08",
-    status: "In Progress",
-    priority: "Critical",
-    facilityId: "facility_mosh",
-    facilityName: "Midwest Orthopedic Specialty Hospital",
-    notes: "Two cylinders found unsecured against wall. Bracket order placed.",
-  },
-  {
-    id: "cap-003",
-    title: "Replace extension cord used as permanent wiring at nurse station B",
-    standard: "EC.02.05.01",
-    department: "Nursing",
-    owner: "Priya Nair",
-    dueDate: "2026-05-14",
-    status: "Open",
-    priority: "High",
-    facilityId: "facility_mosh",
-    facilityName: "Midwest Orthopedic Specialty Hospital",
-    notes: "",
-  },
-  {
-    id: "cap-004",
-    title: "Update blanket warmer logs to document temp range and corrective steps",
-    standard: "EC.02.05.07",
-    department: "Perioperative",
-    owner: "Derek Walsh",
-    dueDate: "2026-05-20",
-    status: "Pending Validation",
-    priority: "High",
-    facilityId: "facility_mosh",
-    facilityName: "Midwest Orthopedic Specialty Hospital",
-    notes: "New log template distributed. Supervisor needs to verify compliance.",
-  },
-  {
-    id: "cap-005",
-    title: "Attach current PM sticker to EKG machine in cardiology suite",
-    standard: "EC.02.04.01",
-    department: "Cardiology",
-    owner: "Sandra Brooks",
-    dueDate: "2026-04-28",
-    status: "Closed",
-    priority: "Medium",
-    facilityId: "facility_mosh",
-    facilityName: "Midwest Orthopedic Specialty Hospital",
-    notes: "Biomedical completed PM and affixed updated sticker on 4/27.",
-  },
-  {
-    id: "cap-006",
-    title: "Post hand hygiene compliance data in staff break room",
-    standard: "IC.02.01.01",
-    department: "Infection Control",
-    owner: "Tom Reyes",
-    dueDate: "2026-05-30",
-    status: "Open",
-    priority: "Medium",
-    facilityId: "facility_mosh",
-    facilityName: "Midwest Orthopedic Specialty Hospital",
-    notes: "",
-  },
-  {
-    id: "cap-007",
-    title: "Complete fire drill documentation for Q1 — missing patient count signatures",
-    standard: "EC.02.03.03",
-    department: "Facilities",
-    owner: "Linda Park",
-    dueDate: "2026-04-15",
-    status: "Closed",
-    priority: "Low",
-    facilityId: "facility_mosh",
-    facilityName: "Midwest Orthopedic Specialty Hospital",
-    notes: "All signatures collected and filed.",
-  },
+type DataMode = "demo" | "live";
 
-  // ── facility_demo_hospital ─────────────────────────────────────────────
-  {
-    id: "cap-demo-001",
-    title: "Update sterile supply expiration tracking log — OR suite B",
-    standard: "IC.02.02.01",
-    department: "Perioperative",
-    owner: "Keisha Hammond",
-    dueDate: "2026-05-15",
-    status: "Open",
-    priority: "High",
-    facilityId: "facility_demo_hospital",
-    facilityName: "Demo Regional Medical Center",
-    notes: "Supply log missing date entries for 3 items.",
-  },
-  {
-    id: "cap-demo-002",
-    title: "Obtain missing QAPI committee sign-off for Q1 improvement plan",
-    standard: "PI.01.01.01",
-    department: "Quality",
-    owner: "Angela Ross",
-    dueDate: "2026-05-02",
-    status: "Open",
-    priority: "Critical",
-    facilityId: "facility_demo_hospital",
-    facilityName: "Demo Regional Medical Center",
-    notes: "Q1 plan submitted but committee sign-off page missing.",
-  },
-  {
-    id: "cap-demo-003",
-    title: "Correct staff credentialing file — two licenses expired last quarter",
-    standard: "HR.01.05.03",
-    department: "Medical Staff Office",
-    owner: "Diana Cho",
-    dueDate: "2026-05-06",
-    status: "In Progress",
-    priority: "High",
-    facilityId: "facility_demo_hospital",
-    facilityName: "Demo Regional Medical Center",
-    notes: "MSO contacted both staff. Renewals pending.",
-  },
+// ── Live Data Source ────────────────────────────────────────────────────────
+// In Live mode, the page reads from `liveActions` state (initially empty).
+// Connect to a real backend by replacing this with a TanStack Query fetch
+// from an API endpoint such as GET /api/corrective-actions.
+// No fake/synthetic data is ever injected in Live mode.
 
-  // ── facility_ohw ───────────────────────────────────────────────────────
-  {
-    id: "cap-ohw-001",
-    title: "Update fire extinguisher inspection tags — 3 expired in OR corridor",
-    standard: "EC.02.03.05",
-    department: "Facilities",
-    owner: "Marcus Webb",
-    dueDate: "2026-05-12",
-    status: "Open",
-    priority: "High",
-    facilityId: "facility_ohw",
-    facilityName: "Orthopedic Hospital of Wisconsin",
-    notes: "Biomedical to schedule re-inspection before 5/12.",
-  },
-  {
-    id: "cap-ohw-002",
-    title: "Train staff on updated restraint use policy — 6 staff not yet complete",
-    standard: "PC.03.05.01",
-    department: "Nursing",
-    owner: "Rachel Kim",
-    dueDate: "2026-05-18",
-    status: "In Progress",
-    priority: "High",
-    facilityId: "facility_ohw",
-    facilityName: "Orthopedic Hospital of Wisconsin",
-    notes: "Online module assigned. 6 staff have not completed as of last check.",
-  },
-  {
-    id: "cap-ohw-003",
-    title: "Reconcile missing entries in medication administration record for unit 3B",
-    standard: "RC.02.01.01",
-    department: "Nursing",
-    owner: "Yolanda Morris",
-    dueDate: "2026-05-09",
-    status: "Open",
-    priority: "Critical",
-    facilityId: "facility_ohw",
-    facilityName: "Orthopedic Hospital of Wisconsin",
-    notes: "Three entries missing date/time signature from April shift.",
-  },
-];
+const INITIAL_LIVE_ACTIONS: CorrectiveAction[] = [];
 
-const ALL_STATUSES: ActionStatus[] = ["Open", "In Progress", "Pending Validation", "Closed"];
+// ── Constants ──────────────────────────────────────────────────────────────
+
+const ALL_STATUSES: ActionStatus[] = ["Open", "In Progress", "Awaiting Verification", "Closed"];
 
 const DEPARTMENTS = [
   "Pharmacy", "Perioperative", "Nursing", "Cardiology",
-  "Infection Control", "Facilities", "Administration", "Radiology", "Laboratory",
+  "Infection Control", "Facilities", "Administration", "Radiology",
+  "Laboratory", "Biomedical", "Quality", "Medical Staff Office",
 ];
 
 const STANDARDS = [
   "EC.02.05.07", "EC.02.06.01", "EC.02.05.01", "EC.02.04.01",
   "IC.02.01.01", "EC.02.03.03", "RC.02.01.01", "HR.01.05.03",
-  "AAAHC 8.I.C", "AAAHC 5.B", "CMS §482.15",
+  "AAAHC 8.I.C", "AAAHC 5.B", "CMS §482.15", "PI.01.01.01",
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
@@ -247,8 +84,8 @@ function statusConfig(status: ActionStatus) {
     case "Open":
       return { color: "text-blue-400", bg: "bg-blue-500/15 border-blue-500/25", icon: Circle };
     case "In Progress":
-      return { color: "text-chart-4", bg: "bg-chart-4/15 border-chart-4/25", icon: Clock };
-    case "Pending Validation":
+      return { color: "text-amber-400", bg: "bg-amber-500/15 border-amber-500/25", icon: Clock };
+    case "Awaiting Verification":
       return { color: "text-purple-400", bg: "bg-purple-500/15 border-purple-500/25", icon: ClipboardCheck };
     case "Closed":
       return { color: "text-green-400", bg: "bg-green-500/15 border-green-500/25", icon: CheckCircle2 };
@@ -258,11 +95,11 @@ function statusConfig(status: ActionStatus) {
 function priorityConfig(priority: ActionPriority) {
   switch (priority) {
     case "Critical":
-      return { color: "text-destructive", bg: "bg-destructive/15 border-destructive/25" };
+      return { color: "text-red-400", bg: "bg-red-500/15 border-red-500/25" };
     case "High":
       return { color: "text-orange-400", bg: "bg-orange-500/15 border-orange-500/25" };
     case "Medium":
-      return { color: "text-chart-4", bg: "bg-chart-4/15 border-chart-4/25" };
+      return { color: "text-amber-400", bg: "bg-amber-500/15 border-amber-500/25" };
     case "Low":
       return { color: "text-muted-foreground", bg: "bg-muted/40 border-border" };
   }
@@ -276,14 +113,82 @@ function formatDate(iso: string) {
   return format(new Date(iso), "MMM d, yyyy");
 }
 
+// ── How to Read This Box ────────────────────────────────────────────────────
+// Rendered in BOTH Demo and Live modes near the top of the page.
+
+function HowToReadBox() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-xl border border-border/60 bg-muted/20 overflow-hidden" data-testid="container-how-to-read">
+      <button
+        className="w-full flex items-center gap-2.5 px-4 py-3 text-left hover:bg-muted/30 transition-colors"
+        onClick={() => setOpen((v) => !v)}
+        data-testid="button-toggle-how-to-read"
+      >
+        <Info size={15} className="text-primary flex-shrink-0" />
+        <span className="text-sm font-semibold">How to read this tracker</span>
+        <span className="ml-auto text-xs text-muted-foreground">{open ? "Hide" : "Show"}</span>
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 pb-4 flex flex-col gap-2 text-xs text-muted-foreground leading-relaxed border-t border-border/40 pt-3">
+              <p>Each card is one corrective action created from a compliance gap.</p>
+              <ul className="space-y-1.5 pl-1">
+                <li className="flex gap-2">
+                  <span className="text-foreground font-semibold min-w-[110px]">Priority</span>
+                  <span>How serious the issue is — Critical requires immediate attention.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-foreground font-semibold min-w-[110px]">Status</span>
+                  <span>Where the action is in the workflow:</span>
+                </li>
+              </ul>
+              <div className="pl-[118px] space-y-1">
+                {[
+                  ["Open", "Identified but not yet started."],
+                  ["In Progress", "Being actively worked on."],
+                  ["Awaiting Verification", "Fix completed — waiting for supervisor or leader confirmation."],
+                  ["Closed", "Verified and completed."],
+                ].map(([s, d]) => (
+                  <div key={s} className="flex gap-1.5">
+                    <span className="font-semibold text-foreground/80">{s}</span>
+                    <span className="text-muted-foreground">— {d}</span>
+                  </div>
+                ))}
+              </div>
+              <ul className="space-y-1.5 pl-1 mt-1">
+                <li className="flex gap-2">
+                  <span className="text-foreground font-semibold min-w-[110px]">Owner</span>
+                  <span>The responsible role — not necessarily a named individual.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-foreground font-semibold min-w-[110px]">Due date</span>
+                  <span>When the action should be completed.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-foreground font-semibold min-w-[110px]">Standard</span>
+                  <span>The accreditation or regulatory reference linked to the issue.</span>
+                </li>
+              </ul>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // ── Create Action Form ─────────────────────────────────────────────────────
 
 function CreateActionDialog({
-  open,
-  onClose,
-  onSave,
-  defaultFacilityId,
-  defaultFacilityName,
+  open, onClose, onSave, defaultFacilityId, defaultFacilityName,
 }: {
   open: boolean;
   onClose: () => void;
@@ -294,7 +199,6 @@ function CreateActionDialog({
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreateActionForm>({
     defaultValues: { title: "", standard: "", department: "", owner: "", dueDate: "", priority: "Medium", notes: "" },
   });
-
   const priority = watch("priority");
   const department = watch("department");
   const standard = watch("standard");
@@ -327,9 +231,7 @@ function CreateActionDialog({
             Create Corrective Action
           </DialogTitle>
         </DialogHeader>
-
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 mt-2">
-          {/* Title */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold flex items-center gap-1.5">
               <FileText size={13} className="text-muted-foreground" /> Action Title
@@ -342,8 +244,6 @@ function CreateActionDialog({
             />
             {errors.title && <span className="text-xs text-destructive">Required</span>}
           </div>
-
-          {/* Standard */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold flex items-center gap-1.5">
               <ClipboardCheck size={13} className="text-muted-foreground" /> Related Standard
@@ -353,14 +253,10 @@ function CreateActionDialog({
                 <SelectValue placeholder="Select standard..." />
               </SelectTrigger>
               <SelectContent>
-                {STANDARDS.map((s) => (
-                  <SelectItem key={s} value={s}>{s}</SelectItem>
-                ))}
+                {STANDARDS.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
-
-          {/* Department */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold flex items-center gap-1.5">
               <Building2 size={13} className="text-muted-foreground" /> Department
@@ -370,28 +266,22 @@ function CreateActionDialog({
                 <SelectValue placeholder="Select department..." />
               </SelectTrigger>
               <SelectContent>
-                {DEPARTMENTS.map((d) => (
-                  <SelectItem key={d} value={d}>{d}</SelectItem>
-                ))}
+                {DEPARTMENTS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
-
-          {/* Owner */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold flex items-center gap-1.5">
-              <User size={13} className="text-muted-foreground" /> Owner
+              <User size={13} className="text-muted-foreground" /> Owner (role or person)
             </label>
             <input
               {...register("owner", { required: true })}
-              placeholder="Responsible person or role..."
+              placeholder="e.g. Nurse Manager A, Pharmacy Lead..."
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
               data-testid="input-action-owner"
             />
             {errors.owner && <span className="text-xs text-destructive">Required</span>}
           </div>
-
-          {/* Due Date + Priority row */}
           <div className="grid grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-semibold flex items-center gap-1.5">
@@ -421,8 +311,6 @@ function CreateActionDialog({
               </Select>
             </div>
           </div>
-
-          {/* Notes */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold flex items-center gap-1.5">
               <StickyNote size={13} className="text-muted-foreground" /> Notes <span className="text-muted-foreground font-normal">(optional)</span>
@@ -435,11 +323,9 @@ function CreateActionDialog({
               data-testid="textarea-action-notes"
             />
           </div>
-
           <div className="flex gap-2 pt-1">
             <Button type="submit" className="flex-1" data-testid="button-submit-action">
-              <Plus size={15} className="mr-1.5" />
-              Create Action
+              <Plus size={15} className="mr-1.5" /> Create Action
             </Button>
             <Button type="button" variant="outline" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-action">
               Cancel
@@ -463,65 +349,110 @@ function ActionCard({ action, showFacility }: { action: CorrectiveAction; showFa
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border-2 border-border bg-card p-4 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow"
+      className="rounded-2xl border-2 border-border bg-card flex flex-col gap-0 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
       data-testid={`card-action-${action.id}`}
     >
-      {/* Top row: priority badge + status badge */}
-      <div className="flex items-center gap-2 flex-wrap">
-        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${pc.bg} ${pc.color}`} data-testid={`badge-priority-${action.id}`}>
-          <Flag size={10} />
-          {action.priority}
-        </span>
-        <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${sc.bg} ${sc.color}`} data-testid={`badge-status-${action.id}`}>
-          <StatusIcon size={10} />
-          {action.status}
-        </span>
-        {overdue && (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border bg-destructive/15 border-destructive/25 text-destructive" data-testid={`badge-overdue-${action.id}`}>
-            <AlertTriangle size={10} />
-            Overdue
+      {/* Top color bar based on priority */}
+      <div className={`h-1 w-full ${action.priority === "Critical" ? "bg-red-500" : action.priority === "High" ? "bg-orange-500" : action.priority === "Medium" ? "bg-amber-400" : "bg-muted-foreground/30"}`} />
+
+      <div className="p-4 flex flex-col gap-3">
+        {/* Badge row */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${pc.bg} ${pc.color}`} data-testid={`badge-priority-${action.id}`}>
+            <Flag size={10} />
+            Priority: {action.priority}
           </span>
-        )}
-        {showFacility && (
-          <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-muted/30 border-border text-muted-foreground" data-testid={`badge-facility-${action.id}`}>
-            <Building2 size={9} />
-            {action.facilityName}
+          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${sc.bg} ${sc.color}`} data-testid={`badge-status-${action.id}`}>
+            <StatusIcon size={10} />
+            Status: {action.status}
           </span>
-        )}
-      </div>
+          {overdue && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border bg-red-500/15 border-red-500/25 text-red-400" data-testid={`badge-overdue-${action.id}`}>
+              <AlertTriangle size={10} />
+              Overdue
+            </span>
+          )}
+          {showFacility && (
+            <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-muted/30 border-border text-muted-foreground" data-testid={`badge-facility-${action.id}`}>
+              <Building2 size={9} />
+              {action.facilityName}
+            </span>
+          )}
+        </div>
 
-      {/* Title */}
-      <p className="text-sm font-semibold leading-snug" data-testid={`text-action-title-${action.id}`}>
-        {action.title}
-      </p>
-
-      {/* Meta grid */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5" data-testid={`text-action-standard-${action.id}`}>
-          <ClipboardCheck size={11} className="flex-shrink-0" />
-          <span className="truncate">{action.standard || "—"}</span>
-        </div>
-        <div className="flex items-center gap-1.5" data-testid={`text-action-department-${action.id}`}>
-          <Building2 size={11} className="flex-shrink-0" />
-          <span className="truncate">{action.department || "—"}</span>
-        </div>
-        <div className="flex items-center gap-1.5" data-testid={`text-action-owner-${action.id}`}>
-          <User size={11} className="flex-shrink-0" />
-          <span className="truncate">{action.owner || "—"}</span>
-        </div>
-        <div className={`flex items-center gap-1.5 ${overdue ? "text-destructive font-semibold" : ""}`} data-testid={`text-action-due-${action.id}`}>
-          <Calendar size={11} className="flex-shrink-0" />
-          <span>{action.dueDate ? formatDate(action.dueDate) : "—"}</span>
-        </div>
-      </div>
-
-      {/* Notes */}
-      {action.notes && (
-        <p className="text-xs text-muted-foreground italic border-t border-border/60 pt-2 leading-relaxed" data-testid={`text-action-notes-${action.id}`}>
-          {action.notes}
+        {/* Title */}
+        <p className="text-sm font-semibold leading-snug" data-testid={`text-action-title-${action.id}`}>
+          {action.title}
         </p>
-      )}
+
+        {/* Labeled meta grid */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+          <div className="flex flex-col gap-0.5" data-testid={`text-action-owner-${action.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Owner</span>
+            <span className="flex items-center gap-1 text-foreground/80 font-medium">
+              <User size={10} className="text-muted-foreground flex-shrink-0" />
+              {action.owner || "—"}
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5" data-testid={`text-action-department-${action.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Department</span>
+            <span className="flex items-center gap-1 text-foreground/80 font-medium">
+              <Building2 size={10} className="text-muted-foreground flex-shrink-0" />
+              {action.department || "—"}
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5" data-testid={`text-action-due-${action.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Due</span>
+            <span className={`flex items-center gap-1 font-medium ${overdue ? "text-red-400" : "text-foreground/80"}`}>
+              <Calendar size={10} className="flex-shrink-0" />
+              {action.dueDate ? formatDate(action.dueDate) : "—"}
+            </span>
+          </div>
+          <div className="flex flex-col gap-0.5" data-testid={`text-action-standard-${action.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Standard</span>
+            <span className="flex items-center gap-1 text-foreground/80 font-medium">
+              <ClipboardCheck size={10} className="text-muted-foreground flex-shrink-0" />
+              {action.standard || "—"}
+            </span>
+          </div>
+        </div>
+
+        {/* Notes */}
+        {action.notes && (
+          <p className="text-xs text-muted-foreground italic border-t border-border/50 pt-2.5 leading-relaxed" data-testid={`text-action-notes-${action.id}`}>
+            {action.notes}
+          </p>
+        )}
+      </div>
     </motion.div>
+  );
+}
+
+// ── Live Mode Empty State ──────────────────────────────────────────────────
+
+function LiveEmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-5 py-14 text-center" data-testid="container-live-empty">
+      <div className="w-14 h-14 rounded-full border border-border flex items-center justify-center bg-muted/20">
+        <Database size={26} className="text-muted-foreground" />
+      </div>
+      <div className="max-w-sm">
+        <h3 className="text-base font-bold mb-2" data-testid="text-empty-title">No live corrective actions yet</h3>
+        <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-empty-body">
+          This tracker will display real corrective actions created from identified compliance gaps. Once actions are assigned, you will see the owner role, department, due date, priority, and current status here.
+        </p>
+      </div>
+      <ul className="text-left space-y-2 text-xs text-muted-foreground max-w-xs">
+        <li className="flex gap-2 items-start">
+          <span className="text-primary mt-0.5">•</span>
+          <span>Use this tracker to assign fixes, track progress, and verify closure.</span>
+        </li>
+        <li className="flex gap-2 items-start">
+          <span className="text-primary mt-0.5">•</span>
+          <span>Only real action records should appear in Live Data mode.</span>
+        </li>
+      </ul>
+    </div>
   );
 }
 
@@ -532,23 +463,33 @@ export default function CorrectiveActionPage() {
   const facilityAuth = useFacilityAuth();
   const { facilityId: scopedFacilityId, facilityName: scopedFacilityName, isSuperAdmin, permissions } = facilityAuth;
 
-  const [actions, setActions] = useState<CorrectiveAction[]>(MOCK_ACTIONS);
+  // ── Data Mode Toggle ──────────────────────────────────────────────────────
+  // Switch between Demo Data (synthetic sample records) and Live Data (real backend).
+  // To connect to role-based permissions later, replace this with a prop or context value.
+  const [dataMode, setDataMode] = useState<DataMode>("demo");
+
+  // ── Live data state ───────────────────────────────────────────────────────
+  // In Live mode, start empty. Connect to backend by replacing with a TanStack Query.
+  const [liveActions, setLiveActions] = useState<CorrectiveAction[]>(INITIAL_LIVE_ACTIONS);
+
   const [activeStatus, setActiveStatus] = useState<ActionStatus | "All">("All");
   const [activePriority, setActivePriority] = useState<ActionPriority | "All">("All");
   const [createOpen, setCreateOpen] = useState(false);
 
-  // Facility-scoped base list — CEO/admin never see another hospital's data
+  // Select which dataset to show based on mode
+  const sourceActions = dataMode === "demo" ? DEMO_CORRECTIVE_ACTIONS : liveActions;
+
+  // Facility-scoped base list — in demo mode, show all demo actions; in live, scope by facility
   const facilityActions = useMemo(() => {
-    // Fail-closed: super_admin sees all; everyone else is locked to their facilityId.
-    // If a non-super-admin has no facilityId, they see nothing (never leak cross-facility).
-    if (isSuperAdmin) return actions;
+    if (dataMode === "demo") return sourceActions;
+    if (isSuperAdmin) return sourceActions;
     if (!scopedFacilityId) return [];
-    return actions.filter((a) => a.facilityId === scopedFacilityId);
-  }, [actions, isSuperAdmin, scopedFacilityId]);
+    return sourceActions.filter((a) => a.facilityId === scopedFacilityId);
+  }, [sourceActions, dataMode, isSuperAdmin, scopedFacilityId]);
 
   const openCount = facilityActions.filter((a) => a.status === "Open").length;
   const inProgressCount = facilityActions.filter((a) => a.status === "In Progress").length;
-  const pendingCount = facilityActions.filter((a) => a.status === "Pending Validation").length;
+  const awaitingCount = facilityActions.filter((a) => a.status === "Awaiting Verification").length;
   const closedCount = facilityActions.filter((a) => a.status === "Closed").length;
   const overdueCount = facilityActions.filter(isOverdue).length;
 
@@ -559,7 +500,7 @@ export default function CorrectiveActionPage() {
   });
 
   function handleSave(action: CorrectiveAction) {
-    setActions((prev) => [action, ...prev]);
+    setLiveActions((prev) => [action, ...prev]);
     auditLog({
       userId: facilityAuth.user?.id ?? null,
       role: facilityAuth.facilityRole,
@@ -569,6 +510,8 @@ export default function CorrectiveActionPage() {
       meta: { actionId: action.id, priority: action.priority },
     });
   }
+
+  const showFacility = isSuperAdmin && dataMode !== "demo";
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -581,16 +524,15 @@ export default function CorrectiveActionPage() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <ClipboardCheck size={16} className="text-primary" />
-              <h2 className="font-bold text-base" data-testid="text-page-title">Corrective Action Plan</h2>
+              <h2 className="font-bold text-base" data-testid="text-page-title">Corrective Action Tracker</h2>
             </div>
             <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
-              {scopedFacilityName} &middot; Track gaps, assign fixes, document closure
+              {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} &middot; Assign fixes, track progress, verify closure
             </p>
           </div>
-          {permissions.canCreateActions && (
+          {permissions.canCreateActions && dataMode === "live" && (
             <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-action-header">
-              <Plus size={14} className="mr-1.5" />
-              Create Action
+              <Plus size={14} className="mr-1.5" /> Create Action
             </Button>
           )}
         </div>
@@ -598,119 +540,169 @@ export default function CorrectiveActionPage() {
 
       <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-5 flex flex-col gap-5">
 
-        {/* ── Stat Summary ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5" data-testid="container-stats">
-          {[
-            { label: "Open", count: openCount, icon: Circle, color: "text-blue-400" },
-            { label: "In Progress", count: inProgressCount, icon: Clock, color: "text-chart-4" },
-            { label: "Pending Validation", count: pendingCount, icon: ClipboardCheck, color: "text-purple-400" },
-            { label: "Closed", count: closedCount, icon: CheckCircle2, color: "text-green-400" },
-          ].map(({ label, count, icon: Icon, color }) => (
+        {/* ── Demo / Live Toggle ── */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2 rounded-xl border border-border bg-card p-1" data-testid="container-data-mode-toggle">
             <button
-              key={label}
-              onClick={() => setActiveStatus(activeStatus === label as ActionStatus ? "All" : label as ActionStatus)}
-              className={`rounded-xl border p-3 flex flex-col items-center gap-1 transition-all text-center ${
-                activeStatus === label
-                  ? "border-primary/40 bg-primary/10"
-                  : "border-border bg-card hover:border-primary/25"
+              onClick={() => { setDataMode("demo"); setActiveStatus("All"); setActivePriority("All"); }}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+                dataMode === "demo"
+                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
-              data-testid={`stat-${label.toLowerCase().replace(/ /g, "-")}`}
+              data-testid="button-mode-demo"
             >
-              <Icon size={15} className={color} />
-              <span className="text-xl font-black">{count}</span>
-              <span className="text-[10px] text-muted-foreground font-semibold leading-tight">{label}</span>
+              <FlaskConical size={15} />
+              Demo Data
             </button>
-          ))}
-        </div>
-
-        {/* Overdue callout */}
-        {overdueCount > 0 && (
-          <div className="rounded-xl border border-destructive/30 bg-destructive/8 px-4 py-2.5 flex items-center gap-2.5" data-testid="banner-overdue">
-            <AlertTriangle size={15} className="text-destructive flex-shrink-0" />
-            <p className="text-sm font-semibold text-destructive">
-              {overdueCount} action{overdueCount > 1 ? "s are" : " is"} overdue and need immediate attention.
-            </p>
-          </div>
-        )}
-
-        {/* ── Filters ── */}
-        <div className="flex flex-wrap gap-2 items-center" data-testid="container-filters">
-          <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
-            <Filter size={12} />
-            Filter:
-          </div>
-
-          {/* Status filter pills */}
-          <div className="flex flex-wrap gap-1.5">
-            {(["All", ...ALL_STATUSES] as (ActionStatus | "All")[]).map((s) => (
-              <button
-                key={s}
-                onClick={() => setActiveStatus(s)}
-                className={`text-xs font-semibold px-3 py-1 rounded-full border transition-all ${
-                  activeStatus === s
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card border-border text-muted-foreground hover:border-primary/40"
-                }`}
-                data-testid={`filter-status-${s.toLowerCase().replace(/ /g, "-")}`}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-
-          {/* Priority filter */}
-          <Select value={activePriority} onValueChange={(v) => setActivePriority(v as ActionPriority | "All")}>
-            <SelectTrigger className="h-7 text-xs w-36 border-border" data-testid="select-filter-priority">
-              <Flag size={11} className="mr-1 text-muted-foreground" />
-              <SelectValue placeholder="Priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All">All Priorities</SelectItem>
-              {(["Critical", "High", "Medium", "Low"] as ActionPriority[]).map((p) => (
-                <SelectItem key={p} value={p}>{p}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {(activeStatus !== "All" || activePriority !== "All") && (
             <button
-              onClick={() => { setActiveStatus("All"); setActivePriority("All"); }}
-              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors"
-              data-testid="button-clear-filters"
+              onClick={() => { setDataMode("live"); setActiveStatus("All"); setActivePriority("All"); }}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
+                dataMode === "live"
+                  ? "bg-primary/20 text-primary border border-primary/40"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              data-testid="button-mode-live"
             >
-              <X size={11} /> Clear
+              <Database size={15} />
+              Live Data
             </button>
+          </div>
+
+          {/* Demo mode notice */}
+          {dataMode === "demo" && (
+            <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/8 px-3 py-2" data-testid="banner-demo-mode">
+              <FlaskConical size={13} className="text-amber-400 flex-shrink-0" />
+              <div>
+                <span className="text-xs font-bold text-amber-300">Demo Data</span>
+                <span className="text-xs text-amber-300/70 ml-2">Sample corrective actions shown for demonstration purposes only.</span>
+              </div>
+            </div>
           )}
         </div>
 
-        {/* ── Action List ── */}
-        <div className="flex flex-col gap-3" data-testid="list-actions">
-          {filtered.length === 0 ? (
-            <div className="rounded-2xl border-2 border-dashed border-border bg-card p-10 flex flex-col items-center gap-2 text-center" data-testid="empty-state-actions">
-              <ClipboardCheck size={32} className="text-muted-foreground/40" />
-              <p className="text-sm font-semibold text-muted-foreground">No actions match this filter</p>
-              <p className="text-xs text-muted-foreground/60">Try clearing filters or create a new action</p>
-              {permissions.canCreateActions && (
-                <Button size="sm" className="mt-2" onClick={() => setCreateOpen(true)} data-testid="button-create-from-empty">
-                  <Plus size={13} className="mr-1" /> Create Action
+        {/* ── How to Read This ── */}
+        <HowToReadBox />
+
+        {/* ── Live Mode: No records yet ── */}
+        {dataMode === "live" && liveActions.length === 0 ? (
+          <>
+            {permissions.canCreateActions && (
+              <div className="flex justify-end">
+                <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-action-empty">
+                  <Plus size={14} className="mr-1.5" /> Create First Action
                 </Button>
+              </div>
+            )}
+            <LiveEmptyState />
+          </>
+        ) : (
+          <>
+            {/* ── Stat Summary ── */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5" data-testid="container-stats">
+              {[
+                { label: "Open", count: openCount, icon: Circle, color: "text-blue-400" },
+                { label: "In Progress", count: inProgressCount, icon: Clock, color: "text-amber-400" },
+                { label: "Awaiting Verification", count: awaitingCount, icon: ClipboardCheck, color: "text-purple-400" },
+                { label: "Closed", count: closedCount, icon: CheckCircle2, color: "text-green-400" },
+              ].map(({ label, count, icon: Icon, color }) => (
+                <button
+                  key={label}
+                  onClick={() => setActiveStatus(activeStatus === (label as ActionStatus) ? "All" : (label as ActionStatus))}
+                  className={`rounded-xl border p-3 flex flex-col items-center gap-1 transition-all text-center ${
+                    activeStatus === label
+                      ? "border-primary/40 bg-primary/10"
+                      : "border-border bg-card hover:border-primary/25"
+                  }`}
+                  data-testid={`stat-${label.toLowerCase().replace(/ /g, "-")}`}
+                >
+                  <Icon size={15} className={color} />
+                  <span className="text-xl font-black">{count}</span>
+                  <span className="text-[10px] text-muted-foreground font-semibold leading-tight">{label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Overdue callout */}
+            {overdueCount > 0 && (
+              <div className="rounded-xl border border-red-500/30 bg-red-500/8 px-4 py-2.5 flex items-center gap-2.5" data-testid="banner-overdue">
+                <AlertTriangle size={15} className="text-red-400 flex-shrink-0" />
+                <p className="text-sm font-semibold text-red-400">
+                  {overdueCount} action{overdueCount > 1 ? "s are" : " is"} overdue and need immediate attention.
+                </p>
+              </div>
+            )}
+
+            {/* ── Filters ── */}
+            <div className="flex flex-wrap gap-2 items-center" data-testid="container-filters">
+              {/* Status filter chips */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {(["All", ...ALL_STATUSES] as const).map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setActiveStatus(s === "All" ? "All" : s as ActionStatus)}
+                    className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${
+                      activeStatus === s
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card text-muted-foreground border-border hover:border-primary/40"
+                    }`}
+                    data-testid={`filter-status-${s.toLowerCase().replace(/ /g, "-")}`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+
+              <div className="ml-auto flex items-center gap-2">
+                <Select value={activePriority} onValueChange={(v) => setActivePriority(v as ActionPriority | "All")}>
+                  <SelectTrigger className="h-8 text-xs w-[130px]" data-testid="filter-priority">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="All">All Priorities</SelectItem>
+                    {(["Critical", "High", "Medium", "Low"] as ActionPriority[]).map((p) => (
+                      <SelectItem key={p} value={p}>{p}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {(activeStatus !== "All" || activePriority !== "All") && (
+                  <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setActiveStatus("All"); setActivePriority("All"); }} data-testid="button-clear-filters">
+                    <X size={14} />
+                  </Button>
+                )}
+              </div>
+            </div>
+
+            {/* ── Card List ── */}
+            <div className="flex flex-col gap-3" data-testid="container-action-cards">
+              {filtered.length === 0 ? (
+                <div className="text-center py-10 text-muted-foreground text-sm" data-testid="text-no-results">
+                  No actions match your current filters.
+                </div>
+              ) : (
+                filtered.map((action) => (
+                  <ActionCard key={action.id} action={action} showFacility={showFacility} />
+                ))
               )}
             </div>
-          ) : (
-            filtered.map((action) => (
-              <ActionCard key={action.id} action={action} showFacility={isSuperAdmin} />
-            ))
-          )}
-        </div>
+
+            {/* Filtered count */}
+            {filtered.length > 0 && (
+              <p className="text-center text-xs text-muted-foreground pb-4" data-testid="text-result-count">
+                Showing {filtered.length} of {facilityActions.length} action{facilityActions.length !== 1 ? "s" : ""}
+                {dataMode === "demo" && " (demo data)"}
+              </p>
+            )}
+          </>
+        )}
       </div>
 
-      {/* ── Create Dialog ── */}
       <CreateActionDialog
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onSave={handleSave}
-        defaultFacilityId={scopedFacilityId ?? "facility_mosh"}
-        defaultFacilityName={scopedFacilityName}
+        defaultFacilityId={scopedFacilityId ?? ""}
+        defaultFacilityName={scopedFacilityName ?? ""}
       />
     </div>
   );

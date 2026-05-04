@@ -1,0 +1,105 @@
+Refactor the Corrective Action Tracker to remove misleading fake data and make the screen easier to understand.
+
+Goal:
+I do not want realistic fake names/cases that look like real hospital incidents. Add a clear toggle for Demo Data and Live Data. In Live Data mode, if there is no real backend data yet, show an educational empty state and clearly explain how to interpret the tracker. In Demo Data mode, use obviously synthetic placeholder roles and clearly marked sample records.
+
+Requirements:
+
+1. Rename the page to:
+   Corrective Action Tracker
+
+2. Add a top toggle with two modes:
+   - Demo Data
+   - Live Data
+
+3. Behavior of Demo Data mode:
+   - Show clearly labeled sample records for demonstration purposes.
+   - Add a visible badge near the top:
+     Demo Data
+   - Add helper text:
+     Sample corrective actions shown for demonstration purposes only.
+   - Replace all fake personal names with obviously non-real role-based placeholders such as:
+     - Nurse Manager A
+     - Pharmacy Lead
+     - OR Supervisor
+     - Facilities Coordinator
+     - Infection Prevention Lead
+     - Department Director A
+   - Replace action titles with clearly sample/demo phrasing such as:
+     - Sample refrigerator temperature documentation gap
+     - Sample oxygen cylinder storage correction
+     - Sample extension cord remediation item
+     - Sample blanket warmer log documentation issue
+     - Sample PM sticker follow-up
+   - Replace detailed notes with clearly synthetic phrasing such as:
+     - Sample note for demonstration purposes only
+     - Demo follow-up note
+     - Example verification note
+
+4. Behavior of Live Data mode:
+   - Pull from actual backend/live data only.
+   - Do not inject or generate fake names, fake departments, fake incidents, or fake dates.
+   - If there are no live corrective action records yet, show an empty state instead of fake records.
+
+5. Live Data empty state content:
+   Title:
+   No live corrective actions yet
+
+   Body text:
+   This tracker will display real corrective actions created from identified compliance gaps. Once actions are assigned, you will see the owner role, department, due date, priority, and current status here.
+
+   Add 2 small explanation bullets:
+   - Use this tracker to assign fixes, track progress, and verify closure.
+   - Only real action records should appear in Live Data mode.
+
+6. Add a “How to read this” explanation box near the top of the page in both modes.
+   Use plain language and keep it visible but compact.
+
+   Use this exact content or very close:
+   How to read this tracker
+   - Each card is one corrective action created from a compliance gap.
+   - Priority shows how serious the issue is.
+   - Status shows where the action is in the workflow:
+     Open = identified but not started
+     In Progress = being worked on
+     Awaiting Verification = fix completed and waiting for supervisor/leader confirmation
+     Closed = verified and completed
+   - Owner shows the responsible role, not necessarily a named individual.
+   - Due date shows when the action should be completed.
+   - Standard shows the accreditation/reference standard linked to the issue.
+
+7. Rename status:
+   Pending Validation
+   to:
+   Awaiting Verification
+
+8. Update the card layout to use explicit labels:
+   - Priority:
+   - Status:
+   - Owner:
+   - Department:
+   - Due:
+   - Standard:
+
+9. Make it obvious that demo owners are role placeholders, not people.
+   Prefer role labels over person names.
+   Example:
+   Owner: Pharmacy Lead
+   not:
+   Owner: Maria Chen
+
+10. Keep the current dark visual theme and card style, but improve clarity and reduce ambiguity.
+
+11. Put the mock/sample data in a single clearly named file or constant, such as:
+   sampleCorrectiveActions.ts
+   or
+   demoCorrectiveActions.js
+
+12. Put the live/demo toggle state in a clear location so I can later connect it to role-based permissions or admin settings.
+
+13. Show me after implementation:
+   - which files were changed
+   - where demo data is defined
+   - where live data is pulled from
+   - where the Demo Data / Live Data toggle is controlled
+   - where the “How to read this tracker” explanation is rendered
