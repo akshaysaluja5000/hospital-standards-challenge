@@ -1,0 +1,121 @@
+4. NEW FEATURE PURPOSE
+==================================================
+
+Use this explanatory purpose statement at the top of the page:
+
+“Remediation plans are assigned only when a learner scores below the required passing threshold on the final test. These plans guide targeted review, reinforcement, and reassessment. They do not represent hospital or ASC operational incidents.”
+
+==================================================
+5. STATUS MODEL
+==================================================
+
+Use only these statuses:
+- Assigned
+- In Progress
+- Completed
+- Verified
+
+Do NOT use the old operations-style statuses unless they are fully removed:
+- Open
+- Closed
+- Awaiting Verification
+
+The language should sound educational, not incident-based.
+
+==================================================
+6. CARD / RECORD MODEL
+==================================================
+
+Every remediation record should show:
+
+Required fields:
+- Learner
+- Facility Type (Hospital or ASC)
+- Category (hospital) OR Chapter (ASC)
+- Assessment Type
+- Final Test Score
+- Passing Threshold
+- Assigned Remediation Plan
+- Status
+- Assigned Date
+- Due Date
+
+Optional fields:
+- Assigned By
+- Verified By
+- Notes (educational notes only)
+
+Remove fields that belong to the old operational issue model:
+- Priority
+- Incident seriousness
+- Standard code display on the card
+- Department if it is being used in an operations-management way
+- Owner if it implies operational accountability
+- operational follow-up notes
+
+==================================================
+7. HOW-TO-READ SECTION
+==================================================
+
+Rewrite the “How to read this tracker” section fully.
+
+It must be educational only.
+
+Use something close to this:
+
+“How to read this page
+
+Each card represents a learner remediation plan created after a final test score below the required passing threshold.
+
+Status
+Assigned — the remediation plan has been created and assigned
+In Progress — the learner is completing review or reinforcement steps
+Completed — the learner finished the assigned remediation work
+Verified — a supervisor or educator confirmed completion
+
+Final Test Score
+The learner’s score on the formal post-test/final assessment.
+
+Passing Threshold
+The minimum score required to pass without remediation.
+
+Assigned Plan
+The preset educational follow-up selected for the learner’s category or chapter.”
+
+Remove any references to:
+- issue seriousness
+- operational workflow closure
+- corrective action severity
+- compliance-gap incident management
+
+==================================================
+8. EMPTY STATES
+==================================================
+
+Replace the current empty-state text with educational empty states.
+
+For Live Data:
+“No remediation plans assigned yet.
+Remediation plans appear here only when a learner scores below the required threshold on a final test.”
+
+For filtered empty states:
+“No remediation plans match the selected filters.”
+
+==================================================
+9. DEMO DATA
+==================================================
+
+Replace all old demo data with synthetic learner remediation examples only.
+
+Examples of acceptable hospital demo records:
+- Learner A — Hospital — Instrument Integrity — Final Test — 58% — Threshold 70% — Guided Instrument Inspection Walkthrough — Assigned
+- Learner B — Hospital — Sterile Storage — Final Test — 64% — Threshold 70% — Sterile Storage Standards Review — In Progress
+- Learner C — Hospital — EOC & Safety Compliance — Final Test — 49% — Threshold 70% — Safety Checklist Walkthrough — Completed
+
+Examples of acceptable ASC demo records:
+- ASC Staff A — ASC — Infection Prevention and Control and Safety — Final Test — 61% — Threshold 70% — Infection Prevention Review + Retest — Assigned
+- ASC Staff B — ASC — Governance — Final Test — 54% — Threshold 70% — Governance Concepts Review — In Progress
+- ASC Staff C — ASC — Surgical and Related Services — Final Test — 66% — Threshold 70% — Surgical Services Review + Retest — Verified
+
+Important:
+No diagnostic or drill-based demo entries should create remediation records.

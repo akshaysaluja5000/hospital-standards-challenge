@@ -10,8 +10,8 @@ export type AuditAction =
   | "executive_report_viewed"
   | "executive_report_csv_export"
   | "executive_report_pdf_export"
-  | "corrective_action_plan_viewed"
-  | "corrective_action_created";
+  | "remediation_plan_viewed"
+  | "remediation_plan_created";
 
 export interface AuditEntry {
   userId: string | number | null;

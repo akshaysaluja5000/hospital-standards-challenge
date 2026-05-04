@@ -1,0 +1,145 @@
+10. FACILITY-SPECIFIC REMEDIATION LIBRARIES
+==================================================
+
+Keep separate remediation libraries for Hospital and ASC.
+
+Hospital:
+Use the category-based remediation library already provided, with 3 preset remediation plans per category:
+- Instrument Integrity
+- Facilities & Equipment
+- SPD & Decontamination
+- OR & Sterile Technique
+- Transport of Instruments
+- Environment & Surfaces
+- Clean vs. Dirty
+- Sterile Storage
+- Surgical Safety & Consent
+- Patient Care & Documentation
+- EOC & Safety Compliance
+
+ASC:
+Use the chapter-based remediation library already provided, with 3 preset remediation plans per chapter:
+1. Patient Rights and Responsibilities
+2. Governance
+3. Administration
+4. Quality of Care Provided
+5. Quality Management and Improvement
+6. Clinical Records and Health Information
+7. Infection Prevention and Control and Safety
+8. Facilities and Environment
+9. Anesthesia Care Services
+10. Surgical and Related Services
+11. Pharmaceutical Services
+12. Pathology and Medical Laboratory Services
+13. Diagnostic and Other Imaging Services
+
+The remediation plan assigned should come from the correct library based on:
+- facility type
+- category/chapter
+- final test score below threshold
+
+==================================================
+11. ASSIGNMENT LOGIC
+==================================================
+
+Use this assignment logic only for FINAL TEST results:
+
+- 60–69% → assign 1 remediation plan
+- 50–59% → assign 2 remediation steps
+- below 50% → assign 2 remediation steps plus reassessment before completion
+
+Again:
+this logic applies ONLY to final/post-test scores.
+Never to diagnostic or drill results.
+
+==================================================
+12. UI / LAYOUT FIXES
+==================================================
+
+The current UI is too small, cramped, and hard to read.
+
+Fix readability substantially.
+
+Requirements:
+- increase max content width
+- make the layout visibly larger on desktop
+- enlarge all headings
+- enlarge card titles and body text
+- enlarge summary stat cards
+- enlarge status chips and filter controls
+- enlarge primary/secondary buttons
+- increase vertical spacing between sections and cards
+- reduce the feeling of tiny components floating in a large empty blue canvas
+- optimize for desktop and tablet first, then responsive mobile
+
+Design goals:
+- easy to read at normal desktop zoom
+- no miniature text
+- no tiny tracker cards
+- no tiny filters squeezed into one row
+- empty state should look intentional, centered, and readable
+
+==================================================
+13. BUTTONS / ACTIONS
+==================================================
+
+Replace old operations-style buttons.
+
+Use:
+- View Remediation Plans
+- Create Demo Remediation
+- Assign Remediation Plan
+- Mark In Progress
+- Mark Completed
+- Mark Verified
+
+Avoid:
+- Create Action
+- View Action Plan
+- Close Action
+- Fix Item
+- any incident-management wording
+
+==================================================
+14. CODEBASE CLEANUP REQUIREMENT
+==================================================
+
+Do not just patch the old component if legacy strings and mock data remain behind.
+
+Do a true refactor and cleanup:
+- remove obsolete corrective-action components if no longer needed
+- remove old text constants
+- remove old demo/mock incident records
+- remove old incident-specific types/interfaces
+- remove old helper functions that assume operations issues
+- remove old labels, status mappings, and priority filters
+- remove dead code and hidden components using the legacy model
+
+==================================================
+15. SEARCH-AND-PROVE CLEANUP
+==================================================
+
+Before finalizing, run a full codebase search for legacy operational terms and remove or replace them.
+
+Search for terms such as:
+- Corrective Action Tracker
+- corrective action
+- assign fixes
+- track closure
+- refrigerator
+- oxygen cylinder
+- extension cord
+- blanket warmer
+- pharmacy lead
+- facilities coordinator
+- nurse manager
+- priority critical
+- priority high
+- awaiting verification
+- compliance gap
+- owner
+- standard code
+- open actions
+- closed this month
+
+Then show the search results and confirm what was removed or intentionally replaced.

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert, CheckCircle2, Plus } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert, CheckCircle2, Plus, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -601,30 +601,30 @@ export default function DashboardPage() {
               </motion.button>
             </div>
 
-            {/* Corrective Action Plan */}
+            {/* Remediation Plans */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               className="rounded-2xl border-2 border-primary/30 bg-primary/8 p-5 shadow-md"
-              data-testid="card-corrective-action-plan"
+              data-testid="card-remediation-plans"
             >
               <div className="flex items-center gap-2.5 mb-1">
                 <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
-                  <ClipboardCheck size={18} className="text-primary" />
+                  <GraduationCap size={18} className="text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-base leading-tight" data-testid="text-cap-title">Corrective Action Plan</h3>
+                  <h3 className="font-bold text-base leading-tight" data-testid="text-cap-title">Remediation Plans</h3>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-4 mt-1" data-testid="text-cap-subtitle">
-                Turn missed questions into assigned fixes, track closure, and document follow-up.
+                Final test scores below 70% generate a preset remediation plan — track learner progress and supervisor sign-off.
               </p>
 
               <div className="grid grid-cols-3 gap-2 mb-4">
                 <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-open-actions">
-                  <ClipboardCheck size={15} className="text-primary" />
+                  <GraduationCap size={15} className="text-primary" />
                   <span className="text-xl font-black">0</span>
-                  <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Open Actions</span>
+                  <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Active Plans</span>
                 </div>
                 <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-overdue">
                   <AlertTriangle size={15} className="text-destructive" />
@@ -634,18 +634,18 @@ export default function DashboardPage() {
                 <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-closed-this-month">
                   <CheckCircle2 size={15} className="text-green-500" />
                   <span className="text-xl font-black">0</span>
-                  <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Closed This Month</span>
+                  <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Completed</span>
                 </div>
               </div>
 
               <div className="flex gap-2">
                 <Button size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-view-action-plan">
-                  <ClipboardCheck size={14} className="mr-1.5" />
-                  View Action Plan
+                  <GraduationCap size={14} className="mr-1.5" />
+                  View Remediation Plans
                 </Button>
                 <Button variant="outline" size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-create-action">
                   <Plus size={14} className="mr-1.5" />
-                  Create Action
+                  Create Demo Remediation
                 </Button>
               </div>
             </motion.div>

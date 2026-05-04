@@ -1,0 +1,91 @@
+We need a full refactor of the current tracker/action-plan feature in AccreditationReady.
+
+This is NOT a small tweak.
+The previous implementation still contains legacy operational “Corrective Action Tracker” code, text, demo data, and layout behavior that do not match the intended product.
+
+IMPORTANT PRODUCT SCOPE
+
+AccreditationReady is a teaching and accreditation-readiness platform for hospitals and ASCs.
+It is NOT a hospital operations incident-management or corrective-action system.
+
+The feature must be fully converted into an EDUCATIONAL remediation feature.
+
+==================================================
+1. CORE FEATURE NAME
+==================================================
+
+Rename the feature everywhere from:
+- Corrective Action Tracker
+- Corrective Actions
+- Action Plan / Create Action / View Action Plan
+
+To:
+- Remediation Plans
+- Remediation Plan Library
+- View Remediation Plans
+- Create Demo Remediation
+- Assign Remediation Plan (only if manual assignment exists)
+
+Do a full string replacement across UI labels, helper text, component titles, empty states, buttons, filters, mock data labels, and documentation text.
+
+==================================================
+2. CORE RULE FOR ASSIGNMENT
+==================================================
+
+A remediation plan should ONLY be assigned if a learner scores BELOW 70% on the FINAL TEST / POST-TEST.
+
+Do NOT assign remediation plans for:
+- diagnostic test scores
+- drill scores
+- practice quiz scores
+- readiness review scores
+- study mode questions
+- micro-assessments
+
+Required logic:
+- if assessment_type = "final" and score < 70 → create remediation plan
+- otherwise → do NOT create remediation plan
+
+Behavior by assessment type:
+1. Diagnostic test
+   - baseline only
+   - can recommend study areas
+   - cannot create remediation plan
+
+2. Drills / Practice / Readiness Review
+   - learning/reinforcement only
+   - can recommend review content
+   - cannot create remediation plan
+
+3. Final test / Post-test
+   - formal completion assessment
+   - if score >= 70 → no remediation plan
+   - if score < 70 → create remediation plan from preset library
+
+Please make this restriction explicit in both code and UI copy.
+
+==================================================
+3. REMOVE ALL LEGACY OPERATIONAL TRACKER CONTENT
+==================================================
+
+Delete all old operational incident-tracker logic and sample content.
+
+Examples that must be removed from demo data, UI text, and code:
+- refrigerator temperature documentation gap
+- oxygen cylinder storage correction
+- extension cord remediation item
+- blanket warmer log documentation issue
+- pharmacy lead
+- facilities coordinator
+- nurse manager A
+- department + standard-code heavy incident cards
+- “assign fixes, track closure”
+- “corrective action created from a compliance gap”
+- priority critical / high incident-style tags
+- any operational hospital issue management framing
+
+This feature must not display or imply:
+- real hospital incident management
+- operations remediation
+- safety-event correction workflows
+- active compliance issue tracking inside the facility

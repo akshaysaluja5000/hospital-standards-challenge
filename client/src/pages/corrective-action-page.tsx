@@ -3,118 +3,138 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Plus, ClipboardCheck, AlertTriangle, CheckCircle2,
-  Clock, X, Calendar, User, Building2,
-  FileText, Flag, StickyNote, Circle, Info, FlaskConical, Database,
+  Clock, X, Calendar, User, BookOpen,
+  StickyNote, Circle, Info, FlaskConical, Database,
+  GraduationCap, ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
 import { useFacilityAuth } from "@/lib/facility-auth";
 import { auditLog } from "@/lib/audit-log";
-import { DEMO_CORRECTIVE_ACTIONS } from "@/data/demoCorrectiveActions";
+import { DEMO_REMEDIATION_PLANS } from "@/data/demoCorrectiveActions";
 
 // ── Types ──────────────────────────────────────────────────────────────────
+// Remediation plans are ONLY created when a learner scores below 70% on a
+// final test / post-test. Diagnostic, practice quiz, readiness review, and
+// study mode results do NOT trigger remediation.
 
-export type ActionStatus = "Open" | "In Progress" | "Awaiting Verification" | "Closed";
-export type ActionPriority = "Critical" | "High" | "Medium" | "Low";
+export type PlanStatus = "Active" | "In Progress" | "Awaiting Verification" | "Completed";
 
-export interface CorrectiveAction {
+export interface RemediationPlan {
   id: string;
-  title: string;
-  standard: string;
-  department: string;
-  owner: string;
+  learnerRole: string;
+  module: string;
+  chapter: string;
+  quizScore: number;
+  remediationStep: string;
+  status: PlanStatus;
+  assignedDate: string;
   dueDate: string;
-  status: ActionStatus;
-  priority: ActionPriority;
   facilityId: string;
   facilityName: string;
   notes?: string;
+  reassessmentRequired?: boolean;
   isDemo?: boolean;
 }
 
-interface CreateActionForm {
-  title: string;
-  standard: string;
-  department: string;
-  owner: string;
+interface CreatePlanForm {
+  chapter: string;
+  learnerRole: string;
+  quizScore: string;
   dueDate: string;
-  priority: ActionPriority;
   notes: string;
 }
 
 // ── Data Mode Toggle ────────────────────────────────────────────────────────
-// This is the single source of truth for Demo vs Live data mode.
-// To connect to role-based permissions or admin settings later,
-// replace this local useState with a context value or API flag.
 
 type DataMode = "demo" | "live";
 
 // ── Live Data Source ────────────────────────────────────────────────────────
-// In Live mode, the page reads from `liveActions` state (initially empty).
-// Connect to a real backend by replacing this with a TanStack Query fetch
-// from an API endpoint such as GET /api/corrective-actions.
-// No fake/synthetic data is ever injected in Live mode.
+// In Live mode, plans are auto-created from final test results (score < 70%).
+// Manual demo creation is available in Demo mode only.
+// Connect to a real backend by replacing with a TanStack Query on a
+// GET /api/remediation-plans endpoint.
 
-const INITIAL_LIVE_ACTIONS: CorrectiveAction[] = [];
+const INITIAL_LIVE_PLANS: RemediationPlan[] = [];
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const ALL_STATUSES: ActionStatus[] = ["Open", "In Progress", "Awaiting Verification", "Closed"];
+const ALL_STATUSES: PlanStatus[] = ["Active", "In Progress", "Awaiting Verification", "Completed"];
 
-const DEPARTMENTS = [
-  "Pharmacy", "Perioperative", "Nursing", "Cardiology",
-  "Infection Control", "Facilities", "Administration", "Radiology",
-  "Laboratory", "Biomedical", "Quality", "Medical Staff Office",
+const CHAPTER_OPTIONS = [
+  // Hospital — Joint Commission
+  "Transport of Instruments",
+  "Environment & Surfaces",
+  "Clean vs. Dirty",
+  "Sterile Storage",
+  "Instrument Integrity",
+  "Facilities & Equipment",
+  "SPD & Decontamination",
+  "OR & Sterile Technique",
+  "Surgical Safety & Consent",
+  "Patient Care & Documentation",
+  "EOC & Safety Compliance",
+  // ASC — AAAHC / CMS
+  "ASC: Patient Rights and Responsibilities",
+  "ASC: Governance",
+  "ASC: Administration",
+  "ASC: Quality of Care Provided",
+  "ASC: Quality Management and Improvement",
+  "ASC: Clinical Records and Health Information",
+  "ASC: Infection Prevention and Control and Safety",
+  "ASC: Facilities and Environment",
+  "ASC: Anesthesia and Surgical Services",
+  "ASC: Pharmaceutical Services",
 ];
 
-const STANDARDS = [
-  "EC.02.05.07", "EC.02.06.01", "EC.02.05.01", "EC.02.04.01",
-  "IC.02.01.01", "EC.02.03.03", "RC.02.01.01", "HR.01.05.03",
-  "AAAHC 8.I.C", "AAAHC 5.B", "CMS §482.15", "PI.01.01.01",
+const ROLE_OPTIONS = [
+  "OR Circulating Nurse",
+  "OR Scrub Tech",
+  "SPD Technician",
+  "Charge RN",
+  "RN — Pre/Post",
+  "CRNA",
+  "ASC Circulating RN",
+  "Infection Preventionist",
+  "Biomedical Technician",
+  "OR Director",
+  "Quality Coordinator",
+  "Compliance Officer",
 ];
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-function statusConfig(status: ActionStatus) {
+function statusConfig(status: PlanStatus) {
   switch (status) {
-    case "Open":
+    case "Active":
       return { color: "text-blue-400", bg: "bg-blue-500/15 border-blue-500/25", icon: Circle };
     case "In Progress":
       return { color: "text-amber-400", bg: "bg-amber-500/15 border-amber-500/25", icon: Clock };
     case "Awaiting Verification":
       return { color: "text-purple-400", bg: "bg-purple-500/15 border-purple-500/25", icon: ClipboardCheck };
-    case "Closed":
+    case "Completed":
       return { color: "text-green-400", bg: "bg-green-500/15 border-green-500/25", icon: CheckCircle2 };
   }
 }
 
-function priorityConfig(priority: ActionPriority) {
-  switch (priority) {
-    case "Critical":
-      return { color: "text-red-400", bg: "bg-red-500/15 border-red-500/25" };
-    case "High":
-      return { color: "text-orange-400", bg: "bg-orange-500/15 border-orange-500/25" };
-    case "Medium":
-      return { color: "text-amber-400", bg: "bg-amber-500/15 border-amber-500/25" };
-    case "Low":
-      return { color: "text-muted-foreground", bg: "bg-muted/40 border-border" };
-  }
+function scoreConfig(score: number) {
+  if (score >= 60) return { color: "text-amber-400", bg: "bg-amber-500/15 border-amber-500/25", label: `${score}% — Just below passing` };
+  if (score >= 50) return { color: "text-orange-400", bg: "bg-orange-500/15 border-orange-500/25", label: `${score}% — Needs reinforcement` };
+  return { color: "text-red-400", bg: "bg-red-500/15 border-red-500/25", label: `${score}% — Significant gap` };
 }
 
-function isOverdue(action: CorrectiveAction) {
-  return action.status !== "Closed" && new Date(action.dueDate) < new Date();
+function isOverdue(plan: RemediationPlan) {
+  return plan.status !== "Completed" && new Date(plan.dueDate) < new Date();
 }
 
 function formatDate(iso: string) {
   return format(new Date(iso), "MMM d, yyyy");
 }
 
-// ── How to Read This Box ────────────────────────────────────────────────────
-// Rendered in BOTH Demo and Live modes near the top of the page.
+// ── How Remediation Plans Work ──────────────────────────────────────────────
 
 function HowToReadBox({ dataMode }: { dataMode: DataMode }) {
   const [open, setOpen] = useState(false);
@@ -134,7 +154,7 @@ function HowToReadBox({ dataMode }: { dataMode: DataMode }) {
         data-testid="button-toggle-how-to-read"
       >
         <Info size={15} className={isDemo ? "text-amber-400 flex-shrink-0" : "text-primary flex-shrink-0"} />
-        <span className="text-sm font-semibold">How to read this tracker</span>
+        <span className="text-sm font-semibold">How remediation plans work</span>
         <span className="ml-auto text-xs text-muted-foreground">{open ? "Hide" : "Show"}</span>
       </button>
       <AnimatePresence>
@@ -147,23 +167,37 @@ function HowToReadBox({ dataMode }: { dataMode: DataMode }) {
             className="overflow-hidden"
           >
             <div className="px-4 pb-4 flex flex-col gap-2 text-xs text-muted-foreground leading-relaxed border-t border-border/40 pt-3">
-              <p>Each card is one corrective action created from a compliance gap.</p>
-              <ul className="space-y-1.5 pl-1">
+              <p className="font-semibold text-foreground/80">
+                Remediation plans are assigned automatically when a learner scores below 70% on a final test.
+              </p>
+              <p className="text-amber-400/90 font-medium">
+                Diagnostic quizzes, practice sessions, readiness reviews, and study mode do not trigger remediation.
+                Only a final test result below 70% creates a plan.
+              </p>
+              <ul className="space-y-1.5 pl-1 mt-1">
                 <li className="flex gap-2">
-                  <span className="text-foreground font-semibold min-w-[110px]">Priority</span>
-                  <span>How serious the issue is — Critical requires immediate attention.</span>
+                  <span className="text-foreground font-semibold min-w-[130px]">Score</span>
+                  <span>The final test score (%) that triggered this plan. Lower scores receive more intensive steps.</span>
                 </li>
                 <li className="flex gap-2">
-                  <span className="text-foreground font-semibold min-w-[110px]">Status</span>
-                  <span>Where the action is in the workflow:</span>
+                  <span className="text-foreground font-semibold min-w-[130px]">Chapter</span>
+                  <span>The training domain where the knowledge gap was identified.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-foreground font-semibold min-w-[130px]">Remediation Step</span>
+                  <span>The specific learning activity assigned from the preset library.</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-foreground font-semibold min-w-[130px]">Reassessment</span>
+                  <span>Scores below 50% require a supervisor reassessment before the plan can close.</span>
                 </li>
               </ul>
-              <div className="pl-[118px] space-y-1">
+              <div className="pl-[138px] space-y-1 mt-0.5">
                 {[
-                  ["Open", "Identified but not yet started."],
-                  ["In Progress", "Being actively worked on."],
-                  ["Awaiting Verification", "Fix completed — waiting for supervisor or leader confirmation."],
-                  ["Closed", "Verified and completed."],
+                  ["Active", "Plan assigned — not yet started."],
+                  ["In Progress", "Learner is working through the assigned steps."],
+                  ["Awaiting Verification", "Steps complete — waiting for supervisor confirmation."],
+                  ["Completed", "Verified and finished. Learner may retake the final test."],
                 ].map(([s, d]) => (
                   <div key={s} className="flex gap-1.5">
                     <span className="font-semibold text-foreground/80">{s}</span>
@@ -171,20 +205,6 @@ function HowToReadBox({ dataMode }: { dataMode: DataMode }) {
                   </div>
                 ))}
               </div>
-              <ul className="space-y-1.5 pl-1 mt-1">
-                <li className="flex gap-2">
-                  <span className="text-foreground font-semibold min-w-[110px]">Owner</span>
-                  <span>The responsible role — not necessarily a named individual.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-foreground font-semibold min-w-[110px]">Due date</span>
-                  <span>When the action should be completed.</span>
-                </li>
-                <li className="flex gap-2">
-                  <span className="text-foreground font-semibold min-w-[110px]">Standard</span>
-                  <span>The accreditation or regulatory reference linked to the issue.</span>
-                </li>
-              </ul>
             </div>
           </motion.div>
         )}
@@ -193,104 +213,125 @@ function HowToReadBox({ dataMode }: { dataMode: DataMode }) {
   );
 }
 
-// ── Create Action Form ─────────────────────────────────────────────────────
+// ── Create Demo Remediation Form ───────────────────────────────────────────
+// Demo mode only. Illustrates the remediation plan structure; not connected
+// to a real final test result. Real plans are created automatically.
 
-function CreateActionDialog({
+function CreatePlanDialog({
   open, onClose, onSave, defaultFacilityId, defaultFacilityName,
 }: {
   open: boolean;
   onClose: () => void;
-  onSave: (action: CorrectiveAction) => void;
+  onSave: (plan: RemediationPlan) => void;
   defaultFacilityId: string;
   defaultFacilityName: string;
 }) {
-  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreateActionForm>({
-    defaultValues: { title: "", standard: "", department: "", owner: "", dueDate: "", priority: "Medium", notes: "" },
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreatePlanForm>({
+    defaultValues: { chapter: "", learnerRole: "", quizScore: "", dueDate: "", notes: "" },
   });
-  const priority = watch("priority");
-  const department = watch("department");
-  const standard = watch("standard");
+  const chapter = watch("chapter");
+  const learnerRole = watch("learnerRole");
 
-  function onSubmit(data: CreateActionForm) {
-    const newAction: CorrectiveAction = {
-      id: `cap-${Date.now()}`,
-      title: data.title,
-      standard: data.standard,
-      department: data.department,
-      owner: data.owner,
+  function onSubmit(data: CreatePlanForm) {
+    const score = parseInt(data.quizScore, 10);
+    const newPlan: RemediationPlan = {
+      id: `rem-${Date.now()}`,
+      learnerRole: data.learnerRole,
+      module: data.chapter.startsWith("ASC:") ? "ASC (AAAHC/CMS)" : "Hospital (Joint Commission)",
+      chapter: data.chapter,
+      quizScore: score,
+      remediationStep: score < 50
+        ? "Guided Review + Checklist Verification (Reassessment Required)"
+        : score < 60
+        ? "Guided Review + Teach-Back"
+        : "Review + Retest",
+      status: "Active",
+      assignedDate: new Date().toISOString().split("T")[0],
       dueDate: data.dueDate,
-      status: "Open",
-      priority: data.priority,
       facilityId: defaultFacilityId,
       facilityName: defaultFacilityName,
       notes: data.notes,
+      reassessmentRequired: score < 50,
     };
-    onSave(newAction);
+    onSave(newPlan);
     reset();
     onClose();
   }
 
   return (
     <Dialog open={open} onOpenChange={(v) => { if (!v) { onClose(); reset(); } }}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto" data-testid="dialog-create-action">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto" data-testid="dialog-create-plan">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <ClipboardCheck size={18} className="text-primary" />
-            Create Corrective Action
+            <GraduationCap size={18} className="text-primary" />
+            Create Demo Remediation
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 mt-2">
+        <p className="text-xs text-muted-foreground -mt-1 mb-1 leading-relaxed">
+          This creates a sample remediation plan for demonstration. In production, plans are
+          created automatically when a learner scores below 70% on a final test.
+        </p>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 mt-1">
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold flex items-center gap-1.5">
-              <FileText size={13} className="text-muted-foreground" /> Action Title
+              <BookOpen size={13} className="text-muted-foreground" /> Chapter / Domain
             </label>
-            <input
-              {...register("title", { required: true })}
-              placeholder="Describe the corrective action..."
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-              data-testid="input-action-title"
-            />
-            {errors.title && <span className="text-xs text-destructive">Required</span>}
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold flex items-center gap-1.5">
-              <ClipboardCheck size={13} className="text-muted-foreground" /> Related Standard
-            </label>
-            <Select value={standard} onValueChange={(v) => setValue("standard", v)}>
-              <SelectTrigger className="text-sm" data-testid="select-standard">
-                <SelectValue placeholder="Select standard..." />
+            <Select value={chapter} onValueChange={(v) => setValue("chapter", v)}>
+              <SelectTrigger className="text-sm" data-testid="select-chapter">
+                <SelectValue placeholder="Select chapter..." />
               </SelectTrigger>
               <SelectContent>
-                {STANDARDS.map((s) => <SelectItem key={s} value={s}>{s}</SelectItem>)}
+                <SelectGroup>
+                  <SelectLabel>Hospital (Joint Commission)</SelectLabel>
+                  {CHAPTER_OPTIONS.filter((c) => !c.startsWith("ASC:")).map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>ASC (AAAHC/CMS)</SelectLabel>
+                  {CHAPTER_OPTIONS.filter((c) => c.startsWith("ASC:")).map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectGroup>
               </SelectContent>
             </Select>
+            {errors.chapter && <span className="text-xs text-destructive">Required</span>}
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold flex items-center gap-1.5">
-              <Building2 size={13} className="text-muted-foreground" /> Department
+              <User size={13} className="text-muted-foreground" /> Learner Role
             </label>
-            <Select value={department} onValueChange={(v) => setValue("department", v)}>
-              <SelectTrigger className="text-sm" data-testid="select-department">
-                <SelectValue placeholder="Select department..." />
+            <Select value={learnerRole} onValueChange={(v) => setValue("learnerRole", v)}>
+              <SelectTrigger className="text-sm" data-testid="select-learner-role">
+                <SelectValue placeholder="Select role..." />
               </SelectTrigger>
               <SelectContent>
-                {DEPARTMENTS.map((d) => <SelectItem key={d} value={d}>{d}</SelectItem>)}
+                {ROLE_OPTIONS.map((r) => <SelectItem key={r} value={r}>{r}</SelectItem>)}
               </SelectContent>
             </Select>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold flex items-center gap-1.5">
-              <User size={13} className="text-muted-foreground" /> Owner (role or person)
-            </label>
-            <input
-              {...register("owner", { required: true })}
-              placeholder="e.g. Nurse Manager A, Pharmacy Lead..."
-              className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-              data-testid="input-action-owner"
-            />
-            {errors.owner && <span className="text-xs text-destructive">Required</span>}
+            {errors.learnerRole && <span className="text-xs text-destructive">Required</span>}
           </div>
           <div className="grid grid-cols-2 gap-3">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm font-semibold flex items-center gap-1.5">
+                <AlertTriangle size={13} className="text-muted-foreground" /> Final Test Score (%)
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={69}
+                {...register("quizScore", {
+                  required: true,
+                  min: { value: 1, message: "Score must be at least 1" },
+                  max: { value: 69, message: "Only scores below 70% trigger remediation" },
+                })}
+                placeholder="e.g. 62"
+                className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                data-testid="input-quiz-score"
+              />
+              {errors.quizScore && <span className="text-xs text-destructive">{errors.quizScore.message || "Required"}</span>}
+              <p className="text-[10px] text-muted-foreground">Must be below 70% (final test only)</p>
+            </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-sm font-semibold flex items-center gap-1.5">
                 <Calendar size={13} className="text-muted-foreground" /> Due Date
@@ -299,24 +340,9 @@ function CreateActionDialog({
                 type="date"
                 {...register("dueDate", { required: true })}
                 className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-                data-testid="input-action-due-date"
+                data-testid="input-plan-due-date"
               />
               {errors.dueDate && <span className="text-xs text-destructive">Required</span>}
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-semibold flex items-center gap-1.5">
-                <Flag size={13} className="text-muted-foreground" /> Priority
-              </label>
-              <Select value={priority} onValueChange={(v) => setValue("priority", v as ActionPriority)}>
-                <SelectTrigger className="text-sm" data-testid="select-priority">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {(["Critical", "High", "Medium", "Low"] as ActionPriority[]).map((p) => (
-                    <SelectItem key={p} value={p}>{p}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </div>
           <div className="flex flex-col gap-1.5">
@@ -326,16 +352,16 @@ function CreateActionDialog({
             <textarea
               {...register("notes")}
               rows={3}
-              placeholder="Additional context, evidence, or instructions..."
+              placeholder="Additional context or supervisor observations..."
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
-              data-testid="textarea-action-notes"
+              data-testid="textarea-plan-notes"
             />
           </div>
           <div className="flex gap-2 pt-1">
-            <Button type="submit" className="flex-1" data-testid="button-submit-action">
-              <Plus size={15} className="mr-1.5" /> Create Action
+            <Button type="submit" className="flex-1" data-testid="button-submit-plan">
+              <Plus size={15} className="mr-1.5" /> Create Demo Remediation
             </Button>
-            <Button type="button" variant="outline" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-action">
+            <Button type="button" variant="outline" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-plan">
               Cancel
             </Button>
           </div>
@@ -345,12 +371,12 @@ function CreateActionDialog({
   );
 }
 
-// ── Action Card ────────────────────────────────────────────────────────────
+// ── Remediation Plan Card ──────────────────────────────────────────────────
 
-function ActionCard({ action, showFacility }: { action: CorrectiveAction; showFacility: boolean }) {
-  const sc = statusConfig(action.status);
-  const pc = priorityConfig(action.priority);
-  const overdue = isOverdue(action);
+function PlanCard({ plan, showFacility }: { plan: RemediationPlan; showFacility: boolean }) {
+  const sc = statusConfig(plan.status);
+  const scoreC = scoreConfig(plan.quizScore);
+  const overdue = isOverdue(plan);
   const StatusIcon = sc.icon;
 
   return (
@@ -358,77 +384,80 @@ function ActionCard({ action, showFacility }: { action: CorrectiveAction; showFa
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       className="rounded-2xl border-2 border-border bg-card flex flex-col gap-0 shadow-sm hover:shadow-md transition-shadow overflow-hidden"
-      data-testid={`card-action-${action.id}`}
+      data-testid={`card-plan-${plan.id}`}
     >
-      {/* Top color bar based on priority */}
-      <div className={`h-1 w-full ${action.priority === "Critical" ? "bg-red-500" : action.priority === "High" ? "bg-orange-500" : action.priority === "Medium" ? "bg-amber-400" : "bg-muted-foreground/30"}`} />
-
       <div className="p-4 flex flex-col gap-3">
         {/* Badge row */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${pc.bg} ${pc.color}`} data-testid={`badge-priority-${action.id}`}>
-            <Flag size={10} />
-            Priority: {action.priority}
+          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${scoreC.bg} ${scoreC.color}`} data-testid={`badge-score-${plan.id}`}>
+            Score: {plan.quizScore}%
           </span>
-          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${sc.bg} ${sc.color}`} data-testid={`badge-status-${action.id}`}>
+          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border ${sc.bg} ${sc.color}`} data-testid={`badge-status-${plan.id}`}>
             <StatusIcon size={10} />
-            Status: {action.status}
+            {plan.status}
           </span>
+          {plan.reassessmentRequired && plan.status !== "Completed" && (
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border bg-orange-500/15 border-orange-500/25 text-orange-400" data-testid={`badge-reassessment-${plan.id}`}>
+              <ShieldAlert size={10} />
+              Reassessment Required
+            </span>
+          )}
           {overdue && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border bg-red-500/15 border-red-500/25 text-red-400" data-testid={`badge-overdue-${action.id}`}>
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded-full border bg-red-500/15 border-red-500/25 text-red-400" data-testid={`badge-overdue-${plan.id}`}>
               <AlertTriangle size={10} />
               Overdue
             </span>
           )}
           {showFacility && (
-            <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-muted/30 border-border text-muted-foreground" data-testid={`badge-facility-${action.id}`}>
-              <Building2 size={9} />
-              {action.facilityName}
+            <span className="ml-auto inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border bg-muted/30 border-border text-muted-foreground" data-testid={`badge-facility-${plan.id}`}>
+              {plan.facilityName}
             </span>
           )}
         </div>
 
-        {/* Title */}
-        <p className="text-sm font-semibold leading-snug" data-testid={`text-action-title-${action.id}`}>
-          {action.title}
-        </p>
+        {/* Chapter + Step */}
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60 mb-0.5">{plan.chapter}</p>
+          <p className="text-sm font-semibold leading-snug" data-testid={`text-plan-step-${plan.id}`}>
+            {plan.remediationStep}
+          </p>
+        </div>
 
-        {/* Labeled meta grid */}
+        {/* Meta grid */}
         <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-          <div className="flex flex-col gap-0.5" data-testid={`text-action-owner-${action.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Owner</span>
+          <div className="flex flex-col gap-0.5" data-testid={`text-plan-role-${plan.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Learner Role</span>
             <span className="flex items-center gap-1 text-foreground/80 font-medium">
               <User size={10} className="text-muted-foreground flex-shrink-0" />
-              {action.owner || "—"}
+              {plan.learnerRole || "—"}
             </span>
           </div>
-          <div className="flex flex-col gap-0.5" data-testid={`text-action-department-${action.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Department</span>
-            <span className="flex items-center gap-1 text-foreground/80 font-medium">
-              <Building2 size={10} className="text-muted-foreground flex-shrink-0" />
-              {action.department || "—"}
+          <div className="flex flex-col gap-0.5" data-testid={`text-plan-module-${plan.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Module</span>
+            <span className="flex items-center gap-1 text-foreground/80 font-medium text-[11px]">
+              {plan.module}
             </span>
           </div>
-          <div className="flex flex-col gap-0.5" data-testid={`text-action-due-${action.id}`}>
+          <div className="flex flex-col gap-0.5" data-testid={`text-plan-due-${plan.id}`}>
             <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Due</span>
             <span className={`flex items-center gap-1 font-medium ${overdue ? "text-red-400" : "text-foreground/80"}`}>
               <Calendar size={10} className="flex-shrink-0" />
-              {action.dueDate ? formatDate(action.dueDate) : "—"}
+              {plan.dueDate ? formatDate(plan.dueDate) : "—"}
             </span>
           </div>
-          <div className="flex flex-col gap-0.5" data-testid={`text-action-standard-${action.id}`}>
-            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Standard</span>
+          <div className="flex flex-col gap-0.5" data-testid={`text-plan-assigned-${plan.id}`}>
+            <span className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground/60">Assigned</span>
             <span className="flex items-center gap-1 text-foreground/80 font-medium">
-              <ClipboardCheck size={10} className="text-muted-foreground flex-shrink-0" />
-              {action.standard || "—"}
+              <Calendar size={10} className="text-muted-foreground flex-shrink-0" />
+              {plan.assignedDate ? formatDate(plan.assignedDate) : "—"}
             </span>
           </div>
         </div>
 
         {/* Notes */}
-        {action.notes && (
-          <p className="text-xs text-muted-foreground italic border-t border-border/50 pt-2.5 leading-relaxed" data-testid={`text-action-notes-${action.id}`}>
-            {action.notes}
+        {plan.notes && (
+          <p className="text-xs text-muted-foreground italic border-t border-border/50 pt-2.5 leading-relaxed" data-testid={`text-plan-notes-${plan.id}`}>
+            {plan.notes}
           </p>
         )}
       </div>
@@ -445,19 +474,24 @@ function LiveEmptyState() {
         <Database size={26} className="text-muted-foreground" />
       </div>
       <div className="max-w-sm">
-        <h3 className="text-base font-bold mb-2" data-testid="text-empty-title">No live corrective actions yet</h3>
+        <h3 className="text-base font-bold mb-2" data-testid="text-empty-title">No remediation plans yet</h3>
         <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-empty-body">
-          This tracker will display real corrective actions created from identified compliance gaps. Once actions are assigned, you will see the owner role, department, due date, priority, and current status here.
+          Remediation plans appear here automatically when a learner scores below 70% on a final test.
+          Practice quizzes, diagnostics, and readiness reviews do not create plans.
         </p>
       </div>
       <ul className="text-left space-y-2 text-xs text-muted-foreground max-w-xs">
         <li className="flex gap-2 items-start">
           <span className="text-primary mt-0.5">•</span>
-          <span>Use this tracker to assign fixes, track progress, and verify closure.</span>
+          <span>Plans are assigned from the preset remediation library based on the score and chapter.</span>
         </li>
         <li className="flex gap-2 items-start">
           <span className="text-primary mt-0.5">•</span>
-          <span>Only real action records should appear in Live Data mode.</span>
+          <span>Scores below 50% require a supervisor reassessment before a plan can close.</span>
+        </li>
+        <li className="flex gap-2 items-start">
+          <span className="text-primary mt-0.5">•</span>
+          <span>Switch to Demo mode to explore sample remediation plans.</span>
         </li>
       </ul>
     </div>
@@ -471,51 +505,39 @@ export default function CorrectiveActionPage() {
   const facilityAuth = useFacilityAuth();
   const { facilityId: scopedFacilityId, facilityName: scopedFacilityName, isSuperAdmin, permissions } = facilityAuth;
 
-  // ── Data Mode Toggle ──────────────────────────────────────────────────────
-  // Switch between Demo Data (synthetic sample records) and Live Data (real backend).
-  // To connect to role-based permissions later, replace this with a prop or context value.
   const [dataMode, setDataMode] = useState<DataMode>("demo");
-
-  // ── Live data state ───────────────────────────────────────────────────────
-  // In Live mode, start empty. Connect to backend by replacing with a TanStack Query.
-  const [liveActions, setLiveActions] = useState<CorrectiveAction[]>(INITIAL_LIVE_ACTIONS);
-
-  const [activeStatus, setActiveStatus] = useState<ActionStatus | "All">("All");
-  const [activePriority, setActivePriority] = useState<ActionPriority | "All">("All");
+  const [livePlans, setLivePlans] = useState<RemediationPlan[]>(INITIAL_LIVE_PLANS);
+  const [activeStatus, setActiveStatus] = useState<PlanStatus | "All">("All");
   const [createOpen, setCreateOpen] = useState(false);
 
-  // Select which dataset to show based on mode
-  const sourceActions = dataMode === "demo" ? DEMO_CORRECTIVE_ACTIONS : liveActions;
+  const sourcePlans = dataMode === "demo" ? DEMO_REMEDIATION_PLANS : livePlans;
 
-  // Facility-scoped base list — in demo mode, show all demo actions; in live, scope by facility
-  const facilityActions = useMemo(() => {
-    if (dataMode === "demo") return sourceActions;
-    if (isSuperAdmin) return sourceActions;
+  const facilityPlans = useMemo(() => {
+    if (dataMode === "demo") return sourcePlans;
+    if (isSuperAdmin) return sourcePlans;
     if (!scopedFacilityId) return [];
-    return sourceActions.filter((a) => a.facilityId === scopedFacilityId);
-  }, [sourceActions, dataMode, isSuperAdmin, scopedFacilityId]);
+    return sourcePlans.filter((p) => p.facilityId === scopedFacilityId);
+  }, [sourcePlans, dataMode, isSuperAdmin, scopedFacilityId]);
 
-  const openCount = facilityActions.filter((a) => a.status === "Open").length;
-  const inProgressCount = facilityActions.filter((a) => a.status === "In Progress").length;
-  const awaitingCount = facilityActions.filter((a) => a.status === "Awaiting Verification").length;
-  const closedCount = facilityActions.filter((a) => a.status === "Closed").length;
-  const overdueCount = facilityActions.filter(isOverdue).length;
+  const activeCount = facilityPlans.filter((p) => p.status === "Active").length;
+  const inProgressCount = facilityPlans.filter((p) => p.status === "In Progress").length;
+  const awaitingCount = facilityPlans.filter((p) => p.status === "Awaiting Verification").length;
+  const completedCount = facilityPlans.filter((p) => p.status === "Completed").length;
+  const overdueCount = facilityPlans.filter(isOverdue).length;
 
-  const filtered = facilityActions.filter((a) => {
-    const matchStatus = activeStatus === "All" || a.status === activeStatus;
-    const matchPriority = activePriority === "All" || a.priority === activePriority;
-    return matchStatus && matchPriority;
+  const filtered = facilityPlans.filter((p) => {
+    return activeStatus === "All" || p.status === activeStatus;
   });
 
-  function handleSave(action: CorrectiveAction) {
-    setLiveActions((prev) => [action, ...prev]);
+  function handleSave(plan: RemediationPlan) {
+    setLivePlans((prev) => [plan, ...prev]);
     auditLog({
       userId: facilityAuth.user?.id ?? null,
       role: facilityAuth.facilityRole,
       facilityId: scopedFacilityId,
       facilityName: scopedFacilityName,
-      action: "corrective_action_created",
-      meta: { actionId: action.id, priority: action.priority },
+      action: "remediation_plan_created",
+      meta: { planId: plan.id, chapter: plan.chapter, score: plan.quizScore },
     });
   }
 
@@ -531,8 +553,8 @@ export default function CorrectiveActionPage() {
           </Button>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <ClipboardCheck size={16} className="text-primary flex-shrink-0" />
-              <h2 className="font-bold text-base" data-testid="text-page-title">Corrective Action Tracker</h2>
+              <GraduationCap size={16} className="text-primary flex-shrink-0" />
+              <h2 className="font-bold text-base" data-testid="text-page-title">Remediation Plans</h2>
               {dataMode === "demo" ? (
                 <span
                   className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border border-amber-500/40 bg-amber-500/15 text-amber-300"
@@ -552,12 +574,12 @@ export default function CorrectiveActionPage() {
               )}
             </div>
             <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
-              {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} &middot; Assign fixes, track progress, verify closure
+              {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} · Final test results below 70% · Assigned from preset library
             </p>
           </div>
-          {permissions.canCreateActions && dataMode === "live" && (
-            <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-action-header">
-              <Plus size={14} className="mr-1.5" /> Create Action
+          {dataMode === "demo" && (
+            <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-header">
+              <Plus size={14} className="mr-1.5" /> Create Demo
             </Button>
           )}
         </div>
@@ -569,7 +591,7 @@ export default function CorrectiveActionPage() {
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2 rounded-xl border border-border bg-card p-1" data-testid="container-data-mode-toggle">
             <button
-              onClick={() => { setDataMode("demo"); setActiveStatus("All"); setActivePriority("All"); }}
+              onClick={() => { setDataMode("demo"); setActiveStatus("All"); }}
               className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
                 dataMode === "demo"
                   ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
@@ -581,7 +603,7 @@ export default function CorrectiveActionPage() {
               Demo Data
             </button>
             <button
-              onClick={() => { setDataMode("live"); setActiveStatus("All"); setActivePriority("All"); }}
+              onClick={() => { setDataMode("live"); setActiveStatus("All"); }}
               className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-semibold transition-all ${
                 dataMode === "live"
                   ? "bg-primary/20 text-primary border border-primary/40"
@@ -594,32 +616,33 @@ export default function CorrectiveActionPage() {
             </button>
           </div>
 
-          {/* Demo mode notice */}
           {dataMode === "demo" && (
             <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/8 px-3 py-2" data-testid="banner-demo-mode">
               <FlaskConical size={13} className="text-amber-400 flex-shrink-0" />
               <div>
                 <span className="text-xs font-bold text-amber-300">Demo Data</span>
-                <span className="text-xs text-amber-300/70 ml-2">Sample corrective actions shown for demonstration purposes only.</span>
+                <span className="text-xs text-amber-300/70 ml-2">
+                  Sample remediation plans shown for demonstration. Real plans are created automatically when a learner scores below 70% on a final test.
+                </span>
               </div>
             </div>
           )}
         </div>
 
-        {/* ── How to Read This ── */}
+        {/* ── How Remediation Plans Work ── */}
         <HowToReadBox dataMode={dataMode} />
 
-        {/* ── Stat Summary — always visible, shows 0s when live is empty ── */}
+        {/* ── Stat Summary ── */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5" data-testid="container-stats">
           {[
-            { label: "Open", count: openCount, icon: Circle, color: "text-blue-400" },
+            { label: "Active", count: activeCount, icon: Circle, color: "text-blue-400" },
             { label: "In Progress", count: inProgressCount, icon: Clock, color: "text-amber-400" },
             { label: "Awaiting Verification", count: awaitingCount, icon: ClipboardCheck, color: "text-purple-400" },
-            { label: "Closed", count: closedCount, icon: CheckCircle2, color: "text-green-400" },
+            { label: "Completed", count: completedCount, icon: CheckCircle2, color: "text-green-400" },
           ].map(({ label, count, icon: Icon, color }) => (
             <button
               key={label}
-              onClick={() => setActiveStatus(activeStatus === (label as ActionStatus) ? "All" : (label as ActionStatus))}
+              onClick={() => setActiveStatus(activeStatus === (label as PlanStatus) ? "All" : (label as PlanStatus))}
               className={`rounded-xl border p-3 flex flex-col items-center gap-1 transition-all text-center ${
                 activeStatus === label
                   ? "border-primary/40 bg-primary/10"
@@ -639,18 +662,18 @@ export default function CorrectiveActionPage() {
           <div className="rounded-xl border border-red-500/30 bg-red-500/8 px-4 py-2.5 flex items-center gap-2.5" data-testid="banner-overdue">
             <AlertTriangle size={15} className="text-red-400 flex-shrink-0" />
             <p className="text-sm font-semibold text-red-400">
-              {overdueCount} action{overdueCount > 1 ? "s are" : " is"} overdue and need immediate attention.
+              {overdueCount} plan{overdueCount > 1 ? "s are" : " is"} overdue and require follow-up.
             </p>
           </div>
         )}
 
-        {/* ── Filters — always visible ── */}
+        {/* ── Status Filters ── */}
         <div className="flex flex-wrap gap-2 items-center" data-testid="container-filters">
           <div className="flex items-center gap-1.5 flex-wrap">
             {(["All", ...ALL_STATUSES] as const).map((s) => (
               <button
                 key={s}
-                onClick={() => setActiveStatus(s === "All" ? "All" : s as ActionStatus)}
+                onClick={() => setActiveStatus(s === "All" ? "All" : s as PlanStatus)}
                 className={`text-[11px] font-bold px-2.5 py-1 rounded-full border transition-all ${
                   activeStatus === s
                     ? "bg-primary text-primary-foreground border-primary"
@@ -662,62 +685,49 @@ export default function CorrectiveActionPage() {
               </button>
             ))}
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <Select value={activePriority} onValueChange={(v) => setActivePriority(v as ActionPriority | "All")}>
-              <SelectTrigger className="h-8 text-xs w-[130px]" data-testid="filter-priority">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="All">All Priorities</SelectItem>
-                {(["Critical", "High", "Medium", "Low"] as ActionPriority[]).map((p) => (
-                  <SelectItem key={p} value={p}>{p}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {(activeStatus !== "All" || activePriority !== "All") && (
-              <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setActiveStatus("All"); setActivePriority("All"); }} data-testid="button-clear-filters">
-                <X size={14} />
-              </Button>
-            )}
-          </div>
+          {activeStatus !== "All" && (
+            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setActiveStatus("All")} data-testid="button-clear-filters">
+              <X size={14} />
+            </Button>
+          )}
         </div>
 
-        {/* ── Cards area: empty state (live only) or card list ── */}
-        {dataMode === "live" && liveActions.length === 0 ? (
+        {/* ── Cards area ── */}
+        {dataMode === "live" && livePlans.length === 0 ? (
           <>
             {permissions.canCreateActions && (
               <div className="flex justify-end">
-                <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-action-empty">
-                  <Plus size={14} className="mr-1.5" /> Create First Action
+                <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-empty">
+                  <Plus size={14} className="mr-1.5" /> Create Demo Remediation
                 </Button>
               </div>
             )}
             <LiveEmptyState />
           </>
         ) : (
-          <div className="flex flex-col gap-3" data-testid="container-action-cards">
+          <div className="flex flex-col gap-3" data-testid="container-plan-cards">
             {filtered.length === 0 ? (
               <div className="text-center py-10 text-muted-foreground text-sm" data-testid="text-no-results">
-                No actions match your current filters.
+                No plans match your current filters.
               </div>
             ) : (
-              filtered.map((action) => (
-                <ActionCard key={action.id} action={action} showFacility={showFacility} />
+              filtered.map((plan) => (
+                <PlanCard key={plan.id} plan={plan} showFacility={showFacility} />
               ))
             )}
           </div>
         )}
 
-        {/* Filtered count */}
-        {facilityActions.length > 0 && filtered.length > 0 && (
+        {/* Result count */}
+        {facilityPlans.length > 0 && filtered.length > 0 && (
           <p className="text-center text-xs text-muted-foreground pb-4" data-testid="text-result-count">
-            Showing {filtered.length} of {facilityActions.length} action{facilityActions.length !== 1 ? "s" : ""}
+            Showing {filtered.length} of {facilityPlans.length} plan{facilityPlans.length !== 1 ? "s" : ""}
             {dataMode === "demo" && " (demo data)"}
           </p>
         )}
       </div>
 
-      <CreateActionDialog
+      <CreatePlanDialog
         open={createOpen}
         onClose={() => setCreateOpen(false)}
         onSave={handleSave}
