@@ -6,3 +6,27 @@ id = "aEc3XbGxJ-7g2NlCofRHJ"
 uri = "file://survey-readiness-platform.zip"
 type = "unspecified"
 title = "Survey Readiness Platform — Source Code"
+
+[[outputs]]
+id = "KsrC4qW3l44hWyWO43PRI"
+uri = "file://screenshots/remediation-demo-mode.jpg"
+type = "image"
+title = "7. Demo Data Mode — all 6 cards"
+
+[[outputs]]
+id = "sxQ1fYjD7j52zcFHUuqOl"
+uri = "file://screenshots/remediation-live-empty.jpg"
+type = "image"
+title = "8. Live Data Empty State"
+
+[[outputs]]
+id = "USdgsnETkSz2FP8L0VrWQ"
+uri = "file://screenshots/remediation-hospital-example.jpg"
+type = "image"
+title = "9. Hospital Remediation Example — Learner A"
+
+[[outputs]]
+id = "e7Ce0g9xnZ9MBfp3qrBvq"
+uri = "file://screenshots/remediation-asc-example.jpg"
+type = "image"
+title = "10. ASC Remediation Example — ASC Staff A"

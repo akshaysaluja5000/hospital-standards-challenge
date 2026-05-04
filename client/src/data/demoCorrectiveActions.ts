@@ -18,7 +18,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     learner: "Learner A",
     facilityType: "Hospital",
     category: "Instrument Integrity",
-    assessmentType: "Final Test",
+    assessmentType: "final",
     quizScore: 58,
     passingThreshold: 70,
     // 58% → 50–59% → 2 steps
@@ -40,7 +40,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     learner: "Learner B",
     facilityType: "Hospital",
     category: "Sterile Storage",
-    assessmentType: "Final Test",
+    assessmentType: "final",
     quizScore: 64,
     passingThreshold: 70,
     // 64% → 60–69% → 1 step
@@ -61,7 +61,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     learner: "Learner C",
     facilityType: "Hospital",
     category: "EOC & Safety Compliance",
-    assessmentType: "Final Test",
+    assessmentType: "final",
     quizScore: 49,
     passingThreshold: 70,
     // 49% → below 50% → 2 steps + reassessmentRequired
@@ -86,7 +86,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     learner: "ASC Staff A",
     facilityType: "ASC",
     category: "Infection Prevention and Control and Safety",
-    assessmentType: "Final Test",
+    assessmentType: "final",
     quizScore: 61,
     passingThreshold: 70,
     // 61% → 60–69% → 1 step
@@ -107,7 +107,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     learner: "ASC Staff B",
     facilityType: "ASC",
     category: "Governance",
-    assessmentType: "Final Test",
+    assessmentType: "final",
     quizScore: 54,
     passingThreshold: 70,
     // 54% → 50–59% → 2 steps
@@ -129,7 +129,7 @@ export const DEMO_REMEDIATION_PLANS: RemediationPlan[] = [
     learner: "ASC Staff C",
     facilityType: "ASC",
     category: "Surgical and Related Services",
-    assessmentType: "Final Test",
+    assessmentType: "final",
     quizScore: 66,
     passingThreshold: 70,
     // 66% → 60–69% → 1 step

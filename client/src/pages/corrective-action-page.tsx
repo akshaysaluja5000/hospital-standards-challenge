@@ -19,8 +19,45 @@ import { REMEDIATION_LIBRARY } from "@/data/remediationLibrary";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 // Remediation plans are assigned ONLY when a learner scores below the required
-// passing threshold on a final test. Diagnostic, practice quiz, readiness
-// review, and study mode results do NOT trigger remediation.
+// passing threshold on a FINAL test.
+//
+// Assessment types tracked across the platform:
+//   "diagnostic" — knowledge-gap diagnostic, never triggers remediation
+//   "drill"      — rapid-fire drill, never triggers remediation
+//   "practice"   — practice quiz, never triggers remediation
+//   "final"      — formal post-test / final assessment — the ONLY type that
+//                  triggers remediation when score < passing threshold
+
+export type AssessmentType = "diagnostic" | "drill" | "practice" | "final";
+
+export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
+  diagnostic: "Diagnostic",
+  drill:      "Drill",
+  practice:   "Practice Quiz",
+  final:      "Final Test",
+};
+
+// ── Remediation Guard ──────────────────────────────────────────────────────
+//
+// THIS IS THE SINGLE SOURCE OF TRUTH for whether a remediation plan should
+// be created. Every code path that creates a remediation plan MUST call
+// this function before proceeding.
+//
+// Logic:
+//   assessment_type === "final"  AND  score < passingThreshold
+//
+// Callers:
+//   - handleSave()               in the Create Demo dialog (manual demo only)
+//   - getRemediationPlan()       in remediationLibrary.ts (quiz engine hook)
+//   - (future) quiz result hook  in the backend when a final test is submitted
+
+export function shouldCreateRemediationPlan(
+  assessmentType: AssessmentType,
+  score: number,
+  passingThreshold = PASSING_THRESHOLD,
+): boolean {
+  return assessmentType === "final" && score < passingThreshold;
+}
 
 export interface RemediationStep {
   title: string;
@@ -34,7 +71,7 @@ export interface RemediationPlan {
   learner: string;
   facilityType: "Hospital" | "ASC";
   category: string;
-  assessmentType: string;
+  assessmentType: AssessmentType;
   quizScore: number;
   passingThreshold: number;
   remediationSteps: RemediationStep[];
@@ -276,13 +313,15 @@ function CreatePlanDialog({
 
   function onSubmit(data: CreatePlanForm) {
     const score = parseInt(data.quizScore, 10);
+    // ── Remediation guard: only "final" assessment type below passing threshold ──
+    if (!shouldCreateRemediationPlan("final", score)) return;
     const steps = getStepsForScore(data.facilityType as "Hospital" | "ASC", data.category, score);
     const newPlan: RemediationPlan = {
       id: `rem-${Date.now()}`,
       learner: data.learner,
       facilityType: data.facilityType as "Hospital" | "ASC",
       category: data.category,
-      assessmentType: "Final Test",
+      assessmentType: "final",
       quizScore: score,
       passingThreshold: PASSING_THRESHOLD,
       remediationSteps: steps,
@@ -501,7 +540,7 @@ function PlanCard({
           <div className="flex-1 min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55 mb-0.5">Category</p>
             <p className="text-lg font-bold leading-snug" data-testid={`text-plan-category-${plan.id}`}>{plan.category}</p>
-            <p className="text-xs text-muted-foreground mt-0.5" data-testid={`text-plan-assessment-${plan.id}`}>{plan.assessmentType}</p>
+            <p className="text-xs text-muted-foreground mt-0.5" data-testid={`text-plan-assessment-${plan.id}`}>{ASSESSMENT_TYPE_LABELS[plan.assessmentType]}</p>
           </div>
         </div>
 
