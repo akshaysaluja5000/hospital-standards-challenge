@@ -1,0 +1,97 @@
+Use the following ASC remediation library for the Remediation Plan feature.
+
+ASC chapters:
+1. Patient Rights and Responsibilities
+2. Governance
+3. Administration
+4. Quality of Care Provided
+5. Quality Management and Improvement
+6. Clinical Records and Health Information
+7. Infection Prevention and Control and Safety
+8. Facilities and Environment
+9. Anesthesia Care Services
+10. Surgical and Related Services
+11. Pharmaceutical Services
+12. Pathology and Medical Laboratory Services
+13. Diagnostic and Other Imaging Services
+
+For ASC mode, create 3 preset remediation plans per chapter using this standard pattern:
+1. Review + Retest
+2. Guided Review + Teach-Back
+3. Checklist/Workflow Review + Verification
+
+Use the following chapter-specific titles:
+
+1. Patient Rights and Responsibilities
+- Patient Rights Review + Retest
+- Guided Review + Teach-Back on Patient Rights
+- Patient Communication Workflow Review
+
+2. Governance
+- Governance Concepts Review
+- Guided Review + Teach-Back on Oversight Roles
+- Governance Readiness Verification
+
+3. Administration
+- Administration Standards Review
+- Guided Review + Teach-Back on Administrative Processes
+- Administrative Workflow Verification
+
+4. Quality of Care Provided
+- Quality of Care Review + Retest
+- Case-Based Guided Review
+- Quality Standards Teach-Back
+
+5. Quality Management and Improvement
+- Quality Improvement Concepts Review
+- Guided Review + Teach-Back on Improvement Process
+- Quality Review Checklist Verification
+
+6. Clinical Records and Health Information
+- Clinical Records Review + Retest
+- Documentation Scenario Review
+- Documentation Teach-Back + Verification
+
+7. Infection Prevention and Control and Safety
+- Infection Prevention Review + Retest
+- Guided Safety and Infection Review
+- Infection Control Checklist Verification
+
+8. Facilities and Environment
+- Facilities and Environment Review
+- Guided Environment Walkthrough Review
+- Facilities Readiness Verification
+
+9. Anesthesia Care Services
+- Anesthesia Standards Review + Retest
+- Guided Review + Teach-Back on Anesthesia Safety
+- Anesthesia Workflow Verification
+
+10. Surgical and Related Services
+- Surgical Services Review + Retest
+- Guided Review of Surgical Workflow
+- Surgical Safety Verification
+
+11. Pharmaceutical Services
+- Pharmaceutical Services Review + Retest
+- Guided Medication Safety Review
+- Medication Workflow Verification
+
+12. Pathology and Medical Laboratory Services
+- Lab Services Review + Retest
+- Guided Review + Teach-Back on Lab-Related Standards
+- Lab Workflow Verification
+
+13. Diagnostic and Other Imaging Services
+- Imaging Services Review + Retest
+- Guided Review + Teach-Back on Imaging Readiness
+- Imaging Workflow Verification
+
+Assignment logic:
+- score 60–69%: assign 1 remediation plan
+- score 50–59%: assign 2 remediation steps
+- score below 50%: assign 2 remediation steps plus reassessment before completion
+
+Use supportive educational wording only.
+Do not use incident-based or hospital-operations corrective action language.
+Show me where the ASC remediation library is stored and how it differs from hospital mode.

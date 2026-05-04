@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { SwipeCard } from "@/components/swipe-card";
 import { QuizCard } from "@/components/quiz-card";
 import { AiDebriefBox } from "@/components/ai-debrief-box";
+import { RemediationPlanBox } from "@/components/remediation-plan-box";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import { findLevelById } from "@shared/all-levels";
@@ -360,6 +361,8 @@ export default function PlayPage() {
                 Play again for <span className="font-semibold text-foreground">fresh questions</span> each time — drawn from a larger pool every session.
               </p>
             </div>
+
+            <RemediationPlanBox levelId={level.id} percentage={percentage} />
 
             <AiDebriefBox
               levelId={level.id}

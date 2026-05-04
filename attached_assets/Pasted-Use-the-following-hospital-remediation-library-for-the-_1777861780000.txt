@@ -1,0 +1,84 @@
+Use the following hospital remediation library for the Remediation Plan feature.
+
+Hospital categories:
+- Instrument Integrity
+- Facilities & Equipment
+- SPD & Decontamination
+- OR & Sterile Technique
+- Transport of Instruments
+- Environment & Surfaces
+- Clean vs. Dirty
+- Sterile Storage
+- Surgical Safety & Consent
+- Patient Care & Documentation
+- EOC & Safety Compliance
+
+For each category, create 3 preset remediation plans using the titles and descriptions below.
+
+1. Instrument Integrity
+- Targeted Review of Instrument Inspection Concepts
+- Guided Instrument Inspection Walkthrough
+- Return Demonstration: Instrument Check Before Use
+
+2. Facilities & Equipment
+- Focused Review of Equipment Safety Standards
+- Unit-Based Equipment Safety Observation
+- Equipment Compliance Reinforcement Quiz
+
+3. SPD & Decontamination
+- Decontamination Workflow Review
+- Checklist Walkthrough with Preceptor
+- Scenario Review + Reassessment
+
+4. OR & Sterile Technique
+- Sterile Field and Attire Review
+- Observed Sterile Technique Reinforcement
+- Teach-Back on Breaks in Sterility
+
+5. Transport of Instruments
+- Instrument Transport Process Review
+- Workflow Observation: Point of Use to Decontam
+- Transport Compliance Retest
+
+6. Environment & Surfaces
+- Environmental Infection Prevention Review
+- Area Walkthrough with Supervisor
+- Scenario-Based Surface Safety Review
+
+7. Clean vs. Dirty
+- Segregation Principles Review
+- Verbal Workflow Walkthrough
+- Teach-Back on Contamination Prevention
+
+8. Sterile Storage
+- Sterile Storage Standards Review
+- Storage Area Guided Review
+- Storage Decision Scenarios
+
+9. Surgical Safety & Consent
+- Universal Protocol Review
+- Pre-Procedure Safety Walkthrough
+- Teach-Back: Time-Out and Consent
+
+10. Patient Care & Documentation
+- Documentation and Care Standards Review
+- Case-Based Documentation Practice
+- Focused Reassessment
+
+11. EOC & Safety Compliance
+- Environment of Care Review
+- Safety Checklist Walkthrough
+- Safety Readiness Reassessment
+
+Use this assignment logic:
+- Score 60–69%: assign 1 primary remediation plan
+- Score 50–59%: assign 2 remediation steps
+- Score below 50%: assign 2 remediation steps plus reassessment before completion
+
+Use supportive educational wording only.
+Do not use incident-based or operational-hospital corrective action language.
+
+Show me:
+- where the remediation library is stored
+- how category-to-plan mapping works
+- how score thresholds assign 1 vs 2 steps
