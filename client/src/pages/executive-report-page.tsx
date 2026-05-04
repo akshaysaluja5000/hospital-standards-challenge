@@ -4,9 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Download, AlertTriangle, CheckCircle2, Clock,
   Building2, TrendingUp, TrendingDown, Filter, X,
-  ChevronRight, ClipboardCheck, Circle, Printer, FileText,
+  ChevronRight, ClipboardList, Printer, FileText,
   ShieldCheck, ShieldAlert, ShieldX, ChevronDown, ChevronUp,
-  Minus, Lock, GraduationCap, BookOpen, ShieldAlert as ReassessIcon,
+  Minus, Lock, GraduationCap, BookOpen,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -20,36 +20,30 @@ import { MOCK_FACILITIES } from "@shared/facility-roles";
 import { format, parseISO, startOfWeek, subWeeks } from "date-fns";
 
 // ── Types ──────────────────────────────────────────────────────────────────
-// Remediation plans are created only when a learner scores < 70% on a final test.
 
-type PlanStatus = "Active" | "In Progress" | "Awaiting Verification" | "Completed";
-type ValidationStatus = "Pending" | "Approved" | "Rejected" | null;
+type PlanStatus = "Assigned" | "In Progress" | "Completed" | "Verified";
 type RiskLevel = "green" | "yellow" | "red";
 
 interface ExecPlan {
   id: string;
-  title: string;
-  chapter: string;
-  module: string;
-  learnerRole: string;
+  category: string;
+  facilityType: "Hospital" | "ASC";
+  learner: string;
   facility: string;
   facilityId: string;
   quizScore: number;
-  reassessmentRequired: boolean;
+  passingThreshold: number;
   status: PlanStatus;
   assignedDate: string;
   dueDate: string;
   completedAt?: string;
   daysActive: number;
   daysOverdue: number;
-  validationStatus: ValidationStatus;
 }
 
 interface TrendPoint { week: string; assigned: number; completed: number; }
 
 // ── Mock Data ──────────────────────────────────────────────────────────────
-// Educational remediation scenarios across three facilities.
-// All plans were triggered by final test scores below 70%.
 
 const TODAY = new Date();
 const d = (offset: number) => {
@@ -62,204 +56,173 @@ const EXEC_MOCK_PLANS: ExecPlan[] = [
   // ── facility_mosh ────────────────────────────────────────────────────────
   {
     id: "rem-001",
-    title: "OR & Sterile Technique — Targeted Sterile Field Review + Retest",
-    chapter: "OR & Sterile Technique", module: "Hospital (JC)",
-    learnerRole: "OR Circulating Nurse",
+    category: "OR & Sterile Technique", facilityType: "Hospital",
+    learner: "OR Circulating Nurse",
     facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
-    quizScore: 62, reassessmentRequired: false,
-    status: "Active",
+    quizScore: 62, passingThreshold: 70,
+    status: "Assigned",
     assignedDate: d(-21), dueDate: d(-4), daysActive: 21, daysOverdue: 4,
-    validationStatus: null,
   },
   {
     id: "rem-002",
-    title: "Instrument Integrity — Guided Instrument Inspection Walkthrough",
-    chapter: "Instrument Integrity", module: "Hospital (JC)",
-    learnerRole: "OR Scrub Tech",
+    category: "Instrument Integrity", facilityType: "Hospital",
+    learner: "OR Scrub Tech",
     facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
-    quizScore: 48, reassessmentRequired: true,
+    quizScore: 48, passingThreshold: 70,
     status: "In Progress",
     assignedDate: d(-14), dueDate: d(-2), daysActive: 14, daysOverdue: 2,
-    validationStatus: null,
   },
   {
     id: "rem-005",
-    title: "EOC & Safety Compliance — EOC Walkthrough with Safety Officer",
-    chapter: "EOC & Safety Compliance", module: "Hospital (JC)",
-    learnerRole: "RN — Pre/Post",
+    category: "EOC & Safety Compliance", facilityType: "Hospital",
+    learner: "RN — Pre/Post",
     facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
-    quizScore: 52, reassessmentRequired: false,
-    status: "Completed",
+    quizScore: 52, passingThreshold: 70,
+    status: "Verified",
     assignedDate: d(-30), dueDate: d(-5), completedAt: d(-1),
-    daysActive: 29, daysOverdue: 0, validationStatus: "Approved",
+    daysActive: 29, daysOverdue: 0,
   },
   {
     id: "rem-009",
-    title: "ASC: Anesthesia and Surgical Services — Guided Review + Teach-Back",
-    chapter: "ASC: Anesthesia and Surgical Services", module: "ASC (AAAHC)",
-    learnerRole: "CRNA",
+    category: "Anesthesia and Surgical Services", facilityType: "ASC",
+    learner: "CRNA",
     facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
-    quizScore: 55, reassessmentRequired: false,
-    status: "Active",
+    quizScore: 55, passingThreshold: 70,
+    status: "Assigned",
     assignedDate: d(-12), dueDate: d(-1), daysActive: 12, daysOverdue: 1,
-    validationStatus: null,
   },
   {
     id: "rem-012",
-    title: "Surgical Safety & Consent — Documentation Standards Review + Retest",
-    chapter: "Surgical Safety & Consent", module: "Hospital (JC)",
-    learnerRole: "Quality Coordinator",
+    category: "Surgical Safety & Consent", facilityType: "Hospital",
+    learner: "Quality Coordinator",
     facility: "Midwest Orthopedic Specialty Hospital", facilityId: "facility_mosh",
-    quizScore: 67, reassessmentRequired: false,
-    status: "Awaiting Verification",
+    quizScore: 67, passingThreshold: 70,
+    status: "Completed",
     assignedDate: d(-18), dueDate: d(7), daysActive: 18, daysOverdue: 0,
-    validationStatus: "Pending",
   },
   // ── facility_ohw ─────────────────────────────────────────────────────────
   {
     id: "rem-003",
-    title: "SPD & Decontamination — Decontamination Process Teach-Back",
-    chapter: "SPD & Decontamination", module: "Hospital (JC)",
-    learnerRole: "SPD Technician",
+    category: "SPD & Decontamination", facilityType: "Hospital",
+    learner: "SPD Technician",
     facility: "Orthopedic Hospital of Wisconsin", facilityId: "facility_ohw",
-    quizScore: 55, reassessmentRequired: false,
-    status: "Active",
+    quizScore: 55, passingThreshold: 70,
+    status: "Assigned",
     assignedDate: d(-10), dueDate: d(4), daysActive: 10, daysOverdue: 0,
-    validationStatus: null,
   },
   {
     id: "rem-006",
-    title: "Environment & Surfaces — Environmental Cleaning Process Teach-Back",
-    chapter: "Environment & Surfaces", module: "Hospital (JC)",
-    learnerRole: "Charge RN",
+    category: "Environment & Surfaces", facilityType: "Hospital",
+    learner: "Charge RN",
     facility: "Orthopedic Hospital of Wisconsin", facilityId: "facility_ohw",
-    quizScore: 62, reassessmentRequired: false,
-    status: "Active",
+    quizScore: 62, passingThreshold: 70,
+    status: "Assigned",
     assignedDate: d(-7), dueDate: d(17), daysActive: 7, daysOverdue: 0,
-    validationStatus: null,
   },
   {
     id: "rem-010",
-    title: "Clean vs. Dirty — Segregation Workflow Review + Verification",
-    chapter: "Clean vs. Dirty", module: "Hospital (JC)",
-    learnerRole: "OR Scrub Tech",
+    category: "Clean vs. Dirty", facilityType: "Hospital",
+    learner: "OR Scrub Tech",
     facility: "Orthopedic Hospital of Wisconsin", facilityId: "facility_ohw",
-    quizScore: 44, reassessmentRequired: true,
-    status: "Active",
+    quizScore: 44, passingThreshold: 70,
+    status: "In Progress",
     assignedDate: d(-9), dueDate: d(5), daysActive: 9, daysOverdue: 0,
-    validationStatus: null,
   },
   {
     id: "rem-013",
-    title: "Patient Care & Documentation — Documentation Standards Review + Retest",
-    chapter: "Patient Care & Documentation", module: "Hospital (JC)",
-    learnerRole: "Infection Preventionist",
+    category: "Patient Care & Documentation", facilityType: "Hospital",
+    learner: "Infection Preventionist",
     facility: "Orthopedic Hospital of Wisconsin", facilityId: "facility_ohw",
-    quizScore: 65, reassessmentRequired: false,
-    status: "Completed",
+    quizScore: 65, passingThreshold: 70,
+    status: "Verified",
     assignedDate: d(-38), dueDate: d(-10), completedAt: d(-12),
-    daysActive: 26, daysOverdue: 0, validationStatus: "Approved",
+    daysActive: 26, daysOverdue: 0,
   },
   // ── facility_ascension ────────────────────────────────────────────────────
   {
     id: "rem-004",
-    title: "Facilities & Equipment — Facilities Readiness Walkthrough + Verification",
-    chapter: "Facilities & Equipment", module: "Hospital (JC)",
-    learnerRole: "Biomedical Technician",
+    category: "Facilities & Equipment", facilityType: "Hospital",
+    learner: "Biomedical Technician",
     facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
-    quizScore: 67, reassessmentRequired: false,
-    status: "Awaiting Verification",
+    quizScore: 67, passingThreshold: 70,
+    status: "Completed",
     assignedDate: d(-18), dueDate: d(7), daysActive: 18, daysOverdue: 0,
-    validationStatus: "Pending",
   },
   {
     id: "rem-007",
-    title: "Transport of Instruments — Instrument Transport Process Review",
-    chapter: "Transport of Instruments", module: "Hospital (JC)",
-    learnerRole: "SPD Technician",
+    category: "Transport of Instruments", facilityType: "Hospital",
+    learner: "SPD Technician",
     facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
-    quizScore: 60, reassessmentRequired: false,
-    status: "In Progress",
+    quizScore: 60, passingThreshold: 70,
+    status: "Verified",
     assignedDate: d(-45), dueDate: d(-18), completedAt: d(-20),
-    daysActive: 25, daysOverdue: 0, validationStatus: "Approved",
+    daysActive: 25, daysOverdue: 0,
   },
   {
     id: "rem-008",
-    title: "ASC: Infection Prevention — Guided Safety and Infection Review",
-    chapter: "ASC: Infection Prevention and Control and Safety", module: "ASC (AAAHC)",
-    learnerRole: "ASC Circulating RN",
+    category: "Infection Prevention and Control and Safety", facilityType: "ASC",
+    learner: "ASC Circulating RN",
     facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
-    quizScore: 58, reassessmentRequired: false,
-    status: "Active",
+    quizScore: 58, passingThreshold: 70,
+    status: "Assigned",
     assignedDate: d(-5), dueDate: d(1), daysActive: 5, daysOverdue: 0,
-    validationStatus: null,
   },
   {
     id: "rem-011",
-    title: "ASC: Pharmaceutical Services — Guided Medication Safety Review",
-    chapter: "ASC: Pharmaceutical Services", module: "ASC (AAAHC)",
-    learnerRole: "ASC Charge RN",
+    category: "Pharmaceutical Services", facilityType: "ASC",
+    learner: "ASC Charge RN",
     facility: "Ascension SE Wisconsin", facilityId: "facility_ascension",
-    quizScore: 62, reassessmentRequired: false,
-    status: "Completed",
+    quizScore: 62, passingThreshold: 70,
+    status: "Verified",
     assignedDate: d(-28), dueDate: d(-7), completedAt: d(-2),
-    daysActive: 26, daysOverdue: 0, validationStatus: "Approved",
+    daysActive: 26, daysOverdue: 0,
   },
   // ── facility_demo_hospital ────────────────────────────────────────────────
   {
     id: "rem-demo-001",
-    title: "OR & Sterile Technique — Targeted Sterile Field Review + Retest",
-    chapter: "OR & Sterile Technique", module: "Hospital (JC)",
-    learnerRole: "OR Director",
+    category: "OR & Sterile Technique", facilityType: "Hospital",
+    learner: "OR Director",
     facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
-    quizScore: 55, reassessmentRequired: false,
-    status: "Active",
+    quizScore: 55, passingThreshold: 70,
+    status: "Assigned",
     assignedDate: d(-8), dueDate: d(3), daysActive: 8, daysOverdue: 0,
-    validationStatus: null,
   },
   {
     id: "rem-demo-002",
-    title: "Instrument Integrity — Guided Instrument Inspection Walkthrough",
-    chapter: "Instrument Integrity", module: "Hospital (JC)",
-    learnerRole: "SPD Technician",
+    category: "Instrument Integrity", facilityType: "Hospital",
+    learner: "SPD Technician",
     facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
-    quizScore: 44, reassessmentRequired: true,
+    quizScore: 44, passingThreshold: 70,
     status: "In Progress",
     assignedDate: d(-4), dueDate: d(10), daysActive: 4, daysOverdue: 0,
-    validationStatus: null,
   },
   {
     id: "rem-demo-003",
-    title: "Patient Care & Documentation — Documentation Standards Review + Retest",
-    chapter: "Patient Care & Documentation", module: "Hospital (JC)",
-    learnerRole: "Charge RN",
+    category: "Patient Care & Documentation", facilityType: "Hospital",
+    learner: "Charge RN",
     facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
-    quizScore: 62, reassessmentRequired: false,
-    status: "Awaiting Verification",
+    quizScore: 62, passingThreshold: 70,
+    status: "Completed",
     assignedDate: d(-16), dueDate: d(-3), daysActive: 16, daysOverdue: 3,
-    validationStatus: null,
   },
   {
     id: "rem-demo-004",
-    title: "EOC & Safety Compliance — EOC Walkthrough with Safety Officer",
-    chapter: "EOC & Safety Compliance", module: "Hospital (JC)",
-    learnerRole: "Quality Coordinator",
+    category: "EOC & Safety Compliance", facilityType: "Hospital",
+    learner: "Quality Coordinator",
     facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
-    quizScore: 65, reassessmentRequired: false,
-    status: "Active",
+    quizScore: 65, passingThreshold: 70,
+    status: "Assigned",
     assignedDate: d(-11), dueDate: d(-2), daysActive: 11, daysOverdue: 2,
-    validationStatus: null,
   },
   {
     id: "rem-demo-005",
-    title: "ASC: Anesthesia and Surgical Services — Guided Review + Teach-Back",
-    chapter: "ASC: Anesthesia and Surgical Services", module: "ASC (AAAHC)",
-    learnerRole: "CRNA",
+    category: "Anesthesia and Surgical Services", facilityType: "ASC",
+    learner: "CRNA",
     facility: "Demo Regional Medical Center", facilityId: "facility_demo_hospital",
-    quizScore: 52, reassessmentRequired: false,
-    status: "Completed",
+    quizScore: 52, passingThreshold: 70,
+    status: "Verified",
     assignedDate: d(-28), dueDate: d(-7), completedAt: d(-2),
-    daysActive: 26, daysOverdue: 0, validationStatus: "Approved",
+    daysActive: 26, daysOverdue: 0,
   },
 ];
 
@@ -273,41 +236,53 @@ function buildTrendData(plans: ExecPlan[]): TrendPoint[] {
     weekEnd.setDate(weekEnd.getDate() + 6);
     return {
       week: format(weekStart, "MMM d"),
-      assigned: plans.filter((p) => { const c = parseISO(p.assignedDate); return c >= weekStart && c <= weekEnd; }).length,
-      completed: plans.filter((p) => { if (!p.completedAt) return false; const c = parseISO(p.completedAt); return c >= weekStart && c <= weekEnd; }).length,
+      assigned: plans.filter((p) => {
+        const c = parseISO(p.assignedDate);
+        return c >= weekStart && c <= weekEnd;
+      }).length,
+      completed: plans.filter((p) => {
+        if (!p.completedAt) return false;
+        const c = parseISO(p.completedAt);
+        return c >= weekStart && c <= weekEnd;
+      }).length,
     };
   });
 }
 
 // ── KPI Calculations ───────────────────────────────────────────────────────
+// Active Plans = Assigned + In Progress
+// Completed This Month = Completed + Verified this month
 
 function calcKpis(plans: ExecPlan[]) {
   const now = new Date();
-  const active = plans.filter((p) => p.status !== "Completed").length;
+  const active = plans.filter((p) => p.status === "Assigned" || p.status === "In Progress").length;
   const overdue = plans.filter((p) => p.daysOverdue > 0).length;
   const completedThisMonth = plans.filter((p) => {
-    if (!p.completedAt) return false;
+    const isFinished = p.status === "Completed" || p.status === "Verified";
+    if (!isFinished || !p.completedAt) return false;
     const c = parseISO(p.completedAt);
     return c.getMonth() === now.getMonth() && c.getFullYear() === now.getFullYear();
   }).length;
-  const overdueWithReassessment = plans.filter((p) => p.daysOverdue > 0 && p.reassessmentRequired).length;
-  const reassessmentActive = plans.filter((p) => p.status !== "Completed" && p.reassessmentRequired).length;
-  const completedPlans = plans.filter((p) => p.completedAt);
-  const avgDaysToComplete = completedPlans.length
-    ? Math.round(completedPlans.reduce((s, p) => s + p.daysActive, 0) / completedPlans.length) : 0;
-  return { active, overdue, completedThisMonth, overdueWithReassessment, reassessmentActive, avgDaysToComplete };
+  const overdueCount = plans.filter((p) => p.daysOverdue > 0).length;
+  const finishedPlans = plans.filter((p) => p.completedAt);
+  const avgDaysToComplete = finishedPlans.length
+    ? Math.round(finishedPlans.reduce((s, p) => s + p.daysActive, 0) / finishedPlans.length)
+    : 0;
+  return { active, overdue, completedThisMonth, overdueCount, avgDaysToComplete };
 }
 
 // ── Risk Status ────────────────────────────────────────────────────────────
 
 function calcRiskStatus(plans: ExecPlan[], trendData: TrendPoint[]): RiskLevel {
-  const overdueWithReassessment = plans.filter((p) => p.daysOverdue > 0 && p.reassessmentRequired).length;
+  const overdueActive = plans.filter(
+    (p) => p.daysOverdue > 0 && (p.status === "Assigned" || p.status === "In Progress")
+  );
   const recent = trendData.slice(-4);
   const recentAssigned = recent.reduce((s, w) => s + w.assigned, 0);
   const recentCompleted = recent.reduce((s, w) => s + w.completed, 0);
   const worsening = recentAssigned > 0 && recentCompleted < recentAssigned * 0.6;
-  if (overdueWithReassessment > 0 || worsening) return "red";
-  if (plans.filter((p) => p.daysOverdue > 0).length > 0) return "yellow";
+  if (overdueActive.some((p) => p.quizScore < 55) || worsening) return "red";
+  if (overdueActive.length > 0) return "yellow";
   return "green";
 }
 
@@ -325,11 +300,11 @@ function generateNarrative(
     ? `across ${facilityCount} facilit${facilityCount !== 1 ? "ies" : "y"}`
     : `at ${facilityName}`;
 
-  const chapterMap: Record<string, number> = {};
-  for (const p of plans.filter((p) => p.status !== "Completed")) {
-    chapterMap[p.chapter] = (chapterMap[p.chapter] || 0) + 1;
+  const categoryMap: Record<string, number> = {};
+  for (const p of plans.filter((p) => p.status === "Assigned" || p.status === "In Progress")) {
+    categoryMap[p.category] = (categoryMap[p.category] || 0) + 1;
   }
-  const topChapters = Object.entries(chapterMap)
+  const topCategories = Object.entries(categoryMap)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 2)
     .map(([c]) => c);
@@ -340,26 +315,22 @@ function generateNarrative(
   const trendImproving = recentCompleted >= recentAssigned;
 
   let text = `As of ${format(TODAY, "MMMM d, yyyy")}, there are ${kpis.active} active remediation plan${kpis.active !== 1 ? "s" : ""} ${scopeLabel}.`;
-  text += " All plans were triggered by final test scores below 70%.";
+  text += " All plans were triggered by final test scores below the 70% passing threshold.";
 
   if (kpis.overdue > 0) {
-    text += ` ${kpis.overdue} plan${kpis.overdue !== 1 ? "s are" : " is"} past due`;
-    if (kpis.overdueWithReassessment > 0) {
-      text += `, including ${kpis.overdueWithReassessment} requiring supervisor reassessment before completion`;
-    }
-    text += ".";
+    text += ` ${kpis.overdue} plan${kpis.overdue !== 1 ? "s are" : " is"} past the due date and require learner follow-up.`;
   } else {
     text += " No plans are currently overdue.";
   }
 
-  if (topChapters.length > 0) {
-    text += ` ${topChapters.join(" and ")} ${topChapters.length > 1 ? "have" : "has"} the most active learner plans.`;
+  if (topCategories.length > 0) {
+    text += ` ${topCategories.join(" and ")} ${topCategories.length > 1 ? "have" : "has"} the most active plans.`;
   }
 
   if (recentAssigned + recentCompleted > 0) {
     text += trendImproving
-      ? " Plan completion is outpacing new assignments over the past four weeks — learners are progressing."
-      : " New plan assignments are outpacing completions over the past four weeks — follow-up is recommended.";
+      ? " Completion is outpacing new assignments over the past four weeks — learners are progressing."
+      : " New assignments are outpacing completions over the past four weeks — follow-up is recommended.";
   }
 
   return text;
@@ -370,40 +341,41 @@ function generateNarrative(
 function buildChapterBreakdown(plans: ExecPlan[]) {
   const map: Record<string, { active: number; overdue: number }> = {};
   for (const p of plans) {
-    if (!map[p.chapter]) map[p.chapter] = { active: 0, overdue: 0 };
-    if (p.status !== "Completed") map[p.chapter].active++;
-    if (p.daysOverdue > 0) map[p.chapter].overdue++;
+    if (!map[p.category]) map[p.category] = { active: 0, overdue: 0 };
+    if (p.status === "Assigned" || p.status === "In Progress") map[p.category].active++;
+    if (p.daysOverdue > 0) map[p.category].overdue++;
   }
-  return Object.entries(map).map(([chapter, s]) => ({ chapter, ...s })).sort((a, b) => b.active - a.active);
+  return Object.entries(map)
+    .map(([category, s]) => ({ category, ...s }))
+    .sort((a, b) => b.active - a.active);
 }
 
 // ── Attention Sort ─────────────────────────────────────────────────────────
 
 function sortForAttention(plans: ExecPlan[]) {
   return [...plans]
-    .filter((p) => p.status !== "Completed")
+    .filter((p) => p.status === "Assigned" || p.status === "In Progress")
     .sort((a, b) => {
       if (b.daysOverdue !== a.daysOverdue) return b.daysOverdue - a.daysOverdue;
-      if (Number(b.reassessmentRequired) !== Number(a.reassessmentRequired))
-        return Number(b.reassessmentRequired) - Number(a.reassessmentRequired);
       return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
     });
 }
 
 // ── Helpers ────────────────────────────────────────────────────────────────
 
-function scoreColor(score: number) {
-  if (score >= 60) return "text-amber-400";
-  if (score >= 50) return "text-orange-400";
+function scoreColor(score: number, threshold: number) {
+  const gap = threshold - score;
+  if (gap <= 6) return "text-amber-400";
+  if (gap <= 16) return "text-orange-400";
   return "text-red-400";
 }
 
 function statusIcon(s: PlanStatus) {
   switch (s) {
-    case "Active": return <Circle size={12} className="text-blue-400" />;
-    case "In Progress": return <Clock size={12} className="text-chart-4" />;
-    case "Awaiting Verification": return <ClipboardCheck size={12} className="text-purple-400" />;
+    case "Assigned": return <ClipboardList size={12} className="text-blue-400" />;
+    case "In Progress": return <Clock size={12} className="text-amber-400" />;
     case "Completed": return <CheckCircle2 size={12} className="text-green-400" />;
+    case "Verified": return <ShieldCheck size={12} className="text-purple-400" />;
   }
 }
 
@@ -429,7 +401,7 @@ const RISK_CONFIG = {
   red: {
     Icon: ShieldX,
     label: "Remediation Action Required",
-    sub: "Overdue plans with supervisor reassessment required, or backlog growing.",
+    sub: "Overdue plans with significant score gaps, or completion backlog growing.",
     bg: "bg-destructive/10 border-destructive/30",
     text: "text-destructive",
     dot: "bg-destructive",
@@ -439,20 +411,15 @@ const RISK_CONFIG = {
 // ── Export Helpers ─────────────────────────────────────────────────────────
 
 function exportCsv(plans: ExecPlan[], facilityName: string) {
-  const headers = ["ID", "Chapter", "Module", "Learner Role", "Facility", "Score %", "Reassessment Required", "Status", "Assigned Date", "Due Date", "Days Active", "Days Overdue"];
+  const headers = [
+    "ID", "Category", "Facility Type", "Learner", "Facility",
+    "Score %", "Threshold %", "Status", "Assigned Date", "Due Date",
+    "Days Active", "Days Overdue",
+  ];
   const rows = plans.map((p) => [
-    p.id,
-    `"${p.chapter}"`,
-    p.module,
-    `"${p.learnerRole}"`,
-    `"${p.facility}"`,
-    p.quizScore,
-    p.reassessmentRequired ? "Yes" : "No",
-    p.status,
-    p.assignedDate,
-    p.dueDate,
-    p.daysActive,
-    p.daysOverdue,
+    p.id, `"${p.category}"`, p.facilityType, `"${p.learner}"`, `"${p.facility}"`,
+    p.quizScore, p.passingThreshold, p.status, p.assignedDate, p.dueDate,
+    p.daysActive, p.daysOverdue,
   ]);
   const csv = [headers, ...rows].map((r) => r.join(",")).join("\n");
   const blob = new Blob([csv], { type: "text/csv" });
@@ -467,7 +434,7 @@ function exportCsv(plans: ExecPlan[], facilityName: string) {
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
-const ALL_STATUSES: (PlanStatus | "All")[] = ["All", "Active", "In Progress", "Awaiting Verification", "Completed"];
+const ALL_STATUSES: (PlanStatus | "All")[] = ["All", "Assigned", "In Progress", "Completed", "Verified"];
 
 // ── Main Page ──────────────────────────────────────────────────────────────
 
@@ -502,14 +469,14 @@ export default function ExecutiveReportPage() {
   }, [isSuperAdmin, scopedFacilityId]);
 
   const ALL_CHAPTERS = useMemo(
-    () => ["All Chapters", ...Array.from(new Set(facilityScoped.map((p) => p.chapter))).sort()],
+    () => ["All Chapters", ...Array.from(new Set(facilityScoped.map((p) => p.category))).sort()],
     [facilityScoped]
   );
 
   const filtered = useMemo(() => {
     return facilityScoped.filter((p) => {
       if (isSuperAdmin && selectedFacility !== "All Facilities" && p.facility !== selectedFacility) return false;
-      if (chapter !== "All Chapters" && p.chapter !== chapter) return false;
+      if (chapter !== "All Chapters" && p.category !== chapter) return false;
       if (status !== "All" && p.status !== status) return false;
       return true;
     });
@@ -617,16 +584,29 @@ export default function ExecutiveReportPage() {
                   </Select>
                 )}
                 <Select value={chapter} onValueChange={setChapter}>
-                  <SelectTrigger className="h-8 text-xs w-52" data-testid="select-chapter"><SelectValue /></SelectTrigger>
-                  <SelectContent>{ALL_CHAPTERS.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
+                  <SelectTrigger className="h-8 text-xs w-56" data-testid="select-chapter">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ALL_CHAPTERS.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                  </SelectContent>
                 </Select>
                 <Select value={status} onValueChange={(v) => setStatus(v as PlanStatus | "All")}>
-                  <SelectTrigger className="h-8 text-xs w-44" data-testid="select-status"><SelectValue /></SelectTrigger>
-                  <SelectContent>{ALL_STATUSES.map((s) => <SelectItem key={s} value={s}>{s === "All" ? "All Statuses" : s}</SelectItem>)}</SelectContent>
+                  <SelectTrigger className="h-8 text-xs w-44" data-testid="select-status">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {ALL_STATUSES.map((s) => (
+                      <SelectItem key={s} value={s}>{s === "All" ? "All Statuses" : s}</SelectItem>
+                    ))}
+                  </SelectContent>
                 </Select>
                 {hasFilters && (
-                  <button onClick={() => { setSelectedFacility("All Facilities"); setChapter("All Chapters"); setStatus("All"); }}
-                    className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1" data-testid="button-clear-filters">
+                  <button
+                    onClick={() => { setSelectedFacility("All Facilities"); setChapter("All Chapters"); setStatus("All"); }}
+                    className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1"
+                    data-testid="button-clear-filters"
+                  >
                     <X size={11} /> Clear all
                   </button>
                 )}
@@ -657,7 +637,9 @@ export default function ExecutiveReportPage() {
           </div>
           <div className="flex-shrink-0 text-right hidden sm:block">
             <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wide">Survey Risk</p>
-            <p className={`text-2xl font-black ${riskCfg.text}`} data-testid="text-risk-level">{riskLevel === "green" ? "Low" : riskLevel === "yellow" ? "Moderate" : "High"}</p>
+            <p className={`text-2xl font-black ${riskCfg.text}`} data-testid="text-risk-level">
+              {riskLevel === "green" ? "Low" : riskLevel === "yellow" ? "Moderate" : "High"}
+            </p>
           </div>
         </motion.div>
 
@@ -683,12 +665,12 @@ export default function ExecutiveReportPage() {
               {trendImproving ? <TrendingDown size={11} /> : <TrendingUp size={11} />}
               {trendImproving ? "Completion trend improving" : "Assignments outpacing completions"}
             </span>
-            {kpis.overdueWithReassessment > 0 && (
+            {kpis.overdue > 0 && (
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border bg-destructive/10 border-destructive/25 text-destructive" data-testid="pill-critical-overdue">
-                <AlertTriangle size={11} /> {kpis.overdueWithReassessment} overdue + reassessment required
+                <AlertTriangle size={11} /> {kpis.overdue} plan{kpis.overdue !== 1 ? "s" : ""} overdue
               </span>
             )}
-            {kpis.overdueWithReassessment === 0 && kpis.overdue === 0 && (
+            {kpis.overdue === 0 && (
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border bg-green-500/10 border-green-500/25 text-green-400" data-testid="pill-on-track">
                 <CheckCircle2 size={11} /> All plans on track
               </span>
@@ -704,9 +686,30 @@ export default function ExecutiveReportPage() {
         {/* ── 3 KPI Cards ── */}
         <div className="grid grid-cols-3 gap-3" data-testid="container-kpis">
           {[
-            { label: "Active Plans", value: kpis.active, sub: `${kpis.reassessmentActive} need reassessment`, icon: GraduationCap, color: "text-blue-400", testid: "kpi-open" },
-            { label: "Overdue", value: kpis.overdue, sub: kpis.overdueWithReassessment > 0 ? `${kpis.overdueWithReassessment} + reassessment` : "None need reassessment", icon: AlertTriangle, color: kpis.overdue > 0 ? "text-destructive" : "text-muted-foreground", testid: "kpi-overdue" },
-            { label: "Completed This Month", value: kpis.completedThisMonth, sub: `Avg ${kpis.avgDaysToComplete}d to complete`, icon: CheckCircle2, color: "text-green-400", testid: "kpi-closed-month" },
+            {
+              label: "Active Plans",
+              value: kpis.active,
+              sub: "Assigned + In Progress",
+              icon: GraduationCap,
+              color: "text-blue-400",
+              testid: "kpi-open",
+            },
+            {
+              label: "Overdue",
+              value: kpis.overdue,
+              sub: "Past due date",
+              icon: AlertTriangle,
+              color: kpis.overdue > 0 ? "text-destructive" : "text-muted-foreground",
+              testid: "kpi-overdue",
+            },
+            {
+              label: "Completed This Month",
+              value: kpis.completedThisMonth,
+              sub: `Avg ${kpis.avgDaysToComplete}d to complete`,
+              icon: CheckCircle2,
+              color: "text-green-400",
+              testid: "kpi-closed-month",
+            },
           ].map(({ label, value, sub, icon: Icon, color, testid }) => (
             <motion.div
               key={label}
@@ -760,13 +763,13 @@ export default function ExecutiveReportPage() {
             </div>
             <div className="flex flex-col gap-1">
               <div className="grid grid-cols-4 text-[9px] font-bold uppercase tracking-wider text-muted-foreground pb-1.5 border-b border-border px-1">
-                <span className="col-span-2">Chapter / Domain</span>
+                <span className="col-span-2">Category / Chapter</span>
                 <span className="text-center">Active</span>
                 <span className="text-center">Overdue</span>
               </div>
-              {chapterBreakdown.map(({ chapter: ch, active, overdue }) => (
-                <div key={ch} className="grid grid-cols-4 text-xs px-1 py-1.5 rounded-lg hover:bg-white/5 transition-colors items-center" data-testid={`row-dept-${ch}`}>
-                  <span className="col-span-2 font-medium truncate pr-2 text-[11px]">{ch}</span>
+              {chapterBreakdown.map(({ category: cat, active, overdue }) => (
+                <div key={cat} className="grid grid-cols-4 text-xs px-1 py-1.5 rounded-lg hover:bg-white/5 transition-colors items-center" data-testid={`row-dept-${cat}`}>
+                  <span className="col-span-2 font-medium truncate pr-2 text-[11px]">{cat}</span>
                   <span className="text-center font-bold text-blue-400">{active || "—"}</span>
                   <span className={`text-center font-bold ${overdue > 0 ? "text-destructive" : "text-muted-foreground/40"}`}>
                     {overdue > 0 ? overdue : "—"}
@@ -829,8 +832,8 @@ export default function ExecutiveReportPage() {
                   <table className="w-full text-xs" data-testid="table-needs-attention">
                     <thead>
                       <tr className="border-b border-border/60 text-muted-foreground font-bold uppercase tracking-wider text-[9px]">
-                        <th className="text-left px-5 py-2.5">Plan</th>
-                        <th className="text-left px-3 py-2.5 hidden sm:table-cell">Learner Role</th>
+                        <th className="text-left px-5 py-2.5">Category</th>
+                        <th className="text-left px-3 py-2.5 hidden sm:table-cell">Learner</th>
                         <th className="text-center px-3 py-2.5">Score</th>
                         <th className="text-center px-3 py-2.5 hidden sm:table-cell">Due</th>
                         <th className="text-center px-3 py-2.5">Status</th>
@@ -854,15 +857,16 @@ export default function ExecutiveReportPage() {
                           data-testid={`row-action-${plan.id}`}
                         >
                           <td className="px-5 py-3 max-w-[200px]">
-                            <p className="font-semibold leading-snug line-clamp-2 text-[11px]">{plan.chapter}</p>
-                            <p className="text-muted-foreground mt-0.5 text-[10px]">{plan.module}</p>
-                            {plan.reassessmentRequired && (
-                              <span className="text-[9px] font-bold text-orange-400">Reassessment required</span>
-                            )}
+                            <p className="font-semibold leading-snug line-clamp-2 text-[11px]">{plan.category}</p>
+                            <p className="text-muted-foreground mt-0.5 text-[10px]">{plan.facilityType}</p>
                           </td>
-                          <td className="px-3 py-3 hidden sm:table-cell text-muted-foreground whitespace-nowrap text-[11px]">{plan.learnerRole}</td>
+                          <td className="px-3 py-3 hidden sm:table-cell text-muted-foreground whitespace-nowrap text-[11px]">
+                            {plan.learner}
+                          </td>
                           <td className="px-3 py-3 text-center">
-                            <span className={`font-bold text-[11px] ${scoreColor(plan.quizScore)}`}>{plan.quizScore}%</span>
+                            <span className={`font-bold text-[11px] ${scoreColor(plan.quizScore, plan.passingThreshold)}`}>
+                              {plan.quizScore}%
+                            </span>
                           </td>
                           <td className={`px-3 py-3 text-center hidden sm:table-cell whitespace-nowrap font-semibold text-[11px] ${plan.daysOverdue > 0 ? "text-destructive" : "text-muted-foreground"}`}>
                             {format(parseISO(plan.dueDate), "MMM d")}
@@ -876,7 +880,13 @@ export default function ExecutiveReportPage() {
                               : <Minus size={12} className="text-muted-foreground/30 mx-auto" />}
                           </td>
                           <td className="px-3 py-3">
-                            <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2" onClick={() => setLocation("/corrective-actions")} data-testid={`button-drilldown-${plan.id}`}>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 text-[10px] px-2"
+                              onClick={() => setLocation("/corrective-actions")}
+                              data-testid={`button-drilldown-${plan.id}`}
+                            >
                               View
                             </Button>
                           </td>
