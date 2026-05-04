@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -667,6 +667,19 @@ export default function CorrectiveActionPage() {
   const [activeStatus, setActiveStatus] = useState<PlanStatus | "All">("All");
   const [facilityTypeFilter, setFacilityTypeFilter] = useState<"All" | "Hospital" | "ASC">("All");
   const [createOpen, setCreateOpen] = useState(false);
+  const filterInitialized = useRef(false);
+
+  // Auto-default facility type filter to the logged-in user's org type.
+  // Hospital users see Hospital plans by default; ASC users see ASC plans.
+  // SuperAdmins default to All (they oversee both).
+  useEffect(() => {
+    if (filterInitialized.current) return;
+    if (!facilityAuth.user) return;
+    filterInitialized.current = true;
+    if (isSuperAdmin) return;
+    const orgType = facilityAuth.user.organizationType;
+    setFacilityTypeFilter(orgType === "asc" ? "ASC" : "Hospital");
+  }, [facilityAuth.user, isSuperAdmin]);
 
   const sourcePlans = dataMode === "demo" ? demoPlans : livePlans;
 
