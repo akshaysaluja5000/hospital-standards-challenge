@@ -227,12 +227,237 @@ export const REMEDIATION_LIBRARY: Record<string, [RemediationPlan, RemediationPl
         "After your review and walkthrough, take the quiz again. If specific EOC standards are still unclear, ask your safety officer or manager to clarify before your next attempt.",
     },
   ],
-};
+
+  // ── ASC Categories (AAAHC/CMS) ─────────────────────────────────────────────
+  // Pattern per chapter: Review + Retest | Guided Review + Teach-Back | Checklist/Workflow + Verification
+  // Chapters 12 (Pathology) and 13 (Imaging) are in the library but have no active
+  // quiz level yet — reserved for future unlocks.
+
+  "ASC: Patient Rights and Responsibilities": [
+    {
+      title: "Patient Rights Review + Retest",
+      description:
+        "Review the Patient Rights and Responsibilities study cards, focusing on the patient's right to information, privacy, informed consent, and how to handle complaints or grievances. Once you feel confident, retake the quiz.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Patient Rights",
+      description:
+        "Sit with a supervisor or educator and walk through the key patient rights standards together. Explain in your own words what each right means and how it is applied in your ASC setting. Ask your educator to clarify anything that was unclear.",
+    },
+    {
+      title: "Patient Communication Workflow Review",
+      description:
+        "Review your ASC's process for communicating patient rights at intake and throughout care. Discuss with a supervisor how your facility documents acknowledgment and how surveyors evaluate this workflow.",
+    },
+  ],
+
+  "ASC: Governance": [
+    {
+      title: "Governance Concepts Review",
+      description:
+        "Review the Governance study cards, paying close attention to the responsibilities of the governing body, medical staff oversight, credentialing authority, and how policies are approved and reviewed.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Oversight Roles",
+      description:
+        "With a supervisor or administrator, walk through the key governance roles in your ASC — who is on the governing body, what they are responsible for, and how that accountability is documented. Teach the structure back in your own words.",
+    },
+    {
+      title: "Governance Readiness Verification",
+      description:
+        "Review your ASC's governance meeting documentation, policy approval records, and organizational chart. Discuss with your administrator what a surveyor would review and where you feel confident vs. uncertain.",
+    },
+  ],
+
+  "ASC: Administration": [
+    {
+      title: "Administration Standards Review",
+      description:
+        "Review the Administration study cards with a focus on operational requirements: staffing, leadership, policies, emergency preparedness, and the administrative documentation that AAAHC evaluates.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Administrative Processes",
+      description:
+        "Walk through your ASC's administrative workflows with a supervisor or manager. Explain what each core administrative process looks like in your facility, then ask for feedback on anything that was unclear.",
+    },
+    {
+      title: "Administrative Workflow Verification",
+      description:
+        "Using your facility's administrative checklist or policy index, verify that you understand how key documents are maintained, updated, and made accessible. Discuss with your administrator how this would be evaluated during an AAAHC survey.",
+    },
+  ],
+
+  "ASC: Quality of Care Provided": [
+    {
+      title: "Quality of Care Review + Retest",
+      description:
+        "Review the Quality of Care study cards with attention to patient assessment requirements, care planning, discharge criteria, and post-procedure follow-up expectations. Retake the quiz after your review.",
+    },
+    {
+      title: "Case-Based Guided Review",
+      description:
+        "Work through the scenario-type cards in this chapter with your supervisor or clinical educator. Focus on identifying where care standards are met or missed in each case, and discuss what documentation would be expected.",
+    },
+    {
+      title: "Quality Standards Teach-Back",
+      description:
+        "Explain to your supervisor or educator the key quality-of-care requirements for your ASC — what must be assessed, documented, and followed up on. Teaching the concept back helps confirm your understanding before retesting.",
+    },
+  ],
+
+  "ASC: Quality Management and Improvement": [
+    {
+      title: "Quality Improvement Concepts Review",
+      description:
+        "Review the Quality Management study cards. Focus on the QAPI framework: how performance improvement activities are identified, measured, acted on, and documented in an ASC setting.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Improvement Process",
+      description:
+        "Ask your quality coordinator or administrator to walk through your ASC's current quality improvement activities with you. Explain the QAPI cycle back in your own words, then discuss how your facility's work maps to AAAHC expectations.",
+    },
+    {
+      title: "Quality Review Checklist Verification",
+      description:
+        "Review your ASC's QAPI meeting minutes, improvement project logs, and outcome tracking records. With your supervisor, identify what is working well and what a surveyor might ask about during a quality management review.",
+    },
+  ],
+
+  "ASC: Clinical Records and Health Information": [
+    {
+      title: "Clinical Records Review + Retest",
+      description:
+        "Review the Clinical Records study cards, focusing on what must be included in the health record, retention requirements, access and confidentiality standards, and how records are authenticated.",
+    },
+    {
+      title: "Documentation Scenario Review",
+      description:
+        "Work through the scenario-based cards in this chapter. Each scenario presents a documentation gap — practice identifying what is missing and what the correct action is. Discuss tricky scenarios with your supervisor.",
+    },
+    {
+      title: "Documentation Teach-Back + Verification",
+      description:
+        "Explain to your supervisor or HIM contact what must be in a complete clinical record for your ASC, how long records are retained, and how access is controlled. Then verify your understanding against your facility's actual record policy.",
+    },
+  ],
+
+  "ASC: Infection Prevention and Control and Safety": [
+    {
+      title: "Infection Prevention Review + Retest",
+      description:
+        "Review the Infection Prevention and Control study cards with attention to hand hygiene, high-level disinfection and sterilization, PPE requirements, environmental cleaning, and how your ASC's infection prevention program is structured.",
+    },
+    {
+      title: "Guided Safety and Infection Review",
+      description:
+        "Walk through your ASC's infection prevention policies and procedures with your infection preventionist or supervisor. Focus on the standards most likely to be evaluated during an AAAHC survey and discuss anything you found unclear in the study cards.",
+    },
+    {
+      title: "Infection Control Checklist Verification",
+      description:
+        "Use your facility's infection prevention checklist or audit tool to review compliance in a patient care area or procedure room. With your supervisor, identify any areas where documentation, supplies, or practice could be strengthened.",
+    },
+  ],
+
+  "ASC: Facilities and Environment": [
+    {
+      title: "Facilities and Environment Review",
+      description:
+        "Review the Facilities and Environment study cards. Focus on physical plant requirements, utility management, emergency and safety systems, and the environmental standards AAAHC expects for an ASC.",
+    },
+    {
+      title: "Guided Environment Walkthrough Review",
+      description:
+        "Walk through your ASC's clinical and support spaces with a supervisor or facilities coordinator. Identify together what a surveyor would evaluate — emergency exits, medical gas storage, equipment condition, and environmental cleanliness.",
+    },
+    {
+      title: "Facilities Readiness Verification",
+      description:
+        "Review your ASC's utility management logs, preventive maintenance records, and safety inspection documentation. Discuss with your facilities or safety coordinator what is current and what may need attention before your next accreditation review.",
+    },
+  ],
+
+  "ASC: Anesthesia and Surgical Services": [
+    {
+      title: "Anesthesia & Surgical Services Review + Retest",
+      description:
+        "Review the combined Anesthesia and Surgical Services study cards. Cover pre-anesthesia evaluation requirements, intraoperative monitoring standards, post-anesthesia assessment, and the surgical safety elements including Universal Protocol and site marking.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Anesthesia and Surgical Safety",
+      description:
+        "Work through the key anesthesia and surgical workflow requirements with your clinical educator, CRNA, or supervisor. Teach back the pre-, intra-, and post-procedure expectations in your own words. Discuss anything that was unclear in the study cards.",
+    },
+    {
+      title: "Anesthesia and Surgical Workflow Verification",
+      description:
+        "Review your ASC's anesthesia records, surgical checklists, and Universal Protocol documentation. With your clinical supervisor, identify what the record demonstrates and how it would be evaluated during an AAAHC survey.",
+    },
+  ],
+
+  "ASC: Pharmaceutical Services": [
+    {
+      title: "Pharmaceutical Services Review + Retest",
+      description:
+        "Review the Pharmaceutical Services study cards. Focus on medication storage requirements, controlled substance handling, pharmacy oversight, labeling standards, and how your ASC's pharmacy program is structured.",
+    },
+    {
+      title: "Guided Medication Safety Review",
+      description:
+        "Walk through your ASC's medication management policies with your pharmacist, pharmacy consultant, or clinical supervisor. Discuss storage conditions, controlled substance logs, and how expired medications are managed and documented.",
+    },
+    {
+      title: "Medication Workflow Verification",
+      description:
+        "Review your medication storage areas and controlled substance records with your supervisor or pharmacy contact. Identify anything that would require attention in a survey and discuss how your facility addresses each requirement.",
+    },
+  ],
+
+  "ASC: Pathology and Medical Laboratory Services": [
+    {
+      title: "Lab Services Review + Retest",
+      description:
+        "Review the Pathology and Laboratory Services study cards. Focus on specimen handling, CLIA waiver requirements, point-of-care testing documentation, and how lab services are contracted or overseen in your ASC.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Lab-Related Standards",
+      description:
+        "Discuss your ASC's laboratory and pathology arrangements with your administrator or lab contact. Explain the key compliance requirements in your own words, then ask your educator to confirm your understanding.",
+    },
+    {
+      title: "Lab Workflow Verification",
+      description:
+        "Review your ASC's CLIA certificate, specimen handling logs, and any contracted lab agreements. With your supervisor, verify that documentation and processes align with what AAAHC would evaluate during an accreditation survey.",
+    },
+  ],
+
+  "ASC: Diagnostic and Other Imaging Services": [
+    {
+      title: "Imaging Services Review + Retest",
+      description:
+        "Review the Diagnostic and Imaging Services study cards. Focus on equipment maintenance requirements, radiation safety, contrast media management, and how imaging services are supervised or contracted in your ASC.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Imaging Readiness",
+      description:
+        "Discuss your ASC's imaging setup with your radiology contact, equipment supervisor, or administrator. Explain the key compliance standards back in your own words and ask for feedback on any areas that were unclear.",
+    },
+    {
+      title: "Imaging Workflow Verification",
+      description:
+        "Review your imaging equipment maintenance logs, radiation safety documentation, and any imaging-related policies. With your supervisor, identify what a surveyor would evaluate and confirm that records are current and accessible.",
+    },
+  ],
+
+}; // end REMEDIATION_LIBRARY
 
 // ── Level ID → Category mapping ────────────────────────────────────────────
-// Each hospital level ID maps to exactly one remediation category.
+// HOSPITAL levels map to hospital categories.
+// ASC levels map to ASC categories (prefixed "ASC: ").
+// The getRemediationPlan() function works for both — no separate function needed.
 
 export const LEVEL_TO_CATEGORY: Record<string, string> = {
+  // ── Hospital (Joint Commission) ───────────────────────────────────────────
   transport:        "Transport of Instruments",
   environment:      "Environment & Surfaces",
   segregation:      "Clean vs. Dirty",
@@ -244,6 +469,22 @@ export const LEVEL_TO_CATEGORY: Record<string, string> = {
   universal_protocol: "Surgical Safety & Consent",
   patient_care_docs:  "Patient Care & Documentation",
   eoc_safety:         "EOC & Safety Compliance",
+
+  // ── ASC (AAAHC/CMS) ───────────────────────────────────────────────────────
+  // Active quiz levels mapped to their AAAHC chapter remediation category.
+  // Chapters 12 (Pathology) and 13 (Imaging) have no active quiz level yet;
+  // they are in the library above and will map here when those levels are published.
+  asc_patient_rights:             "ASC: Patient Rights and Responsibilities",
+  asc_governance:                 "ASC: Governance",
+  asc_credentialing:              "ASC: Governance",          // credentialing lives under governance oversight
+  asc_administration:             "ASC: Administration",
+  asc_quality_of_care:            "ASC: Quality of Care Provided",
+  asc_quality_management:         "ASC: Quality Management and Improvement",
+  asc_clinical_records:           "ASC: Clinical Records and Health Information",
+  asc_infection_prevention_safety:"ASC: Infection Prevention and Control and Safety",
+  asc_facilities_environment:     "ASC: Facilities and Environment",
+  asc_anesthesia_surgery_services:"ASC: Anesthesia and Surgical Services",
+  asc_pharmaceutical_services:    "ASC: Pharmaceutical Services",
 };
 
 // ── Assignment function ────────────────────────────────────────────────────
