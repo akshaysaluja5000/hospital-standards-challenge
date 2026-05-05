@@ -4,12 +4,65 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Lightbulb, Play,
   AlertTriangle, ListChecks, FileText, CheckCircle2, RotateCcw,
-  Trophy, RefreshCw,
+  Trophy, RefreshCw, Timer, Clock, CalendarDays, Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { findLevelById } from "@shared/all-levels";
 import type { StudyConcept } from "@shared/schema";
+
+// ── Types ────────────────────────────────────────────────────────────────────
+
+type SRRating = "again" | "hard" | "good" | "easy";
+
+const SR_CONFIG: Record<SRRating, {
+  label: string;
+  interval: string;
+  icon: typeof Timer;
+  btn: string;
+  dot: string;
+  badge: string;
+  requeue: number | null; // null = done for session; number = slots ahead to reinsert
+}> = {
+  again: {
+    label: "Again",
+    interval: "< 2 min",
+    icon: Timer,
+    btn: "border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500/70",
+    dot: "#f87171",
+    badge: "bg-red-500/15 text-red-400 border-red-500/25",
+    requeue: 2,
+  },
+  hard: {
+    label: "Hard",
+    interval: "< 15 min",
+    icon: Clock,
+    btn: "border-orange-500/50 text-orange-400 hover:bg-orange-500/10 hover:border-orange-500/70",
+    dot: "#fb923c",
+    badge: "bg-orange-500/15 text-orange-400 border-orange-500/25",
+    requeue: 8,
+  },
+  good: {
+    label: "Good",
+    interval: "1 day",
+    icon: CheckCircle2,
+    btn: "bg-emerald-600 hover:bg-emerald-500 text-white border-0",
+    dot: "#34d399",
+    badge: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
+    requeue: null,
+  },
+  easy: {
+    label: "Easy",
+    interval: "3 days",
+    icon: CalendarDays,
+    btn: "bg-sky-600 hover:bg-sky-500 text-white border-0",
+    dot: "#38bdf8",
+    badge: "bg-sky-500/15 text-sky-400 border-sky-500/25",
+    requeue: null,
+  },
+};
+
+// ── Category config ───────────────────────────────────────────────────────────
 
 const CATEGORY_CONFIG: Record<
   NonNullable<StudyConcept["category"]>,
@@ -29,6 +82,20 @@ const FLIP_VARIANTS = {
   exitFront:  { opacity: 0, rotateY: 12,  scale: 0.97 },
 };
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function buildInitialQueue(n: number): number[] {
+  return Array.from({ length: n }, (_, i) => i);
+}
+
+function insertAt<T>(arr: T[], idx: number, item: T): T[] {
+  const next = [...arr];
+  next.splice(idx, 0, item);
+  return next;
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
+
 export default function StudyPage() {
   const [, params] = useRoute("/study/:levelId");
   const [, setLocation] = useLocation();
@@ -38,26 +105,31 @@ export default function StudyPage() {
   const [view, setView] = useState<"summary" | "concepts">(
     level?.chapterSummary ? "summary" : "concepts"
   );
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [knownSet, setKnownSet] = useState<Set<number>>(new Set());
-  const [reviewSet, setReviewSet] = useState<Set<number>>(new Set());
   const [sessionDone, setSessionDone] = useState(false);
+
+  // Spaced-repetition queue state
+  const [queue, setQueue] = useState<number[]>(() =>
+    buildInitialQueue(level?.studyMaterial.length ?? 0)
+  );
+  const [queueIndex, setQueueIndex] = useState(0);
+  // Last rating per original card index
+  const [ratings, setRatings] = useState<Record<number, SRRating>>({});
 
   useEffect(() => {
     setFlipped(false);
-  }, [currentIndex]);
+  }, [queueIndex]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (view !== "concepts" || sessionDone) return;
       if (e.key === " ") { e.preventDefault(); setFlipped((v) => !v); }
-      if (e.key === "ArrowRight" && flipped) advance("known");
-      if (e.key === "ArrowLeft" && !flipped && currentIndex > 0) goBack();
+      if (e.key === "ArrowRight" && flipped) rate("good");
+      if (e.key === "ArrowLeft" && !flipped && queueIndex > 0) goBack();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [view, flipped, currentIndex, sessionDone]);
+  }, [view, flipped, queueIndex, sessionDone]);
 
   if (!level) {
     return (
@@ -68,41 +140,80 @@ export default function StudyPage() {
   }
 
   const concepts = level.studyMaterial;
-  const currentConcept = concepts[currentIndex];
-  const isFirst = currentIndex === 0;
-  const isLast = currentIndex === concepts.length - 1;
+  const currentCardIndex = queue[queueIndex];
+  const currentConcept = concepts[currentCardIndex];
+  const isFirst = queueIndex === 0;
   const summary = level.chapterSummary;
   const catKey = currentConcept?.category;
   const cat = catKey ? CATEGORY_CONFIG[catKey] : null;
 
-  const advance = (result: "known" | "review") => {
-    if (result === "known") {
-      setKnownSet((prev) => new Set(Array.from(prev).concat(currentIndex)));
+  // How many unique original cards remain in queue from queueIndex onward
+  const remainingUnique = new Set(queue.slice(queueIndex)).size;
+
+  const rate = (rating: SRRating) => {
+    const cfg = SR_CONFIG[rating];
+
+    // Store rating for this card
+    setRatings((prev) => ({ ...prev, [currentCardIndex]: rating }));
+
+    const nextQueueIndex = queueIndex + 1;
+
+    if (cfg.requeue !== null) {
+      // Re-insert the card into the queue ahead
+      const insertPos = Math.min(nextQueueIndex + cfg.requeue, queue.length);
+      const newQueue = insertAt(queue, insertPos, currentCardIndex);
+      setQueue(newQueue);
+      if (nextQueueIndex >= newQueue.length) {
+        setSessionDone(true);
+      } else {
+        setQueueIndex(nextQueueIndex);
+      }
     } else {
-      setReviewSet((prev) => new Set(Array.from(prev).concat(currentIndex)));
-    }
-    if (isLast) {
-      setSessionDone(true);
-    } else {
-      setCurrentIndex((i) => i + 1);
+      // Good / Easy — just advance
+      if (nextQueueIndex >= queue.length) {
+        setSessionDone(true);
+      } else {
+        setQueueIndex(nextQueueIndex);
+      }
     }
   };
 
   const goBack = () => {
-    if (!isFirst) setCurrentIndex((i) => i - 1);
+    if (!isFirst) {
+      setQueueIndex((i) => i - 1);
+      setFlipped(false);
+    }
   };
 
   const restart = () => {
-    setCurrentIndex(0);
+    setQueue(buildInitialQueue(concepts.length));
+    setQueueIndex(0);
     setFlipped(false);
-    setKnownSet(new Set());
-    setReviewSet(new Set());
+    setRatings({});
     setSessionDone(false);
   };
 
-  const knownCount = knownSet.size;
-  const reviewCount = reviewSet.size;
-  const totalAnswered = knownSet.size + reviewSet.size;
+  // Summary counts — use last rating per card
+  const ratingCounts: Record<SRRating, number> = { again: 0, hard: 0, good: 0, easy: 0 };
+  Object.values(ratings).forEach((r) => { ratingCounts[r]++; });
+  const totalRated = Object.values(ratingCounts).reduce((a, b) => a + b, 0);
+
+  // For progress dots (original card count), derive color from last rating
+  const dotColor = (i: number): string => {
+    const r = ratings[i];
+    if (r) return SR_CONFIG[r].dot;
+    if (i === currentCardIndex && !sessionDone) return level.color;
+    return level.color;
+  };
+
+  const dotOpacity = (i: number): string => {
+    const r = ratings[i];
+    if (r) return "opacity-90";
+    const posInQueue = queue.indexOf(i, queueIndex);
+    if (posInQueue === queueIndex) return "opacity-90";
+    if (posInQueue > queueIndex) return "opacity-20";
+    return "opacity-35";
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -152,32 +263,15 @@ export default function StudyPage() {
             </div>
           )}
 
-          {/* Progress dots */}
+          {/* Progress dots — one per original card */}
           {view === "concepts" && !sessionDone && (
             <div className="flex gap-1">
               {concepts.map((_, i) => (
-                <button
+                <div
                   key={i}
-                  className={`flex-1 h-1.5 rounded-full transition-all ${
-                    knownSet.has(i)
-                      ? "opacity-100"
-                      : reviewSet.has(i)
-                      ? "opacity-60"
-                      : i === currentIndex
-                      ? "opacity-90"
-                      : i < currentIndex
-                      ? "opacity-40"
-                      : "opacity-15"
-                  }`}
-                  style={{
-                    backgroundColor: knownSet.has(i)
-                      ? level.color
-                      : reviewSet.has(i)
-                      ? "rgb(251 146 60)"
-                      : level.color,
-                  }}
-                  onClick={() => { setCurrentIndex(i); setSessionDone(false); }}
-                  data-testid={`button-concept-dot-${i}`}
+                  className={`flex-1 h-1.5 rounded-full transition-all ${dotOpacity(i)}`}
+                  style={{ backgroundColor: dotColor(i) }}
+                  data-testid={`dot-concept-${i}`}
                 />
               ))}
             </div>
@@ -259,24 +353,33 @@ export default function StudyPage() {
       {/* ── Concepts View: Active Cards ── */}
       {view === "concepts" && !sessionDone && (
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 gap-5">
-          {/* Counter */}
+          {/* Counter + queue info */}
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">
-              Card <span className="font-black" style={{ color: level.color }}>{currentIndex + 1}</span> of {concepts.length}
+              Card <span className="font-black" style={{ color: level.color }}>{queueIndex + 1}</span>
+              {queue.length > concepts.length
+                ? <span className="text-muted-foreground/60"> · {remainingUnique} left</span>
+                : <span className="text-muted-foreground/60"> of {concepts.length}</span>
+              }
             </span>
-            {knownSet.size > 0 && (
+            {ratingCounts.good + ratingCounts.easy > 0 && (
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
-                ✓ {knownSet.size} known
+                ✓ {ratingCounts.good + ratingCounts.easy} done
+              </span>
+            )}
+            {ratingCounts.again + ratingCounts.hard > 0 && (
+              <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-orange-500/15 text-orange-400 border border-orange-500/25">
+                ↺ {ratingCounts.again + ratingCounts.hard} queued
               </span>
             )}
           </div>
 
           {/* Flip card */}
-          <div className="w-full max-w-lg" data-testid={`card-concept-${currentIndex}`}>
+          <div className="w-full max-w-lg" data-testid={`card-concept-${currentCardIndex}`}>
             <AnimatePresence mode="wait" initial={false}>
               {!flipped ? (
                 <motion.div
-                  key={`front-${currentIndex}`}
+                  key={`front-${queueIndex}`}
                   initial={FLIP_VARIANTS.enterFront}
                   animate={FLIP_VARIANTS.center}
                   exit={FLIP_VARIANTS.exitFront}
@@ -288,7 +391,6 @@ export default function StudyPage() {
                     onClick={() => setFlipped(true)}
                     data-testid="card-front"
                   >
-                    {/* Top row: category + "flip to reveal" */}
                     <div className="flex items-center justify-between">
                       {cat ? (
                         <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${cat.bg} ${cat.text} ${cat.border}`}>
@@ -299,19 +401,19 @@ export default function StudyPage() {
                           Concept
                         </span>
                       )}
-                      <span className="text-[10px] text-muted-foreground font-semibold">
-                        {currentIndex + 1} / {concepts.length}
-                      </span>
+                      {ratings[currentCardIndex] && (
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${SR_CONFIG[ratings[currentCardIndex]].badge}`}>
+                          Last: {SR_CONFIG[ratings[currentCardIndex]].label}
+                        </span>
+                      )}
                     </div>
 
-                    {/* Title */}
                     <div className="flex-1 flex items-center">
                       <h3 className="text-2xl font-black leading-tight" data-testid="text-concept-title">
                         {currentConcept.title}
                       </h3>
                     </div>
 
-                    {/* Tap hint */}
                     <div className="flex items-center justify-center gap-2 pt-2 border-t border-border/40">
                       <span className="text-xs text-muted-foreground/60 font-medium tracking-wide">
                         Tap card to reveal answer
@@ -321,7 +423,7 @@ export default function StudyPage() {
                 </motion.div>
               ) : (
                 <motion.div
-                  key={`back-${currentIndex}`}
+                  key={`back-${queueIndex}`}
                   initial={FLIP_VARIANTS.enterFront}
                   animate={FLIP_VARIANTS.center}
                   exit={FLIP_VARIANTS.exitFront}
@@ -332,7 +434,6 @@ export default function StudyPage() {
                     style={{ borderColor: `${level.color}50` }}
                     data-testid="card-back"
                   >
-                    {/* Top row */}
                     <div className="flex items-center justify-between">
                       {cat ? (
                         <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${cat.bg} ${cat.text} ${cat.border}`}>
@@ -344,16 +445,14 @@ export default function StudyPage() {
                         </span>
                       )}
                       <span className="text-[10px] text-muted-foreground font-semibold">
-                        {currentIndex + 1} / {concepts.length}
+                        {currentCardIndex + 1} of {concepts.length}
                       </span>
                     </div>
 
-                    {/* Answer */}
                     <p className="text-base text-foreground/85 leading-relaxed" data-testid="text-concept-content">
                       {currentConcept.content}
                     </p>
 
-                    {/* Key takeaway */}
                     <div
                       className="rounded-xl p-4 flex gap-3 items-start"
                       style={{ backgroundColor: `${level.color}12` }}
@@ -369,25 +468,29 @@ export default function StudyPage() {
                       </div>
                     </div>
 
-                    {/* Got it / Review buttons */}
-                    <div className="flex gap-3 pt-1">
-                      <Button
-                        variant="outline"
-                        className="flex-1 border-orange-500/40 text-orange-400 hover:bg-orange-500/10 hover:border-orange-500/60"
-                        onClick={() => advance("review")}
-                        data-testid="button-review-again"
-                      >
-                        <RotateCcw size={14} className="mr-1.5" />
-                        Review Again
-                      </Button>
-                      <Button
-                        className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white border-0"
-                        onClick={() => advance("known")}
-                        data-testid="button-got-it"
-                      >
-                        <CheckCircle2 size={14} className="mr-1.5" />
-                        Got It
-                      </Button>
+                    {/* ── 4-Button Spaced Repetition Row ── */}
+                    <div className="flex flex-col gap-2 pt-1">
+                      <p className="text-[10px] text-center text-muted-foreground/50 font-semibold uppercase tracking-widest">
+                        How well did you know this?
+                      </p>
+                      <div className="grid grid-cols-4 gap-2">
+                        {(["again", "hard", "good", "easy"] as SRRating[]).map((r) => {
+                          const cfg = SR_CONFIG[r];
+                          const Icon = cfg.icon;
+                          return (
+                            <button
+                              key={r}
+                              onClick={() => rate(r)}
+                              className={`flex flex-col items-center gap-1 px-1 py-2.5 rounded-xl border font-bold text-[11px] transition-all active:scale-95 ${cfg.btn}`}
+                              data-testid={`button-rate-${r}`}
+                            >
+                              <Icon size={14} />
+                              <span>{cfg.label}</span>
+                              <span className="text-[9px] font-semibold opacity-70">{cfg.interval}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   </Card>
                 </motion.div>
@@ -423,8 +526,9 @@ export default function StudyPage() {
               size="sm"
               className="text-muted-foreground"
               onClick={() => {
-                if (isLast) setSessionDone(true);
-                else setCurrentIndex((i) => i + 1);
+                const next = queueIndex + 1;
+                if (next >= queue.length) setSessionDone(true);
+                else setQueueIndex(next);
               }}
               data-testid="button-skip-concept"
             >
@@ -434,7 +538,7 @@ export default function StudyPage() {
 
           {/* Keyboard hint */}
           <p className="text-[11px] text-muted-foreground/40 text-center hidden sm:block">
-            Space = flip &nbsp;·&nbsp; → = Got It &nbsp;·&nbsp; ← = Back
+            Space = flip &nbsp;·&nbsp; → = Good &nbsp;·&nbsp; ← = Back
           </p>
         </div>
       )}
@@ -455,33 +559,48 @@ export default function StudyPage() {
                   <Trophy size={30} style={{ color: level.color }} />
                 </div>
                 <div className="text-center">
-                  <h2 className="text-2xl font-black">Session Complete</h2>
+                  <h2 className="text-2xl font-black" data-testid="text-session-complete">Session Complete</h2>
                   <p className="text-muted-foreground text-sm mt-1">
-                    You worked through all {concepts.length} flashcards
+                    You reviewed {totalRated} card{totalRated !== 1 ? "s" : ""} this session
                   </p>
                 </div>
               </div>
 
-              {/* Score cards */}
+              {/* 4-bucket summary */}
               <div className="grid grid-cols-2 gap-3">
-                <Card className="rounded-2xl p-5 border-2 border-emerald-500/25 bg-emerald-500/8 text-center" data-testid="stat-known">
-                  <div className="text-3xl font-black text-emerald-400">{knownCount}</div>
-                  <div className="text-xs font-bold uppercase tracking-wide text-emerald-400/80 mt-1">Knew It</div>
-                </Card>
-                <Card className="rounded-2xl p-5 border-2 border-orange-500/25 bg-orange-500/8 text-center" data-testid="stat-review">
-                  <div className="text-3xl font-black text-orange-400">{reviewCount}</div>
-                  <div className="text-xs font-bold uppercase tracking-wide text-orange-400/80 mt-1">To Review</div>
-                </Card>
+                {(["easy", "good", "hard", "again"] as SRRating[]).map((r) => {
+                  const cfg = SR_CONFIG[r];
+                  const Icon = cfg.icon;
+                  const count = ratingCounts[r];
+                  return (
+                    <Card
+                      key={r}
+                      className={`rounded-2xl p-4 border-2 text-center ${count === 0 ? "opacity-40" : ""}`}
+                      style={{
+                        borderColor: count > 0 ? `${cfg.dot}40` : undefined,
+                        background: count > 0 ? `${cfg.dot}10` : undefined,
+                      }}
+                      data-testid={`stat-rating-${r}`}
+                    >
+                      <Icon size={18} className="mx-auto mb-1" style={{ color: count > 0 ? cfg.dot : undefined }} />
+                      <div className="text-3xl font-black" style={{ color: count > 0 ? cfg.dot : undefined }}>{count}</div>
+                      <div className="text-xs font-bold uppercase tracking-wide mt-0.5 opacity-80" style={{ color: count > 0 ? cfg.dot : undefined }}>
+                        {cfg.label}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground mt-0.5">{cfg.interval}</div>
+                    </Card>
+                  );
+                })}
               </div>
 
-              {/* Message */}
+              {/* Next-session nudge */}
               <Card className="rounded-2xl border-2 p-5" style={{ borderColor: `${level.color}25` }}>
                 <p className="text-sm text-foreground/75 leading-relaxed text-center">
-                  {knownCount === concepts.length
-                    ? "Perfect session! You nailed every card. Ready to prove it on the quiz?"
-                    : reviewCount > 0
-                    ? `${reviewCount} card${reviewCount > 1 ? "s" : ""} to revisit. Run through the deck again or jump into the quiz when ready.`
-                    : "Great work going through the full deck. Take the quiz to lock in what you've learned."}
+                  {ratingCounts.again + ratingCounts.hard === 0
+                    ? "Excellent session — you rated every card Good or Easy. Ready to prove it on the quiz?"
+                    : ratingCounts.good + ratingCounts.easy === 0
+                    ? "Keep reviewing — run through the deck again until more cards feel Good or Easy."
+                    : `${ratingCounts.good + ratingCounts.easy} card${ratingCounts.good + ratingCounts.easy !== 1 ? "s" : ""} feeling solid. ${ratingCounts.again + ratingCounts.hard} still need more review.`}
                 </p>
               </Card>
 
@@ -505,20 +624,25 @@ export default function StudyPage() {
                   >
                     <RefreshCw size={16} className="mr-2" /> Run Again
                   </Button>
-                  {reviewCount > 0 && (
+                  {(ratingCounts.again > 0 || ratingCounts.hard > 0) && (
                     <Button
                       variant="outline"
                       size="lg"
                       className="flex-1 border-orange-500/40 text-orange-400 hover:bg-orange-500/10"
                       onClick={() => {
-                        const firstReview = Array.from(reviewSet)[0];
-                        setCurrentIndex(firstReview ?? 0);
+                        // Restart with only again+hard rated cards
+                        const needsWork = Object.entries(ratings)
+                          .filter(([, r]) => r === "again" || r === "hard")
+                          .map(([i]) => Number(i));
+                        setQueue(needsWork);
+                        setQueueIndex(0);
                         setFlipped(false);
+                        setRatings({});
                         setSessionDone(false);
                       }}
-                      data-testid="button-review-marked"
+                      data-testid="button-review-weak"
                     >
-                      <RotateCcw size={16} className="mr-2" /> Review Marked
+                      <RotateCcw size={16} className="mr-2" /> Review Weak
                     </Button>
                   )}
                 </div>
