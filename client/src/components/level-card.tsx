@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp, Layers } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -109,8 +109,8 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
               onClick={onStudy}
               data-testid={`button-study-${level.id}`}
             >
-              <BookOpen size={15} className="mr-1.5" />
-              Study First
+              <Layers size={15} className="mr-1.5" />
+              Flashcards
             </Button>
             {hasInProgress ? (
               <>
