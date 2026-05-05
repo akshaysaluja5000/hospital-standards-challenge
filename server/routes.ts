@@ -1557,6 +1557,80 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     }
   });
 
+  app.post("/api/admin/lesson-plan/generate", requireAdmin, async (req: Request, res: Response) => {
+    const schema = z.object({
+      assignedDate: z.string().min(1),
+      dueDate: z.string().min(1),
+      cadence: z.enum(["daily", "weekly"]),
+      category: z.string().min(1),
+      facilityType: z.enum(["Hospital", "ASC"]),
+      learner: z.string().min(1),
+      steps: z.array(z.object({ title: z.string(), description: z.string() })).min(1),
+    });
+    const parsed = schema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: "Invalid request." });
+    }
+    const { assignedDate, dueDate, cadence, category, facilityType, learner, steps } = parsed.data;
+
+    const start = new Date(assignedDate);
+    const end = new Date(dueDate);
+    const diffMs = end.getTime() - start.getTime();
+    const diffDays = Math.max(1, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+    const diffWeeks = Math.max(1, Math.floor(diffDays / 7));
+    const totalPeriods = cadence === "daily" ? diffDays : diffWeeks;
+    const periodLabel = cadence === "daily" ? "day" : "week";
+
+    const stepsText = steps.map((s, i) => `Step ${i + 1}: ${s.title} — ${s.description}`).join("\n");
+
+    try {
+      const message = await callAnthropicWithRetry({
+        model: "claude-haiku-4-5",
+        max_tokens: 1200,
+        messages: [
+          {
+            role: "user",
+            content: `You are a healthcare compliance educator creating a structured learning schedule.
+
+A learner (${learner}) needs to complete a guided education plan for: ${category} (${facilityType}).
+Start date: ${assignedDate}. Due date: ${dueDate}. Total ${periodLabel}s available: ${totalPeriods}.
+Cadence: ${cadence}.
+
+Assigned remediation steps:
+${stepsText}
+
+Generate a ${cadence} lesson plan that spreads the work across the available ${totalPeriods} ${periodLabel}(s). Each entry should be concrete and actionable — specific activities like reviewing flashcards, completing a quiz section, or watching a walkthrough. The final period should include a self-check or review.
+
+Respond with ONLY a JSON array (no markdown, no explanation). Each element: { "period": "${cadence === "daily" ? "Day N" : "Week N"}", "task": "short task name", "description": "1-2 sentence description of exactly what to do" }
+
+Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ? 14 : 8)} periods. Do not exceed ${totalPeriods} periods.`,
+          },
+        ],
+      });
+
+      const content = message.content[0];
+      if (!content || content.type !== "text") {
+        return res.status(502).json({ error: "Unable to generate lesson plan." });
+      }
+
+      let planArray: any[];
+      try {
+        const raw = content.text.trim();
+        const jsonStart = raw.indexOf("[");
+        const jsonEnd = raw.lastIndexOf("]");
+        if (jsonStart === -1 || jsonEnd === -1) throw new Error("No JSON array found");
+        planArray = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
+      } catch {
+        return res.status(502).json({ error: "Could not parse lesson plan from AI response." });
+      }
+
+      res.json({ lessonPlan: planArray });
+    } catch (error: any) {
+      console.error("Lesson plan generation error:", error?.message);
+      res.status(502).json({ error: "Lesson plan generation is temporarily unavailable." });
+    }
+  });
+
   const ADMIN_USERNAMES = ["akshaysaluja", "rsaluja"];
   const QUESTIONS_PER_SECTION = 5;
 

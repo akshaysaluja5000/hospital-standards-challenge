@@ -6,7 +6,7 @@ import {
   Clock, X, Calendar, Info, FlaskConical, Database,
   GraduationCap, ShieldCheck, User, ClipboardList,
   Hospital, Stethoscope, ChevronRight, BookOpen, ShieldAlert,
-  Library,
+  Library, Sparkles, CalendarDays, Loader2, LayoutList,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -66,6 +66,12 @@ export interface RemediationStep {
   description: string;
 }
 
+export interface LessonPlanEntry {
+  period: string;
+  task: string;
+  description: string;
+}
+
 export type PlanStatus = "Assigned" | "In Progress" | "Completed" | "Verified";
 
 export interface RemediationPlan {
@@ -87,6 +93,8 @@ export interface RemediationPlan {
   verifiedBy?: string;
   notes?: string;
   isDemo?: boolean;
+  lessonPlan?: LessonPlanEntry[];
+  lessonPlanCadence?: "daily" | "weekly";
 }
 
 interface CreatePlanForm {
@@ -97,6 +105,7 @@ interface CreatePlanForm {
   dueDate: string;
   assignedBy: string;
   notes: string;
+  cadence: "daily" | "weekly";
 }
 
 type DataMode = "demo" | "live";
@@ -418,20 +427,64 @@ function CreatePlanDialog({
   defaultFacilityName: string;
 }) {
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreatePlanForm>({
-    defaultValues: { facilityType: "", category: "", learner: "", quizScore: "", dueDate: "", assignedBy: "", notes: "" },
+    defaultValues: { facilityType: "", category: "", learner: "", quizScore: "", dueDate: "", assignedBy: "", notes: "", cadence: "daily" },
   });
   const facilityType = watch("facilityType");
   const category = watch("category");
   const quizScoreRaw = watch("quizScore");
+  const dueDate = watch("dueDate");
+  const learner = watch("learner");
+  const cadence = watch("cadence");
   const scoreNum = parseInt(quizScoreRaw, 10);
+
+  const [generatingPlan, setGeneratingPlan] = useState(false);
+  const [generatedPlan, setGeneratedPlan] = useState<LessonPlanEntry[] | null>(null);
+  const [planGenError, setPlanGenError] = useState<string | null>(null);
 
   const categoryOptions = facilityType === "Hospital" ? HOSPITAL_CATEGORIES : facilityType === "ASC" ? ASC_CATEGORIES : [];
   const previewSteps = getStepsForScore(facilityType as "Hospital" | "ASC" | "", category, scoreNum);
   const reassessment = needsReassessment(scoreNum);
 
+  const canGeneratePlan = !!(facilityType && category && learner && dueDate && !isNaN(scoreNum) && scoreNum > 0 && scoreNum < 70 && previewSteps.length > 0);
+
+  async function handleGeneratePlan() {
+    if (!canGeneratePlan) return;
+    setGeneratingPlan(true);
+    setPlanGenError(null);
+    setGeneratedPlan(null);
+    try {
+      const res = await fetch("/api/admin/lesson-plan/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assignedDate: new Date().toISOString().split("T")[0],
+          dueDate,
+          cadence,
+          category,
+          facilityType,
+          learner,
+          steps: previewSteps,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to generate plan");
+      setGeneratedPlan(data.lessonPlan);
+    } catch (err: any) {
+      setPlanGenError(err.message || "Could not generate lesson plan.");
+    } finally {
+      setGeneratingPlan(false);
+    }
+  }
+
+  function handleClose() {
+    onClose();
+    reset();
+    setGeneratedPlan(null);
+    setPlanGenError(null);
+  }
+
   function onSubmit(data: CreatePlanForm) {
     const score = parseInt(data.quizScore, 10);
-    // ── Remediation guard: only "final" assessment type below passing threshold ──
     if (!shouldCreateRemediationPlan("final", score)) return;
     const steps = getStepsForScore(data.facilityType as "Hospital" | "ASC", data.category, score);
     const newPlan: RemediationPlan = {
@@ -451,14 +504,18 @@ function CreatePlanDialog({
       facilityName: defaultFacilityName,
       assignedBy: data.assignedBy || undefined,
       notes: data.notes || undefined,
+      lessonPlan: generatedPlan || undefined,
+      lessonPlanCadence: generatedPlan ? data.cadence : undefined,
     };
     onSave(newPlan);
     reset();
+    setGeneratedPlan(null);
+    setPlanGenError(null);
     onClose();
   }
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { if (!v) { onClose(); reset(); } }}>
+    <Dialog open={open} onOpenChange={(v) => { if (!v) handleClose(); }}>
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto" data-testid="dialog-create-plan">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg">
@@ -473,7 +530,7 @@ function CreatePlanDialog({
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold">Facility Type</label>
-            <Select value={facilityType} onValueChange={(v) => { setValue("facilityType", v as "Hospital" | "ASC"); setValue("category", ""); }}>
+            <Select value={facilityType} onValueChange={(v) => { setValue("facilityType", v as "Hospital" | "ASC"); setValue("category", ""); setGeneratedPlan(null); }}>
               <SelectTrigger data-testid="select-facility-type">
                 <SelectValue placeholder="Select Hospital or ASC..." />
               </SelectTrigger>
@@ -487,7 +544,7 @@ function CreatePlanDialog({
 
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold">Category / Chapter</label>
-            <Select value={category} onValueChange={(v) => setValue("category", v)} disabled={!facilityType}>
+            <Select value={category} onValueChange={(v) => { setValue("category", v); setGeneratedPlan(null); }} disabled={!facilityType}>
               <SelectTrigger data-testid="select-chapter">
                 <SelectValue placeholder={facilityType ? "Select category..." : "Select facility type first"} />
               </SelectTrigger>
@@ -552,6 +609,78 @@ function CreatePlanDialog({
             <StepsPreview facilityType={facilityType as "Hospital" | "ASC" | ""} category={category} score={scoreNum} />
           )}
 
+          {/* ── AI Lesson Plan Section ── */}
+          {previewSteps.length > 0 && dueDate && (
+            <div className="rounded-xl border border-primary/25 bg-primary/5 p-4 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <Sparkles size={15} className="text-primary flex-shrink-0" />
+                <p className="text-sm font-bold">AI Lesson Plan</p>
+                <span className="text-[10px] text-muted-foreground font-semibold ml-auto">optional</span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Generate a structured {cadence} schedule showing the learner exactly what to complete each {cadence === "daily" ? "day" : "week"} between now and the due date.
+              </p>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Schedule Cadence</label>
+                <div className="flex gap-2">
+                  {(["daily", "weekly"] as const).map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => { setValue("cadence", c); setGeneratedPlan(null); }}
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg border text-sm font-bold transition-all ${
+                        cadence === c
+                          ? "bg-primary/20 border-primary/60 text-primary"
+                          : "bg-background border-border text-muted-foreground hover:border-primary/30"
+                      }`}
+                      data-testid={`button-cadence-${c}`}
+                    >
+                      <CalendarDays size={13} />
+                      {c === "daily" ? "Daily" : "Weekly"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleGeneratePlan}
+                disabled={generatingPlan || !canGeneratePlan}
+                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-primary/40 bg-primary/10 text-primary text-sm font-bold hover:bg-primary/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                data-testid="button-generate-lesson-plan"
+              >
+                {generatingPlan ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                {generatingPlan ? "Generating plan…" : generatedPlan ? "Regenerate Lesson Plan" : "Generate AI Lesson Plan"}
+              </button>
+
+              {planGenError && (
+                <p className="text-xs text-destructive font-semibold">{planGenError}</p>
+              )}
+
+              {generatedPlan && (
+                <div className="flex flex-col gap-2 pt-1" data-testid="container-generated-plan">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Generated {cadence === "daily" ? "Daily" : "Weekly"} Schedule ({generatedPlan.length} {cadence === "daily" ? "days" : "weeks"})
+                  </p>
+                  <div className="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-1">
+                    {generatedPlan.map((entry, i) => (
+                      <div key={i} className="flex gap-2.5 items-start" data-testid={`lesson-entry-${i}`}>
+                        <span className="text-[10px] font-black text-primary/70 bg-primary/10 rounded px-1.5 py-0.5 flex-shrink-0 mt-0.5 whitespace-nowrap">
+                          {entry.period}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold leading-tight">{entry.task}</p>
+                          <p className="text-[11px] text-muted-foreground leading-snug">{entry.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-bold">
               Assigned By <span className="font-normal text-muted-foreground">(optional)</span>
@@ -581,13 +710,69 @@ function CreatePlanDialog({
             <Button type="submit" className="flex-1" size="lg" data-testid="button-submit-plan">
               <Plus size={16} className="mr-1.5" /> Assign Guided Education Plan
             </Button>
-            <Button type="button" variant="outline" size="lg" onClick={() => { onClose(); reset(); }} data-testid="button-cancel-plan">
+            <Button type="button" variant="outline" size="lg" onClick={handleClose} data-testid="button-cancel-plan">
               Cancel
             </Button>
           </div>
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+// ── Lesson Plan Display ────────────────────────────────────────────────────
+
+function LessonPlanDisplay({ plan, cadence, planId }: { plan: LessonPlanEntry[]; cadence: "daily" | "weekly"; planId: string }) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="border-t border-border/40 pt-3" data-testid={`container-lesson-plan-${planId}`}>
+      <button
+        className="w-full flex items-center gap-2 text-left mb-2"
+        onClick={() => setExpanded((v) => !v)}
+        data-testid={`button-toggle-lesson-plan-${planId}`}
+      >
+        <LayoutList size={14} className="text-primary flex-shrink-0" />
+        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/70 flex-1">
+          AI {cadence === "daily" ? "Daily" : "Weekly"} Lesson Plan
+        </span>
+        <span className="text-[10px] font-bold text-primary/70 bg-primary/10 rounded px-1.5 py-0.5">
+          {plan.length} {cadence === "daily" ? "days" : "weeks"}
+        </span>
+        <ChevronRight size={13} className={`text-muted-foreground transition-transform flex-shrink-0 ${expanded ? "rotate-90" : ""}`} />
+      </button>
+
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="lesson-plan-body"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="flex flex-col gap-2 pt-1">
+              {plan.map((entry, i) => (
+                <div
+                  key={i}
+                  className="flex gap-3 items-start rounded-xl border border-border/50 bg-muted/20 px-3 py-2.5"
+                  data-testid={`lesson-plan-entry-${planId}-${i}`}
+                >
+                  <span className="text-[10px] font-black text-primary bg-primary/12 border border-primary/20 rounded-lg px-2 py-1 flex-shrink-0 mt-0.5 whitespace-nowrap leading-tight">
+                    {entry.period}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold leading-snug mb-0.5">{entry.task}</p>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{entry.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
 
@@ -724,6 +909,11 @@ function PlanCard({
           <p className="text-sm text-muted-foreground italic border-t border-border/40 pt-3 leading-relaxed" data-testid={`text-plan-notes-${plan.id}`}>
             {plan.notes}
           </p>
+        )}
+
+        {/* ── Lesson Plan ── */}
+        {plan.lessonPlan && plan.lessonPlan.length > 0 && (
+          <LessonPlanDisplay plan={plan.lessonPlan} cadence={plan.lessonPlanCadence ?? "daily"} planId={plan.id} />
         )}
 
         {/* ── Action buttons ── */}
