@@ -128,22 +128,18 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Dark hero band */}
-      <div
-        className="relative"
-        style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}
-      >
-        <header className="relative z-10 sticky top-0 border-b border-white/10" style={{ background: "rgba(7,22,48,0.95)", backdropFilter: "blur(12px)" }}>
+    <div className="min-h-screen flex flex-col bg-background">
+      <div className="relative">
+        <header className="relative z-10 sticky top-0 border-b border-border bg-background/95 backdrop-blur-md">
           <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
             <button
               type="button"
               onClick={() => setLocation("/")}
-              className="flex items-center gap-2 rounded-lg px-2 py-1 -ml-2 hover:bg-white/10 transition-colors"
+              className="flex items-center gap-2 rounded-lg px-2 py-1 -ml-2 hover:bg-accent transition-colors"
               data-testid="link-home-header"
             >
               <AppLogoMark variant="sm" />
-              <span className="text-white text-sm tracking-tight">
+              <span className="text-foreground text-sm tracking-tight">
                 <span className="font-semibold">Accreditation</span><span className="font-bold italic"> Ready</span>
               </span>
             </button>
@@ -152,14 +148,12 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               <Button
                 variant="ghost"
                 onClick={goToAuth}
-                className="text-white/80 hover:text-white hover:bg-white/10"
                 data-testid="button-header-signin"
               >
                 Sign In
               </Button>
               <Button
                 onClick={goToAuth}
-                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
                 data-testid="button-header-create-account"
               >
                 Create Account
@@ -176,22 +170,22 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
             className="flex flex-col items-center gap-6"
           >
             <span
-              className="text-xs font-bold tracking-widest uppercase text-white/70 bg-white/10 border border-white/20 px-3 py-1 rounded-full"
+              className="text-xs font-bold tracking-widest uppercase text-muted-foreground bg-muted border border-border px-3 py-1 rounded-full"
               data-testid="text-audience"
             >
               {config.audience}
             </span>
-            <div className="w-20 h-20 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center backdrop-blur-sm">
-              <HeroIcon size={44} className="text-white" />
+            <div className="w-20 h-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <HeroIcon size={44} className="text-primary" />
             </div>
             <h1
-              className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-white"
+              className="text-4xl md:text-5xl font-black tracking-tight leading-tight max-w-3xl text-foreground"
               data-testid="text-hero-headline"
             >
               {config.headline}
             </h1>
             <p
-              className="text-lg md:text-xl text-white/70 max-w-2xl leading-relaxed"
+              className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed"
               data-testid="text-hero-subhead"
             >
               {config.subhead}
@@ -200,7 +194,6 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               <Button
                 size="lg"
                 onClick={goToAuth}
-                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold shadow-lg shadow-black/20"
                 data-testid="button-hero-create-account"
               >
                 Create Account
@@ -210,7 +203,6 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
                 size="lg"
                 variant="outline"
                 onClick={goToAuth}
-                className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
                 data-testid="button-hero-signin"
               >
                 Sign In

@@ -54,19 +54,13 @@ export default function LandingPage() {
   };
 
   return (
-    <div
-      className="min-h-screen flex flex-col"
-      style={{ background: "linear-gradient(160deg, #071630 0%, #0D2659 55%, #0F3080 100%)" }}
-    >
+    <div className="min-h-screen flex flex-col bg-background">
       {/* ── Header ── */}
-      <header
-        className="relative z-50 sticky top-0 border-b border-white/20"
-        style={{ background: "rgba(7,22,48,0.95)", backdropFilter: "blur(12px)" }}
-      >
+      <header className="relative z-50 sticky top-0 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <AppLogoMark variant="sm" />
-            <span className="text-white text-sm tracking-tight" data-testid="text-app-name">
+            <span className="text-foreground text-sm tracking-tight" data-testid="text-app-name">
               <span className="font-semibold">Accreditation</span><span className="font-bold italic"> Ready</span>
             </span>
           </div>
@@ -75,14 +69,12 @@ export default function LandingPage() {
             <Button
               variant="ghost"
               onClick={() => setLocation("/auth")}
-              className="text-white/80 hover:text-white hover:bg-white/10"
               data-testid="button-header-signin"
             >
               Sign In
             </Button>
             <Button
               onClick={() => setLocation("/auth")}
-              className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
               data-testid="button-header-create-account"
             >
               Create Account
@@ -94,10 +86,7 @@ export default function LandingPage() {
       <main className="relative z-10 flex-1">
 
         {/* ── Hero ── */}
-        <section
-          className="max-w-5xl mx-auto px-4 py-20 md:py-32 text-center"
-          style={{ background: "linear-gradient(180deg, rgba(26,77,160,0.25) 0%, transparent 100%)" }}
-        >
+        <section className="max-w-5xl mx-auto px-4 py-20 md:py-32 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -105,17 +94,16 @@ export default function LandingPage() {
             className="flex flex-col items-center gap-6"
           >
             <AppLogoMark variant="lg" />
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight max-w-3xl text-white" data-testid="text-hero-title">
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight max-w-3xl text-foreground" data-testid="text-hero-title">
               Know your gaps. Close them before the surveyor does.
             </h1>
-            <p className="text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed font-normal" data-testid="text-hero-subtitle">
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-normal" data-testid="text-hero-subtitle">
               Accreditation <em>Ready</em> turns Joint Commission, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
                 size="lg"
                 onClick={() => setLocation("/auth")}
-                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold shadow-lg shadow-black/30"
                 data-testid="button-hero-diagnostic"
               >
                 Start Free Diagnostic
@@ -125,22 +113,21 @@ export default function LandingPage() {
                 size="lg"
                 variant="outline"
                 onClick={scrollToFeatures}
-                className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
                 data-testid="button-hero-how-it-works"
               >
                 See How It Works
               </Button>
             </div>
-            <p className="text-sm text-white/50 mt-1" data-testid="text-hero-supporting">
+            <p className="text-sm text-muted-foreground mt-1" data-testid="text-hero-supporting">
               Built on real JC, AAAHC, and CMS standards · No in-service time required
             </p>
           </motion.div>
         </section>
 
         {/* ── Positioning Strip ── */}
-        <section className="border-y border-white/10 py-8" style={{ background: "rgba(255,255,255,0.04)" }}>
+        <section className="border-y border-border py-8 bg-muted/40">
           <div className="max-w-5xl mx-auto px-4 text-center">
-            <p className="text-lg md:text-xl font-semibold text-white/80" data-testid="text-positioning-strip">
+            <p className="text-lg md:text-xl font-semibold text-foreground" data-testid="text-positioning-strip">
               Accreditation readiness shouldn't live in a binder. Now it doesn't.
             </p>
           </div>
@@ -155,14 +142,14 @@ export default function LandingPage() {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-red-500/15 border border-red-400/20 flex items-center justify-center flex-shrink-0">
-                  <AlertTriangle size={20} className="text-red-400" />
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-400/20 flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle size={20} className="text-red-500" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-problem-heading">
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground" data-testid="text-problem-heading">
                   Most teams aren't unprepared — they're undertrained.
                 </h2>
               </div>
-              <p className="text-base text-white/70 leading-relaxed mb-6 max-w-3xl" data-testid="text-problem-body">
+              <p className="text-base text-muted-foreground leading-relaxed mb-6 max-w-3xl" data-testid="text-problem-body">
                 Policies exist. Binders are full. But when a surveyor walks through the door and asks your staff nurse to explain your fall prevention protocol, the answer matters.
               </p>
               <ul className="space-y-3">
@@ -172,10 +159,10 @@ export default function LandingPage() {
                   "Leaders can't see where their real risk is by department",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3" data-testid={`text-problem-bullet-${i}`}>
-                    <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-red-400" />
+                    <div className="w-5 h-5 rounded-full bg-red-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
                     </div>
-                    <span className="text-base text-white/75 leading-relaxed">{item}</span>
+                    <span className="text-base text-muted-foreground leading-relaxed">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -184,7 +171,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── Solution Section ── */}
-        <section className="border-y border-white/10 py-16 md:py-20" style={{ background: "rgba(255,255,255,0.04)" }}>
+        <section className="border-y border-border py-16 md:py-20 bg-muted/40">
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -192,14 +179,14 @@ export default function LandingPage() {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center flex-shrink-0">
-                  <ShieldCheck size={20} className="text-blue-300" />
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                  <ShieldCheck size={20} className="text-primary" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-solution-heading">
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground" data-testid="text-solution-heading">
                   Continuous readiness, built into the workday.
                 </h2>
               </div>
-              <p className="text-base text-white/70 leading-relaxed max-w-3xl" data-testid="text-solution-body">
+              <p className="text-base text-muted-foreground leading-relaxed max-w-3xl" data-testid="text-solution-body">
                 Accreditation <em>Ready</em> converts accreditation standards into short, role-based training sessions staff complete in 10–15 minutes — and gives quality leaders a live readiness dashboard across every unit.
               </p>
             </motion.div>
@@ -217,16 +204,15 @@ export default function LandingPage() {
                 transition={{ duration: 0.15 }}
               >
                 <div
-                  className="p-5 flex items-start gap-4 rounded-xl border border-white/10 h-full"
-                  style={{ background: "rgba(255,255,255,0.06)" }}
+                  className="p-5 flex items-start gap-4 rounded-xl border border-border bg-card h-full"
                   data-testid={`card-feature-${index}`}
                 >
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/25 flex items-center justify-center flex-shrink-0">
-                    <feature.icon size={20} className="text-blue-300" />
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                    <feature.icon size={20} className="text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm text-white">{feature.title}</h3>
-                    <p className="text-sm text-white/60 mt-1">{feature.description}</p>
+                    <h3 className="font-bold text-sm text-foreground">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{feature.description}</p>
                   </div>
                 </div>
               </motion.div>
@@ -235,7 +221,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── How It Works ── */}
-        <section className="border-y border-white/10 py-16 md:py-20" style={{ background: "rgba(255,255,255,0.04)" }}>
+        <section className="border-y border-border py-16 md:py-20 bg-muted/40">
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -243,24 +229,23 @@ export default function LandingPage() {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center flex-shrink-0">
-                  <TrendingUp size={20} className="text-blue-300" />
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp size={20} className="text-primary" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-how-it-works-heading">
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground" data-testid="text-how-it-works-heading">
                   From baseline to audit-ready in 4 weeks.
                 </h2>
               </div>
               <ol className="space-y-4 mb-6">
                 {howItWorksSteps.map((step, i) => (
                   <li key={i} className="flex items-start gap-4" data-testid={`text-step-${i}`}>
-                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center text-sm font-bold mt-0.5">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold mt-0.5">
                       {i + 1}
                     </span>
-                    <span className="text-base text-white/80 leading-relaxed pt-1">{step}</span>
+                    <span className="text-base text-muted-foreground leading-relaxed pt-1">{step}</span>
                   </li>
                 ))}
               </ol>
-
             </motion.div>
           </div>
         </section>
@@ -274,21 +259,21 @@ export default function LandingPage() {
               transition={{ duration: 0.2 }}
             >
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-400/20 flex items-center justify-center flex-shrink-0">
-                  <Target size={20} className="text-emerald-400" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center flex-shrink-0">
+                  <Target size={20} className="text-emerald-600" />
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white" data-testid="text-proof-heading">
+                <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground" data-testid="text-proof-heading">
                   Stop guessing. Start measuring.
                 </h2>
               </div>
-              <p className="text-base text-white/70 leading-relaxed mb-6 max-w-3xl" data-testid="text-proof-body">
+              <p className="text-base text-muted-foreground leading-relaxed mb-6 max-w-3xl" data-testid="text-proof-body">
                 Before Accreditation <em>Ready</em>, most quality leaders go into survey week with instinct and hope. After:
               </p>
               <ul className="space-y-3">
                 {proofPoints.map((point, i) => (
                   <li key={i} className="flex items-start gap-3" data-testid={`text-proof-point-${i}`}>
-                    <CheckCircle2 size={20} className="text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span className="text-base text-white/80 leading-relaxed">{point}</span>
+                    <CheckCircle2 size={20} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+                    <span className="text-base text-muted-foreground leading-relaxed">{point}</span>
                   </li>
                 ))}
               </ul>
@@ -297,7 +282,7 @@ export default function LandingPage() {
         </section>
 
         {/* ── Diagnostic CTA ── */}
-        <section className="py-16 md:py-20 border-y border-white/10" style={{ background: "rgba(20,100,90,0.25)" }}>
+        <section className="py-16 md:py-20 border-y border-border bg-primary/5">
           <div className="max-w-4xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -311,10 +296,10 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-2xl md:text-3xl font-black tracking-tight text-white mb-2" data-testid="text-diagnostic-promo-heading">
+                  <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground mb-2" data-testid="text-diagnostic-promo-heading">
                     How ready is your team right now?
                   </h2>
-                  <p className="text-base text-white/75 leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
+                  <p className="text-base text-muted-foreground leading-relaxed mb-4 max-w-xl" data-testid="text-diagnostic-promo-body">
                     Take a free 25-question diagnostic across every compliance domain — no studying, no prep, just honest answers that show you where to focus.
                   </p>
                   <div className="flex items-center gap-3 flex-wrap justify-center md:justify-start">
@@ -342,17 +327,16 @@ export default function LandingPage() {
             transition={{ duration: 0.2 }}
             className="flex flex-col items-center gap-4"
           >
-            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-white" data-testid="text-final-cta-heading">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight text-foreground" data-testid="text-final-cta-heading">
               Build readiness that holds up on survey day.
             </h2>
-            <p className="text-base text-white/65 max-w-lg" data-testid="text-final-cta-subhead">
+            <p className="text-base text-muted-foreground max-w-lg" data-testid="text-final-cta-subhead">
               Give your team a consistent, measurable way to stay accreditation-ready — year-round, not just the week before.
             </p>
             <div className="flex items-center gap-3 flex-wrap justify-center mt-2">
               <Button
                 size="lg"
                 onClick={() => setLocation("/auth")}
-                className="bg-white text-[#0D2659] hover:bg-white/90 font-bold"
                 data-testid="button-bottom-create-account"
               >
                 Create Account
@@ -362,7 +346,6 @@ export default function LandingPage() {
                 size="lg"
                 variant="outline"
                 onClick={() => setLocation("/auth")}
-                className="border-white/40 text-white hover:bg-white/10 hover:border-white/60"
                 data-testid="button-bottom-signin"
               >
                 Sign In
@@ -373,13 +356,13 @@ export default function LandingPage() {
       </main>
 
       {/* ── Footer ── */}
-      <footer className="relative z-10 border-t border-white/10 py-6 px-4">
+      <footer className="relative z-10 border-t border-border py-6 px-4 bg-muted/30">
         <div className="max-w-5xl mx-auto text-center">
-          <p className="text-sm text-white/60 leading-relaxed" data-testid="text-disclaimer">
+          <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-disclaimer">
             Accreditation <em>Ready</em> is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.
           </p>
-          <p className="text-sm text-white/60 mt-2">
-            <a href="/terms" className="underline hover:text-white/80" data-testid="link-terms-landing">Terms & Privacy</a>
+          <p className="text-sm text-muted-foreground mt-2">
+            <a href="/terms" className="underline hover:text-foreground" data-testid="link-terms-landing">Terms & Privacy</a>
           </p>
         </div>
       </footer>

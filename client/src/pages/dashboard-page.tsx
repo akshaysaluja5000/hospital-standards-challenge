@@ -259,19 +259,19 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen pb-20">
       {/* Sub-header */}
-      <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
+      <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-white/15 border border-white/20">
-              <span className="font-black text-sm text-white">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10 border border-border">
+              <span className="font-black text-sm text-primary">
                 {user?.username?.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="min-w-0">
-              <h1 className="font-bold text-base text-white truncate" data-testid="text-username">
+              <h1 className="font-bold text-base text-foreground truncate" data-testid="text-username">
                 {user?.username}
               </h1>
-              <p className="text-xs text-white/50">Welcome back!</p>
+              <p className="text-xs text-muted-foreground">Welcome back!</p>
             </div>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">

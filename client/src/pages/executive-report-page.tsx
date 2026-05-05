@@ -528,7 +528,7 @@ export default function ExecutiveReportPage() {
     <div className="min-h-screen flex flex-col print:bg-white print:text-black">
 
       {/* ── Header ── */}
-      <div className="sticky top-[58px] z-40 border-b border-white/10 print:hidden" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
+      <div className="sticky top-[58px] z-40 border-b border-border print:hidden" className="bg-background/95 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
             <ArrowLeft size={20} />
@@ -544,7 +544,7 @@ export default function ExecutiveReportPage() {
           </div>
           <div className="flex gap-2 items-center">
             {/* Demo / Live toggle */}
-            <div className="flex items-center rounded-lg border border-white/10 bg-white/5 p-0.5" data-testid="container-mode-toggle">
+            <div className="flex items-center rounded-lg border border-border bg-white/5 p-0.5" data-testid="container-mode-toggle">
               <button
                 onClick={() => setDataMode("demo")}
                 className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
@@ -802,7 +802,7 @@ export default function ExecutiveReportPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                 <XAxis dataKey="week" tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "rgba(7,22,48,0.95)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: 11 }} labelStyle={{ color: "rgba(255,255,255,0.65)", marginBottom: 3 }} />
+                <Tooltip contentStyle={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: 11 }} labelStyle={{ color: "rgba(255,255,255,0.65)", marginBottom: 3 }} />
                 <Legend wrapperStyle={{ fontSize: 10, paddingTop: 6 }} />
                 <Bar dataKey="assigned" name="Assigned" fill="hsl(var(--primary))" radius={[3, 3, 0, 0]} opacity={0.8} />
                 <Bar dataKey="completed" name="Completed" fill="hsl(var(--chart-2))" radius={[3, 3, 0, 0]} opacity={0.8} />

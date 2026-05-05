@@ -1214,8 +1214,8 @@ export default function CorrectiveActionPage() {
 
       {/* ── Header ── */}
       <div
-        className="sticky top-[58px] z-40 border-b border-white/10"
-        style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}
+        className="sticky top-[58px] z-40 border-b border-border"
+        className="bg-background/95 backdrop-blur-md"
       >
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">

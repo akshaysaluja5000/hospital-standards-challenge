@@ -65,7 +65,7 @@ export default function LeaderboardPage() {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="sticky top-[58px] z-40 border-b border-white/10" style={{ background: "rgba(7,22,48,0.88)", backdropFilter: "blur(12px)" }}>
+      <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <Button
             variant="ghost"
