@@ -18,7 +18,7 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
           Center (22,22) radius 18 — arc from 2 o'clock clockwise to 12 o'clock */}
       <path
         d="M 37.6 13 A 18 18 0 1 1 22 4"
-        stroke="white"
+        stroke="hsl(218, 68%, 32%)"
         strokeWidth="3"
         strokeLinecap="round"
         fill="none"
@@ -32,7 +32,7 @@ export function AppLogoMark({ variant = "sm" }: AppLogoMarkProps) {
         fontFamily="'Arial Black', 'Arial', 'Helvetica', sans-serif"
         fontWeight="900"
         fontSize="17"
-        fill="white"
+        fill="hsl(218, 68%, 32%)"
         letterSpacing="-1"
       >AR</text>
     </svg>
