@@ -28,6 +28,11 @@ const QUIZ_MAP: Record<string, string> = {
   asc_hb_anesthesia: "asc_anesthesia_surgery_services",
   asc_hb_surgical_services: "asc_anesthesia_surgery_services",
   asc_hb_pharmaceutical: "asc_pharmaceutical_services",
+  asc_hb_pathology: "asc_pathology_services",
+  asc_hb_imaging: "asc_imaging_services",
+  asc_hb_teaching: "asc_teaching_activities",
+  asc_hb_research: "asc_research_activities",
+  asc_hb_overnight_care: "asc_overnight_care",
 };
 
 export const ascHandbook: AscHandbookChapter[] = [

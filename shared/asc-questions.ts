@@ -10,6 +10,11 @@ import { ascInfectionPreventionLevel } from "./asc-infection-prevention";
 import { ascFacilitiesEnvironmentLevel } from "./asc-facilities-environment";
 import { ascAnesthesiaSurgeryLevel } from "./asc-anesthesia-surgery";
 import { ascPharmaceuticalLevel } from "./asc-pharmaceutical";
+import { ascPathologyLevel } from "./asc-pathology";
+import { ascImagingLevel } from "./asc-imaging";
+import { ascTeachingLevel } from "./asc-teaching";
+import { ascResearchLevel } from "./asc-research";
+import { ascOvernightLevel } from "./asc-overnight";
 
 export const ascLevels: Level[] = [
   ascPatientRightsLevel,
@@ -23,16 +28,9 @@ export const ascLevels: Level[] = [
   ascFacilitiesEnvironmentLevel,
   ascAnesthesiaSurgeryLevel,
   ascPharmaceuticalLevel,
-  {
-    id: "asc_medicare_conditions_for_coverage",
-    module: "asc",
-    draft: true,
-    name: "Overnight & Extended Stay",
-    description: "ASC domain: requirements for ASCs that maintain patients overnight or for extended recovery periods. Coming soon.",
-    icon: "Moon",
-    color: "hsl(220, 70%, 40%)",
-    requiredScore: 0,
-    studyMaterial: [],
-    questions: [],
-  },
+  ascPathologyLevel,
+  ascImagingLevel,
+  ascTeachingLevel,
+  ascResearchLevel,
+  ascOvernightLevel,
 ];
