@@ -468,6 +468,19 @@ export default function StudyPage() {
                       </div>
                     </div>
 
+                    {currentConcept.extraInfo && (
+                      <div className="rounded-xl p-4 flex gap-3 items-start bg-muted/40 border border-border/50">
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest mb-1 text-muted-foreground">
+                            Extra Information
+                          </p>
+                          <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-concept-extrainfo">
+                            {currentConcept.extraInfo}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
                     {/* ── 4-Button Spaced Repetition Row ── */}
                     <div className="flex flex-col gap-2 pt-1">
                       <p className="text-[10px] text-center text-muted-foreground/50 font-semibold uppercase tracking-widest">

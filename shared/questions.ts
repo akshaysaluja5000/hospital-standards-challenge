@@ -90,9 +90,10 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         title: "A Common Mistake Is Instruments Being Locked During Transport. Why Is This a Problem?",
-        content: "A surveyor observing hemostats and clamps locked in the closed position inside a transport bin is a finding. Locking instruments prevents cleaning solution from reaching box locks and jaw areas during decontamination. Surveyors will look into open transport containers for this.",
+        content: "Locking instruments prevents cleaning solution from reaching box locks and jaw areas during decontamination.",
         keyPoint: "Locked/closed instruments during transport = finding. All hinged = open position.",
         category: "mistake",
+        extraInfo: "A surveyor observing hemostats and clamps locked in the closed position inside a transport bin is a finding. Surveyors will look into open transport containers for this.",
       },
       {
         title: "Is Wearing Gloves, Gown, and Goggles Without a Mask Compliant PPE?",
