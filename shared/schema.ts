@@ -322,6 +322,22 @@ export interface DeepDiveLevel {
   questions: DeepDiveQuestion[];
 }
 
+// ── Flashcard Reviews (Spaced Repetition) ────────────────────────────────────
+
+export const flashcardReviews = pgTable("flashcard_reviews", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  levelId: text("level_id").notNull(),
+  cardIndex: integer("card_index").notNull(),
+  nextReviewAt: timestamp("next_review_at").notNull().defaultNow(),
+  intervalMinutes: integer("interval_minutes").notNull().default(1440),
+  reviewCount: integer("review_count").notNull().default(0),
+  lastRating: text("last_rating").notNull().default("good"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export type FlashcardReview = typeof flashcardReviews.$inferSelect;
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert, CheckCircle2, Plus, GraduationCap } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert, CheckCircle2, Plus, GraduationCap, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -166,6 +166,10 @@ export default function DashboardPage() {
     queryKey: ["/api/diagnostic/results"],
   });
 
+  const { data: dueData } = useQuery<{ count: number; byLevel: Record<string, number> }>({
+    queryKey: ["/api/flashcards/due/count"],
+  });
+
   const { data: masteryEligibility } = useQuery<{ eligible: boolean; missingSections: string[] }>({
     queryKey: ["/api/mastery/eligibility"],
   });
@@ -301,6 +305,45 @@ export default function DashboardPage() {
 
           {/* ── LEFT: Training content ── */}
           <div className="flex flex-col gap-6">
+
+            {/* ── Due Flashcards Banner ── */}
+            {dueData && dueData.count > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full rounded-2xl border-2 p-5 bg-violet-500/8 border-violet-500/30"
+                data-testid="card-due-flashcards"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-violet-500 to-purple-600 shadow-md">
+                    <Brain size={22} className="text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-base leading-tight">Flashcards Due for Review</h3>
+                      <span
+                        className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-black border border-violet-500/30"
+                        data-testid="badge-due-count"
+                      >
+                        {dueData.count} card{dueData.count !== 1 ? "s" : ""}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-0.5">
+                      {dueData.count === 1
+                        ? "1 card is scheduled for review today"
+                        : `${dueData.count} cards are scheduled for review — keep your streak strong`}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setLocation("/flashcard-review")}
+                    data-testid="button-review-due"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm bg-gradient-to-r from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700 text-white shadow-md transition-all active:scale-95"
+                  >
+                    Review Now <ChevronRight size={15} />
+                  </button>
+                </div>
+              </motion.div>
+            )}
 
             {/* Role card */}
             {!isAsc && user?.roleId && (() => {

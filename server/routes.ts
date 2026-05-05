@@ -2202,5 +2202,70 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     res.json({ score, totalQuestions: totalAnswered, resultId: result.id, detailedResults, sectionScores });
   });
 
+  // ── Flashcard Review (Spaced Repetition) Routes ──────────────────────────────
+
+  const SR_INTERVALS: Record<string, number> = {
+    again: 2,
+    hard: 15,
+    good: 1440,
+    easy: 4320,
+  };
+
+  app.get("/api/flashcards/due/count", requireAuth, async (req, res) => {
+    try {
+      const count = await storage.getDueFlashcardCount(req.user!.id);
+      const due = await storage.getDueFlashcards(req.user!.id);
+      const byLevel: Record<string, number> = {};
+      for (const r of due) {
+        byLevel[r.levelId] = (byLevel[r.levelId] || 0) + 1;
+      }
+      res.json({ count, byLevel });
+    } catch (err) {
+      console.error("Error fetching due flashcard count:", err);
+      res.status(500).json({ error: "Failed to fetch due count" });
+    }
+  });
+
+  app.get("/api/flashcards/due", requireAuth, async (req, res) => {
+    try {
+      const due = await storage.getDueFlashcards(req.user!.id);
+      res.json(due);
+    } catch (err) {
+      console.error("Error fetching due flashcards:", err);
+      res.status(500).json({ error: "Failed to fetch due flashcards" });
+    }
+  });
+
+  app.get("/api/flashcards/:levelId", requireAuth, async (req, res) => {
+    try {
+      const { levelId } = req.params;
+      const reviews = await storage.getFlashcardReviews(req.user!.id, levelId);
+      res.json(reviews);
+    } catch (err) {
+      console.error("Error fetching flashcard reviews:", err);
+      res.status(500).json({ error: "Failed to fetch reviews" });
+    }
+  });
+
+  app.post("/api/flashcards/:levelId/review", requireAuth, async (req, res) => {
+    try {
+      const { levelId } = req.params;
+      const schema = z.object({
+        cardIndex: z.number().int().min(0),
+        rating: z.enum(["again", "hard", "good", "easy"]),
+      });
+      const { cardIndex, rating } = schema.parse(req.body);
+      const intervalMinutes = SR_INTERVALS[rating];
+      const nextReviewAt = new Date(Date.now() + intervalMinutes * 60 * 1000);
+      const review = await storage.upsertFlashcardReview(
+        req.user!.id, levelId, cardIndex, nextReviewAt, intervalMinutes, rating
+      );
+      res.json(review);
+    } catch (err) {
+      console.error("Error saving flashcard review:", err);
+      res.status(500).json({ error: "Failed to save review" });
+    }
+  });
+
   return httpServer;
 }

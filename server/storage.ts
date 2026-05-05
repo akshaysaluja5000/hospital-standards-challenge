@@ -1,15 +1,15 @@
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, lte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
   ascPretestResults, ascPosttestResults,
-  roles, roleChapterMappings,
+  roles, roleChapterMappings, flashcardReviews,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
-  type AscPretestResult, type AscPosttestResult,
+  type AscPretestResult, type AscPosttestResult, type FlashcardReview,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -158,6 +158,18 @@ export async function ensureTablesExist() {
         updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
         PRIMARY KEY (user_id, test_type)
       );
+      CREATE TABLE IF NOT EXISTS flashcard_reviews (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        level_id TEXT NOT NULL,
+        card_index INTEGER NOT NULL,
+        next_review_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        interval_minutes INTEGER NOT NULL DEFAULT 1440,
+        review_count INTEGER NOT NULL DEFAULT 0,
+        last_rating TEXT NOT NULL DEFAULT 'good',
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        UNIQUE (user_id, level_id, card_index)
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedRoles(client);
@@ -279,6 +291,11 @@ export interface IStorage {
   getMasterySession(userId: number): Promise<MasterySession | undefined>;
   upsertMasterySession(userId: number, data: Partial<MasterySession>): Promise<MasterySession>;
   deleteMasterySession(userId: number): Promise<void>;
+
+  getFlashcardReviews(userId: number, levelId: string): Promise<FlashcardReview[]>;
+  upsertFlashcardReview(userId: number, levelId: string, cardIndex: number, nextReviewAt: Date, intervalMinutes: number, lastRating: string): Promise<FlashcardReview>;
+  getDueFlashcards(userId: number): Promise<FlashcardReview[]>;
+  getDueFlashcardCount(userId: number): Promise<number>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -620,6 +637,56 @@ export class DatabaseStorage implements IStorage {
 
   async deleteMasterySession(userId: number): Promise<void> {
     await db.delete(masterySessions).where(eq(masterySessions.userId, userId));
+  }
+
+  async getFlashcardReviews(userId: number, levelId: string): Promise<FlashcardReview[]> {
+    return db.select().from(flashcardReviews).where(
+      and(eq(flashcardReviews.userId, userId), eq(flashcardReviews.levelId, levelId))
+    );
+  }
+
+  async upsertFlashcardReview(userId: number, levelId: string, cardIndex: number, nextReviewAt: Date, intervalMinutes: number, lastRating: string): Promise<FlashcardReview> {
+    const client = await pool.connect();
+    try {
+      const r = await client.query(
+        `INSERT INTO flashcard_reviews (user_id, level_id, card_index, next_review_at, interval_minutes, review_count, last_rating, updated_at)
+         VALUES ($1, $2, $3, $4, $5, 1, $6, NOW())
+         ON CONFLICT (user_id, level_id, card_index)
+         DO UPDATE SET
+           next_review_at = EXCLUDED.next_review_at,
+           interval_minutes = EXCLUDED.interval_minutes,
+           review_count = flashcard_reviews.review_count + 1,
+           last_rating = EXCLUDED.last_rating,
+           updated_at = NOW()
+         RETURNING *`,
+        [userId, levelId, cardIndex, nextReviewAt.toISOString(), intervalMinutes, lastRating]
+      );
+      const row = r.rows[0];
+      return {
+        id: row.id,
+        userId: row.user_id,
+        levelId: row.level_id,
+        cardIndex: row.card_index,
+        nextReviewAt: new Date(row.next_review_at),
+        intervalMinutes: row.interval_minutes,
+        reviewCount: row.review_count,
+        lastRating: row.last_rating,
+        updatedAt: new Date(row.updated_at),
+      };
+    } finally {
+      client.release();
+    }
+  }
+
+  async getDueFlashcards(userId: number): Promise<FlashcardReview[]> {
+    return db.select().from(flashcardReviews).where(
+      and(eq(flashcardReviews.userId, userId), lte(flashcardReviews.nextReviewAt, new Date()))
+    );
+  }
+
+  async getDueFlashcardCount(userId: number): Promise<number> {
+    const rows = await this.getDueFlashcards(userId);
+    return rows.length;
   }
 
   async getAllRoles(): Promise<Role[]> {

@@ -2,14 +2,17 @@ import { useState, useEffect, useMemo } from "react";
 import { useRoute, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Lightbulb, Play,
+  ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Play,
   AlertTriangle, ListChecks, FileText, CheckCircle2, RotateCcw,
-  Trophy, RefreshCw, Timer, Clock, CalendarDays, Zap,
+  Trophy, RefreshCw, Timer, Clock, CalendarDays,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { findLevelById } from "@shared/all-levels";
 import type { StudyConcept } from "@shared/schema";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import type { FlashcardReview } from "@shared/schema";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -116,6 +119,36 @@ export default function StudyPage() {
   // Last rating per original card index
   const [ratings, setRatings] = useState<Record<number, SRRating>>({});
 
+  // ── Persistence: fetch existing review schedule for this level ─────────────
+  const { data: existingReviews } = useQuery<FlashcardReview[]>({
+    queryKey: ["/api/flashcards", levelId],
+    queryFn: async () => {
+      const res = await fetch(`/api/flashcards/${levelId}`);
+      if (!res.ok) return [];
+      return res.json();
+    },
+    enabled: !!levelId,
+    staleTime: 30_000,
+  });
+
+  // Build a map of cardIndex → stored review for quick lookup
+  const reviewMap = useMemo<Record<number, FlashcardReview>>(() => {
+    if (!existingReviews) return {};
+    const m: Record<number, FlashcardReview> = {};
+    for (const r of existingReviews) m[r.cardIndex] = r;
+    return m;
+  }, [existingReviews]);
+
+  const reviewMutation = useMutation({
+    mutationFn: async ({ cardIndex, rating }: { cardIndex: number; rating: SRRating }) => {
+      const res = await apiRequest("POST", `/api/flashcards/${levelId}/review`, { cardIndex, rating });
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/flashcards/due/count"] });
+    },
+  });
+
   useEffect(() => {
     setFlipped(false);
   }, [queueIndex]);
@@ -155,6 +188,11 @@ export default function StudyPage() {
 
     // Store rating for this card
     setRatings((prev) => ({ ...prev, [currentCardIndex]: rating }));
+
+    // Persist to backend (fire-and-forget — session UX is not blocked)
+    if (levelId) {
+      reviewMutation.mutate({ cardIndex: currentCardIndex, rating });
+    }
 
     const nextQueueIndex = queueIndex + 1;
 
@@ -401,11 +439,15 @@ export default function StudyPage() {
                           Concept
                         </span>
                       )}
-                      {ratings[currentCardIndex] && (
+                      {ratings[currentCardIndex] ? (
                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${SR_CONFIG[ratings[currentCardIndex]].badge}`}>
-                          Last: {SR_CONFIG[ratings[currentCardIndex]].label}
+                          This session: {SR_CONFIG[ratings[currentCardIndex]].label}
                         </span>
-                      )}
+                      ) : reviewMap[currentCardIndex] ? (
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${SR_CONFIG[reviewMap[currentCardIndex].lastRating as SRRating]?.badge ?? "bg-muted text-muted-foreground border-border"}`}>
+                          Last: {reviewMap[currentCardIndex].lastRating}
+                        </span>
+                      ) : null}
                     </div>
 
                     <div className="flex-1 flex items-center">
@@ -449,35 +491,37 @@ export default function StudyPage() {
                       </span>
                     </div>
 
-                    <p className="text-base text-foreground/85 leading-relaxed" data-testid="text-concept-content">
-                      {currentConcept.content}
-                    </p>
-
+                    {/* Answer — keyPoint is the direct answer shown first and prominently */}
                     <div
-                      className="rounded-xl p-4 flex gap-3 items-start"
-                      style={{ backgroundColor: `${level.color}12` }}
+                      className="rounded-xl p-5 border"
+                      style={{ backgroundColor: `${level.color}12`, borderColor: `${level.color}30` }}
                     >
-                      <Lightbulb size={18} className="flex-shrink-0 mt-0.5" style={{ color: level.color }} />
-                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: level.color }}>
-                          Key Rule
-                        </p>
-                        <p className="text-sm font-semibold leading-snug" data-testid="text-concept-keypoint">
-                          {currentConcept.keyPoint}
-                        </p>
-                      </div>
+                      <p className="text-[10px] font-black uppercase tracking-widest mb-2" style={{ color: level.color }}>
+                        Answer
+                      </p>
+                      <p className="text-lg font-bold leading-snug" data-testid="text-concept-keypoint">
+                        {currentConcept.keyPoint}
+                      </p>
+                    </div>
+
+                    {/* Explanation — content is supplementary context below the answer */}
+                    <div className="flex flex-col gap-1.5">
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                        Explanation
+                      </p>
+                      <p className="text-sm text-foreground/80 leading-relaxed" data-testid="text-concept-content">
+                        {currentConcept.content}
+                      </p>
                     </div>
 
                     {currentConcept.extraInfo && (
-                      <div className="rounded-xl p-4 flex gap-3 items-start bg-muted/40 border border-border/50">
-                        <div>
-                          <p className="text-[10px] font-black uppercase tracking-widest mb-1 text-muted-foreground">
-                            Extra Information
-                          </p>
-                          <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-concept-extrainfo">
-                            {currentConcept.extraInfo}
-                          </p>
-                        </div>
+                      <div className="rounded-xl p-4 bg-muted/40 border border-border/50">
+                        <p className="text-[10px] font-black uppercase tracking-widest mb-1 text-muted-foreground">
+                          Also Note
+                        </p>
+                        <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-concept-extrainfo">
+                          {currentConcept.extraInfo}
+                        </p>
                       </div>
                     )}
 
