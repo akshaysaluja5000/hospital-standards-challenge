@@ -38,63 +38,63 @@ export const ascQualityOfCareLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "Scope of practice is the bedrock — and it lives in the chart",
+      title: "What Happens When a Clinician Performs a Procedure Not on Their Privilege List?",
       content:
         "Every clinician at the ASC — physician, anesthesiologist, CRNA, RN, surgical tech — has to practice within their license, their certification, and the privileges granted by the governing body. Surveyors confirm this by tracing a chart against the clinician's signed privilege list. A surgeon performing a procedure that is not on their delineation-of-privileges sheet, even once, is a finding. A nurse documenting an assessment a CMA performed is a finding. The chart is the evidence.",
       keyPoint:
         "If it isn't on the privilege list, it shouldn't be in the chart. Surveyors will compare the two side by side.",
     },
     {
-      title: "Specimens are a closed loop, not a drop-off",
+      title: "What Must an ASC Track From Specimen Collection to Result in the Chart?",
       content:
         "From the moment a specimen leaves the patient, the ASC owns it: correct labeling at the point of collection, a log entry, defined transport conditions, a defined receiving lab with current CLIA, and a documented confirmation that the result returned to the ordering professional and to the chart. Biological products (vaccines, blood derivatives) follow manufacturer instructions for storage and transport. A specimen that vanishes between OR and lab is the ASC's failure to track, not the courier's.",
       keyPoint:
         "If you cannot show how a specimen got from the patient to a result in the chart, the loop is open and the surveyor will write it up.",
     },
     {
-      title: "Patient education is required — and 'verbalized understanding' is not enough",
+      title: "What Must Patient Education Documentation Actually Show?",
       content:
         "Patients must be educated about their condition, treatment, and preventive measures. In surgical settings, that explicitly includes post-operative infection prevention, VTE, and PE awareness when clinically relevant. Documentation must show what was taught — not a checkbox saying 'taught.' Materials should be in a language and at a literacy level the patient can understand, and interpreter services have to be offered when needed.",
       keyPoint:
         "A chart entry that says 'education provided, patient verbalized understanding' with nothing about what was taught is a half-met requirement at best.",
     },
     {
-      title: "Transfer to hospital is a binary requirement",
+      title: "What Are the Two Ways an ASC Can Satisfy the Hospital Transfer Requirement?",
       content:
         "Either (a) the ASC has a current written transfer agreement with a Medicare-participating hospital (or one that meets 42 CFR 482.2 emergency-services payment requirements), or (b) every physician performing procedures in the ASC has documented admitting privileges at such a hospital. There is no third option, no informal pathway, and no exception for low-acuity facilities. When a patient deteriorates, the transfer has to be immediate and effective — an expired agreement at that moment is a patient-safety failure as well as a survey finding.",
       keyPoint:
         "Verify the transfer agreement date and the receiving hospital's Medicare status every quarter. The day a patient needs transfer is the wrong day to discover the gap.",
     },
     {
-      title: "Written notice to the local hospital is a separate, often-missed obligation",
+      title: "What Is the Written Notice Obligation to the Local Hospital Under 42 CFR 416.41(b)(3)?",
       content:
         "42 CFR 416.41(b)(3) requires the ASC to periodically provide the local hospital with written notice of its operations and patient population served. This is so the receiving hospital knows what to expect when it accepts your transfers. Most ASCs sign a transfer agreement and stop there, then can't produce a single dated notice letter when a surveyor asks. Send it annually, on the same date, with proof of delivery, and file the copy in the survey-ready binder.",
       keyPoint:
         "The transfer agreement and the periodic written notice are two different requirements — and the notice is the one ASCs forget.",
     },
     {
-      title: "H&P, informed consent, and medication reconciliation — three pieces, one chart",
+      title: "What Three Documents Must Be in the Chart Before Any Procedure?",
       content:
         "Before any procedure, the chart has to show a current history and physical, an informed consent that names the actual procedure being performed, and a documented medication reconciliation. Standard E (high-quality health care provided) wants surveyors to see that the diagnosis, the planned treatment, and the patient's full medication list line up — including supplements, OTC drugs, and anything the patient stopped taking pre-op. A consent that says 'right knee arthroscopy' when the op note says 'left knee' is a wrong-site setup. A med rec that lists only prescription drugs misses the warfarin, the ginkgo, and the GLP-1 the patient forgot to mention until pre-op.",
       keyPoint:
         "If a surveyor asks 'show me the H&P, the consent, and the med rec for this case,' all three should be in the chart, dated before the case, and consistent with each other.",
     },
     {
-      title: "Biological products follow the manufacturer — and a temp excursion is a quarantine event",
+      title: "What Must Happen When a Vaccine or Biological Product Has a Temperature Excursion?",
       content:
         "Standard D extends beyond specimens to cover biological products: vaccines, blood derivatives, biologic injectables. Storage and transport have to follow the manufacturer's package insert and any applicable program rules (CDC's Vaccine Storage and Handling Toolkit, VFC if you're a VFC site). The trap is the overnight temperature excursion: staff see the alarm, return the fridge to range, and keep using the product. That is not the standard. The product gets quarantined, the manufacturer (and VFC coordinator) gets called, the disposition gets documented, and only then does the product return to inventory or get discarded.",
       keyPoint:
         "A temperature excursion is a triggering event for an investigation, not a self-resolving alarm. The surveyor will ask for the excursion log and the disposition note.",
     },
     {
-      title: "Immediate post-op assessment and the abandoned procedure — both belong in the chart",
+      title: "What Must Be Documented When a Procedure Is Started and Then Abandoned?",
       content:
         "Standard E and the surgical-services standards together require a documented post-anesthesia assessment by a qualified provider before the patient moves out of Phase I recovery, and a separate discharge assessment before the patient leaves the ASC. Vital signs, level of consciousness, pain, nausea, and any complications all have to be captured by the named clinician at named times. When a procedure is started and abandoned (case canceled mid-procedure for clinical or equipment reasons), the chart has to document why it was stopped, what was done before stopping, the patient's condition at the time, who made the decision, and what the follow-up plan is — these are not 'incomplete' charts; they are complete charts of a case that ended early.",
       keyPoint:
         "If a surveyor asks 'who assessed this patient post-op and when,' you should be able to point to a named provider, a timestamp, and a documented set of assessment elements — not 'the nurse signed off.'",
     },
     {
-      title: "Professional practice principles and ethical conduct — the floor under every other standard",
+      title: "What Does It Mean for an ASC to Practice in Accordance With Professional and Ethical Conduct?",
       content:
         "Chapter 4 opens with the principle that the ASC provides care in accordance with professional practice and ethical conduct. Operationally that means: no dual-relationship conflicts (a surgeon cannot be the proceduralist and the sole anesthesia provider on a case requiring sedation), no procedures performed for financial reasons that aren't clinically indicated, no privileging shortcuts, and a culture where staff can raise concerns without retaliation. Surveyors look for the policy, but they also look at the chart and the schedule for patterns — high volumes of marginally indicated cases, repeated scope drift, or single-provider days where roles overlap improperly all read as ethical-floor problems.",
       keyPoint:

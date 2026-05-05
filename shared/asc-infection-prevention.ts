@@ -43,77 +43,77 @@ export const ascInfectionPreventionLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "The Written IPC Program",
+      title: "What Must an ASC's Written Infection Prevention and Control Program Include?",
       content:
         "An ASC must have a written infection prevention and control program that is approved by the governing body and is grounded in a documented infection prevention risk assessment specific to the facility. The program must adopt nationally recognized infection control guidelines (CDC is the most common reference), be integrated into the ASC's quality improvement program through surveillance and monitoring, and comply with all applicable state, federal, and tribal requirements (including OSHA bloodborne pathogen standards).",
       keyPoint:
         "Written + governing-body approved + risk-assessment driven + nationally recognized guidelines + integrated with QI + OSHA-compliant. Missing any of those is a citation risk.",
     },
     {
-      title: "The Designated Infection Preventionist",
+      title: "What Qualifications Must the Designated Infection Preventionist Have?",
       content:
         "The IPC program must be directed by a designated and qualified professional with training in infection control. The chart-of-record needs documentation that the assigned person has obtained IP training and demonstrates current competence — not just a job title. For most ASCs this is an RN with APIC training or equivalent; the role can be part-time but the documentation must be real.",
       keyPoint:
         "A designated person with documented IP training and current competence — title alone is not enough.",
     },
     {
-      title: "Hand Hygiene and Safe Injection Practices",
+      title: "What Standards Govern Hand Hygiene and Safe Injection Practices at an ASC?",
       content:
         "Education and active surveillance must follow CDC, WHO, or other nationally recognized guidelines for hand hygiene and CDC guidelines for safe injection practices. A written hand hygiene policy must specify use of products according to the manufacturer's IFU. Safe injection practice failures — single-dose vial reuse, shared insulin pens, IV bag spiking through a contaminated port — are among the most cited and most patient-harmful findings in ASC surveys.",
       keyPoint:
         "Hand hygiene per CDC/WHO and product IFU; safe injection per CDC. Single-dose means single patient. Insulin pens are patient-specific.",
     },
     {
-      title: "Sterilization and Reprocessing",
+      title: "What Must a Compliant Sterilization and Reprocessing Program Include?",
       content:
         "Cleaning, decontamination, high-level disinfection, and sterilization must adhere to nationally recognized guidelines, the manufacturer's IFU, and state/federal requirements. Internal/external chemical indicators and biological indicators must be used. There must be a written process for items that fail to meet HLD or sterilization parameters. Sterile packs must be handled and stored to maintain their sterility (controlled temperature/humidity, no crushing, no exposure to wet/dirty conditions). Reprocessing of single-use devices is allowed only under FDA 510(k) clearance, in-house only if the ASC is FDA-registered, otherwise via an FDA-registered third party.",
       keyPoint:
         "IFU + national guidelines + chemical and biological indicators + written failure process + sterility-preserving storage. Single-use reprocessing requires FDA 510(k).",
     },
     {
-      title: "Sharps and Hazardous Materials",
+      title: "What Are the Requirements for Sharps Containers and Hazardous Materials Management?",
       content:
         "Intact needles and syringes must be disposed of in puncture-resistant sharps containers per state and federal guidelines. Containers must be in appropriate care areas, secured from tampering, replaced at the fill line, and handled, stored, and disposed of per regulation. Hazardous materials and waste — solid, liquid, gas — must be properly labeled, managed, and disposed of in accordance with prevailing law, and the staff responsible must be able to demonstrate they know those laws.",
       keyPoint:
         "Sharps: puncture-resistant, correct location, secured, replaced at fill line. Haz materials: labeled, managed per law, with staff who can speak to the rules.",
     },
     {
-      title: "BLS Coverage and Emergency Equipment",
+      title: "Who Must Be Present Whenever Patients Are in the ASC?",
       content:
         "Personnel trained in BLS and the use of cardiac and emergency equipment must be present in the facility whenever patients are present. Personnel files must document current BLS certification and training in the use of cardiac/emergency equipment. A written policy must require trained, currently certified personnel to be on site during patient care.",
       keyPoint:
         "Whenever patients are present, BLS-certified staff trained on emergency equipment must be on site — and the documentation must back it up.",
     },
     {
-      title: "Recalls, Expired Products, Temperature Monitoring",
+      title: "What Must a Written Recall Policy Cover?",
       content:
         "Written recall policy must cover sources of recall information (FDA, CDC, manufacturer), staff notification, identification of whether the recalled item is in stock or was administered to patients, response, disposition/return, and patient notification when applicable. Products with manufacturer expiration dates must be monitored and disposed of per facility policy and manufacturer guidance. Refrigerated, frozen, and heated items must have continuous temperature monitoring with logs, accessible recommended ranges, and trained staff who know what to do when temperatures fall out of range.",
       keyPoint:
         "Recalls: source → notify → identify exposure → respond → dispose → notify patients if needed. Temps: continuous monitoring + accessible ranges + trained out-of-range response.",
     },
     {
-      title: "New Device Education",
+      title: "What Must Happen Before a New Device Is Used in Patient Care?",
       content:
         "Before a newly acquired device or product is used in patient care, appropriate clinical education must be provided to the intended operators. A designated person is responsible for ensuring this happens. Vendor representatives may participate, but vendor reps may NOT be the sole source of clinical education — the ASC must have its own internal clinical sign-off on competency.",
       keyPoint:
         "New device = pre-use training = designated owner. Vendor rep alone is not enough; the ASC must own the competency check.",
     },
     {
-      title: "Cross-Infection Safeguards and Communicable Disease Referral",
+      title: "What Must Staff Do When a Patient Presents With a Possible Communicable Disease?",
       content:
         "Standard F under the IPC subchapter requires written policies that tell front-desk and clinical staff exactly what to do when a patient presents with a possible communicable disease — varicella vesicles in the waiting room, suspected active TB cough on intake, a febrile rash on a pediatric pre-op. The policy must define how the patient is isolated or referred for appropriate care, who notifies the surgeon and the IP director, and how reportable conditions are escalated to the state or local public health authority. There also has to be a written policy identifying who is authorized in patient care areas (no roaming vendors or family members in the OR core) and surveillance activities aimed at minimizing sources and transmission.",
       keyPoint:
         "If a surveyor asks 'show me what registration does when a patient walks in coughing blood,' you should hand over a one-page communicable disease triage SOP — not improvise.",
     },
     {
-      title: "Environmental Cleaning: Before, Between, and Terminal",
+      title: "What Are the Four Cleaning Moments Required in Written Environmental Cleaning Policies?",
       content:
         "Written cleaning policies have to address four moments: cleaning before first use of the day, cleaning between every patient/case turnover, terminal cleaning at a frequency tied to how the area is used, and the requirement that EVS staff use the cleaning/disinfectant product per the manufacturer's IFU (correct dilution, correct contact/dwell time, correct surface). Surveyors will pull the SDS, look at the bottle, time the dwell, and watch a turnover. The most common citation is staff wiping surfaces dry before the contact time has elapsed, which means the disinfectant never actually killed anything.",
       keyPoint:
         "Cleaning compliance lives or dies on dwell time. If the wet-time on the label is 3 minutes, the surface stays visibly wet for 3 minutes — period.",
     },
     {
-      title: "OSHA Bloodborne Pathogens, Hep B, TB Plan, and Employee Health",
+      title: "What OSHA Requirements Must the ASC's Safety Program Address?",
       content:
         "Standards N, O, P, and Q under the Safety subchapter pull together everything OSHA already requires for healthcare workers: a written exposure control plan reviewed and updated at least annually (including evaluation of safer engineered sharps), a Hepatitis B vaccination program offered to at-risk staff, post-exposure evaluation and treatment protocols, an immunization program tied back to the IP risk assessment, a TB detection and prevention plan that follows local public health authority requirements (or CDC if no local rule exists), and a documented investigation/recordkeeping process for any work injury or illness. The governing body has to approve these policies (Q-0246, 42 CFR 416.51(c)).",
       keyPoint:

@@ -38,56 +38,56 @@ export const ascCredentialingLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "Primary source verification (PSV)",
+      title: "What Does Primary Source Verification Require?",
       content:
         "PSV means going directly to the issuing source — state medical board, DEA, ABMS, residency program — to confirm the credential. A photocopy of a license that the physician brings in is not PSV; the actual license verification must come from the state board's primary database (often electronic, with a printed or saved confirmation). Every required element gets PSV at appointment, and license/DEA/malpractice get re-verified at reappointment and on expiration.",
       keyPoint:
         "Go to the source. A copy from the clinician's file is not PSV. Document the source, date, and verifier on every PSV.",
     },
     {
-      title: "Privileges are specific, not general",
+      title: "How Specific Must a Clinician's Privilege List Be?",
       content:
         "Privileges describe what a clinician can do at your ASC. 'General surgery' is too broad to be defensible — privileges should list specific procedures or procedure categories with criteria (training, recent volume, outcomes). A surgeon credentialed to do laparoscopic cholecystectomy is not automatically privileged for robotic prostatectomy, even if both fall under 'general surgery' in some old taxonomy.",
       keyPoint:
         "If the privilege list doesn't say a clinician can do a specific procedure, they can't do it. List what is allowed; deny by silence.",
     },
     {
-      title: "FPPE: trust but verify the new",
+      title: "When Is Focused Professional Practice Evaluation Required?",
       content:
         "Focused Professional Practice Evaluation applies whenever a clinician is granted a new privilege — whether at initial appointment, after a request to add a procedure, or after returning from a long leave. FPPE is proctoring or focused review of a defined number of cases, with a documented closeout decision. New privileges without FPPE is a citation; FPPE that never closes out is also a citation.",
       keyPoint:
         "New privileges = FPPE = a defined number of cases reviewed = a documented closeout signed by the medical director.",
     },
     {
-      title: "OPPE: continuous performance review",
+      title: "What Is Ongoing Professional Practice Evaluation and How Must It Be Conducted?",
       content:
         "Ongoing Professional Practice Evaluation is the regular review of every clinician's performance — typically every 6 months. OPPE pulls data from quality reports, complications, infections, returns to OR, peer review findings, patient complaints, and reappointment-relevant items. Surveyors look for OPPE that reflects real data and real differences between clinicians, not template summaries that say 'no concerns' for everyone.",
       keyPoint:
         "OPPE is data-driven, individual, and ongoing. Not a checkbox; not the same for everyone.",
     },
     {
-      title: "Expirables: track or perish",
+      title: "What Must Happen When a Clinician's License or Credential Expires?",
       content:
         "Licenses, DEAs, malpractice certificates, board certifications, and ACLS/BLS cards all have expiration dates. The ASC must have a tracking system (spreadsheet, credentialing software, EHR module) that alerts well before expiration and triggers an auto-suspension if the credential is not renewed by the expiration date. Auto-suspension is uncomfortable but it is the protective mechanism that prevents an uncredentialed clinician from operating.",
       keyPoint:
         "If you don't have an expirables tracker that auto-suspends, you have a citation waiting to happen.",
     },
     {
-      title: "Reappointment every 2 years is a re-verification, not a refile",
+      title: "What Must Happen at Each Clinician Reappointment?",
       content:
         "Privileges are time-limited — typically every 2 years (42 CFR 416.45(b)) — and reappointment is the moment the ASC confirms that everything in the file is still true today. That means a fresh primary source license check, a new DEA verification, a current ABMS or specialty board check, a new NPDB query, an updated malpractice certificate of insurance, refreshed peer references, and a current OPPE summary that drives the privilege decision. Photocopying the original packet from two years ago is one of the fastest ways to lose a credentialing finding under Q-0091. Surveyors specifically look at the verification dates on the reappointment file — anything older than ~30 days from the medical staff committee meeting is suspect.",
       keyPoint:
         "If a surveyor asks 'when was this license re-verified for reappointment?' the answer needs to be a recent date with a saved verification, not 'we already had it on file.'",
     },
     {
-      title: "Allied health & non-physician practitioners are privileged too",
+      title: "Do Non-Physician Practitioners Need Governing Body Privilege Grants?",
       content:
         "CRNAs, NPs, PAs, podiatrists, dentists, oral surgeons, and any other independent licensed practitioner providing patient care at the ASC must go through the same credentialing and privileging process as physicians — application, primary source verification, NPDB query, peer references, defined privilege list, governing body grant, FPPE, OPPE, and reappointment. A job description is an HR document; it does not authorize patient care. The privilege list has to be specific to that role: which anesthesia techniques the CRNA is authorized to deliver, which procedures the PA may perform or assist on, which sedation level the NP may administer. A clean file for a CRNA looks structurally identical to a clean file for a surgeon.",
       keyPoint:
         "If a non-physician practitioner is putting hands on patients in your ASC, they need a governing-body-granted privilege list — not just a job description.",
     },
     {
-      title: "Temporary, emergency, locum, and telemedicine privileges still go through the process",
+      title: "Do Locum or Telemedicine Clinicians Still Need Full Credentialing at the ASC?",
       content:
         "There is no time-based or volume-based exemption from credentialing in 42 CFR 416.45. Locum tenens, temporary, emergency, and telemedicine clinicians all need PSV, NPDB query, malpractice verification, and a governing body privilege grant before they put hands (or a video link) on a patient. Most ASCs handle this through credentialing-by-proxy with a vetted locum agency or a distant-site telemedicine hospital under a written agreement that defines what verification each side performs — but the ASC's governing body still has to formally accept those privileges. For telemedicine specifically, the clinician must hold an active license in the state where the patient is physically located, not just their home state. 'We didn't have time for a full file' is not a defense surveyors accept.",
       keyPoint:

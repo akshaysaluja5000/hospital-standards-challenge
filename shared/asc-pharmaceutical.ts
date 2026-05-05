@@ -37,84 +37,84 @@ export const ascPharmaceuticalLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "Direction by a qualified licensed provider",
+      title: "Who Must Direct Pharmaceutical Services at an ASC With No Onsite Pharmacy?",
       content:
         "Even an ASC with no onsite pharmacy must have a qualified licensed provider — typically a physician or pharmacist — formally designated as responsible for pharmaceutical services. The designation has to be documented (governing body appointment letter, job description) and the person actually has to perform the role: approving the formulary, reviewing medication errors, signing off on storage and security policies, and overseeing controlled substance practices.",
       keyPoint:
         "If a surveyor asks 'who directs your pharmacy services?' and the answer is a shrug or 'the surgeon I guess,' that's a Condition-level finding.",
     },
     {
-      title: "Multi-dose vials and the date rule",
+      title: "What Must Be Done When a Multi-Dose Vial Is First Punctured?",
       content:
         "Once a multi-dose vial is punctured, the clock starts. Most multi-dose vials must be discarded 28 days after first puncture (or sooner if the manufacturer says so), and the date of first puncture must be written on the label. Single-dose vials are exactly that — single dose, single patient — and may not be re-entered or held for the next case, even if there is medication left.",
       keyPoint:
         "An undated open vial is both an infection control finding and a pharmacy finding. Date when you puncture, every time.",
     },
     {
-      title: "Controlled substances: count, witness, waste, document",
+      title: "What Does a Compliant Controlled Substance Process Require?",
       content:
         "Controlled substances require a closed loop: receipt is logged, secured storage is double-locked, dispensing is tied to a specific patient and provider, waste is witnessed and documented, and counts are reconciled at defined intervals (typically shift change or end-of-day). Any discrepancy — even one tablet — has to be investigated, documented, and escalated. 'Always reconciles' with no witness signatures is itself a red flag.",
       keyPoint:
         "Surveyors and DEA inspectors don't look for a perfect count — they look for a credible reconciliation process when the count is off.",
     },
     {
-      title: "Vaccine storage and the CDC toolkit",
+      title: "What Standard Governs Vaccine Storage and Temperature Monitoring?",
       content:
         "Vaccines are uniquely fragile and uniquely regulated. The CDC vaccine storage and handling toolkit is the de facto national standard: dedicated storage unit, calibrated digital data logger with current calibration certificate, twice-daily temperature checks, and a written excursion procedure that includes contacting the manufacturer or state vaccine program before discarding or administering affected vaccine. A temperature excursion that wasn't investigated is worse than one that was — silence implies the doses were given anyway.",
       keyPoint:
         "Temperature logs are not a checklist — they're a record of patient safety decisions. Initials without readings, or readings without action, are both findings.",
     },
     {
-      title: "Recalls and expired drugs: segregation is the rule",
+      title: "What Must Happen Immediately When a Drug Is Recalled or Expires?",
       content:
         "When a recall hits or a drug expires, it has to come out of active stock immediately and go into a clearly labeled, physically separate quarantine area pending return or destruction. Mixing recalled and active stock 'until pickup' is a top-five medication management citation because it is exactly how an expired or recalled drug gets administered to a patient. The disposal process itself must be documented and must prevent diversion (witnessed destruction, DEA Form 41 for controlled substances). Standard N requires a written policy that names who monitors expiration dates, how recall notices are received, and how disposal or return is documented.",
       keyPoint:
         "Active stock and quarantined stock should never be in the same bin. Physical separation is the simplest, most visible defense against the worst error in this chapter.",
     },
     {
-      title: "High-alert and look-alike/sound-alike (LASA) medications",
+      title: "What Must an ASC Do About High-Alert and LASA Medications Beyond Maintaining a List?",
       content:
         "Standards H, I, and J require the ASC to maintain a current list of high-alert medications and a current list of confused drug names (the new term for look-alike/sound-alike), and to have written processes — aligned with ISMP guidance — that prevent selection errors. Surveyors don't just want to see the lists; they walk the medication room and look for evidence the lists are actually applied: separation between heparin concentrations, color-coded auxiliary labels, segregated bins, tall-man lettering on labels, and rescue/reversal agents stocked next to the high-alert drug they treat. A current ISMP list with no observable storage discipline is a finding waiting to happen.",
       keyPoint:
         "If a surveyor asks 'show me your high-alert list,' you should also be able to walk them to the shelf and point to the safeguards that list drove.",
     },
     {
-      title: "Standard M — labeling syringes and any container off the original",
+      title: "What Five Elements Must Be on Any Medication Label Off Its Original Container?",
       content:
         "Any medication moved out of its original container — syringe, basin, IV bag, irrigation bottle — that will not be administered immediately must carry a label with five elements: drug name, strength, amount or volume (when not obvious from the container), expiration date and time, and the initials of the person who prepared it. 'Immediate use' means the same person who drew it administers it (or directly witnesses administration) within one hour, with no break in the process. Anesthesia syringes labeled with drug name only are the most common Standard M citation in ASC surveys.",
       keyPoint:
         "Drug name on a syringe is not labeling — it's a partial label, and a partial label is a finding.",
     },
     {
-      title: "USP 797/795 sterile compounding and the immediate-use rule",
+      title: "What Governs Sterile Compounding at an ASC That Does Not Have a Hood?",
       content:
         "Drawing antibiotics, mixing irrigation solutions, or reconstituting injectables in the OR is sterile compounding under USP 797. Without an ISO 5 hood, the ASC must rely on the USP 797 immediate-use provision: simple compounds, qualified personnel, strict aseptic technique, and administration within one hour. The provision is not a blanket pass — it has to be operationalized in a written policy that defines who may compound, what may be compounded, the time limit, and the labeling required. USP 795 covers non-sterile compounding and applies in the rare ASC that mixes oral suspensions or topical preparations.",
       keyPoint:
         "Saying 'we just do immediate-use' is fine — but only if there's a written policy behind it that names the criteria.",
     },
     {
-      title: "Verbal orders, scope of administration, and Standard F",
+      title: "What Does Standard F Require After a Verbal Drug Order Is Given?",
       content:
         "Standard F (and Q-0182, Q-0183, Q-0184 under 42 CFR 416.48(a)) covers three things people get wrong: adverse drug reactions must be reported to the responsible physician and documented in the record; blood and blood products may only be administered by a physician or RN; and verbal orders for any drug must be followed by a written order signed by the prescribing physician on a timely basis. Procedural urgency does not erase the written-order requirement — it just shifts the signature to after the event. Sloppy verbal orders ('one of midazolam') also create their own dose-clarity findings.",
       keyPoint:
         "Verbal orders are real orders. They close the loop with a written, signed entry — within 24–48 hours, not 'eventually.'",
     },
     {
-      title: "Competency reassessment for medication and controlled substance tasks",
+      title: "How Often Must Competency Be Reassessed for High-Risk Medication Tasks?",
       content:
         "Initial orientation competency is the floor, not the ceiling. For high-risk medication tasks — controlled substance handling, multi-dose vial dating, recall workflow, emergency drug retrieval, anesthesia drug labeling — the ASC has to define a reassessment cadence (typically annual) and document it with a skill-checklist sign-off by an evaluator. When a surveyor's tracer reveals that a staff member can't actually perform a task, the orientation paperwork doesn't save the finding — the demonstrated skill gap is the finding. Tie reassessment to the staff member's anniversary date so it cannot drift.",
       keyPoint:
         "Surveyors test the system by testing a person. 'I trained at orientation' is not a defense if today the staff member can't do the task.",
     },
     {
-      title: "Samples, prescription pads, e-prescribing — Standard K security",
+      title: "How Must Prescription Pads, Drug Samples, and E-Prescribing Access Be Controlled?",
       content:
         "Standard K covers the boring side of pharmacy that ends careers: prescription pads must be controlled and secured from unauthorized access, pre-signed and post-dated prescriptions are prohibited by written policy, electronic prescribing access is restricted and audited, and sample drugs are tracked and stored under the same security and expiration rules as commercial stock. If an ASC accepts samples from manufacturer reps, those samples need a log (drug, lot, expiration, who received them, where stored) and they need to be cycled through the same expiration check and recall process. 'Samples don't count' is the wrong answer.",
       keyPoint:
         "Samples are inventory. If you can't show the log, you can't show the chain of custody.",
     },
     {
-      title: "Medication error and adverse drug reaction reporting",
+      title: "What Must Happen When a Medication Error or Adverse Drug Reaction Occurs?",
       content:
         "Standard F requires that adverse drug reactions be reported to the patient's responsible physician and documented in the medical record. Beyond that, the ASC's quality program is expected to capture medication errors (including near-misses), trend them, present them to the governing body, and act on the trend. A medication error log that only contains harmful events is itself a red flag — the absence of near-miss reports tells the surveyor that staff don't trust the reporting system or that the threshold is set too high. Closed-loop error review is the difference between a quality program and a paperwork file.",
       keyPoint:

@@ -36,84 +36,84 @@ export const ascQualityManagementLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "QAPI is data plus action",
+      title: "What Makes a QAPI Program Real Rather Than Just Paperwork?",
       content:
         "Data alone is not QAPI; data plus action is. Surveyors look for the cycle: a measurement identifies a gap, a project is designed, an intervention is implemented, a follow-up measurement shows whether the gap closed, and the program adjusts. A dashboard with no PIPs, or PIPs that don't connect to the data, is half a program.",
       keyPoint:
         "Show the cycle. Data → identified opportunity → intervention → re-measurement → next step.",
     },
     {
-      title: "Priorities reflect this ASC, not a template",
+      title: "How Should QAPI Priorities Be Determined?",
       content:
         "QAPI priorities should be specific to the ASC's procedure mix and patient population. An ASC that does primarily ophthalmology cases should prioritize endophthalmitis surveillance and intraocular pressure metrics. An orthopedic ASC should prioritize SSI rates by procedure category, return-to-OR rates, and DVT events. A generic priority list that could apply to any facility is a red flag for surveyors.",
       keyPoint:
         "If your QAPI priorities don't name your specific procedures and risks, they aren't yours.",
     },
     {
-      title: "Performance improvement projects (PIPs)",
+      title: "What Are the Required Components of a Performance Improvement Project?",
       content:
         "A PIP has a defined problem statement, a measurable baseline, a target, an intervention, a timeline, and a planned re-measurement. A PIP without a target is just a project. A PIP without a re-measurement is just an intervention. The PIP cycle is what produces evidence of improvement and is what surveyors track from launch to closeout.",
       keyPoint:
         "Every PIP has a baseline number, a target number, and a date when you'll measure again.",
     },
     {
-      title: "Root-cause analysis (RCA) for adverse events",
+      title: "What Must a Root-Cause Analysis Dig Into Beyond the Proximate Cause?",
       content:
         "When an adverse event occurs — wrong-site surgery, sentinel event, unexpected transfer, medication error with harm — the QAPI program triggers an RCA. The RCA digs past the proximate cause ('the surgeon marked the wrong knee') to the system contributors ('site-marking policy doesn't require pre-induction confirmation in the OR, the time-out script doesn't require the marked site to be visible'). Corrective actions address system causes, not just the individual.",
       keyPoint:
         "RCA asks 'why' five times. If your conclusion is 'human error,' you stopped too early.",
     },
     {
-      title: "The governing body feedback loop",
+      title: "How Must QAPI Data Be Presented to the Governing Body?",
       content:
         "QAPI reports go to the governing body at every meeting — not as data dumps, but as decision packages. Each report identifies what's working, what's not, what's been done about it, and what the governing body needs to decide or fund. The governing body's response is documented in minutes. Without that loop, QAPI is paperwork; with it, QAPI is governance. 42 CFR 416.43(e) puts the implementation responsibility squarely on the governing body, not the QAPI chair.",
       keyPoint:
         "Every QAPI report ends with: 'Decisions requested:' and the governing body answers in writing.",
     },
     {
-      title: "The written QI program is its own deliverable",
+      title: "What Must the Written Quality Improvement Program Document Include?",
       content:
         "Beyond the QAPI plan, surveyors expect a written quality improvement program document that names the responsible committee(s) and individuals, describes the full scope of services covered, identifies at least one physician (or dentist) participant, defines purpose and objectives, describes data collection processes, and explains how peer review, risk management, and infection prevention integrate into QAPI. The program has to be evaluated annually for effectiveness — was the design sound, did it meet its objectives, what gets adjusted next year. A QAPI plan that doesn't name the committee, the physician participant, or the integration points is a documentation gap regardless of how much data is being collected.",
       keyPoint:
         "If a surveyor asks 'show me your written QI program,' the answer is a single document, not a stack of dashboards.",
     },
     {
-      title: "Peer review feeds QAPI and credentialing — both",
+      title: "How Does Peer Review Connect to Both QAPI and Credentialing?",
       content:
         "Peer review is one of the strongest data sources QAPI has, and 42 CFR 416.43 expects QAPI to integrate it. Findings flow two ways: de-identified system themes go to QAPI for process improvement, and clinician-specific findings go into OPPE/FPPE for credentialing and reappointment decisions. Filing peer review reports without action — or running peer review in a silo separate from QAPI — defeats the purpose and creates a documentation gap. The deliberative process is confidential; the outputs are not exempt from action.",
       keyPoint:
         "Peer review confidentiality protects the discussion, not the obligation to act on the findings.",
     },
     {
-      title: "Infection prevention and NHSN data live inside QAPI",
+      title: "Where Does Infection Prevention Surveillance Data Belong in the QAPI Structure?",
       content:
         "Infection prevention is not a parallel program — it is one of QAPI's required data inputs under 42 CFR 416.43(a)(2). Surveillance data (SSI, endophthalmitis, bloodstream, GI scope-related infections), hand hygiene audits, sterilization metrics, and NHSN-derived rates and SIRs should appear on the QAPI agenda with discussion and decisions documented. Submitting to NHSN and then summarizing it as 'data submitted, no concerns' wastes the external benchmarking value. The QAPI committee should review the SIR, the trend, peer comparisons, and any procedure-specific signal each cycle.",
       keyPoint:
         "If NHSN data isn't discussed in QAPI minutes, the integration is broken even if the submission is on time.",
     },
     {
-      title: "Risk management policies that surveyors actually open",
+      title: "What Specific Risk Management Policies Must an ASC Have in Writing?",
       content:
         "The risk management subchapter requires written policies covering several specific scenarios: how a patient may be dismissed or refused care, what happens if a clinician becomes incapacitated mid-procedure, how an impaired clinician is addressed, after-hours coverage and clinical advice documentation, restrictions on observers in patient care areas, and consent for any non-staff present in clinical space. Add the operational policies: encouraging near-miss reporting, communicating reportable events as required by law, periodic litigation review, complaints/grievances response times, timely notice to the liability carrier, and periodic clinical record review. Missing any one of these is a standard-level finding even if the underlying scenario has never occurred.",
       keyPoint:
         "The risk management binder has to exist before the event, not get written after one.",
     },
     {
-      title: "Adverse event and near-miss definitions drive what gets analyzed",
+      title: "What Is the Difference Between an Adverse Event and a Near-Miss for QAPI Purposes?",
       content:
         "Risk management policy has to define both 'incident' and 'adverse event' — and crucially, the definition of incident has to include near-miss events (anything that could have caused harm but didn't). Adverse events include unexpected death or serious injury, process variations that carry significant risk of recurrence, breaches in care or administrative procedures, and reactions to drugs and materials. All of these get reviewed; near-misses and adverse events both get analyzed for causal factors, with system improvements implemented where indicated. A program that only tracks events with documented harm misses the warning signals.",
       keyPoint:
         "Near-misses are gifts — they show you the system failure without the patient injury. Track them like the real thing.",
     },
     {
-      title: "Prioritize by high-risk, high-volume, problem-prone",
+      title: "What Three Categories Must Drive QAPI Priority-Setting Under 42 CFR 416.43?",
       content:
         "42 CFR 416.43(c)(1) tells the ASC to set QAPI priorities based on three buckets: high-risk activities (anesthesia events, sentinel-level outcomes), high-volume procedures (whatever dominates the case mix — cataracts, colonoscopy, joint injections), and problem-prone areas (anything with elevated complications in the past 12 months). Priorities also have to consider incidence, prevalence, and severity, and they have to connect to health outcomes, patient safety, and quality of care. A QAPI plan that ignores the procedure that is 60% of the schedule is misaligned with the actual practice — surveyors notice that mismatch immediately.",
       keyPoint:
         "If your top procedure isn't named in the QAPI plan, your priorities don't reflect your facility.",
     },
     {
-      title: "External benchmarking with valid comparators",
+      title: "What Does Valid External Benchmarking Require in a QAPI Program?",
       content:
         "QAPI requires comparison to external benchmarks based on valid local, state, national, or published data — NHSN, AAAHC peer data, specialty society registries, or ASC Quality Collaboration measures all qualify. Pick measures that are actually relevant to the procedures performed, collect data on them on an ongoing basis, compare internal performance, and feed the results back into QAPI improvement work and into governing body reports. 'We are above average' is not a finding-proof statement on its own — surveyors want to see the comparison data, the trend, and what the program did with it.",
       keyPoint:

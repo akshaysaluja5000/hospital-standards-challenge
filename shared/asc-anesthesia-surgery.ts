@@ -37,84 +37,84 @@ export const ascAnesthesiaSurgeryLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "Pre-anesthesia evaluation is its own event",
+      title: "What Makes the Pre-Anesthesia Evaluation Its Own Separate Documented Event?",
       content:
         "Immediately before the procedure, a physician or qualified anesthetist on the surgical team has to examine the patient and evaluate anesthesia risk. This is not the H&P, not the consent, not the pre-op nursing assessment — it is a discrete pre-anesthesia evaluation that documents airway, ASA class, anesthesia plan, allergies, NPO status, and any new findings since the H&P. Surveyors look for it as a stand-alone note on the day of surgery.",
       keyPoint:
         "If the chart has an H&P from last week and a pre-op nursing checklist but no pre-anesthesia evaluation note dated the day of surgery, you have a citation under Q-0061.",
     },
     {
-      title: "The H&P 30/24 rule",
+      title: "What Are the Two H&P Time Requirements for Anesthesia and Surgical Cases?",
       content:
         "The H&P must be completed within 30 days before the procedure and updated within 24 hours of the procedure. The 24-hour update is a brief note confirming nothing has changed (or noting what has) and must be in the chart before the patient enters the OR. An H&P 31 days old, or an H&P 14 days old with no 24-hour update, both fail the rule.",
       keyPoint:
         "30-day H&P + 24-hour update note in the chart before entry to the OR. Two clocks, both have to be running.",
     },
     {
-      title: "Time-out: the team stops, talks, and confirms",
+      title: "What Must the Entire Surgical Team Do During a Proper Time-Out?",
       content:
         "Immediately before incision, the operator pauses and the entire team — surgeon, anesthetist, scrub, circulator, anyone in the room — verbally confirms patient ID, intended procedure, correct site/laterality, equipment availability and function, and any implants. The patient (or representative) is involved in pre-anesthesia site marking. A checkbox without a true team pause is the most common form of 'failed' time-out surveyors find.",
       keyPoint:
         "If anyone in the room is still doing other work during the time-out, it isn't a time-out — it's documentation theater.",
     },
     {
-      title: "Continuous intra-op monitoring",
+      title: "What Monitoring Is Required During Different Levels of Anesthesia?",
       content:
         "All anesthesia levels above local require continuous physiologic monitoring: pulse oximetry, frequent blood pressure, and ECG. Deep sedation and general anesthesia additionally require end-tidal CO2. General anesthesia requires a means to measure body temperature. The anesthesia record should reflect these continuously, not just at start and finish.",
       keyPoint:
         "EtCO2 during deep sedation is the single most-missed monitoring element when sedation is administered by non-anesthesia providers.",
     },
     {
-      title: "Discharge: criteria met, order signed by the operating physician",
+      title: "Who Must Sign the Discharge Order and What Else Is Required Before Discharge?",
       content:
         "Patients are observed in PACU (or equivalent) until they meet documented discharge criteria. A physician or qualified anesthetist must evaluate the patient for proper anesthesia recovery before discharge. The discharge order itself must be signed by the physician who performed the surgery (or per applicable state law and ASC policy), and patients must leave in the company of a responsible adult unless the attending physician documents an exception.",
       keyPoint:
         "Three signatures matter: pre-anesthesia evaluation (before entry), recovery evaluation (in PACU), and the discharge order signed by the operating physician.",
     },
     {
-      title: "MH cart readiness: dantrolene in date, supplies co-located, drill annually",
+      title: "What Four Things Does a Surveyor Check When Reviewing the MH Cart?",
       content:
         "If the ASC stocks any malignant hyperthermia trigger (succinylcholine, inhaled volatiles), Standard 9.O treats the MH cart like a code cart. Surveyors check four things in parallel: dantrolene (or Ryanodex) is in date, cooling supplies (ice, NG tube, irrigation, refrigerated saline) are co-located in or directly next to the cart, every clinical staff member has documented MH training, and an MH drill has been conducted and documented within the past 12 months. Each missing element is its own finding because each represents a real failure point during a real event — and dantrolene reconstitution at 2 a.m. with scattered supplies is not a defensible clinical reality.",
       keyPoint:
         "If a surveyor asks 'show me the MH cart,' the answer is: in-date drug, co-located cooling, training roster, and last drill date — all on the spot.",
     },
     {
-      title: "Counts: when the count is off, closure stops",
+      title: "What Must Happen When a Surgical Count Is Off?",
       content:
         "Standard 10.P requires a written count policy based on nationally recognized guidance (AORN/WHO) covering which procedures require counts of sponges, sharps, and instruments, when counts occur (before start, before closure), how counts are reported to the surgeon, where counts are documented, and — most importantly — what happens when a count is incorrect. The defensible response to an off count is non-negotiable: stop closure, recount, search the field/trash/floor, perform intra-op imaging if the item is not found, document each step, and report per policy. Hiding or deferring a discrepancy is both a clinical risk (retained foreign object is a sentinel event) and a documentation failure that QAPI cannot recover.",
       keyPoint:
         "An off count is a stop-the-line event. Continuing closure on an unresolved count is the textbook origin story of a sentinel event.",
     },
     {
-      title: "ACLS coverage until the last patient is physically out the door",
+      title: "When Must ACLS-Credentialed Coverage Be Present at an ASC?",
       content:
         "Standard 9.N requires at least one health care professional with current ACLS training to be present until every patient operated on that day has been physically discharged — out the door, not just cleared by the nurse. The training must include hands-on airway and AED demonstration (AHA or equivalent), and the ASC has to be able to produce both the credential and a written policy that defines coverage. The most common citation pattern is the anesthesia provider leaving after the last case is over but while a patient is still in PACU recovering — that interval is non-compliant.",
       keyPoint:
         "ACLS-credentialed coverage starts with the first patient arrival and ends when the last patient walks out — not when the last case ends.",
     },
     {
-      title: "Surgical site marking: by the operator, with the patient awake",
+      title: "Who Must Mark the Surgical Site and When Must It Happen?",
       content:
         "Standard 10.R requires that any procedure involving level or laterality be marked by the person performing the procedure (or a designated surgical-team member who will be present during the time-out) with the patient or representative involved before anesthesia. Pre-marking by a circulator who will not be operating and may not be in the room for the time-out fails the standard. The mark itself, the policy that defines surgical team, the patient's involvement, and the documentation in the clinical record are all separately reviewed.",
       keyPoint:
         "Site marking by the operator, with the patient awake, before sedation — every other workflow is a finding waiting to happen.",
     },
     {
-      title: "Specimen handling: the path report has to land in the chart",
+      title: "Where Must the Pathology Report End Up After Tissue Is Removed?",
       content:
         "Standard 10.T requires that when tissue is removed, a pathologist examines it (unless explicitly exempted in writing by the governing body after medical review) and the signed report is incorporated into the patient's clinical record. 'Sent to pathology' in the op note plus a vendor portal nobody opens does not meet incorporation. Surveyors will sample charts with specimens, look for the pathology result inside the patient record (electronic or paper), and verify a tracking workflow exists so results don't sit unread.",
       keyPoint:
         "If the pathology report is not in the patient's chart, it does not exist for survey purposes — and the patient may not have been notified.",
     },
     {
-      title: "Responsible adult escort: physician exception only, not patient choice",
+      title: "Who Can Authorize Discharge Without a Responsible Adult Escort?",
       content:
         "Q-0267 (42 CFR 416.52(c)(3)) requires every patient to be discharged in the company of a responsible adult, except those patients exempted by the attending physician. The exception is a clinical judgment documented by the attending — it is not waived by the recovery nurse, satisfied by a rideshare driver, or overridden by the patient's autonomous request. Confirm the escort at scheduling, again on day-of-surgery before the case starts, and hold the patient if the escort falls through unless the attending physician specifically documents an exception.",
       keyPoint:
         "No documented attending-physician exception, no responsible adult, no discharge — the patient stays.",
     },
     {
-      title: "Second qualified monitor for moderate/deep sedation and general anesthesia",
+      title: "Who Must Be Present Solely to Monitor the Patient During Moderate or Deep Sedation?",
       content:
         "Standard 9.P requires a written policy prohibiting moderate sedation, deep sedation, or general anesthesia unless a qualified individual in addition to the operator is present whose primary job is monitoring the patient. During moderate sedation the second person may help with minor interruptible tasks, but their role is patient watcher, not assistant scrub. The clinical record has to reflect both the operator and the monitor in every sedated case, and Standard 9.Q adds that if anyone other than an anesthesiologist, OMFS, CRNA, or AA administers a drug without an antagonist (propofol is the classic example), the governing body must have specifically privileged that provider for it.",
       keyPoint:

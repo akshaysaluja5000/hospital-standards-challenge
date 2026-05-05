@@ -41,84 +41,84 @@ export const ascFacilitiesEnvironmentLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "Documents you must be able to produce on day one",
+      title: "Which Documents Must Be Produced Immediately During a Survey Opening Tour?",
       content:
         "An occupancy permit and a current fire-authority letter or report are the two foundational documents under Chapter 8 Standard A. If the surveyor opens the survey-ready binder and these are not in front of them within five minutes, the tone of the entire survey shifts. Keep originals (or signed copies) on-site, with a tickler tied to expiration dates, and never let the local fire-marshal letter age out without requesting a new inspection.",
       keyPoint:
         "If you cannot produce the occupancy permit and a current fire-authority report on demand, every other Chapter 8 finding is amplified.",
     },
     {
-      title: "NFPA 101 and NFPA 99 are the floor, not the ceiling",
+      title: "Which Life Safety Codes Are the Compliance Framework for ASC Facilities?",
       content:
         "ASCs must comply with the 2012 editions of NFPA 101 (Life Safety Code) and NFPA 99 (Health Care Facilities Code), including the Tentative Interim Amendments listed in 416.44(b)(1) and 416.44(c). These codes drive smoke-compartment construction, exit signage, doors to hazardous areas, sprinkler requirements, medical-gas storage, and emergency power. CMS can waive specific provisions, but waivers are rare and require a formal process — assume you must comply unless you have a waiver letter in hand.",
       keyPoint:
         "NFPA 101 and NFPA 99 (2012 editions) are not optional reference material — they are the citation framework Chapter 8 is built on.",
     },
     {
-      title: "Sprinkler shutdowns: 10 hours is the trigger",
+      title: "What Must Happen When a Sprinkler System Is Out of Service More Than 10 Hours?",
       content:
         "Under 416.44(b)(5), if a sprinkler system is out of service for more than 10 hours in a 24-hour period, the ASC must either evacuate the affected area or institute a documented fire watch until the system is back in service. The fire watch is not optional supervision — it requires a person with eyes on the affected area, a log of patrols, and a defined relief schedule. A surveyor who learns of any recent sprinkler outage will ask immediately for the fire watch log.",
       keyPoint:
         "Sprinkler down >10 hours → evacuate or fire watch. No middle ground, no informal coverage.",
     },
     {
-      title: "Drills are evidence; one missed quarter is a citation",
+      title: "How Often Are Scenario-Based Drills Required and What Must Each Include?",
       content:
         "Chapter 8 Standard N requires scenario-based drills at least once per calendar quarter, plus an annual CPR drill and an annual emergency disaster drill. Every drill must have a written evaluation, identified gaps, and documented corrective action. A missed quarter, or a drill with no written evaluation, is one of the easiest findings a surveyor can write — it is a binary check.",
       keyPoint:
         "Quarterly drills + annual CPR + annual disaster drill, each with a written evaluation and documented follow-up, or you have a finding.",
     },
     {
-      title: "Biomedical equipment maintenance must match manufacturer instructions",
+      title: "What Must an ASC's Biomedical Equipment PM Program Follow?",
       content:
         "Standard L requires written policies for equipment use, calibration, and preventive maintenance — and the PM and calibration must follow the manufacturer's specifications, not a generic schedule. Surveyors will pull stickers off a defibrillator, an anesthesia machine, and a sterilizer and ask to see the matching PM record. Stickers that are expired, missing, or contradicted by the underlying log are top-of-list findings because they are visible the moment the surveyor walks into the room.",
       keyPoint:
         "Every regulated patient-care device gets a PM cycle traced to the manufacturer's IFU, with a sticker and a matching log entry.",
     },
     {
-      title: "Emergency preparedness has four phases and a fixed review cycle",
+      title: "What Are the Four Phases of Emergency Preparedness and When Must Each Be Reviewed?",
       content:
         "Under 416.54 the ASC's emergency preparedness program is built around four phases — mitigation (identify and reduce risk), preparedness (plan, train, drill), response (execute the plan), and recovery (return to operations and learn). The program has four required documents that must hang together: an all-hazards risk-based plan, written policies and procedures, a communication plan, and a training and testing program. The plan, P&P, and communication plan are reviewed and updated at least every two years (E-0004, E-0029); the training and testing program is reviewed annually. Drills, after-action reports, and any plan updates triggered by them all live inside this same framework.",
       keyPoint:
         "If a surveyor asks 'show me your EP program,' produce the plan, P&P, communication plan, and training/testing program — each with a documented review date inside the required cycle.",
     },
     {
-      title: "Generator testing: weekly visual, monthly load, annual full",
+      title: "What Is the Required Generator Testing Cycle Under NFPA 110?",
       content:
         "Emergency generators serving an ASC are governed by NFPA 110 through NFPA 99 and 416.44(c). The standard cycle is a weekly visual inspection, a monthly load test of at least 30 minutes at the manufacturer's recommended load, and an annual extended run (typically 4 continuous hours) for Level 1 systems. Each test entry has to record date, run-time, load percentage, fuel level before and after, ambient conditions, and the signature of the person who ran it. A generator that is 'tested' but only has signatures with no run-time data is, in the surveyor's eyes, not tested.",
       keyPoint:
         "Weekly visual + monthly load test (≥30 min) + annual 4-hour run, each with run-time and load data — anything less is a documentation gap under NFPA 110.",
     },
     {
-      title: "Smoke compartments only work when the doors are actually closed",
+      title: "What Makes a Smoke Compartment Non-Compliant?",
       content:
         "NFPA 101 (2012) Chapter 21 requires ambulatory health-care occupancies to be divided into smoke compartments with rated barriers and self-closing doors, cross-referenced through 416.44(b)(1) and Q-0104. The compartment is a fiction the moment a door is wedged open with a doorstop, a trash can, or a kick. The only acceptable hold-open is a magnetic device tied to the fire alarm panel that releases automatically. Doors to hazardous areas (416.44(b)(6), Q-0107) — soiled holding, large storage rooms, mechanical spaces — also have to self-close and latch and are surveyor magnets during a tracer.",
       keyPoint:
         "Smoke-compartment and hazardous-area doors close automatically — no wedges, no door stops, no exceptions. If it's propped open, it's cited.",
     },
     {
-      title: "ABHR dispensers: alcohol is fuel — install accordingly",
+      title: "Where May Alcohol-Based Hand-Rub Dispensers Be Installed?",
       content:
         "Alcohol-based hand-rub dispensers are permitted under 416.44(b)(4) and Q-0105 only if installed in a way that controls inappropriate access and ignition risk. The Life Safety Code provisions that flow through this rule limit corridor quantities, set spacing between dispensers, and prohibit installation directly above or adjacent to ignition sources (electrical outlets, switches, light fixtures, heating equipment). Operating rooms have an even higher bar because the ignition-source density is higher. A dispenser placed 'where it's convenient' over an outlet is a textbook citation that the safety officer should catch on rounds.",
       keyPoint:
         "ABHR is flammable. Install per 416.44(b)(4) — separated from outlets and ignition sources, within corridor quantity limits, and never directly over an electrical receptacle.",
     },
     {
-      title: "Hazardous materials inventory and SDS access have to be current",
+      title: "What Must a Compliant Hazardous Materials Program Include?",
       content:
         "Chapter 8's safety standard expects a current hazardous materials inventory cross-referenced to a Safety Data Sheet binder (or electronic equivalent) that staff can access immediately during an exposure. The inventory must match what is actually on the shelf — an SDS for a discontinued product is administrative debt; a missing SDS for a product currently in use is a real safety failure. OSHA HazCom drives the underlying standard but ASC surveyors will cite under the Chapter 8 safety program when they find mismatches. Audit the binder against the chemical inventory at least twice a year and update it the same day a product is added or discontinued.",
       keyPoint:
         "If a staff member is splashed today and can't pull the SDS for the product they were using, the binder failed — and that's the citation, regardless of whether anyone was hurt.",
     },
     {
-      title: "OR temperature, humidity, and pressure are logged, not just monitored",
+      title: "What OR Environmental Parameters Must Be Continuously Logged?",
       content:
         "ASHRAE 170 — referenced through 416.44 and accreditor expectations — sets the OR environmental envelope: temperature roughly 68–75°F, relative humidity 20–60%, and positive pressure relative to adjacent corridors. A green dashboard is a real-time snapshot; the audit trail surveyors expect is a continuous log retained per facility policy. Drift (humidity below 20% or above 60%, loss of positive pressure, temperature excursion) needs to trigger a documented response: notify the OR charge, evaluate impact on cases in progress, contact facilities, and log the corrective action. Missing days in the log are the most common citation here.",
       keyPoint:
         "OR temp/humidity/pressure logs must be continuous, retained, and reviewed — a green dashboard alone does not satisfy the documentation requirement.",
     },
     {
-      title: "Exit signage and posted evacuation routes are real-time wayfinding",
+      title: "What Must Be True of Exit Signage and Posted Evacuation Routes?",
       content:
         "Under NFPA 101 (2012), exit access has to be marked with illuminated exit signs that remain lit on emergency power, and the evacuation route has to be visibly posted at decision points throughout the patient-care areas. 'It's in the staff handbook' is not an acceptable substitute — a binder cannot guide a frightened patient or visitor down a corridor at 2 AM. Surveyors walk the path of egress: they look for blocked exits, dim or burned-out exit-sign bulbs, missing 'You Are Here' markers, and posted diagrams that no longer reflect a recent renovation.",
       keyPoint:

@@ -37,63 +37,63 @@ export const ascClinicalRecordsLevel: Level = {
   },
   studyMaterial: [
     {
-      title: "The H&P window: 30 days plus a day-of update",
+      title: "What Are the Two Time Requirements for a Compliant History and Physical?",
       content:
         "The history and physical must be completed within 30 days before the procedure and updated on the day of the procedure to confirm no material change. The day-of update is a separate, dated, signed entry — not a checkbox that says 'reviewed.' A surveyor can find a perfectly written H&P from 28 days ago and still cite the chart if the day-of update is missing.",
       keyPoint:
         "30-day window + day-of-surgery update note. Both pieces. Always.",
     },
     {
-      title: "Op note: contemporaneous and complete",
+      title: "What Must Be in the Chart Before a Patient Leaves the OR or PACU?",
       content:
         "The operative report has to be in the chart — at least as a brief operative note — before the patient leaves the OR or PACU. The full dictated note follows quickly after, but the brief note has to capture: procedure, surgeon, assistants, anesthesia type, findings, specimens, complications, estimated blood loss, and disposition. A chart with no op note when the patient is already in PACU is a documentation emergency.",
       keyPoint:
         "Brief op note before the patient leaves the OR. Full report shortly after. No delay.",
     },
     {
-      title: "Consent: timing matters as much as content",
+      title: "When Must Informed Consent Be Documented?",
       content:
         "Informed consent must be documented before the patient receives any sedation or premedication. Consent obtained from a patient who has already been given Versed, fentanyl, or a pre-op sedative is presumptively defective. The consent must include the specific procedure, the surgeon, the risks, the alternatives, and the patient's signature — and it has to be dated and timed.",
       keyPoint:
         "Consent before sedation, every time. If it didn't happen pre-op, it can't happen at all.",
     },
     {
-      title: "Authentication and late entries",
+      title: "How Must Late Chart Entries Be Documented?",
       content:
         "Every entry has to be identifiable to its author and made at the time of the event. If something is documented later, it must be clearly labeled 'Late Entry,' with both the actual date/time of writing and the date/time of the event being documented. Retroactive edits to existing entries are not permitted; corrections are made by addendum.",
       keyPoint:
         "Date, time, and author on every entry. Late entries are flagged as such — never disguised as contemporaneous.",
     },
     {
-      title: "Storage, retention, and patient access",
+      title: "How Long Must Medical Records Be Retained and When Must They Be Released?",
       content:
         "Medical records have to be stored in a way that protects confidentiality (locked storage, access controls, encrypted EHR access, no unattended screens). Retention is governed by both state law and federal requirements; the longer applicable period controls. Patients have a right to access their records under HIPAA, generally within 30 days, with the option to extend once for an additional 30 days with written notice.",
       keyPoint:
         "Lock it, retain it for the longer of state or federal minimum, and release it to the patient within 30 days when asked.",
     },
     {
-      title: "Allergies in a prominent, consistent location on every chart",
+      title: "Where Must Allergies and Sensitivities Be Documented in the Chart?",
       content:
         "42 CFR 416.47(b)(5) and Q-0162 require that the presence — or absence — of allergies, sensitivities, and reactions to drugs, food, and environmental agents be documented in a prominent, consistently defined location on every chart. 'Consistent' means the surveyor can pick up any chart, look in the same place, and find it. Patients have to be asked at every encounter, the specific reaction has to be captured (rash vs. anaphylaxis matters), and updates have to be reconciled — not just appended. 'NKDA' is an answer; a blank field is not.",
       keyPoint:
         "Same location on every chart. Asked every visit. Reaction described, not just the allergen named.",
     },
     {
-      title: "Corrections are addenda, never edits to a signed entry",
+      title: "How Must Corrections Be Made to a Signed Chart Entry?",
       content:
         "Once a chart entry has been authenticated (signed), it is part of the legal record and cannot be altered. If something is wrong, the fix is a dated, timed, signed addendum that identifies the original entry, states what was incorrect, and provides the correct information. Editing the original — even by the original author — destroys the audit trail and is treated as documentation falsification. EHRs should be configured to lock authenticated notes and force a one-click 'Add Addendum' workflow.",
       keyPoint:
         "Signed = locked. Corrections live in a new addendum, not on top of the old entry.",
     },
     {
-      title: "The designated record set lives at the ASC, even for contracted clinicians",
+      title: "Who Owns Clinical Documentation Generated by Contracted Providers at the ASC?",
       content:
         "HIPAA requires the ASC to define and maintain a designated record set, and 42 CFR 416.47 requires that the medical record be available at the facility. That includes the anesthesia record, contracted radiology readings, pathology reports, and any other clinical documentation generated during the case — regardless of who employs the clinician. Letting a contract anesthesia group take their records back to their office creates a custody gap that fails on survey, billing, and clinical-handoff grounds. Contracts have to require all documentation to be filed in the ASC's record system before the contractor leaves the building.",
       keyPoint:
         "If care happened at the ASC, the record lives at the ASC — contractor or not.",
     },
     {
-      title: "Vendors with PHI access need a written BAA — every one of them",
+      title: "Which Vendors Require a Business Associate Agreement?",
       content:
         "Any vendor that creates, receives, maintains, or transmits protected health information for the ASC is a Business Associate under 45 CFR 164.502(e), and a written Business Associate Agreement (BAA) is required before PHI changes hands. That covers shredding companies, off-site storage vendors, IT support, billing services, transcription, and the EHR vendor itself. A 'we've trusted them for years' verbal arrangement is a HIPAA violation from day one — not from the day of a breach. A BAA inventory, with renewal dates tracked by the privacy officer, is the audit-proof artifact.",
       keyPoint:
