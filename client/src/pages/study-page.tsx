@@ -335,18 +335,18 @@ export default function StudyPage() {
             </Card>
 
             {summary.commonRiskPoints && summary.commonRiskPoints.length > 0 && (
-              <div className="rounded-2xl p-6 shadow-md border-2 border-destructive/20 bg-destructive/5">
+              <div className="rounded-2xl p-6 shadow-lg border-2 border-red-300 bg-red-50">
                 <div className="flex items-center gap-3 mb-4">
-                  <AlertTriangle size={22} className="text-destructive flex-shrink-0" />
-                  <h4 className="text-base font-black uppercase tracking-wide text-destructive">Where Teams Get Cited</h4>
-                  <span className="ml-auto text-xs font-bold px-2.5 py-1 rounded-full text-destructive bg-destructive/10 border border-destructive/20" data-testid="badge-risk-count">
+                  <AlertTriangle size={22} className="text-red-600 flex-shrink-0" />
+                  <h4 className="text-base font-black uppercase tracking-wide text-red-700">Where Teams Get Cited</h4>
+                  <span className="ml-auto text-xs font-bold px-2.5 py-1 rounded-full text-red-700 bg-red-100 border border-red-300" data-testid="badge-risk-count">
                     {summary.commonRiskPoints.length} high-risk failures
                   </span>
                 </div>
                 <ul className="space-y-3" data-testid="list-risks">
                   {summary.commonRiskPoints.map((item, i) => (
-                    <li key={i} className="flex gap-3 text-sm leading-relaxed text-foreground/80">
-                      <AlertTriangle size={14} className="text-destructive flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex gap-3 text-sm leading-relaxed text-red-900">
+                      <AlertTriangle size={14} className="text-red-500 flex-shrink-0 mt-0.5" />
                       <span data-testid={`text-risk-${i}`}>{item}</span>
                     </li>
                   ))}
@@ -355,20 +355,20 @@ export default function StudyPage() {
             )}
 
             {summary.keyOperationalExpectations && summary.keyOperationalExpectations.length > 0 && (
-              <Card className="rounded-2xl border-2 p-6 shadow-md" style={{ borderColor: `${level.color}20` }}>
+              <div className="rounded-2xl p-6 shadow-md border-2 border-primary/30 bg-primary/5">
                 <div className="flex items-center gap-2 mb-3">
-                  <ListChecks size={20} style={{ color: level.color }} />
-                  <h4 className="text-base font-black uppercase tracking-wide" style={{ color: level.color }}>What Surveyors Expect</h4>
+                  <ListChecks size={20} className="text-primary" />
+                  <h4 className="text-base font-black uppercase tracking-wide text-primary">What Surveyors Expect</h4>
                 </div>
                 <ul className="space-y-2" data-testid="list-expectations">
                   {summary.keyOperationalExpectations.map((item, i) => (
                     <li key={i} className="flex gap-2 text-sm text-foreground/80 leading-relaxed">
-                      <span className="text-muted-foreground mt-0.5">•</span>
+                      <span className="text-primary mt-0.5 font-bold">•</span>
                       <span data-testid={`text-expectation-${i}`}>{item}</span>
                     </li>
                   ))}
                 </ul>
-              </Card>
+              </div>
             )}
 
             <div className="flex gap-3">
