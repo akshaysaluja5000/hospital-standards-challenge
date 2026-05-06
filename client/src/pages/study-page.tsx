@@ -31,7 +31,7 @@ const SR_CONFIG: Record<SRRating, {
     label: "Again",
     interval: "< 2 min",
     icon: Timer,
-    btn: "border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500/70",
+    btn: "bg-red-500 hover:bg-red-600 text-white border-0",
     dot: "#f87171",
     badge: "bg-red-500/15 text-red-400 border-red-500/25",
     requeue: 2,
@@ -40,7 +40,7 @@ const SR_CONFIG: Record<SRRating, {
     label: "Hard",
     interval: "< 15 min",
     icon: Clock,
-    btn: "border-orange-500/50 text-orange-400 hover:bg-orange-500/10 hover:border-orange-500/70",
+    btn: "bg-orange-500 hover:bg-orange-600 text-white border-0",
     dot: "#fb923c",
     badge: "bg-orange-500/15 text-orange-400 border-orange-500/25",
     requeue: 8,
@@ -527,8 +527,8 @@ export default function StudyPage() {
                       <p className="text-[10px] text-center text-muted-foreground/50 font-semibold uppercase tracking-widest">
                         How well did you know this?
                       </p>
-                      <div className="grid grid-cols-4 gap-2">
-                        {(["again", "hard", "good", "easy"] as SRRating[]).map((r) => {
+                      <div className="grid grid-cols-3 gap-2">
+                        {(["again", "hard", "good"] as SRRating[]).map((r) => {
                           const cfg = SR_CONFIG[r];
                           const Icon = cfg.icon;
                           return (

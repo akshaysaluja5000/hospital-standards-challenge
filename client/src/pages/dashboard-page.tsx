@@ -692,7 +692,7 @@ export default function DashboardPage() {
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}
-          <div className="flex flex-col gap-4 lg:sticky lg:top-[calc(58px+58px+24px)]">
+          <div className="flex flex-col gap-4">
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3">
