@@ -12,9 +12,7 @@ import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
 import type { User, DailyActivity } from "@shared/schema";
 import { generateSecret as totpGenerateSecret, verifyToken as totpVerify, totpUri } from "./totp";
-import { createRequire } from "module";
-const _require = createRequire(import.meta.url);
-const QRCode = _require("qrcode") as { toDataURL: (uri: string) => Promise<string> };
+import QRCode from "qrcode";
 
 declare module "express-session" {
   interface SessionData {
