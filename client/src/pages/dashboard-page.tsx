@@ -47,8 +47,9 @@ function AscChapterCard({
   const quizId = chapter.quizLevelId;
   const quizLevel = quizId ? findLevelById(quizId) : undefined;
   const totalQuestions = quizLevel?.questions.filter((q) => !q.draft).length ?? 0;
-  // Only treat as "has a quiz" if there's a real published quiz with shippable questions.
+  // "Has a quiz" = published questions exist. "Has flashcards" = study material exists (independent of quiz).
   const hasPublishedQuiz = Boolean(quizId && quizLevel && totalQuestions > 0);
+  const hasFlashcards = Boolean(quizId && quizLevel && quizLevel.studyMaterial && quizLevel.studyMaterial.length > 0);
   const progress = hasPublishedQuiz ? progressMap.get(quizId!) : undefined;
   const session = hasPublishedQuiz ? sessionsMap.get(quizId!) : undefined;
   const bestScore = progress?.bestScore ?? 0;
@@ -107,26 +108,26 @@ function AscChapterCard({
               <FileText size={15} />
               Read in Handbook
             </button>
-            {quizId && totalQuestions > 0 ? (
-              <>
-                <button
-                  onClick={() => onStudy(quizId)}
-                  data-testid={`button-asc-study-${chapter.levelId}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
-                >
-                  <Layers size={15} />
-                  Flashcards
-                </button>
-                <button
-                  onClick={() => onPlay(quizId)}
-                  data-testid={`button-asc-practice-${chapter.levelId}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
-                >
-                  <Play size={15} />
-                  {hasPlayed || session ? "Play Again" : "Practice Quiz"}
-                </button>
-              </>
-            ) : null}
+            {hasFlashcards && quizId && (
+              <button
+                onClick={() => onStudy(quizId)}
+                data-testid={`button-asc-study-${chapter.levelId}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+              >
+                <Layers size={15} />
+                Flashcards
+              </button>
+            )}
+            {hasPublishedQuiz && quizId && (
+              <button
+                onClick={() => onPlay(quizId)}
+                data-testid={`button-asc-practice-${chapter.levelId}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
+              >
+                <Play size={15} />
+                {hasPlayed || session ? "Play Again" : "Practice Quiz"}
+              </button>
+            )}
           </div>
         </div>
       </div>
