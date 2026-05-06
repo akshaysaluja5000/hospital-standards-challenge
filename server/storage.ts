@@ -172,6 +172,7 @@ export async function ensureTablesExist() {
       );
     `);
     console.log("Ensured all database tables exist");
+    await seedFacilities(client);
     await seedRoles(client);
   } catch (err) {
     console.error("Error ensuring tables exist:", err);
@@ -208,6 +209,23 @@ const ROLE_SEED: { name: string; slug: string; department: string; scope: "stand
     scope: scopeToDb(r.scope),
     chapters: r.chapters,
   }));
+
+const KNOWN_FACILITIES: { code: string; name: string }[] = [
+  { code: "TSC001", name: "The Surgery Center" },
+];
+
+async function seedFacilities(client: pg.PoolClient) {
+  for (const f of KNOWN_FACILITIES) {
+    const existing = await client.query("SELECT id FROM facilities WHERE code = $1", [f.code]);
+    if (existing.rows.length === 0) {
+      await client.query("INSERT INTO facilities (code, name) VALUES ($1, $2)", [f.code, f.name]);
+      console.log(`Seeded facility: ${f.name} (${f.code})`);
+    } else {
+      await client.query("UPDATE facilities SET name = $1 WHERE code = $2", [f.name, f.code]);
+    }
+  }
+  console.log("Seeded known facilities");
+}
 
 async function seedRoles(client: pg.PoolClient) {
   for (const r of ROLE_SEED) {
