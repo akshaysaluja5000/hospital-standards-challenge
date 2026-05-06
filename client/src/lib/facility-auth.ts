@@ -1,30 +1,17 @@
 // ── Facility Auth Hook ─────────────────────────────────────────────────────
 // Wraps useAuth() to add facility-scoped role and permissions.
+// Derives facilityRole from the real leadershipRole stored in the DB.
 //
-// In production: facilityRole will come from the DB (a new column on users).
-// For now: controlled by MOCK_PERSONA below. Change it to test different roles.
-//
-// ── HOW TO SWITCH TEST PERSONAS ───────────────────────────────────────────
-//
-//   CEO of Midwest Orthopedic Specialty Hospital (facility_mosh):
-//     const MOCK_PERSONA: MockPersona = { role: "ceo", facilityId: "facility_mosh" };
-//
-//   CEO of Orthopedic Hospital of Wisconsin (facility_ohw):
-//     const MOCK_PERSONA: MockPersona = { role: "ceo", facilityId: "facility_ohw" };
-//
-//   Facility Admin of MOSH:
-//     const MOCK_PERSONA: MockPersona = { role: "admin", facilityId: "facility_mosh" };
-//
-//   Super Admin (sees all facilities):
-//     const MOCK_PERSONA: MockPersona = { role: "super_admin", facilityId: null };
-//
-//   No mock — derive from real auth (isAdmin → super_admin, else staff):
-//     const MOCK_PERSONA: MockPersona | null = null;
+// leadershipRole → facilityRole mapping:
+//   super_admin → super_admin (sees all facilities)
+//   admin       → admin
+//   director    → ceo
+//   educator    → manager
+//   learner     → staff
 //
 // ──────────────────────────────────────────────────────────────────────────
 
 import { useAuth } from "./auth";
-import { getRoleConfig } from "@shared/roles";
 import {
   type FacilityRole,
   type FacilityPermissions,
@@ -35,15 +22,6 @@ import {
 
 export type { FacilityRole };
 
-interface MockPersona {
-  role: FacilityRole;
-  facilityId: string | null;
-}
-
-// ── Change this line to switch test personas ───────────────────────────────
-const MOCK_PERSONA: MockPersona = { role: "ceo", facilityId: "facility_mosh" };
-// ──────────────────────────────────────────────────────────────────────────
-
 export interface FacilityAuthContext {
   user: ReturnType<typeof useAuth>["user"];
   facilityId: string | null;
@@ -53,26 +31,20 @@ export interface FacilityAuthContext {
   isSuperAdmin: boolean;
 }
 
+function leadershipToFacilityRole(lr: string | null | undefined, isAdmin: boolean): FacilityRole {
+  if (isAdmin) return "super_admin";
+  switch (lr) {
+    case "super_admin": return "super_admin";
+    case "admin":       return "admin";
+    case "director":    return "ceo";
+    case "educator":    return "manager";
+    default:            return "staff";
+  }
+}
+
 export function useFacilityAuth(): FacilityAuthContext {
   const { user } = useAuth();
 
-  // ── Mock persona override ────────────────────────────────────────────────
-  if (MOCK_PERSONA) {
-    const facilityId = MOCK_PERSONA.facilityId;
-    const facilityName = facilityId
-      ? (MOCK_FACILITIES.find((f) => f.id === facilityId)?.name ?? facilityId)
-      : "All Facilities";
-    return {
-      user,
-      facilityId,
-      facilityName,
-      facilityRole: MOCK_PERSONA.role,
-      permissions: FACILITY_ROLE_PERMISSIONS[MOCK_PERSONA.role],
-      isSuperAdmin: MOCK_PERSONA.role === "super_admin",
-    };
-  }
-
-  // ── Derive from real auth ────────────────────────────────────────────────
   if (!user) {
     return {
       user: null,
@@ -84,27 +56,21 @@ export function useFacilityAuth(): FacilityAuthContext {
     };
   }
 
-  if (user.isAdmin) {
-    return {
-      user,
-      facilityId: null,
-      facilityName: "All Facilities",
-      facilityRole: "super_admin",
-      permissions: FACILITY_ROLE_PERMISSIONS.super_admin,
-      isSuperAdmin: true,
-    };
-  }
+  const facilityRole = leadershipToFacilityRole(
+    user.leadershipRole as string | null | undefined,
+    !!user.isAdmin,
+  );
+  const isSuperAdmin = facilityRole === "super_admin";
 
-  // Map training reportingScope → facility role
-  const roleConfig = getRoleConfig(user.roleId ?? null);
-  let facilityRole: FacilityRole = "staff";
-  if (roleConfig?.reportingScope === "enterprise") facilityRole = "admin";
-  else if (roleConfig?.reportingScope === "own_plus_all") facilityRole = "manager";
+  const facilityId = isSuperAdmin
+    ? null
+    : user.facilityId
+      ? `facility_${user.facilityId}`
+      : null;
 
-  // The DB stores facilityId as an integer; we use string IDs in mock data.
-  // When real data is connected, replace this mapping with an API lookup.
-  const facilityId = user.facilityId ? `facility_${user.facilityId}` : null;
-  const facilityName = getFacilityName(facilityId);
+  const facilityName = isSuperAdmin
+    ? "All Facilities"
+    : getFacilityName(facilityId);
 
   return {
     user,
@@ -112,6 +78,6 @@ export function useFacilityAuth(): FacilityAuthContext {
     facilityName,
     facilityRole,
     permissions: FACILITY_ROLE_PERMISSIONS[facilityRole],
-    isSuperAdmin: false,
+    isSuperAdmin,
   };
 }

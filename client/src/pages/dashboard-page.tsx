@@ -276,12 +276,12 @@ export default function DashboardPage() {
             <Button variant="outline" size="sm" onClick={() => setLocation("/leaderboard")} data-testid="button-leaderboard">
               <Trophy size={16} />
             </Button>
-            {user?.isAdmin && (
+            {(user?.isAdmin || ["director","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
               <Button variant="outline" size="sm" onClick={() => setLocation("/admin")} data-testid="button-admin">
                 <BarChart3 size={16} />
               </Button>
             )}
-            {(user?.isAdmin || ["enterprise", "own_plus_all"].includes(getRoleConfig(user?.roleId)?.reportingScope ?? "")) && (
+            {(user?.isAdmin || ["director","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
               <Button variant="outline" size="sm" onClick={() => setLocation("/executive-report")} data-testid="button-executive-report">
                 <TrendingUp size={16} />
               </Button>
@@ -641,7 +641,8 @@ export default function DashboardPage() {
               </motion.button>
             </div>
 
-            {/* Remediation Plans */}
+            {/* Remediation Plans — director+ only */}
+            {(user?.isAdmin || ["director","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -689,6 +690,8 @@ export default function DashboardPage() {
                 </Button>
               </div>
             </motion.div>
+            )}
+
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}

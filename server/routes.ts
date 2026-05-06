@@ -118,6 +118,7 @@ declare global {
       id: number;
       username: string;
       isAdmin: boolean;
+      leadershipRole: string;
       dailyGoal: number;
       reminderEnabled: boolean;
       createdAt: Date;
@@ -125,6 +126,21 @@ declare global {
       viewScope: string | null;
     }
   }
+}
+
+const LEADERSHIP_RANK: Record<string, number> = {
+  learner: 0,
+  educator: 1,
+  director: 2,
+  admin: 3,
+  super_admin: 4,
+};
+
+function getEffectiveLeadershipRole(user: Express.User): string {
+  const lr = user.leadershipRole || "learner";
+  if (isFacilityScopeBypass(user)) return "super_admin";
+  if (user.isAdmin && LEADERSHIP_RANK[lr] < LEADERSHIP_RANK["admin"]) return "admin";
+  return lr;
 }
 
 function requireAuth(req: Request, res: Response, next: NextFunction) {
@@ -139,6 +155,19 @@ function requireAdmin(req: Request, res: Response, next: NextFunction) {
     return res.status(403).json({ message: "Admin access required" });
   }
   next();
+}
+
+function requireLeadershipRole(minRole: string) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    const effective = getEffectiveLeadershipRole(req.user!);
+    if ((LEADERSHIP_RANK[effective] ?? 0) < (LEADERSHIP_RANK[minRole] ?? 0)) {
+      return res.status(403).json({ message: "Insufficient permissions. This feature requires a leadership role." });
+    }
+    next();
+  };
 }
 
 async function userCanAccessLevel(userId: number, levelId: string): Promise<boolean> {
@@ -493,6 +522,28 @@ export async function registerRoutes(
       if (!user) return res.status(404).json({ message: "User not found" });
       const { password: _, ...safeUser } = user;
       res.json(safeUser);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.patch("/api/admin/users/:id/leadership-role", requireLeadershipRole("admin"), async (req, res) => {
+    try {
+      const { leadershipRole } = req.body || {};
+      const userId = parseInt(String(req.params.id), 10);
+      const valid = ["learner", "educator", "director", "admin", "super_admin"];
+      if (!leadershipRole || !valid.includes(leadershipRole)) {
+        return res.status(400).json({ message: "Invalid leadership role" });
+      }
+      if (Number.isNaN(userId)) return res.status(400).json({ message: "Invalid user id" });
+      const caller = req.user!;
+      const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
+      if (callerRank < LEADERSHIP_RANK[leadershipRole]) {
+        return res.status(403).json({ message: "Cannot assign a role higher than your own" });
+      }
+      const updated = await storage.updateUser(userId, { leadershipRole });
+      if (!updated) return res.status(404).json({ message: "User not found" });
+      res.json({ ok: true });
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }
@@ -984,7 +1035,7 @@ export async function registerRoutes(
     }
   });
 
-  app.get("/api/admin/stats", requireAdmin, async (req, res) => {
+  app.get("/api/admin/stats", requireLeadershipRole("director"), async (req, res) => {
     try {
       const adminUser = req.user as User;
       const facilityFilter = getFacilityFilter(adminUser);
@@ -1088,6 +1139,7 @@ export async function registerRoutes(
           accuracy,
           lastActive: lastActiveTimestamp,
           joinedAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
+          leadershipRole: u.leadershipRole || "learner",
         };
       }).sort((a, b) => b.totalXp - a.totalXp);
 
@@ -1330,7 +1382,7 @@ Give ONE actionable takeaway in 2 sentences about what great hospitals do differ
     }
   });
 
-  app.post("/api/admin/ai-insights", requireAdmin, async (req: Request, res: Response) => {
+  app.post("/api/admin/ai-insights", requireLeadershipRole("director"), async (req: Request, res: Response) => {
     const userId = (req.user as User).id;
     const now = Date.now();
     const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
@@ -1557,7 +1609,7 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     }
   });
 
-  app.post("/api/admin/lesson-plan/generate", requireAdmin, async (req: Request, res: Response) => {
+  app.post("/api/admin/lesson-plan/generate", requireLeadershipRole("director"), async (req: Request, res: Response) => {
     const schema = z.object({
       assignedDate: z.string().min(1),
       dueDate: z.string().min(1),

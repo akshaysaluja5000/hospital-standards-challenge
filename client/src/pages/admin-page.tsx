@@ -1,11 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
 import { AiLeadershipCoach } from "@/components/ai-leadership-coach";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { LEADERSHIP_LABELS, LEADERSHIP_ROLES, type LeadershipRole } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 
 interface AdminUser {
   id: number;
@@ -22,6 +25,7 @@ interface AdminUser {
   accuracy: number;
   lastActive: string | null;
   joinedAt: string | null;
+  leadershipRole?: string;
 }
 
 interface AdminStats {
@@ -32,27 +36,35 @@ interface AdminStats {
   userList: AdminUser[];
 }
 
+const LEADERSHIP_RANK: Record<string, number> = {
+  learner: 0, educator: 1, director: 2, admin: 3, super_admin: 4,
+};
+
 export default function AdminPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
 
   const { data: stats, isLoading } = useQuery<AdminStats>({
     queryKey: ["/api/admin/stats"],
   });
 
-  if (!user?.isAdmin) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold mb-2">Access Denied</h2>
-          <p className="text-muted-foreground">You need admin privileges to view this page.</p>
-          <Button className="mt-4" onClick={() => setLocation("/")} data-testid="button-go-home">
-            Go Home
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  const callerRank = LEADERSHIP_RANK[(user?.leadershipRole as string) || "learner"] ?? 0;
+  const callerIsAdmin = user?.isAdmin || callerRank >= LEADERSHIP_RANK["admin"];
+
+  const roleChangeMutation = useMutation({
+    mutationFn: async ({ userId, role }: { userId: number; role: string }) => {
+      const res = await apiRequest("PATCH", `/api/admin/users/${userId}/leadership-role`, { leadershipRole: role });
+      if (!res.ok) throw new Error("Failed to update role");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/stats"] });
+      toast({ title: "Role updated" });
+    },
+    onError: (err: any) => {
+      toast({ title: "Failed to update role", description: err.message, variant: "destructive" });
+    },
+  });
 
   if (isLoading) {
     return (
@@ -83,7 +95,6 @@ export default function AdminPage() {
     const diffMin = Math.floor(diffMs / 60000);
     const diffHr = Math.floor(diffMin / 60);
     const diffDays = Math.floor(diffHr / 24);
-
     if (diffMin < 1) return "Just now";
     if (diffMin < 60) return `${diffMin} min ago`;
     if (diffHr < 24) return `${diffHr} hr ago`;
@@ -101,12 +112,7 @@ export default function AdminPage() {
     <div className="min-h-screen pb-20">
       <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setLocation("/")}
-            data-testid="button-back"
-          >
+          <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
             <ArrowLeft size={20} />
           </Button>
           <div>
@@ -129,7 +135,7 @@ export default function AdminPage() {
               className="rounded-2xl bg-card border border-card-border p-4 flex flex-col items-center gap-2"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15 }}
+              transition={{ duration: 0.15, delay: i * 0.05 }}
             >
               <stat.icon size={22} className={stat.color} />
               <span className="text-2xl font-black" data-testid={`text-stat-${stat.label.toLowerCase().replace(/\s/g, '-')}`}>
@@ -143,11 +149,17 @@ export default function AdminPage() {
         <AiLeadershipCoach />
 
         <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
-          <div className="p-5 border-b border-card-border">
+          <div className="p-5 border-b border-card-border flex items-center justify-between gap-2">
             <h3 className="font-bold text-base flex items-center gap-2">
               <Users size={18} className="text-primary" />
               Registered Users ({stats?.totalUsers || 0})
             </h3>
+            {callerIsAdmin && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
+                <Shield size={13} className="text-primary" />
+                Role management enabled
+              </div>
+            )}
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -160,54 +172,61 @@ export default function AdminPage() {
                   <th className="text-right p-3 font-bold text-muted-foreground">Streak</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Total Q's</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Today</th>
-                  <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Correct Total</th>
-                  <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Correct Today</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Accuracy</th>
-                  <th className="text-right p-3 font-bold text-muted-foreground hidden lg:table-cell">Joined</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden lg:table-cell">Last Active</th>
+                  {callerIsAdmin && (
+                    <th className="text-left p-3 font-bold text-muted-foreground hidden lg:table-cell">Access Role</th>
+                  )}
                 </tr>
               </thead>
               <tbody>
-                {stats?.userList?.map((u, i) => (
-                  <tr
-                    key={u.id}
-                    className="border-b border-card-border/50 last:border-0"
-                    data-testid={`row-user-${u.id}`}
-                  >
-                    <td className="p-3 font-bold">
-                      {i + 1}
-                    </td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
-                          {(u.firstName || u.username).charAt(0).toUpperCase()}
+                {stats?.userList?.map((u, i) => {
+                  const userRank = LEADERSHIP_RANK[(u.leadershipRole as string) || "learner"] ?? 0;
+                  return (
+                    <tr key={u.id} className="border-b border-card-border/50 last:border-0" data-testid={`row-user-${u.id}`}>
+                      <td className="p-3 font-bold">{i + 1}</td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                            {(u.firstName || u.username).charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="font-bold" data-testid={`text-name-${u.id}`}>{getDisplayName(u)}</span>
+                            <span className="text-xs text-muted-foreground sm:hidden">{u.username}</span>
+                          </div>
                         </div>
-                        <div className="flex flex-col">
-                          <span className="font-bold" data-testid={`text-name-${u.id}`}>{getDisplayName(u)}</span>
-                          <span className="text-xs text-muted-foreground sm:hidden">{u.username}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="p-3 text-muted-foreground hidden sm:table-cell" data-testid={`text-username-${u.id}`}>{u.username}</td>
-                    <td className="p-3 text-right font-bold text-chart-4">{u.totalXp}</td>
-                    <td className="p-3 text-right font-bold">{u.currentStreak}</td>
-                    <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsAnswered}</td>
-                    <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsToday}</td>
-                    <td className="p-3 text-right font-bold hidden sm:table-cell">{u.correctTotal}</td>
-                    <td className="p-3 text-right font-bold hidden sm:table-cell">{u.correctToday}</td>
-                    <td className="p-3 text-right hidden sm:table-cell">
-                      <span className={`font-bold ${u.accuracy >= 80 ? "text-chart-1" : u.accuracy >= 50 ? "text-chart-4" : "text-destructive"}`}>
-                        {u.accuracy}%
-                      </span>
-                    </td>
-                    <td className="p-3 text-right text-muted-foreground text-xs hidden lg:table-cell">
-                      {formatDate(u.joinedAt)}
-                    </td>
-                    <td className="p-3 text-right text-muted-foreground text-xs hidden lg:table-cell">
-                      {formatRelativeTime(u.lastActive)}
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="p-3 text-muted-foreground hidden sm:table-cell" data-testid={`text-username-${u.id}`}>{u.username}</td>
+                      <td className="p-3 text-right font-bold text-chart-4">{u.totalXp}</td>
+                      <td className="p-3 text-right font-bold">{u.currentStreak}</td>
+                      <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsAnswered}</td>
+                      <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsToday}</td>
+                      <td className="p-3 text-right hidden sm:table-cell">
+                        <span className={`font-bold ${u.accuracy >= 80 ? "text-chart-1" : u.accuracy >= 50 ? "text-chart-4" : "text-destructive"}`}>
+                          {u.accuracy}%
+                        </span>
+                      </td>
+                      <td className="p-3 text-right text-muted-foreground text-xs hidden lg:table-cell">
+                        {formatRelativeTime(u.lastActive)}
+                      </td>
+                      {callerIsAdmin && (
+                        <td className="p-3 hidden lg:table-cell">
+                          <select
+                            className="text-xs border border-border rounded-lg px-2 py-1 bg-background font-semibold focus:outline-none focus:ring-1 focus:ring-primary"
+                            value={u.leadershipRole || "learner"}
+                            disabled={roleChangeMutation.isPending || userRank >= callerRank}
+                            data-testid={`select-role-${u.id}`}
+                            onChange={(e) => roleChangeMutation.mutate({ userId: u.id, role: e.target.value })}
+                          >
+                            {LEADERSHIP_ROLES.filter(r => LEADERSHIP_RANK[r] <= callerRank).map((r) => (
+                              <option key={r} value={r}>{LEADERSHIP_LABELS[r as LeadershipRole]}</option>
+                            ))}
+                          </select>
+                        </td>
+                      )}
+                    </tr>
+                  );
+                })}
                 {(!stats?.userList || stats.userList.length === 0) && (
                   <tr>
                     <td colSpan={12} className="p-8 text-center text-muted-foreground">

@@ -29,6 +29,25 @@ export const roleChapterMappings = pgTable("role_chapter_mappings", {
 export const MODULE_IDS = ["hospital", "asc"] as const;
 export type ModuleId = (typeof MODULE_IDS)[number];
 
+export const LEADERSHIP_ROLES = ["learner", "educator", "director", "admin", "super_admin"] as const;
+export type LeadershipRole = (typeof LEADERSHIP_ROLES)[number];
+
+export const LEADERSHIP_RANK: Record<LeadershipRole, number> = {
+  learner: 0,
+  educator: 1,
+  director: 2,
+  admin: 3,
+  super_admin: 4,
+};
+
+export const LEADERSHIP_LABELS: Record<LeadershipRole, string> = {
+  learner: "Learner",
+  educator: "Educator / Supervisor",
+  director: "Director / Quality Leader",
+  admin: "CEO / Administrator",
+  super_admin: "Super Admin",
+};
+
 export const MODULE_LABELS: Record<ModuleId, string> = {
   hospital: "Hospital",
   asc: "Ambulatory Surgery Center (ASC)",
@@ -41,6 +60,7 @@ export const users = pgTable("users", {
   lastName: text("last_name").notNull().default(""),
   password: text("password").notNull(),
   isAdmin: boolean("is_admin").notNull().default(false),
+  leadershipRole: text("leadership_role").notNull().default("learner"),
   facilityId: integer("facility_id").references(() => facilities.id),
   roleId: integer("role_id").references(() => roles.id),
   additionalRoleIds: integer("additional_role_ids").array().notNull().default(sql`ARRAY[]::integer[]`),

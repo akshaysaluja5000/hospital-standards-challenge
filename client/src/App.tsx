@@ -40,6 +40,16 @@ function ScrollToTop() {
   return null;
 }
 
+const LEADERSHIP_RANK: Record<string, number> = {
+  learner: 0, educator: 1, director: 2, admin: 3, super_admin: 4,
+};
+
+function getEffectiveRole(user: { isAdmin: boolean; leadershipRole?: string | null; username?: string | null }): string {
+  const lr = (user.leadershipRole as string) || "learner";
+  if (user.isAdmin && (LEADERSHIP_RANK[lr] ?? 0) < LEADERSHIP_RANK["admin"]) return "admin";
+  return lr;
+}
+
 function ProtectedRoute({ component: Component }: { component: () => JSX.Element }) {
   const { user, isLoading } = useAuth();
 
@@ -68,6 +78,43 @@ function ProtectedRoute({ component: Component }: { component: () => JSX.Element
   const needsSetup = !ascUser && !user.roleId;
   if (!user.isAdmin && (needsSetup || forceRoleSelect)) {
     return <Redirect to="/role-select" />;
+  }
+
+  return <AppShell><Component /></AppShell>;
+}
+
+function LeadershipRoute({ component: Component, minRole = "director" }: { component: () => JSX.Element; minRole?: string }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <AppShell>
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <Loader2 size={32} className="animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Loading...</p>
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (!user) return <Redirect to="/auth" />;
+
+  const effective = getEffectiveRole(user);
+  if ((LEADERSHIP_RANK[effective] ?? 0) < (LEADERSHIP_RANK[minRole] ?? 0)) {
+    return (
+      <AppShell>
+        <div className="min-h-screen flex items-center justify-center p-6">
+          <div className="max-w-sm text-center flex flex-col items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-destructive/15 flex items-center justify-center">
+              <AlertCircle size={28} className="text-destructive" />
+            </div>
+            <h2 className="text-xl font-bold">Access Restricted</h2>
+            <p className="text-sm text-muted-foreground">This page requires a leadership role. Contact your administrator for access.</p>
+            <Button variant="outline" onClick={() => window.history.back()}>Go Back</Button>
+          </div>
+        </div>
+      </AppShell>
+    );
   }
 
   return <AppShell><Component /></AppShell>;
@@ -211,13 +258,13 @@ function Router() {
         {() => <ProtectedRoute component={ProfilePage} />}
       </Route>
       <Route path="/admin">
-        {() => <ProtectedRoute component={AdminPage} />}
+        {() => <LeadershipRoute component={AdminPage} minRole="director" />}
       </Route>
       <Route path="/corrective-actions">
-        {() => <ProtectedRoute component={CorrectiveActionPage} />}
+        {() => <LeadershipRoute component={CorrectiveActionPage} minRole="director" />}
       </Route>
       <Route path="/executive-report">
-        {() => <ProtectedRoute component={ExecutiveReportPage} />}
+        {() => <LeadershipRoute component={ExecutiveReportPage} minRole="director" />}
       </Route>
       <Route path="/flashcard-review">
         {() => <ProtectedRoute component={FlashcardReviewPage} />}

@@ -62,6 +62,7 @@ export async function ensureTablesExist() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS role_assigned_at TIMESTAMP;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS additional_role_ids INTEGER[] NOT NULL DEFAULT ARRAY[]::INTEGER[];
       ALTER TABLE users ADD COLUMN IF NOT EXISTS organization_type TEXT NOT NULL DEFAULT 'hospital';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS leadership_role TEXT NOT NULL DEFAULT 'learner';
       CREATE TABLE IF NOT EXISTS user_progress (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
