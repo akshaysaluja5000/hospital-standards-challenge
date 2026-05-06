@@ -38,7 +38,7 @@ const SR_CONFIG: Record<SRRating, {
   },
   hard: {
     label: "Hard",
-    interval: "< 15 min",
+    interval: "< 10 min",
     icon: Clock,
     btn: "bg-orange-500 hover:bg-orange-600 text-white border-0",
     dot: "#fb923c",
