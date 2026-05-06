@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp, Layers } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { Level, UserProgress, QuizSession } from "@shared/schema";
 
@@ -41,10 +40,10 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
 
   return (
     <motion.div
-      className={`w-full rounded-2xl border-2 p-5 transition-all shadow-md hover:shadow-lg ${
+      className={`w-full rounded-2xl border-2 p-5 transition-all shadow-md hover:shadow-xl ${
         hasInProgress
-          ? "border-chart-4/40 bg-chart-4/5"
-          : "border-border bg-card"
+          ? "border-amber-400/60 bg-primary"
+          : "border-primary/80 bg-primary"
       }`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -54,103 +53,86 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
     >
       <div className="flex items-start gap-4">
         <div
-          className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center"
-          style={{
-            backgroundColor: `${level.color}20`,
-            color: level.color,
-          }}
+          className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center bg-white/10"
+          style={{ color: "white" }}
         >
           <Icon size={28} />
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-black text-lg" data-testid={`text-level-name-${level.id}`}>
+            <h3 className="font-black text-lg text-white" data-testid={`text-level-name-${level.id}`}>
               {level.name}
             </h3>
             {hasInProgress && (
-              <span className="px-2 py-0.5 rounded-full bg-chart-4/15 text-chart-4 text-sm font-bold" data-testid={`badge-in-progress-${level.id}`}>
+              <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 text-sm font-bold" data-testid={`badge-in-progress-${level.id}`}>
                 In Progress ({inProgressQuestion + 1}/{totalQuestions})
               </span>
             )}
             {hasPlayed && !hasInProgress && (
-              <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center gap-1" data-testid={`badge-best-${level.id}`}>
+              <span className="px-2 py-0.5 rounded-full bg-white/15 text-white text-sm font-bold flex items-center gap-1" data-testid={`badge-best-${level.id}`}>
                 <Trophy size={12} />
                 Best: {percentage}%
               </span>
             )}
           </div>
-          <p className="text-base text-foreground/70 mt-1.5 line-clamp-2 leading-relaxed">
+          <p className="text-base text-white/70 mt-1.5 line-clamp-2 leading-relaxed">
             {level.description}
           </p>
           <div className="flex items-center gap-3 mt-2.5">
-            <span className="text-sm text-muted-foreground font-semibold">
+            <span className="text-sm text-white/60 font-semibold">
               {totalQuestions} questions
             </span>
-            <span className="text-sm text-muted-foreground">•</span>
-            <span className="text-sm text-muted-foreground font-semibold">
+            <span className="text-sm text-white/40">•</span>
+            <span className="text-sm text-white/60 font-semibold">
               {level.studyMaterial.length} study concepts
             </span>
-            {hasPlayed && (
-              <>
-                <span className="text-sm text-muted-foreground">•</span>
-                <span className="text-sm text-muted-foreground font-semibold">
-                  Shuffled each play
-                </span>
-              </>
-            )}
           </div>
 
           <div className="flex gap-2 mt-4 flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-sm font-semibold"
+            <button
               onClick={onStudy}
               data-testid={`button-study-${level.id}`}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
             >
-              <Layers size={15} className="mr-1.5" />
+              <Layers size={15} />
               Flashcards
-            </Button>
+            </button>
             {hasInProgress ? (
               <>
-                <Button
-                  size="sm"
-                  className="text-sm font-semibold"
+                <button
                   onClick={onPlay}
                   data-testid={`button-continue-${level.id}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
                 >
-                  <PlayCircle size={15} className="mr-1.5" />
+                  <PlayCircle size={15} />
                   Continue
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-sm font-semibold"
+                </button>
+                <button
                   onClick={handleStartOver}
                   data-testid={`button-restart-${level.id}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
                 >
-                  <RotateCcw size={15} className="mr-1.5" />
+                  <RotateCcw size={15} />
                   Start Over
-                </Button>
+                </button>
               </>
             ) : (
-              <Button
-                size="sm"
-                className="text-sm font-semibold"
+              <button
                 onClick={onPlay}
                 data-testid={`button-level-${level.id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
               >
-                <Play size={15} className="mr-1.5" />
+                <Play size={15} />
                 {hasPlayed ? "Play Again" : "Play Quiz"}
-              </Button>
+              </button>
             )}
           </div>
 
           {riskPoints && riskPoints.length > 0 && (
-            <div className="mt-4 border-t border-border/60 pt-3">
+            <div className="mt-4 border-t border-white/10 pt-3">
               <button
-                className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
+                className="flex items-center gap-1.5 text-amber-300 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
                 onClick={() => setRiskExpanded(!riskExpanded)}
                 data-testid={`button-risk-toggle-${level.id}`}
               >
@@ -161,8 +143,8 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
               {riskExpanded && (
                 <ul className="mt-2 flex flex-col gap-1.5" data-testid={`list-risk-points-${level.id}`}>
                   {riskPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-muted-foreground leading-snug">
-                      <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-amber-500/70" />
+                    <li key={i} className="flex items-start gap-2 text-xs text-white/60 leading-snug">
+                      <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/70" />
                       {point}
                     </li>
                   ))}

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert, CheckCircle2, Plus, GraduationCap, Brain } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert, CheckCircle2, Plus, GraduationCap, Brain, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -57,23 +57,24 @@ function AscChapterCard({
 
   return (
     <motion.div
-      className="w-full rounded-2xl border-2 border-border bg-card p-5 shadow-sm hover:shadow-md transition-all"
+      className="w-full rounded-2xl border-2 border-primary/80 bg-primary p-5 shadow-md hover:shadow-xl transition-all"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -1 }}
       data-testid={`card-asc-chapter-${chapter.levelId}`}
     >
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center bg-primary/10 text-primary">
+        <div className="flex-shrink-0 w-14 h-14 rounded-xl flex items-center justify-center bg-white/10 text-white">
           <span className="font-black text-xl">{chapter.chapterNumber}</span>
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="font-black text-base leading-tight" data-testid={`text-asc-chapter-title-${chapter.levelId}`}>
+            <h3 className="font-black text-base leading-tight text-white" data-testid={`text-asc-chapter-title-${chapter.levelId}`}>
               {chapter.title}
             </h3>
             {hasPublishedQuiz && hasPlayed && (
               <span
-                className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center gap-1"
+                className="px-2 py-0.5 rounded-full bg-white/15 text-white text-xs font-bold flex items-center gap-1"
                 data-testid={`badge-best-score-${chapter.levelId}`}
               >
                 <Trophy size={12} />
@@ -82,53 +83,48 @@ function AscChapterCard({
             )}
             {!hasPublishedQuiz && (
               <span
-                className="px-2 py-0.5 rounded-full bg-muted text-muted-foreground text-xs font-bold"
+                className="px-2 py-0.5 rounded-full bg-white/10 text-white/70 text-xs font-bold"
                 data-testid={`badge-reading-only-${chapter.levelId}`}
               >
                 Reading
               </span>
             )}
           </div>
-          <p className="text-sm text-foreground/70 mt-1.5 leading-snug">
+          <p className="text-sm text-white/65 mt-1.5 leading-snug">
             {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
             {chapter.surveyRiskCount != null && (
-              <span className="ml-2 text-amber-600 dark:text-amber-400 font-semibold">
+              <span className="ml-2 text-amber-300 font-semibold">
                 ⚠ {chapter.surveyRiskCount} common survey failures
               </span>
             )}
           </p>
           <div className="flex gap-2 mt-3 flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-sm font-semibold"
+            <button
               onClick={onRead}
               data-testid={`button-asc-read-${chapter.levelId}`}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
             >
-              <FileText size={15} className="mr-1.5" />
+              <FileText size={15} />
               Read in Handbook
-            </Button>
+            </button>
             {quizId && totalQuestions > 0 ? (
               <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-sm font-semibold"
+                <button
                   onClick={() => onStudy(quizId)}
                   data-testid={`button-asc-study-${chapter.levelId}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
                 >
-                  <BookOpen size={15} className="mr-1.5" />
-                  Readiness Review
-                </Button>
-                <Button
-                  size="sm"
-                  className="text-sm font-semibold"
+                  <Layers size={15} />
+                  Flashcards
+                </button>
+                <button
                   onClick={() => onPlay(quizId)}
                   data-testid={`button-asc-practice-${chapter.levelId}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
                 >
-                  <Play size={15} className="mr-1.5" />
+                  <Play size={15} />
                   {hasPlayed || session ? "Play Again" : "Practice Quiz"}
-                </Button>
+                </button>
               </>
             ) : null}
           </div>
