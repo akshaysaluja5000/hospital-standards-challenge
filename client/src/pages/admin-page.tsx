@@ -112,12 +112,12 @@ export default function AdminPage() {
     <div className="min-h-screen pb-20">
       <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
+          <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
             <ArrowLeft size={20} />
           </Button>
           <div>
-            <h1 className="font-bold text-base text-foreground">Admin Dashboard</h1>
-            <p className="text-xs text-muted-foreground">Track user engagement & performance</p>
+            <h1 className="font-bold text-base text-foreground">User Management</h1>
+            <p className="text-xs text-muted-foreground">Track engagement, accuracy, and assign roles</p>
           </div>
         </div>
       </div>

@@ -516,8 +516,8 @@ export default function ExecutiveReportPage() {
           <p className="text-sm text-muted-foreground">
             The Executive Readiness Report is available to Admin, CEO, and Compliance Officer roles only.
           </p>
-          <Button variant="outline" onClick={() => setLocation("/")} data-testid="button-go-home">
-            <ArrowLeft size={14} className="mr-1.5" /> Back to Dashboard
+          <Button variant="outline" onClick={() => setLocation("/leadership")} data-testid="button-go-home">
+            <ArrowLeft size={14} className="mr-1.5" /> Back to Console
           </Button>
         </div>
       </div>
@@ -530,7 +530,7 @@ export default function ExecutiveReportPage() {
       {/* ── Header ── */}
       <div className="sticky top-[58px] z-40 border-b border-border print:hidden bg-background/95 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
+          <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
             <ArrowLeft size={20} />
           </Button>
           <div className="flex-1 min-w-0">

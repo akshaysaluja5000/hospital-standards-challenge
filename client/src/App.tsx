@@ -25,6 +25,7 @@ import RoleSelectPage from "@/pages/role-select-page";
 import CorrectiveActionPage from "@/pages/corrective-action-page";
 import ExecutiveReportPage from "@/pages/executive-report-page";
 import FlashcardReviewPage from "@/pages/flashcard-review-page";
+import LeadershipHubPage from "@/pages/leadership-hub-page";
 import { HospitalsPage, AscPage } from "@/pages/solutions-page";
 import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
@@ -256,6 +257,9 @@ function Router() {
       </Route>
       <Route path="/profile">
         {() => <ProtectedRoute component={ProfilePage} />}
+      </Route>
+      <Route path="/leadership">
+        {() => <LeadershipRoute component={LeadershipHubPage} minRole="director" />}
       </Route>
       <Route path="/admin">
         {() => <LeadershipRoute component={AdminPage} minRole="director" />}

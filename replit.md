@@ -22,11 +22,12 @@ React 18 + TypeScript, Vite, Tailwind CSS, Framer Motion, wouter, TanStack Query
 - `client/src/pages/` — page components
 
 ## Architecture decisions
-- **Dual RBAC**: two orthogonal role axes. (1) `leadershipRole` (`learner|educator|director|admin|super_admin`) stored in `users.leadership_role`, controls access to leadership features server-side via `requireLeadershipRole(minRole)` middleware. (2) Facility role (`staff|manager|ceo|admin|super_admin`) derived from `leadershipRole` in `useFacilityAuth()`, used for facility-scoping of Executive Report & CAP data. No more mock personas.
-- **Server-side enforcement**: `/api/admin/stats`, `/api/admin/ai-insights`, `/api/admin/lesson-plan/generate` require director+ at the route level; `/api/admin/users/:id/leadership-role` requires admin+.
-- **Frontend gate**: `LeadershipRoute` component in App.tsx wraps director+ pages (`/admin`, `/corrective-actions`, `/executive-report`) with an access-denied wall for lower roles.
-- **Module separation**: Hospital vs ASC modules have distinct content, leaderboard, and stats scopes.
-- **Bypass accounts**: usernames `akshaysaluja` and `rsaluja` always receive `super_admin` effective rank.
+- **Two-surface product split**: Learner App (default, `/`) vs Leadership Console (`/leadership` hub). Learner surface shows only training content — no executive language, no user tables, no export buttons. Leadership Console is a separate gated route with its own hub page linking to Executive Report, User Management, Guided Education Oversight, and AI Coach.
+- **Dual RBAC**: two orthogonal role axes. (1) `leadershipRole` (`learner|educator|director|admin|super_admin`) stored in `users.leadership_role`, enforced server-side via `requireLeadershipRole(minRole)` middleware. (2) Facility role (`staff|manager|ceo|admin|super_admin`) derived from `leadershipRole` in `useFacilityAuth()`, used for facility-scoping of Executive Report & CAP data.
+- **Server-side enforcement**: `/api/admin/stats`, `/api/admin/ai-insights`, `/api/admin/lesson-plan/generate` require director+; `/api/admin/users/:id/leadership-role` requires admin+.
+- **Frontend gate**: `LeadershipRoute` in App.tsx guards `/leadership`, `/admin`, `/corrective-actions`, `/executive-report` — director+ only. Dashboard shows a single labelled "Leadership Console" button (not tiny icons) for qualifying roles.
+- **Facility & module scoping**: Hospital leaders see only hospital data; ASC administrators see only ASC data. Multi-site admin/super_admin can see all. `useFacilityAuth()` derives facility permissions from real `leadershipRole` (no mock personas).
+- **Bypass accounts**: `akshaysaluja` and `rsaluja` always receive `super_admin` effective rank.
 - `darkMode: ["class"]` — light mode enforced via inline script in `index.html` + `useEffect` in `App.tsx`.
 
 ## Product

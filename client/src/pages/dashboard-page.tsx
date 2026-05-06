@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, AlertTriangle, ShieldAlert, CheckCircle2, Plus, GraduationCap, Brain, Layers } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -277,13 +277,16 @@ export default function DashboardPage() {
               <Trophy size={16} />
             </Button>
             {(user?.isAdmin || ["director","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
-              <Button variant="outline" size="sm" onClick={() => setLocation("/admin")} data-testid="button-admin">
-                <BarChart3 size={16} />
-              </Button>
-            )}
-            {(user?.isAdmin || ["director","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
-              <Button variant="outline" size="sm" onClick={() => setLocation("/executive-report")} data-testid="button-executive-report">
-                <TrendingUp size={16} />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLocation("/leadership")}
+                data-testid="button-leadership-console"
+                className="gap-1.5 font-semibold text-primary border-primary/40 hover:bg-primary/5"
+              >
+                <BarChart3 size={15} />
+                <span className="hidden sm:inline">Leadership Console</span>
+                <span className="sm:hidden">Console</span>
               </Button>
             )}
             <Button variant="outline" size="sm" onClick={() => setLocation("/profile")} data-testid="button-profile">
@@ -641,56 +644,6 @@ export default function DashboardPage() {
               </motion.button>
             </div>
 
-            {/* Remediation Plans — director+ only */}
-            {(user?.isAdmin || ["director","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border-2 border-primary/30 bg-primary/8 p-5 shadow-md"
-              data-testid="card-guided-education-plans"
-            >
-              <div className="flex items-center gap-2.5 mb-1">
-                <div className="w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
-                  <GraduationCap size={18} className="text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-base leading-tight" data-testid="text-cap-title">Guided Education Plans</h3>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground mb-4 mt-1" data-testid="text-cap-subtitle">
-                Final test scores below 70% generate a guided education plan — track learner progress and supervisor sign-off.
-              </p>
-
-              <div className="grid grid-cols-3 gap-2 mb-4">
-                <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-active-plans">
-                  <GraduationCap size={15} className="text-primary" />
-                  <span className="text-xl font-black">0</span>
-                  <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Active Plans</span>
-                </div>
-                <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-overdue">
-                  <AlertTriangle size={15} className="text-destructive" />
-                  <span className="text-xl font-black">0</span>
-                  <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Overdue</span>
-                </div>
-                <div className="rounded-xl bg-card border border-border p-3 flex flex-col items-center gap-1" data-testid="stat-completed">
-                  <CheckCircle2 size={15} className="text-green-500" />
-                  <span className="text-xl font-black">0</span>
-                  <span className="text-[11px] text-muted-foreground font-semibold text-center leading-tight">Completed</span>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-view-action-plan">
-                  <GraduationCap size={14} className="mr-1.5" />
-                  View Guided Education Plans
-                </Button>
-                <Button variant="outline" size="sm" className="flex-1 font-semibold" onClick={() => setLocation("/corrective-actions")} data-testid="button-create-action">
-                  <Plus size={14} className="mr-1.5" />
-                  Create Demo Plan
-                </Button>
-              </div>
-            </motion.div>
-            )}
 
           </div>
 
