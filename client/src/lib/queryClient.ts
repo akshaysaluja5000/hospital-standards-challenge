@@ -1,7 +1,27 @@
 import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
+function redirectForMfa(json: Record<string, unknown>) {
+  if (json.mfaRequired) {
+    window.location.href = "/mfa-verify";
+    return true;
+  }
+  if (json.mfaSetupRequired) {
+    window.location.href = "/mfa-setup";
+    return true;
+  }
+  return false;
+}
+
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
+    if (res.status === 403) {
+      try {
+        const json = await res.clone().json();
+        if (redirectForMfa(json)) throw new Error(json.message as string);
+      } catch (e) {
+        if ((e as Error).message?.includes("MFA")) throw e;
+      }
+    }
     const text = (await res.text()) || res.statusText;
     throw new Error(`${res.status}: ${text}`);
   }
@@ -19,6 +39,13 @@ export async function apiRequest(
     credentials: "include",
   });
 
+  if (!res.ok && res.status === 403) {
+    try {
+      const json = await res.clone().json();
+      if (redirectForMfa(json)) return res;
+    } catch { /* ignore */ }
+  }
+
   await throwIfResNotOk(res);
   return res;
 }
@@ -32,6 +59,13 @@ export const getQueryFn: <T>(options: {
     const res = await fetch(queryKey.join("/") as string, {
       credentials: "include",
     });
+
+    if (res.status === 403) {
+      try {
+        const json = await res.clone().json();
+        if (redirectForMfa(json)) return null as T;
+      } catch { /* ignore */ }
+    }
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
       return null;

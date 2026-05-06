@@ -64,6 +64,8 @@ export async function ensureTablesExist() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS organization_type TEXT NOT NULL DEFAULT 'hospital';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS leadership_role TEXT NOT NULL DEFAULT 'learner';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS department TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS mfa_secret TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS mfa_enabled BOOLEAN NOT NULL DEFAULT false;
       CREATE TABLE IF NOT EXISTS audit_logs (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
@@ -328,6 +330,9 @@ export interface IStorage {
   upsertFlashcardReview(userId: number, levelId: string, cardIndex: number, nextReviewAt: Date, intervalMinutes: number, lastRating: string): Promise<FlashcardReview>;
   getDueFlashcards(userId: number): Promise<FlashcardReview[]>;
   getDueFlashcardCount(userId: number): Promise<number>;
+
+  enableMfa(userId: number, secret: string): Promise<void>;
+  disableMfa(userId: number): Promise<void>;
 
   createAuditLog(entry: {
     userId?: number | null;
@@ -732,6 +737,14 @@ export class DatabaseStorage implements IStorage {
   async getDueFlashcardCount(userId: number): Promise<number> {
     const rows = await this.getDueFlashcards(userId);
     return rows.length;
+  }
+
+  async enableMfa(userId: number, secret: string): Promise<void> {
+    await db.update(users).set({ mfaSecret: secret, mfaEnabled: true }).where(eq(users.id, userId));
+  }
+
+  async disableMfa(userId: number): Promise<void> {
+    await db.update(users).set({ mfaSecret: null, mfaEnabled: false }).where(eq(users.id, userId));
   }
 
   async createAuditLog(entry: {

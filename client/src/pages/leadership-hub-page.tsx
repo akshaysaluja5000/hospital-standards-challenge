@@ -3,10 +3,11 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, BarChart3, TrendingUp, GraduationCap, BrainCircuit,
   Users, Building2, Stethoscope, ChevronRight, ShieldCheck,
-  ClipboardList, FileText, Lock,
+  ClipboardList, FileText, Lock, AlertTriangle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
+import { useQuery } from "@tanstack/react-query";
 import { LEADERSHIP_LABELS } from "@shared/schema";
 
 const LEADERSHIP_RANK: Record<string, number> = {
@@ -94,6 +95,12 @@ export default function LeadershipHubPage() {
   const canAccess = (card: ConsoleCard) =>
     effectiveRank >= (LEADERSHIP_RANK[card.minRole] ?? 99);
 
+  const needsMfa = effectiveRank >= LEADERSHIP_RANK["ceo"];
+  const { data: mfaStatus } = useQuery<{ required: boolean; enabled: boolean; verified: boolean }>({
+    queryKey: ["/api/mfa/status"],
+    enabled: needsMfa,
+  });
+
   return (
     <div className="min-h-screen pb-20">
       {/* Sub-header */}
@@ -133,6 +140,52 @@ export default function LeadershipHubPage() {
       {/* Body */}
       <div className="max-w-5xl mx-auto px-6 pt-8 flex flex-col gap-8">
 
+        {/* MFA setup banner for ceo+ users */}
+        {needsMfa && mfaStatus && !mfaStatus.enabled && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/8 p-5 flex items-start gap-4"
+            data-testid="banner-mfa-setup"
+          >
+            <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center flex-shrink-0">
+              <AlertTriangle size={20} className="text-amber-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-bold text-sm mb-1 text-amber-800">Two-Factor Authentication Required</h2>
+              <p className="text-sm text-amber-700 leading-relaxed mb-3">
+                Your role requires MFA to access reporting tools. Set up your authenticator app now to unlock the Executive Report, AI Coach, and data exports.
+              </p>
+              <Button size="sm" onClick={() => setLocation("/mfa-setup")} data-testid="button-setup-mfa-from-hub">
+                Set Up MFA Now
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* MFA verify banner — set up but not verified this session */}
+        {needsMfa && mfaStatus?.enabled && !mfaStatus.verified && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-5 flex items-start gap-4"
+            data-testid="banner-mfa-verify"
+          >
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <ShieldCheck size={20} className="text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-bold text-sm mb-1">Verify Your Identity</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                Enter your authenticator code to access reporting tools for this session.
+              </p>
+              <Button size="sm" onClick={() => setLocation("/mfa-verify")} data-testid="button-verify-mfa-from-hub">
+                Enter Code
+              </Button>
+            </div>
+          </motion.div>
+        )}
+
         {/* Scope banner */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
@@ -148,11 +201,13 @@ export default function LeadershipHubPage() {
             <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-scope-description">
               {effectiveRole === "super_admin" || effectiveRole === "admin"
                 ? "You have platform-wide access. All facilities and modules are visible."
-                : effectiveRole === "director"
-                  ? `You are viewing ${moduleLabel} data for your assigned facility. Contact a system admin to request multi-site access.`
-                  : effectiveRole === "educator"
-                    ? `You can review completion and manage Guided Education Plans for learners in your department (${moduleLabel}).`
-                    : "Your access level does not include leadership tools."}
+                : effectiveRole === "ceo"
+                  ? `You are viewing ${moduleLabel} data for your assigned facility with executive-level access including data exports and audit logs.`
+                  : effectiveRole === "director"
+                    ? `You are viewing ${moduleLabel} data for your assigned facility. Contact a system admin to request multi-site access.`
+                    : effectiveRole === "educator"
+                      ? `You can review completion and manage Guided Education Plans for learners in your department (${moduleLabel}).`
+                      : "Your access level does not include leadership tools."}
             </p>
           </div>
         </motion.div>

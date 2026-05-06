@@ -11,6 +11,17 @@ import connectPgSimple from "connect-pg-simple";
 import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
 import type { User, DailyActivity } from "@shared/schema";
+import { generateSecret as totpGenerateSecret, verifyToken as totpVerify, totpUri } from "./totp";
+import { createRequire } from "module";
+const _require = createRequire(import.meta.url);
+const QRCode = _require("qrcode") as { toDataURL: (uri: string) => Promise<string> };
+
+declare module "express-session" {
+  interface SessionData {
+    mfaVerified?: boolean;
+    pendingMfaSecret?: string;
+  }
+}
 import { deepDiveLevels } from "@shared/deep-dive-questions";
 import { diagnosticQuestions } from "@shared/diagnostic-questions";
 import { masteryQuestions } from "@shared/mastery-questions";
@@ -124,6 +135,9 @@ declare global {
       createdAt: Date;
       roleId: number | null;
       viewScope: string | null;
+      mfaEnabled: boolean;
+      mfaSecret: string | null;
+      department: string | null;
     }
   }
 }
@@ -185,6 +199,22 @@ function requireLeadershipRole(minRole: string) {
     }
     next();
   };
+}
+
+function requireMfa(req: Request, res: Response, next: NextFunction) {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+  const rank = LEADERSHIP_RANK[getEffectiveLeadershipRole(req.user!)] ?? 0;
+  if (rank >= LEADERSHIP_RANK["ceo"]) {
+    if (!req.user!.mfaEnabled) {
+      return res.status(403).json({ mfaSetupRequired: true, message: "MFA setup is required for your role." });
+    }
+    if (!req.session.mfaVerified) {
+      return res.status(403).json({ mfaRequired: true, message: "MFA verification required." });
+    }
+  }
+  next();
 }
 
 async function userCanAccessLevel(userId: number, levelId: string): Promise<boolean> {
@@ -617,7 +647,7 @@ export async function registerRoutes(
     }
   });
 
-  app.get("/api/audit-log", requireLeadershipRole("admin"), async (req, res) => {
+  app.get("/api/audit-log", requireLeadershipRole("admin"), requireMfa, async (req, res) => {
     try {
       const limit = Math.min(parseInt(String(req.query.limit ?? "200"), 10) || 200, 1000);
       const logs = await storage.getAuditLogs(limit);
@@ -628,7 +658,7 @@ export async function registerRoutes(
   });
 
   // Server-side CSV export (requires ceo+ rank) — returns JSON for client to download
-  app.get("/api/admin/export/users-csv", requireLeadershipRole("ceo"), async (req, res) => {
+  app.get("/api/admin/export/users-csv", requireLeadershipRole("ceo"), requireMfa, async (req, res) => {
     try {
       await serverAuditLog(req, "users_csv_export_server");
       const allUsers = await storage.getAllUsers();
@@ -1122,7 +1152,7 @@ export async function registerRoutes(
     }
   });
 
-  app.get("/api/admin/stats", requireLeadershipRole("director"), async (req, res) => {
+  app.get("/api/admin/stats", requireLeadershipRole("director"), requireMfa, async (req, res) => {
     try {
       const adminUser = req.user as User;
       const facilityFilter = getFacilityFilter(adminUser);
@@ -1469,7 +1499,7 @@ Give ONE actionable takeaway in 2 sentences about what great hospitals do differ
     }
   });
 
-  app.post("/api/admin/ai-insights", requireLeadershipRole("director"), async (req: Request, res: Response) => {
+  app.post("/api/admin/ai-insights", requireLeadershipRole("director"), requireMfa, async (req: Request, res: Response) => {
     const userId = (req.user as User).id;
     const now = Date.now();
     const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
@@ -1696,7 +1726,7 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
     }
   });
 
-  app.post("/api/admin/lesson-plan/generate", requireLeadershipRole("director"), async (req: Request, res: Response) => {
+  app.post("/api/admin/lesson-plan/generate", requireLeadershipRole("director"), requireMfa, async (req: Request, res: Response) => {
     const schema = z.object({
       assignedDate: z.string().min(1),
       dueDate: z.string().min(1),
@@ -2403,6 +2433,116 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     } catch (err) {
       console.error("Error saving flashcard review:", err);
       res.status(500).json({ error: "Failed to save review" });
+    }
+  });
+
+  // ── MFA routes ──────────────────────────────────────────────────────────
+  app.get("/api/mfa/status", requireAuth, (req, res) => {
+    const user = req.user!;
+    const rank = LEADERSHIP_RANK[getEffectiveLeadershipRole(user)] ?? 0;
+    res.json({
+      required: rank >= LEADERSHIP_RANK["ceo"],
+      enabled: !!user.mfaEnabled,
+      verified: !!req.session.mfaVerified,
+    });
+  });
+
+  app.post("/api/mfa/setup/start", requireLeadershipRole("ceo"), async (req, res) => {
+    try {
+      const user = req.user!;
+      const secret = totpGenerateSecret();
+      req.session.pendingMfaSecret = secret;
+      const uri = totpUri(user.username, secret);
+      const qrCode = await QRCode.toDataURL(uri);
+      res.json({ secret, qrCode });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/mfa/setup/confirm", requireLeadershipRole("ceo"), async (req, res) => {
+    try {
+      const { token } = req.body;
+      const secret = req.session.pendingMfaSecret;
+      if (!secret) return res.status(400).json({ message: "No pending MFA setup. Start setup first." });
+      const isValid = totpVerify(String(token), secret);
+      if (!isValid) return res.status(400).json({ message: "Invalid code. Please try again." });
+      await storage.enableMfa(req.user!.id, secret);
+      req.session.mfaVerified = true;
+      delete req.session.pendingMfaSecret;
+      res.json({ ok: true });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/mfa/verify", requireAuth, async (req, res) => {
+    try {
+      const { token } = req.body;
+      const freshUser = await storage.getUser(req.user!.id);
+      if (!freshUser?.mfaEnabled || !freshUser?.mfaSecret) {
+        return res.status(400).json({ message: "MFA not set up for this account." });
+      }
+      const isValid = totpVerify(String(token), freshUser.mfaSecret);
+      if (!isValid) return res.status(400).json({ message: "Invalid code. Please try again." });
+      req.session.mfaVerified = true;
+      res.json({ ok: true });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/mfa/disable", requireLeadershipRole("admin"), async (req, res) => {
+    try {
+      const { token } = req.body;
+      const freshUser = await storage.getUser(req.user!.id);
+      if (!freshUser?.mfaEnabled || !freshUser?.mfaSecret) {
+        return res.status(400).json({ message: "MFA is not enabled on this account." });
+      }
+      const isValid = totpVerify(String(token), freshUser.mfaSecret);
+      if (!isValid) return res.status(403).json({ message: "Invalid verification code." });
+      await storage.disableMfa(req.user!.id);
+      req.session.mfaVerified = false;
+      res.json({ ok: true });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  // ── Educator team view ───────────────────────────────────────────────────
+  app.get("/api/educator/team", requireLeadershipRole("educator"), async (req, res) => {
+    try {
+      const caller = req.user!;
+      const callerData = await storage.getUser(caller.id);
+      const callerDept = (callerData as any)?.department ?? null;
+      const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
+
+      const allUsersRaw = await storage.getAllUsers();
+      const facilityFilter = getFacilityFilter(caller);
+      let team = allUsersRaw.filter(facilityFilter);
+
+      // Educators (rank 1) see only their own department; directors+ see all
+      if (callerRank < LEADERSHIP_RANK["director"] && callerDept) {
+        team = team.filter(u => (u as any).department === callerDept);
+      }
+
+      const allStreaks = await storage.getAllStreaks();
+      const streakMap = new Map(allStreaks.map(s => [s.userId, s]));
+
+      const result = team.map(u => ({
+        id: u.id,
+        username: u.username,
+        firstName: u.firstName || "",
+        lastName: u.lastName || "",
+        department: (u as any).department ?? null,
+        totalXp: streakMap.get(u.id)?.totalXp ?? 0,
+        currentStreak: streakMap.get(u.id)?.currentStreak ?? 0,
+        leadershipRole: u.leadershipRole,
+      }));
+
+      res.json({ team: result, department: callerDept });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
     }
   });
 

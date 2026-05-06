@@ -65,6 +65,8 @@ export const users = pgTable("users", {
   leadershipRole: text("leadership_role").notNull().default("learner"),
   facilityId: integer("facility_id").references(() => facilities.id),
   department: text("department"),
+  mfaSecret: text("mfa_secret"),
+  mfaEnabled: boolean("mfa_enabled").notNull().default(false),
   roleId: integer("role_id").references(() => roles.id),
   additionalRoleIds: integer("additional_role_ids").array().notNull().default(sql`ARRAY[]::integer[]`),
   organizationType: text("organization_type").notNull().default("hospital"),

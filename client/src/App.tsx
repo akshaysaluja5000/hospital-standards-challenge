@@ -31,6 +31,9 @@ import { Button } from "@/components/ui/button";
 import { AlertCircle } from "lucide-react";
 import TermsPage from "@/pages/terms-page";
 import NotFound from "@/pages/not-found";
+import MfaSetupPage from "@/pages/mfa-setup-page";
+import MfaVerifyPage from "@/pages/mfa-verify-page";
+import EducatorHubPage from "@/pages/educator-hub-page";
 import { Loader2 } from "lucide-react";
 
 function ScrollToTop() {
@@ -111,6 +114,43 @@ function LeadershipRoute({ component: Component, minRole = "director" }: { compo
             </div>
             <h2 className="text-xl font-bold">Access Restricted</h2>
             <p className="text-sm text-muted-foreground">This page requires a leadership role. Contact your administrator for access.</p>
+            <Button variant="outline" onClick={() => window.history.back()}>Go Back</Button>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
+  return <AppShell><Component /></AppShell>;
+}
+
+function EducatorRoute({ component: Component }: { component: () => JSX.Element }) {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <AppShell>
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <Loader2 size={32} className="animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Loading...</p>
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (!user) return <Redirect to="/auth" />;
+
+  const effective = getEffectiveRole(user);
+  if ((LEADERSHIP_RANK[effective] ?? 0) < LEADERSHIP_RANK["educator"]) {
+    return (
+      <AppShell>
+        <div className="min-h-screen flex items-center justify-center p-6">
+          <div className="max-w-sm text-center flex flex-col items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-destructive/15 flex items-center justify-center">
+              <AlertCircle size={28} className="text-destructive" />
+            </div>
+            <h2 className="text-xl font-bold">Access Restricted</h2>
+            <p className="text-sm text-muted-foreground">This page requires an educator role or above.</p>
             <Button variant="outline" onClick={() => window.history.back()}>Go Back</Button>
           </div>
         </div>
@@ -272,6 +312,11 @@ function Router() {
       </Route>
       <Route path="/flashcard-review">
         {() => <ProtectedRoute component={FlashcardReviewPage} />}
+      </Route>
+      <Route path="/mfa-setup" component={MfaSetupPage} />
+      <Route path="/mfa-verify" component={MfaVerifyPage} />
+      <Route path="/educator">
+        {() => <EducatorRoute component={EducatorHubPage} />}
       </Route>
       <Route component={NotFound} />
     </Switch>

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -276,7 +276,20 @@ export default function DashboardPage() {
             <Button variant="outline" size="sm" onClick={() => setLocation("/leaderboard")} data-testid="button-leaderboard">
               <Trophy size={16} />
             </Button>
-            {(user?.isAdmin || ["director","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
+            {user?.leadershipRole === "educator" && !user?.isAdmin && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLocation("/educator")}
+                data-testid="button-educator-console"
+                className="gap-1.5 font-semibold text-violet-600 border-violet-400/40 hover:bg-violet-500/5"
+              >
+                <GraduationCap size={15} />
+                <span className="hidden sm:inline">Educator Console</span>
+                <span className="sm:hidden">Team</span>
+              </Button>
+            )}
+            {(user?.isAdmin || ["director","ceo","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
               <Button
                 variant="outline"
                 size="sm"
