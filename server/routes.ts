@@ -2490,7 +2490,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
   });
 
-  app.post("/api/mfa/disable", requireLeadershipRole("admin"), async (req, res) => {
+  app.post("/api/mfa/disable", requireLeadershipRole("ceo"), async (req, res) => {
     try {
       const { token } = req.body;
       const freshUser = await storage.getUser(req.user!.id);
