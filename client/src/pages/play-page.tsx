@@ -502,7 +502,7 @@ export default function PlayPage() {
         </div>
       )}
 
-      <div className="sticky top-[58px] z-40 border-b border-border" className="bg-background/95 backdrop-blur-md">
+      <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="max-w-lg mx-auto px-4 py-3 flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3">
             <Button

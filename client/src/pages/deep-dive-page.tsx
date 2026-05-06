@@ -619,7 +619,7 @@ export default function DeepDivePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <div className="sticky top-[58px] z-40 border-b border-border" className="bg-background/95 backdrop-blur-md">
+      <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
           <Button
             variant="ghost"

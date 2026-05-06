@@ -354,7 +354,7 @@ export default function DiagnosticQuizPage() {
           </div>
         )}
 
-        <div className="sticky top-[58px] z-40 border-b border-border" className="bg-background/95 backdrop-blur-md">
+        <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
           <div className="max-w-2xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between mb-2">
               <button onClick={() => setShowExitDialog(true)} className="flex items-center gap-1 text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide hover:text-teal-800 transition-colors" data-testid="button-exit-diagnostic">

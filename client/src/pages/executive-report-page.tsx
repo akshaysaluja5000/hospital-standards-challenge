@@ -528,7 +528,7 @@ export default function ExecutiveReportPage() {
     <div className="min-h-screen flex flex-col print:bg-white print:text-black">
 
       {/* ── Header ── */}
-      <div className="sticky top-[58px] z-40 border-b border-border print:hidden" className="bg-background/95 backdrop-blur-md">
+      <div className="sticky top-[58px] z-40 border-b border-border print:hidden bg-background/95 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
           <Button variant="ghost" size="icon" onClick={() => setLocation("/")} data-testid="button-back">
             <ArrowLeft size={20} />
