@@ -132,15 +132,32 @@ const LEADERSHIP_RANK: Record<string, number> = {
   learner: 0,
   educator: 1,
   director: 2,
-  admin: 3,
-  super_admin: 4,
+  ceo: 3,
+  admin: 4,
+  super_admin: 5,
 };
 
 function getEffectiveLeadershipRole(user: Express.User): string {
   const lr = user.leadershipRole || "learner";
   if (isFacilityScopeBypass(user)) return "super_admin";
-  if (user.isAdmin && LEADERSHIP_RANK[lr] < LEADERSHIP_RANK["admin"]) return "admin";
+  if (user.isAdmin && (LEADERSHIP_RANK[lr] ?? 0) < LEADERSHIP_RANK["admin"]) return "admin";
   return lr;
+}
+
+async function serverAuditLog(req: Request, action: string, meta?: Record<string, unknown>) {
+  try {
+    const u = req.user as User | undefined;
+    await storage.createAuditLog({
+      userId: u?.id ?? null,
+      username: u?.username ?? null,
+      leadershipRole: u ? getEffectiveLeadershipRole(u as unknown as Express.User) : "learner",
+      action,
+      meta: meta ?? null,
+      ipAddress: req.ip ?? null,
+    });
+  } catch {
+    // Audit log failure must never break the request
+  }
 }
 
 function requireAuth(req: Request, res: Response, next: NextFunction) {
@@ -531,7 +548,7 @@ export async function registerRoutes(
     try {
       const { leadershipRole } = req.body || {};
       const userId = parseInt(String(req.params.id), 10);
-      const valid = ["learner", "educator", "director", "admin", "super_admin"];
+      const valid = ["learner", "educator", "director", "ceo", "admin", "super_admin"];
       if (!leadershipRole || !valid.includes(leadershipRole)) {
         return res.status(400).json({ message: "Invalid leadership role" });
       }
@@ -564,6 +581,76 @@ export async function registerRoutes(
       if (!user) return res.status(404).json({ message: "User not found" });
       const { password: _, ...safeUser } = user;
       res.json(safeUser);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  // ── Audit Log endpoints ────────────────────────────────────────────────────
+
+  const auditLogBodySchema = z.object({
+    leadershipRole: z.string().default("learner"),
+    facilityId: z.string().nullable().optional(),
+    facilityName: z.string().nullable().optional(),
+    action: z.string().min(1),
+    meta: z.record(z.unknown()).nullable().optional(),
+  });
+
+  app.post("/api/audit-log", requireAuth, async (req, res) => {
+    try {
+      const parsed = auditLogBodySchema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid audit log body" });
+      const u = req.user!;
+      await storage.createAuditLog({
+        userId: u.id,
+        username: u.username,
+        leadershipRole: parsed.data.leadershipRole,
+        facilityId: parsed.data.facilityId ?? null,
+        facilityName: parsed.data.facilityName ?? null,
+        action: parsed.data.action,
+        meta: (parsed.data.meta as Record<string, unknown>) ?? null,
+        ipAddress: req.ip ?? null,
+      });
+      res.json({ ok: true });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/audit-log", requireLeadershipRole("admin"), async (req, res) => {
+    try {
+      const limit = Math.min(parseInt(String(req.query.limit ?? "200"), 10) || 200, 1000);
+      const logs = await storage.getAuditLogs(limit);
+      res.json(logs);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  // Server-side CSV export (requires ceo+ rank) — returns JSON for client to download
+  app.get("/api/admin/export/users-csv", requireLeadershipRole("ceo"), async (req, res) => {
+    try {
+      await serverAuditLog(req, "users_csv_export_server");
+      const allUsers = await storage.getAllUsers();
+      const allStreaks = await storage.getAllStreaks();
+      const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
+      const rows = allUsers.map((u) => {
+        const streak = streakMap.get(u.id);
+        return {
+          id: u.id,
+          username: u.username,
+          firstName: u.firstName,
+          lastName: u.lastName,
+          leadershipRole: u.leadershipRole,
+          facilityId: u.facilityId,
+          organizationType: u.organizationType,
+          department: (u as any).department ?? "",
+          totalXp: streak?.totalXp ?? 0,
+          currentStreak: streak?.currentStreak ?? 0,
+          createdAt: u.createdAt?.toISOString() ?? "",
+        };
+      });
+      res.json({ rows });
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }

@@ -450,11 +450,15 @@ export default function ExecutiveReportPage() {
   const [tableExpanded, setTableExpanded] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
+  const leadershipRole = (user as any)?.leadershipRole as string ?? "learner";
+  const execReportRank = { learner: 0, educator: 1, director: 2, ceo: 3, admin: 4, super_admin: 5 };
+  const canExportReports = (execReportRank[leadershipRole as keyof typeof execReportRank] ?? 0) >= execReportRank["ceo"] || !!(user as any)?.isAdmin;
+
   useEffect(() => {
     if (permissions.canViewExecutiveReport && user !== undefined) {
       auditLog({
         userId: user?.id ?? null,
-        role: facilityAuth.facilityRole,
+        leadershipRole,
         facilityId: scopedFacilityId,
         facilityName: scopedFacilityName,
         action: "executive_report_viewed",
@@ -567,18 +571,30 @@ export default function ExecutiveReportPage() {
             <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => setFiltersOpen((v) => !v)} data-testid="button-toggle-filters">
               <Filter size={13} className="mr-1.5" /> Filters {hasFilters && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-primary inline-block" />}
             </Button>
-            <Button variant="outline" size="sm" onClick={() => {
-              exportCsv(filtered, scopedFacilityName);
-              auditLog({ userId: user?.id ?? null, role: facilityAuth.facilityRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_csv_export", meta: { count: filtered.length } });
-            }} data-testid="button-export-csv">
-              <Download size={13} className="mr-1.5" /> CSV
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => {
-              window.print();
-              auditLog({ userId: user?.id ?? null, role: facilityAuth.facilityRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_pdf_export" });
-            }} data-testid="button-export-pdf">
-              <Printer size={13} className="mr-1.5" /> PDF
-            </Button>
+            {canExportReports ? (
+              <Button variant="outline" size="sm" onClick={() => {
+                exportCsv(filtered, scopedFacilityName);
+                auditLog({ userId: user?.id ?? null, leadershipRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_csv_export", meta: { count: filtered.length } });
+              }} data-testid="button-export-csv">
+                <Download size={13} className="mr-1.5" /> CSV
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" disabled title="CEO or Administrator role required to export" data-testid="button-export-csv-locked">
+                <Lock size={13} className="mr-1.5" /> CSV
+              </Button>
+            )}
+            {canExportReports ? (
+              <Button variant="outline" size="sm" onClick={() => {
+                window.print();
+                auditLog({ userId: user?.id ?? null, leadershipRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_pdf_export" });
+              }} data-testid="button-export-pdf">
+                <Printer size={13} className="mr-1.5" /> PDF
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" disabled title="CEO or Administrator role required to export" data-testid="button-export-pdf-locked">
+                <Lock size={13} className="mr-1.5" /> PDF
+              </Button>
+            )}
           </div>
         </div>
 

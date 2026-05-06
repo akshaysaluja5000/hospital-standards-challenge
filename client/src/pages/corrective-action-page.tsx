@@ -1199,7 +1199,7 @@ export default function CorrectiveActionPage() {
     }
     auditLog({
       userId: facilityAuth.user?.id ?? null,
-      role: facilityAuth.facilityRole,
+      leadershipRole: (facilityAuth.user as any)?.leadershipRole ?? "learner",
       facilityId: scopedFacilityId,
       facilityName: scopedFacilityName,
       action: "remediation_plan_created",

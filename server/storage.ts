@@ -5,11 +5,11 @@ import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
   ascPretestResults, ascPosttestResults,
-  roles, roleChapterMappings, flashcardReviews,
+  roles, roleChapterMappings, flashcardReviews, auditLogs,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
-  type AscPretestResult, type AscPosttestResult, type FlashcardReview,
+  type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -63,6 +63,19 @@ export async function ensureTablesExist() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS additional_role_ids INTEGER[] NOT NULL DEFAULT ARRAY[]::INTEGER[];
       ALTER TABLE users ADD COLUMN IF NOT EXISTS organization_type TEXT NOT NULL DEFAULT 'hospital';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS leadership_role TEXT NOT NULL DEFAULT 'learner';
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS department TEXT;
+      CREATE TABLE IF NOT EXISTS audit_logs (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        username TEXT,
+        leadership_role TEXT NOT NULL DEFAULT 'learner',
+        facility_id TEXT,
+        facility_name TEXT,
+        action TEXT NOT NULL,
+        meta TEXT,
+        ip_address TEXT,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
       CREATE TABLE IF NOT EXISTS user_progress (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -315,6 +328,19 @@ export interface IStorage {
   upsertFlashcardReview(userId: number, levelId: string, cardIndex: number, nextReviewAt: Date, intervalMinutes: number, lastRating: string): Promise<FlashcardReview>;
   getDueFlashcards(userId: number): Promise<FlashcardReview[]>;
   getDueFlashcardCount(userId: number): Promise<number>;
+
+  createAuditLog(entry: {
+    userId?: number | null;
+    username?: string | null;
+    leadershipRole: string;
+    facilityId?: string | null;
+    facilityName?: string | null;
+    action: string;
+    meta?: Record<string, unknown> | null;
+    ipAddress?: string | null;
+  }): Promise<AuditLog>;
+  getAuditLogs(limit?: number): Promise<AuditLog[]>;
+  getAuditLogsByUser(userId: number): Promise<AuditLog[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -706,6 +732,37 @@ export class DatabaseStorage implements IStorage {
   async getDueFlashcardCount(userId: number): Promise<number> {
     const rows = await this.getDueFlashcards(userId);
     return rows.length;
+  }
+
+  async createAuditLog(entry: {
+    userId?: number | null;
+    username?: string | null;
+    leadershipRole: string;
+    facilityId?: string | null;
+    facilityName?: string | null;
+    action: string;
+    meta?: Record<string, unknown> | null;
+    ipAddress?: string | null;
+  }): Promise<AuditLog> {
+    const [row] = await db.insert(auditLogs).values({
+      userId: entry.userId ?? null,
+      username: entry.username ?? null,
+      leadershipRole: entry.leadershipRole,
+      facilityId: entry.facilityId ?? null,
+      facilityName: entry.facilityName ?? null,
+      action: entry.action,
+      meta: entry.meta ? JSON.stringify(entry.meta) : null,
+      ipAddress: entry.ipAddress ?? null,
+    }).returning();
+    return row;
+  }
+
+  async getAuditLogs(limit = 500): Promise<AuditLog[]> {
+    return db.select().from(auditLogs).orderBy(desc(auditLogs.createdAt)).limit(limit);
+  }
+
+  async getAuditLogsByUser(userId: number): Promise<AuditLog[]> {
+    return db.select().from(auditLogs).where(eq(auditLogs.userId, userId)).orderBy(desc(auditLogs.createdAt));
   }
 
   async getAllRoles(): Promise<Role[]> {

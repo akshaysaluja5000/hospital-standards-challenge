@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus, Shield } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus, Shield, ScrollText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
@@ -37,7 +37,7 @@ interface AdminStats {
 }
 
 const LEADERSHIP_RANK: Record<string, number> = {
-  learner: 0, educator: 1, director: 2, admin: 3, super_admin: 4,
+  learner: 0, educator: 1, director: 2, ceo: 3, admin: 4, super_admin: 5,
 };
 
 export default function AdminPage() {
@@ -51,6 +51,14 @@ export default function AdminPage() {
 
   const callerRank = LEADERSHIP_RANK[(user?.leadershipRole as string) || "learner"] ?? 0;
   const callerIsAdmin = user?.isAdmin || callerRank >= LEADERSHIP_RANK["admin"];
+
+  const { data: auditLogEntries } = useQuery<Array<{
+    id: number; username: string | null; leadershipRole: string;
+    facilityName: string | null; action: string; createdAt: string;
+  }>>({
+    queryKey: ["/api/audit-log"],
+    enabled: callerIsAdmin,
+  });
 
   const roleChangeMutation = useMutation({
     mutationFn: async ({ userId, role }: { userId: number; role: string }) => {
@@ -239,6 +247,48 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
+
+      {callerIsAdmin && (
+        <div className="max-w-4xl mx-auto px-4 pb-8 mt-6">
+          <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
+            <div className="p-5 border-b border-card-border flex items-center gap-2">
+              <ScrollText size={18} className="text-primary" />
+              <h3 className="font-bold text-base">Access Audit Log</h3>
+              <span className="ml-auto text-xs text-muted-foreground font-medium">Last {auditLogEntries?.length ?? 0} events</span>
+            </div>
+            <div className="overflow-x-auto max-h-80 overflow-y-auto">
+              {!auditLogEntries || auditLogEntries.length === 0 ? (
+                <div className="p-8 text-center text-muted-foreground text-sm">No audit events yet.</div>
+              ) : (
+                <table className="w-full text-xs">
+                  <thead className="sticky top-0 bg-muted/60 backdrop-blur">
+                    <tr className="border-b border-card-border">
+                      <th className="text-left p-2 font-bold text-muted-foreground">Time</th>
+                      <th className="text-left p-2 font-bold text-muted-foreground">User</th>
+                      <th className="text-left p-2 font-bold text-muted-foreground">Role</th>
+                      <th className="text-left p-2 font-bold text-muted-foreground">Action</th>
+                      <th className="text-left p-2 font-bold text-muted-foreground hidden sm:table-cell">Facility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {auditLogEntries.map((entry) => (
+                      <tr key={entry.id} className="border-b border-card-border/40 last:border-0 hover:bg-muted/20" data-testid={`row-audit-${entry.id}`}>
+                        <td className="p-2 text-muted-foreground whitespace-nowrap">
+                          {new Date(entry.createdAt).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}
+                        </td>
+                        <td className="p-2 font-medium">{entry.username ?? "—"}</td>
+                        <td className="p-2 text-muted-foreground">{entry.leadershipRole}</td>
+                        <td className="p-2 font-mono text-[10px] text-chart-4">{entry.action}</td>
+                        <td className="p-2 text-muted-foreground hidden sm:table-cell">{entry.facilityName ?? "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

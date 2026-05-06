@@ -42,7 +42,7 @@ function ScrollToTop() {
 }
 
 const LEADERSHIP_RANK: Record<string, number> = {
-  learner: 0, educator: 1, director: 2, admin: 3, super_admin: 4,
+  learner: 0, educator: 1, director: 2, ceo: 3, admin: 4, super_admin: 5,
 };
 
 function getEffectiveRole(user: { isAdmin: boolean; leadershipRole?: string | null; username?: string | null }): string {

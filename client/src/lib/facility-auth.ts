@@ -36,6 +36,7 @@ function leadershipToFacilityRole(lr: string | null | undefined, isAdmin: boolea
   switch (lr) {
     case "super_admin": return "super_admin";
     case "admin":       return "admin";
+    case "ceo":         return "ceo";
     case "director":    return "ceo";
     case "educator":    return "manager";
     default:            return "staff";
