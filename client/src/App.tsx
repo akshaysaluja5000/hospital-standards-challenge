@@ -47,8 +47,8 @@ function ProtectedRoute({ component: Component }: { component: () => JSX.Element
     return (
       <AppShell>
         <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <Loader2 size={32} className="animate-spin text-white/60" />
-          <p className="text-white/50 font-medium">Loading...</p>
+          <Loader2 size={32} className="animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Loading...</p>
         </div>
       </AppShell>
     );
@@ -98,8 +98,8 @@ function HomeRoute() {
     return (
       <AppShell>
         <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <Loader2 size={32} className="animate-spin text-white/60" />
-          <p className="text-white/50 font-medium">Loading...</p>
+          <Loader2 size={32} className="animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Loading...</p>
         </div>
       </AppShell>
     );
@@ -131,10 +131,10 @@ function RoleErrorRoute() {
           <div className="rounded-full bg-destructive/20 text-destructive p-3">
             <AlertCircle size={28} />
           </div>
-          <h1 className="text-2xl font-bold text-white" data-testid="text-role-error-title">
+          <h1 className="text-2xl font-bold text-foreground" data-testid="text-role-error-title">
             We couldn't start your training
           </h1>
-          <p className="text-white/60">
+          <p className="text-muted-foreground">
             The role you selected isn't available. Please choose a different role to continue.
           </p>
           <Button data-testid="button-role-error-change" onClick={() => navigate("/role-select")}>
@@ -152,8 +152,8 @@ function RoleSelectRoute() {
     return (
       <AppShell>
         <div className="flex flex-col items-center justify-center py-32 gap-4">
-          <Loader2 size={32} className="animate-spin text-white/60" />
-          <p className="text-white/50 font-medium">Loading...</p>
+          <Loader2 size={32} className="animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Loading...</p>
         </div>
       </AppShell>
     );

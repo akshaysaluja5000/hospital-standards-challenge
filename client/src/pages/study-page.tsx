@@ -335,18 +335,18 @@ export default function StudyPage() {
             </Card>
 
             {summary.commonRiskPoints && summary.commonRiskPoints.length > 0 && (
-              <div className="rounded-2xl p-6 shadow-lg" style={{ background: "linear-gradient(135deg, #3d0a0a 0%, #2a0808 100%)", border: "1px solid rgba(220,38,38,0.35)" }}>
+              <div className="rounded-2xl p-6 shadow-md border-2 border-destructive/20 bg-destructive/5">
                 <div className="flex items-center gap-3 mb-4">
-                  <AlertTriangle size={22} className="text-red-400 flex-shrink-0" />
-                  <h4 className="text-base font-black uppercase tracking-wide text-red-300">Where Teams Get Cited</h4>
-                  <span className="ml-auto text-xs font-bold px-2.5 py-1 rounded-full text-red-200" style={{ background: "rgba(220,38,38,0.3)" }} data-testid="badge-risk-count">
+                  <AlertTriangle size={22} className="text-destructive flex-shrink-0" />
+                  <h4 className="text-base font-black uppercase tracking-wide text-destructive">Where Teams Get Cited</h4>
+                  <span className="ml-auto text-xs font-bold px-2.5 py-1 rounded-full text-destructive bg-destructive/10 border border-destructive/20" data-testid="badge-risk-count">
                     {summary.commonRiskPoints.length} high-risk failures
                   </span>
                 </div>
                 <ul className="space-y-3" data-testid="list-risks">
                   {summary.commonRiskPoints.map((item, i) => (
-                    <li key={i} className="flex gap-3 text-sm leading-relaxed" style={{ color: "rgba(252,165,165,0.9)" }}>
-                      <AlertTriangle size={14} className="text-red-400 flex-shrink-0 mt-0.5" />
+                    <li key={i} className="flex gap-3 text-sm leading-relaxed text-foreground/80">
+                      <AlertTriangle size={14} className="text-destructive flex-shrink-0 mt-0.5" />
                       <span data-testid={`text-risk-${i}`}>{item}</span>
                     </li>
                   ))}
