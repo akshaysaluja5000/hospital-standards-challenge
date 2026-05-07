@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowLeft, Flame, Zap, Trophy, Target, Bell, BellOff, User as UserIcon, Pencil, Lock, Eye, EyeOff, Check, X, Loader2, Briefcase } from "lucide-react";
+import { ArrowLeft, Flame, Zap, Trophy, Target, Bell, BellOff, User as UserIcon, Pencil, Lock, Eye, EyeOff, Check, X, Loader2, Briefcase, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,18 @@ export default function ProfilePage() {
   const { toast } = useToast();
 
   const [showChangeRoleDialog, setShowChangeRoleDialog] = useState(false);
+  const [nightMode, setNightMode] = useState(() => localStorage.getItem("ar_night_mode") === "1");
+
+  function toggleNightMode(enabled: boolean) {
+    setNightMode(enabled);
+    if (enabled) {
+      localStorage.setItem("ar_night_mode", "1");
+      document.documentElement.classList.add("dark");
+    } else {
+      localStorage.removeItem("ar_night_mode");
+      document.documentElement.classList.remove("dark");
+    }
+  }
   const [editingUsername, setEditingUsername] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
@@ -406,6 +418,21 @@ export default function ProfilePage() {
                   updateSettingsMutation.mutate({ reminderEnabled: checked })
                 }
                 data-testid="switch-reminders"
+              />
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Moon size={18} className="text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-bold">Night Mode</p>
+                  <p className="text-xs text-muted-foreground">Dark background, easier on the eyes</p>
+                </div>
+              </div>
+              <Switch
+                checked={nightMode}
+                onCheckedChange={toggleNightMode}
+                data-testid="switch-night-mode"
               />
             </div>
           </div>
