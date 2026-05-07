@@ -142,7 +142,7 @@ function AscChapterCard({
               {riskExpanded && (
                 <ul className="mt-2 flex flex-col gap-1.5" data-testid={`list-asc-risk-points-${chapter.levelId}`}>
                   {riskPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-white/60 leading-snug">
+                    <li key={i} className="flex items-start gap-2 text-xs text-white leading-snug">
                       <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/70" />
                       {point}
                     </li>
