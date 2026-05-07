@@ -94,7 +94,7 @@ function AscChapterCard({
               </span>
             )}
           </div>
-          <p className="text-sm text-white/65 mt-1.5 leading-snug">
+          <p className="text-sm text-white/90 mt-1.5 leading-snug">
             {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
           </p>
           <div className="flex gap-2 mt-3 flex-wrap">
