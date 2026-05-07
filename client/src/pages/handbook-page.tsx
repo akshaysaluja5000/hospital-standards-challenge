@@ -101,7 +101,6 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
   const level = findLevelById(chapter.levelId);
   const color = level?.color || "hsl(152, 82%, 39%)";
   const [showQuickRef, setShowQuickRef] = useState(false);
-  const [showAiSearch, setShowAiSearch] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -118,15 +117,6 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
               </h2>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowAiSearch((v) => !v)}
-            data-testid="button-chapter-ai-search"
-          >
-            <Brain size={14} className="mr-1" />
-            Ask AI
-          </Button>
           <Button
             variant="default"
             size="sm"
@@ -146,11 +136,7 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
           </p>
         </div>
 
-        {showAiSearch && (
-          <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}>
-            <AiHandbookSearch />
-          </motion.div>
-        )}
+        <AiHandbookSearch />
 
         <div className="flex gap-2">
           <Button

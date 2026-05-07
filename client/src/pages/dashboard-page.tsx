@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -44,8 +45,10 @@ function AscChapterCard({
   onPlay: (quizId: string) => void;
   onStudy: (quizId: string) => void;
 }) {
+  const [riskExpanded, setRiskExpanded] = useState(false);
   const quizId = chapter.quizLevelId;
   const quizLevel = quizId ? findLevelById(quizId) : undefined;
+  const riskPoints = quizLevel?.chapterSummary?.commonRiskPoints;
   const totalQuestions = quizLevel?.questions.filter((q) => !q.draft).length ?? 0;
   // "Has a quiz" = published questions exist. "Has flashcards" = study material exists (independent of quiz).
   const hasPublishedQuiz = Boolean(quizId && quizLevel && totalQuestions > 0);
@@ -93,11 +96,6 @@ function AscChapterCard({
           </div>
           <p className="text-sm text-white/65 mt-1.5 leading-snug">
             {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
-            {chapter.surveyRiskCount != null && (
-              <span className="ml-2 text-amber-300 font-semibold">
-                ⚠ {chapter.surveyRiskCount} common survey failures
-              </span>
-            )}
           </p>
           <div className="flex gap-2 mt-3 flex-wrap">
             <button
@@ -129,6 +127,30 @@ function AscChapterCard({
               </button>
             )}
           </div>
+
+          {riskPoints && riskPoints.length > 0 && (
+            <div className="mt-4 border-t border-white/10 pt-3">
+              <button
+                className="flex items-center gap-1.5 text-amber-300 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
+                onClick={() => setRiskExpanded(!riskExpanded)}
+                data-testid={`button-asc-risk-toggle-${chapter.levelId}`}
+              >
+                <ShieldAlert size={13} />
+                {riskPoints.length} Common Survey Risk Points
+                {riskExpanded ? <ChevronUp size={13} className="ml-auto" /> : <ChevronDown size={13} className="ml-auto" />}
+              </button>
+              {riskExpanded && (
+                <ul className="mt-2 flex flex-col gap-1.5" data-testid={`list-asc-risk-points-${chapter.levelId}`}>
+                  {riskPoints.map((point, i) => (
+                    <li key={i} className="flex items-start gap-2 text-xs text-white/60 leading-snug">
+                      <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/70" />
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </motion.div>
