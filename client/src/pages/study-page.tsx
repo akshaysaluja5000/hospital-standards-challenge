@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Play,
   AlertTriangle, ListChecks, FileText, CheckCircle2, RotateCcw,
-  Trophy, RefreshCw, Timer, Clock, CalendarDays, X, HelpCircle,
+  Trophy, RefreshCw, Timer, Clock, X, HelpCircle, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,7 +16,7 @@ import type { FlashcardReview } from "@shared/schema";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-type SRRating = "again" | "hard" | "good" | "easy";
+type SRRating = "again" | "hard" | "good";
 
 const SR_CONFIG: Record<SRRating, {
   label: string;
@@ -52,15 +52,6 @@ const SR_CONFIG: Record<SRRating, {
     btn: "bg-emerald-600 hover:bg-emerald-500 text-white border-0",
     dot: "#34d399",
     badge: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
-    requeue: null,
-  },
-  easy: {
-    label: "Easy",
-    interval: "3 days",
-    icon: CalendarDays,
-    btn: "bg-sky-600 hover:bg-sky-500 text-white border-0",
-    dot: "#38bdf8",
-    badge: "bg-sky-500/15 text-sky-400 border-sky-500/25",
     requeue: null,
   },
 };
@@ -150,6 +141,20 @@ export default function StudyPage() {
     },
   });
 
+  const resetMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest("DELETE", `/api/flashcards/${levelId}/reviews`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/flashcards", levelId] });
+      queryClient.invalidateQueries({ queryKey: ["/api/flashcards/due/count"] });
+      setRatings({});
+      setSessionDone(false);
+      setQueueIndex(0);
+      setFlipped(false);
+    },
+  });
+
   useEffect(() => {
     setFlipped(false);
   }, [queueIndex]);
@@ -233,7 +238,7 @@ export default function StudyPage() {
   };
 
   // Summary counts — use last rating per card
-  const ratingCounts: Record<SRRating, number> = { again: 0, hard: 0, good: 0, easy: 0 };
+  const ratingCounts: Record<SRRating, number> = { again: 0, hard: 0, good: 0 };
   Object.values(ratings).forEach((r) => { ratingCounts[r]++; });
   const totalRated = Object.values(ratingCounts).reduce((a, b) => a + b, 0);
 
@@ -452,9 +457,9 @@ export default function StudyPage() {
                 : <span className="text-muted-foreground/60"> of {concepts.length}</span>
               }
             </span>
-            {ratingCounts.good + ratingCounts.easy > 0 && (
+            {ratingCounts.good > 0 && (
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
-                ✓ {ratingCounts.good + ratingCounts.easy} done
+                ✓ {ratingCounts.good} done
               </span>
             )}
             {ratingCounts.again + ratingCounts.hard > 0 && (
@@ -675,9 +680,9 @@ export default function StudyPage() {
                 </div>
               </div>
 
-              {/* 4-bucket summary */}
-              <div className="grid grid-cols-2 gap-3">
-                {(["easy", "good", "hard", "again"] as SRRating[]).map((r) => {
+              {/* 3-bucket summary */}
+              <div className="grid grid-cols-3 gap-3">
+                {(["good", "hard", "again"] as SRRating[]).map((r) => {
                   const cfg = SR_CONFIG[r];
                   const Icon = cfg.icon;
                   const count = ratingCounts[r];
@@ -706,10 +711,10 @@ export default function StudyPage() {
               <Card className="rounded-2xl border-2 p-5" style={{ borderColor: `${level.color}25` }}>
                 <p className="text-sm text-foreground/75 leading-relaxed text-center">
                   {ratingCounts.again + ratingCounts.hard === 0
-                    ? "Excellent session — you rated every card Good or Easy. Ready to prove it on the quiz?"
-                    : ratingCounts.good + ratingCounts.easy === 0
-                    ? "Keep reviewing — run through the deck again until more cards feel Good or Easy."
-                    : `${ratingCounts.good + ratingCounts.easy} card${ratingCounts.good + ratingCounts.easy !== 1 ? "s" : ""} feeling solid. ${ratingCounts.again + ratingCounts.hard} still need more review.`}
+                    ? "Excellent session — every card rated Good. Ready to prove it on the quiz?"
+                    : ratingCounts.good === 0
+                    ? "Keep reviewing — run through the deck again until more cards feel Good."
+                    : `${ratingCounts.good} card${ratingCounts.good !== 1 ? "s" : ""} feeling solid. ${ratingCounts.again + ratingCounts.hard} still need more review.`}
                 </p>
               </Card>
 
@@ -739,7 +744,6 @@ export default function StudyPage() {
                       size="lg"
                       className="flex-1 border-orange-500/40 text-orange-400 hover:bg-orange-500/10"
                       onClick={() => {
-                        // Restart with only again+hard rated cards
                         const needsWork = Object.entries(ratings)
                           .filter(([, r]) => r === "again" || r === "hard")
                           .map(([i]) => Number(i));
@@ -755,6 +759,17 @@ export default function StudyPage() {
                     </Button>
                   )}
                 </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full text-muted-foreground/50 hover:text-red-400 hover:bg-red-500/10 text-xs"
+                  onClick={() => resetMutation.mutate()}
+                  disabled={resetMutation.isPending}
+                  data-testid="button-forget-all"
+                >
+                  <Trash2 size={13} className="mr-1.5" />
+                  {resetMutation.isPending ? "Resetting…" : "Forget all — start from scratch"}
+                </Button>
               </div>
             </motion.div>
           </AnimatePresence>

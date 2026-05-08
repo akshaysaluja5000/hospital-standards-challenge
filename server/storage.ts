@@ -328,6 +328,7 @@ export interface IStorage {
 
   getFlashcardReviews(userId: number, levelId: string): Promise<FlashcardReview[]>;
   upsertFlashcardReview(userId: number, levelId: string, cardIndex: number, nextReviewAt: Date, intervalMinutes: number, lastRating: string): Promise<FlashcardReview>;
+  resetFlashcardReviews(userId: number, levelId: string): Promise<void>;
   getDueFlashcards(userId: number): Promise<FlashcardReview[]>;
   getDueFlashcardCount(userId: number): Promise<number>;
 
@@ -726,6 +727,12 @@ export class DatabaseStorage implements IStorage {
     } finally {
       client.release();
     }
+  }
+
+  async resetFlashcardReviews(userId: number, levelId: string): Promise<void> {
+    await db.delete(flashcardReviews).where(
+      and(eq(flashcardReviews.userId, userId), eq(flashcardReviews.levelId, levelId))
+    );
   }
 
   async getDueFlashcards(userId: number): Promise<FlashcardReview[]> {

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowLeft, Brain, CheckCircle2, Timer, Clock, CalendarDays,
+  ArrowLeft, Brain, CheckCircle2, Timer, Clock,
   Trophy, RefreshCw, ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { findLevelById } from "@shared/all-levels";
 import type { FlashcardReview } from "@shared/schema";
 
-type SRRating = "again" | "hard" | "good" | "easy";
+type SRRating = "again" | "hard" | "good";
 
 const SR_CONFIG: Record<SRRating, {
   label: string;
@@ -27,7 +27,7 @@ const SR_CONFIG: Record<SRRating, {
     label: "Again",
     interval: "< 2 min",
     icon: Timer,
-    btn: "border-red-500/50 text-red-400 hover:bg-red-500/10 hover:border-red-500/70",
+    btn: "bg-red-500 hover:bg-red-600 text-white border-0",
     dot: "#f87171",
     badge: "bg-red-500/15 text-red-400 border-red-500/25",
     requeue: 2,
@@ -36,7 +36,7 @@ const SR_CONFIG: Record<SRRating, {
     label: "Hard",
     interval: "< 15 min",
     icon: Clock,
-    btn: "border-orange-500/50 text-orange-400 hover:bg-orange-500/10 hover:border-orange-500/70",
+    btn: "bg-orange-500 hover:bg-orange-600 text-white border-0",
     dot: "#fb923c",
     badge: "bg-orange-500/15 text-orange-400 border-orange-500/25",
     requeue: 8,
@@ -48,15 +48,6 @@ const SR_CONFIG: Record<SRRating, {
     btn: "bg-emerald-600 hover:bg-emerald-500 text-white border-0",
     dot: "#34d399",
     badge: "bg-emerald-500/15 text-emerald-400 border-emerald-500/25",
-    requeue: null,
-  },
-  easy: {
-    label: "Easy",
-    interval: "3 days",
-    icon: CalendarDays,
-    btn: "bg-sky-600 hover:bg-sky-500 text-white border-0",
-    dot: "#38bdf8",
-    badge: "bg-sky-500/15 text-sky-400 border-sky-500/25",
     requeue: null,
   },
 };
@@ -169,7 +160,7 @@ export default function FlashcardReviewPage() {
     }
   };
 
-  const ratingCounts: Record<SRRating, number> = { again: 0, hard: 0, good: 0, easy: 0 };
+  const ratingCounts: Record<SRRating, number> = { again: 0, hard: 0, good: 0 };
   Object.values(ratings).forEach((r) => { ratingCounts[r]++; });
   const totalRated = Object.values(ratingCounts).reduce((a, b) => a + b, 0);
 
@@ -269,9 +260,9 @@ export default function FlashcardReviewPage() {
                 {currentLevel.name}
               </span>
             )}
-            {ratingCounts.good + ratingCounts.easy > 0 && (
+            {ratingCounts.good > 0 && (
               <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/25">
-                ✓ {ratingCounts.good + ratingCounts.easy} done
+                ✓ {ratingCounts.good} done
               </span>
             )}
           </div>
@@ -374,13 +365,13 @@ export default function FlashcardReviewPage() {
                       </div>
                     )}
 
-                    {/* 4-Button SR Row */}
+                    {/* 3-Button SR Row */}
                     <div className="flex flex-col gap-2 pt-1">
                       <p className="text-[10px] text-center text-muted-foreground/50 font-semibold uppercase tracking-widest">
                         How well did you know this?
                       </p>
-                      <div className="grid grid-cols-4 gap-2">
-                        {(["again", "hard", "good", "easy"] as SRRating[]).map((r) => {
+                      <div className="grid grid-cols-3 gap-2">
+                        {(["again", "hard", "good"] as SRRating[]).map((r) => {
                           const cfg = SR_CONFIG[r];
                           const Icon = cfg.icon;
                           return (
@@ -446,8 +437,8 @@ export default function FlashcardReviewPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                {(["easy", "good", "hard", "again"] as SRRating[]).map((r) => {
+              <div className="grid grid-cols-3 gap-3">
+                {(["good", "hard", "again"] as SRRating[]).map((r) => {
                   const cfg = SR_CONFIG[r];
                   const Icon = cfg.icon;
                   const count = ratingCounts[r];
@@ -475,8 +466,8 @@ export default function FlashcardReviewPage() {
               <Card className="rounded-2xl border-2 p-5 border-violet-500/20">
                 <p className="text-sm text-foreground/75 leading-relaxed text-center">
                   {ratingCounts.again + ratingCounts.hard === 0
-                    ? "Excellent! All cards rated Good or Easy — they'll return in 1–3 days."
-                    : `${ratingCounts.good + ratingCounts.easy} card${ratingCounts.good + ratingCounts.easy !== 1 ? "s" : ""} scheduled for tomorrow. ${ratingCounts.again + ratingCounts.hard} card${ratingCounts.again + ratingCounts.hard !== 1 ? "s" : ""} coming back sooner.`}
+                    ? "Excellent! All cards rated Good — they'll return tomorrow."
+                    : `${ratingCounts.good} card${ratingCounts.good !== 1 ? "s" : ""} scheduled for tomorrow. ${ratingCounts.again + ratingCounts.hard} card${ratingCounts.again + ratingCounts.hard !== 1 ? "s" : ""} coming back sooner.`}
                 </p>
               </Card>
 
@@ -501,12 +492,12 @@ export default function FlashcardReviewPage() {
                       setQueue(needsWork);
                       setQueueIndex(0);
                       setFlipped(false);
-                      setRatings({});
+                      setRatings({ again: 0, hard: 0, good: 0 } as any);
                       setSessionDone(false);
                     }}
                     data-testid="button-review-weak"
                   >
-                    <RefreshCw size={16} className="mr-2" /> Review Weak Cards
+                    <RefreshCw size={16} className="mr-2" /> Review Weak Cards Again
                   </Button>
                 )}
               </div>

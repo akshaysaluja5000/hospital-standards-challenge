@@ -2375,7 +2375,6 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     again: 2,
     hard: 15,
     good: 1440,
-    easy: 4320,
   };
 
   app.get("/api/flashcards/due/count", requireAuth, async (req, res) => {
@@ -2414,12 +2413,23 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
   });
 
+  app.delete("/api/flashcards/:levelId/reviews", requireAuth, async (req, res) => {
+    try {
+      const { levelId } = req.params;
+      await storage.resetFlashcardReviews(req.user!.id, levelId);
+      res.json({ ok: true });
+    } catch (err) {
+      console.error("Error resetting flashcard reviews:", err);
+      res.status(500).json({ error: "Failed to reset" });
+    }
+  });
+
   app.post("/api/flashcards/:levelId/review", requireAuth, async (req, res) => {
     try {
       const { levelId } = req.params;
       const schema = z.object({
         cardIndex: z.number().int().min(0),
-        rating: z.enum(["again", "hard", "good", "easy"]),
+        rating: z.enum(["again", "hard", "good"]),
       });
       const { cardIndex, rating } = schema.parse(req.body);
       const intervalMinutes = SR_INTERVALS[rating];
