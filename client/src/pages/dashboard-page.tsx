@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap } from "lucide-react";
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -37,6 +37,7 @@ function AscChapterCard({
   onRead,
   onPlay,
   onStudy,
+  onDeepDive,
 }: {
   chapter: AscHandbookChapter;
   progressMap: Map<string, UserProgress>;
@@ -44,6 +45,7 @@ function AscChapterCard({
   onRead: () => void;
   onPlay: (quizId: string) => void;
   onStudy: (quizId: string) => void;
+  onDeepDive: () => void;
 }) {
   const [riskExpanded, setRiskExpanded] = useState(false);
   const quizId = chapter.quizLevelId;
@@ -126,6 +128,14 @@ function AscChapterCard({
                 {hasPlayed || session ? "Play Again" : "Practice Quiz"}
               </button>
             )}
+            <button
+              onClick={onDeepDive}
+              data-testid={`button-asc-deep-dive-${chapter.levelId}`}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+            >
+              <Microscope size={15} />
+              Deep Dive
+            </button>
           </div>
 
           {riskPoints && riskPoints.length > 0 && (
@@ -408,6 +418,36 @@ export default function DashboardPage() {
               );
             })()}
 
+            {/* Hospital Diagnostic — first-timers: show in left column at top */}
+            {userModule !== "asc" && !(diagnosticResults && diagnosticResults.length > 0) && (
+              <motion.div
+                className="w-full rounded-2xl border-2 p-5 text-left bg-teal-500/5 border-teal-500/20"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                data-testid="card-diagnostic-cta-main"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-md">
+                    <Stethoscope size={22} className="text-white" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-bold text-base leading-tight">Diagnostic Quiz</h3>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/15 text-teal-500 uppercase tracking-wider">Start here</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground mt-0.5">25 questions · ~10 min — find your knowledge gaps before you start training</p>
+                  </div>
+                  <button
+                    onClick={() => setLocation("/diagnostic")}
+                    data-testid="button-diagnostic-cta-main"
+                    className="flex-shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white shadow-md transition-all active:scale-95"
+                  >
+                    Begin <ChevronRight size={15} />
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
             {/* ASC Diagnostic — main column, mirrors hospital diagnostic placement */}
             {userModule === "asc" && (
               <motion.div
@@ -539,6 +579,7 @@ export default function DashboardPage() {
                             onRead={() => setLocation(`/handbook/${chapter.levelId}`)}
                             onPlay={(quizId) => setLocation(`/play/${quizId}`)}
                             onStudy={(quizId) => setLocation(`/study/${quizId}`)}
+                            onDeepDive={() => setLocation("/deep-dive")}
                           />
                         ))}
                       </div>
@@ -637,47 +678,24 @@ export default function DashboardPage() {
               </motion.div>
             )}
 
-            {/* Handbook + Deep Dive — two-up row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <motion.button
-                className="rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"
-                onClick={() => setLocation("/handbook")}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileTap={{ scale: 0.98 }}
-                data-testid="button-handbook"
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">
-                  <BookOpen size={20} className="text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-sm">Compliance Handbook</h3>
-                  <p className="text-sm text-muted-foreground mt-0.5">Complete reference guide</p>
-                </div>
-                <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
-              </motion.button>
-
-              <motion.button
-                className="rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-secondary/5 border-secondary/20 hover:bg-secondary/10"
-                onClick={() => setLocation("/deep-dive")}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileTap={{ scale: 0.98 }}
-                data-testid="button-deep-dive"
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-secondary/10">
-                  <Microscope size={20} className="text-secondary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="font-bold text-sm">Deep Dive Tracer</h3>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-secondary/10 text-secondary uppercase tracking-wider">New</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-0.5">Earn Expert XP for deeper knowledge</p>
-                </div>
-                <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
-              </motion.button>
-            </div>
+            {/* Handbook */}
+            <motion.button
+              className="rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-primary/5 border-primary/20 hover:bg-primary/10"
+              onClick={() => setLocation("/handbook")}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileTap={{ scale: 0.98 }}
+              data-testid="button-handbook"
+            >
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">
+                <BookOpen size={20} className="text-primary" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-bold text-sm">Compliance Handbook</h3>
+                <p className="text-sm text-muted-foreground mt-0.5">Complete reference guide for all standards</p>
+              </div>
+              <ChevronRight size={16} className="text-muted-foreground flex-shrink-0" />
+            </motion.button>
 
 
           </div>
@@ -821,29 +839,6 @@ export default function DashboardPage() {
             {/* XP Bar */}
             <XpBar currentXp={displayXp} />
 
-            {/* Diagnostic — sidebar entry only for first-timers; returners see it in the main column */}
-            {userModule !== "asc" && !(diagnosticResults && diagnosticResults.length > 0) && (
-              <motion.button
-                className="w-full rounded-2xl border-2 p-4 flex items-center gap-3 transition-colors text-left bg-teal-500/5 border-teal-500/20 hover:bg-teal-500/10"
-                onClick={() => setLocation("/diagnostic")}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                whileTap={{ scale: 0.98 }}
-                data-testid="button-diagnostic-cta"
-              >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-teal-500 to-cyan-600 shadow-sm">
-                  <Stethoscope size={18} className="text-white" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <h3 className="font-bold text-sm">Diagnostic Quiz</h3>
-                    <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-teal-500/10 text-teal-600 uppercase tracking-wider">Start</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-0.5">25 questions · ~10 min</p>
-                </div>
-                <ChevronRight size={15} className="text-muted-foreground flex-shrink-0" />
-              </motion.button>
-            )}
 
             {/* Activity Calendar */}
             <div className="rounded-2xl bg-card border border-card-border p-4">

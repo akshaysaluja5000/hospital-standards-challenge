@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Play,
   AlertTriangle, ListChecks, FileText, CheckCircle2, RotateCcw,
-  Trophy, RefreshCw, Timer, Clock, CalendarDays,
+  Trophy, RefreshCw, Timer, Clock, CalendarDays, X, HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -105,11 +105,12 @@ export default function StudyPage() {
   const levelId = params?.levelId;
   const level = useMemo(() => findLevelById(levelId ?? ""), [levelId]);
 
-  const [view, setView] = useState<"summary" | "concepts">(
-    level?.chapterSummary ? "summary" : "concepts"
-  );
+  const [view, setView] = useState<"summary" | "concepts">("concepts");
   const [flipped, setFlipped] = useState(false);
   const [sessionDone, setSessionDone] = useState(false);
+  const [howItWorksOpen, setHowItWorksOpen] = useState(
+    () => localStorage.getItem("ar_flashcard_tip_dismissed") !== "1"
+  );
 
   // Spaced-repetition queue state
   const [queue, setQueue] = useState<number[]>(() =>
@@ -388,6 +389,55 @@ export default function StudyPage() {
       {/* ── Concepts View: Active Cards ── */}
       {view === "concepts" && !sessionDone && (
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 gap-5">
+
+          {/* How it works panel */}
+          {howItWorksOpen ? (
+            <div className="w-full max-w-lg rounded-2xl border border-primary/20 bg-primary/5 p-4">
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="flex items-center gap-2">
+                  <HelpCircle size={15} className="text-primary flex-shrink-0" />
+                  <p className="text-xs font-black uppercase tracking-wide text-primary">How flashcards work</p>
+                </div>
+                <button
+                  onClick={() => { setHowItWorksOpen(false); localStorage.setItem("ar_flashcard_tip_dismissed", "1"); }}
+                  className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
+                  data-testid="button-dismiss-tip"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+              <p className="text-xs text-foreground/80 leading-relaxed mb-3">
+                Tap a card to flip it and reveal the answer. After flipping, rate how well you remembered it:
+              </p>
+              <div className="grid grid-cols-3 gap-2 text-xs">
+                <div className="rounded-xl border border-red-500/30 bg-red-500/8 p-2.5 text-center">
+                  <p className="font-black text-red-400">Again</p>
+                  <p className="text-muted-foreground mt-0.5 leading-tight">Forgot it — shows again right away</p>
+                </div>
+                <div className="rounded-xl border border-orange-500/30 bg-orange-500/8 p-2.5 text-center">
+                  <p className="font-black text-orange-400">Hard</p>
+                  <p className="text-muted-foreground mt-0.5 leading-tight">Struggled — comes back in ~15 min</p>
+                </div>
+                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/8 p-2.5 text-center">
+                  <p className="font-black text-emerald-400">Good</p>
+                  <p className="text-muted-foreground mt-0.5 leading-tight">Got it — scheduled for tomorrow</p>
+                </div>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-2.5 leading-relaxed">
+                Cards you find hard come back sooner. Cards you know well are spaced further out. This is how long-term memory is built.
+              </p>
+            </div>
+          ) : (
+            <button
+              onClick={() => setHowItWorksOpen(true)}
+              className="flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+              data-testid="button-show-tip"
+            >
+              <HelpCircle size={12} />
+              How does rating work?
+            </button>
+          )}
+
           {/* Counter + queue info */}
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">

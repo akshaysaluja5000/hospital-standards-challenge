@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp, Layers } from "lucide-react";
+import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp, Layers, Microscope } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import type { Level, UserProgress, QuizSession } from "@shared/schema";
 
@@ -19,6 +20,7 @@ interface LevelCardProps {
 }
 
 export function LevelCard({ level, progress, savedSession, index, onPlay, onStudy }: LevelCardProps) {
+  const [, setLocation] = useLocation();
   const Icon = iconMap[level.icon] || Star;
   const bestScore = progress?.bestScore || 0;
   const totalQuestions = level.questions.length;
@@ -76,15 +78,15 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
               </span>
             )}
           </div>
-          <p className="text-base text-white/70 mt-1.5 line-clamp-2 leading-relaxed">
+          <p className="text-base text-white/90 mt-1.5 line-clamp-2 leading-relaxed">
             {level.description}
           </p>
           <div className="flex items-center gap-3 mt-2.5">
-            <span className="text-sm text-white/60 font-semibold">
+            <span className="text-sm text-white/90 font-semibold">
               {totalQuestions} questions
             </span>
-            <span className="text-sm text-white/40">•</span>
-            <span className="text-sm text-white/60 font-semibold">
+            <span className="text-sm text-white/60">•</span>
+            <span className="text-sm text-white/90 font-semibold">
               {level.studyMaterial.length} study concepts
             </span>
           </div>
@@ -127,6 +129,14 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
                 {hasPlayed ? "Play Again" : "Play Quiz"}
               </button>
             )}
+            <button
+              onClick={() => setLocation(`/deep-dive/${level.id}`)}
+              data-testid={`button-deep-dive-${level.id}`}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+            >
+              <Microscope size={15} />
+              Deep Dive
+            </button>
           </div>
 
           {riskPoints && riskPoints.length > 0 && (
@@ -143,7 +153,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
               {riskExpanded && (
                 <ul className="mt-2 flex flex-col gap-1.5" data-testid={`list-risk-points-${level.id}`}>
                   {riskPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-white/60 leading-snug">
+                    <li key={i} className="flex items-start gap-2 text-xs text-white leading-snug">
                       <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/70" />
                       {point}
                     </li>
