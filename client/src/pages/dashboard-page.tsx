@@ -99,43 +99,51 @@ function AscChapterCard({
           <p className="text-sm text-white/90 mt-1.5 leading-snug">
             {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
           </p>
-          <div className="flex gap-2 mt-3 flex-wrap">
-            <button
-              onClick={onRead}
-              data-testid={`button-asc-read-${chapter.levelId}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
-            >
-              <FileText size={15} />
-              Read in Handbook
-            </button>
-            {hasFlashcards && quizId && (
+          <div className="flex flex-col gap-2 mt-3">
+            {/* Study tools */}
+            <div className="flex gap-2 flex-wrap">
               <button
-                onClick={() => onStudy(quizId)}
-                data-testid={`button-asc-study-${chapter.levelId}`}
+                onClick={onRead}
+                data-testid={`button-asc-read-${chapter.levelId}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
               >
-                <Layers size={15} />
-                Flashcards
+                <FileText size={15} />
+                Read in Handbook
               </button>
-            )}
-            {hasPublishedQuiz && quizId && (
+              {hasFlashcards && quizId && (
+                <button
+                  onClick={() => onStudy(quizId)}
+                  data-testid={`button-asc-study-${chapter.levelId}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+                >
+                  <Layers size={15} />
+                  Flashcards
+                </button>
+              )}
+            </div>
+
+            {/* Practice / test options — always visible as a pair */}
+            <div className="flex items-center gap-2 pt-1 border-t border-white/10 flex-wrap">
+              <span className="text-[10px] font-black uppercase tracking-wider text-white/50">Practice:</span>
+              {hasPublishedQuiz && quizId && (
+                <button
+                  onClick={() => onPlay(quizId)}
+                  data-testid={`button-asc-practice-${chapter.levelId}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
+                >
+                  <Play size={15} />
+                  {hasPlayed || session ? "Quiz Again" : "Practice Quiz"}
+                </button>
+              )}
               <button
-                onClick={() => onPlay(quizId)}
-                data-testid={`button-asc-practice-${chapter.levelId}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
+                onClick={onDeepDive}
+                data-testid={`button-asc-deep-dive-${chapter.levelId}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
               >
-                <Play size={15} />
-                {hasPlayed || session ? "Play Again" : "Practice Quiz"}
+                <Microscope size={15} />
+                Deep Dive Tracer
               </button>
-            )}
-            <button
-              onClick={onDeepDive}
-              data-testid={`button-asc-deep-dive-${chapter.levelId}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
-            >
-              <Microscope size={15} />
-              Deep Dive
-            </button>
+            </div>
           </div>
 
           {riskPoints && riskPoints.length > 0 && (

@@ -91,52 +91,60 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
             </span>
           </div>
 
-          <div className="flex gap-2 mt-4 flex-wrap">
-            <button
-              onClick={onStudy}
-              data-testid={`button-study-${level.id}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
-            >
-              <Layers size={15} />
-              Flashcards
-            </button>
-            {hasInProgress ? (
-              <>
+          <div className="flex flex-col gap-2 mt-4">
+            {/* Study tools */}
+            <div className="flex gap-2 flex-wrap">
+              <button
+                onClick={onStudy}
+                data-testid={`button-study-${level.id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+              >
+                <Layers size={15} />
+                Flashcards
+              </button>
+            </div>
+
+            {/* Practice / test options — always visible as a pair */}
+            <div className="flex items-center gap-2 pt-1 border-t border-white/10 flex-wrap">
+              <span className="text-[10px] font-black uppercase tracking-wider text-white/50">Practice:</span>
+              {hasInProgress ? (
+                <>
+                  <button
+                    onClick={onPlay}
+                    data-testid={`button-continue-${level.id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
+                  >
+                    <PlayCircle size={15} />
+                    Continue Quiz
+                  </button>
+                  <button
+                    onClick={handleStartOver}
+                    data-testid={`button-restart-${level.id}`}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+                  >
+                    <RotateCcw size={15} />
+                    Restart Quiz
+                  </button>
+                </>
+              ) : (
                 <button
                   onClick={onPlay}
-                  data-testid={`button-continue-${level.id}`}
+                  data-testid={`button-level-${level.id}`}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
                 >
-                  <PlayCircle size={15} />
-                  Continue
+                  <Play size={15} />
+                  {hasPlayed ? "Quiz Again" : "Practice Quiz"}
                 </button>
-                <button
-                  onClick={handleStartOver}
-                  data-testid={`button-restart-${level.id}`}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
-                >
-                  <RotateCcw size={15} />
-                  Start Over
-                </button>
-              </>
-            ) : (
+              )}
               <button
-                onClick={onPlay}
-                data-testid={`button-level-${level.id}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white text-primary hover:bg-white/90 transition-all active:scale-95 shadow-sm"
+                onClick={() => setLocation(`/deep-dive/${level.id}`)}
+                data-testid={`button-deep-dive-${level.id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
               >
-                <Play size={15} />
-                {hasPlayed ? "Play Again" : "Play Quiz"}
+                <Microscope size={15} />
+                Deep Dive Tracer
               </button>
-            )}
-            <button
-              onClick={() => setLocation(`/deep-dive/${level.id}`)}
-              data-testid={`button-deep-dive-${level.id}`}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
-            >
-              <Microscope size={15} />
-              Deep Dive
-            </button>
+            </div>
           </div>
 
           {riskPoints && riskPoints.length > 0 && (
