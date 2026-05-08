@@ -2544,5 +2544,79 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
   });
 
+  // ── AI Topic Quiz ──────────────────────────────────────────────────────────
+  const topicQuizRateLimit = new Map<number, number[]>();
+  const TOPIC_QUIZ_MAX = 20;
+  const TOPIC_QUIZ_WINDOW_MS = 60 * 60 * 1000;
+
+  app.post("/api/ai/topic-quiz", requireAuth, async (req: Request, res: Response) => {
+    const schema = z.object({
+      topic: z.string().min(1).max(200),
+      context: z.string().max(1000).optional(),
+      module: z.enum(["hospital", "asc"]).default("hospital"),
+    });
+    const parsed = schema.safeParse(req.body);
+    if (!parsed.success) return res.status(400).json({ error: "Invalid request." });
+
+    const userId = (req.user as User).id;
+    const now = Date.now();
+    const calls = (topicQuizRateLimit.get(userId) || []).filter(t => now - t < TOPIC_QUIZ_WINDOW_MS);
+    if (calls.length >= TOPIC_QUIZ_MAX) {
+      return res.status(429).json({ error: "You've reached the topic quiz limit. Try again later." });
+    }
+    calls.push(now);
+    topicQuizRateLimit.set(userId, calls);
+
+    const { topic, context, module: mod } = parsed.data;
+    const standard = mod === "asc" ? "AAAHC accreditation" : "Joint Commission (TJC) hospital accreditation";
+
+    const prompt = `You are a ${standard} compliance educator. Generate exactly 5 multiple-choice quiz questions about "${topic}" for healthcare staff preparing for a survey.
+
+${context ? `Additional context: ${context}` : ""}
+
+Rules:
+- Each question must be directly relevant to ${standard} compliance standards or survey readiness
+- Focus on what surveyors actually look for, common citation points, required documentation, or correct procedure
+- 4 answer options per question (A, B, C, D). Only one is correct
+- Options must be plausible but clearly distinguishable
+- Explanation (1-2 sentences) must cite the rationale or standard
+
+Return ONLY valid JSON in this exact structure, no markdown, no commentary:
+{
+  "questions": [
+    {
+      "question": "...",
+      "options": ["option A text", "option B text", "option C text", "option D text"],
+      "correctIndex": 0,
+      "explanation": "..."
+    }
+  ]
+}`;
+
+    try {
+      const message = await callAnthropicWithRetry({
+        model: "claude-haiku-4-5",
+        max_tokens: 2000,
+        messages: [{ role: "user", content: prompt }],
+      });
+
+      const raw = message.content[0]?.type === "text" ? message.content[0].text.trim() : "";
+      const jsonStart = raw.indexOf("{");
+      const jsonEnd = raw.lastIndexOf("}");
+      if (jsonStart === -1 || jsonEnd === -1) {
+        return res.status(502).json({ error: "AI returned an unexpected format. Please try again." });
+      }
+      const parsed2 = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
+      if (!Array.isArray(parsed2?.questions) || parsed2.questions.length === 0) {
+        return res.status(502).json({ error: "AI returned an unexpected format. Please try again." });
+      }
+      res.json({ topic, questions: parsed2.questions });
+    } catch (error: any) {
+      const errStatus = error?.status || 500;
+      if (errStatus === 429) return res.status(429).json({ error: "AI service is busy. Please try again." });
+      res.status(502).json({ error: "Could not generate quiz. Please try again." });
+    }
+  });
+
   return httpServer;
 }

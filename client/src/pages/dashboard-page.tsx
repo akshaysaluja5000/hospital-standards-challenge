@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,6 +19,7 @@ import { getVisibleLevelsForModule, findLevelById } from "@shared/all-levels";
 import { ascHandbook, ASC_HANDBOOK_CATEGORY_ORDER, type AscHandbookChapter } from "@shared/asc-handbook";
 import { MODULE_LABELS, type ModuleId } from "@shared/schema";
 import { getRoleConfig } from "@shared/roles";
+import { TopicQuizModal, type SearchEntry } from "@/components/topic-quiz-modal";
 
 const PATHWAY_HEADERS: Record<ModuleId, string> = {
   hospital: "Hospital Standards",
@@ -268,6 +269,97 @@ export default function DashboardPage() {
     return true;
   };
 
+  // ── Search index (built from all visible levels + ASC handbook) ──────────
+  const searchIndex = useMemo<SearchEntry[]>(() => {
+    const entries: SearchEntry[] = [];
+
+    // Hospital levels
+    const hospLevels = getVisibleLevelsForModule("hospital");
+    for (const lvl of hospLevels) {
+      entries.push({
+        id: `hosp-${lvl.id}`,
+        title: lvl.name,
+        subtitle: lvl.description ?? "",
+        module: "hospital",
+        levelId: lvl.id,
+        aiContext: [
+          lvl.description ?? "",
+          lvl.chapterSummary?.plainLanguageSummary ?? "",
+          (lvl.chapterSummary?.commonRiskPoints ?? []).join(". "),
+        ].filter(Boolean).join(" ").slice(0, 800),
+      });
+      // Also index individual study concept titles so e.g. "moderate sedation" hits specific cards
+      for (const concept of lvl.studyMaterial ?? []) {
+        entries.push({
+          id: `hosp-concept-${lvl.id}-${concept.title.slice(0, 20)}`,
+          title: concept.title,
+          subtitle: `${lvl.name} — ${concept.keyPoint}`,
+          module: "hospital",
+          levelId: lvl.id,
+          aiContext: `${concept.title}: ${concept.content} Key point: ${concept.keyPoint}`.slice(0, 800),
+        });
+      }
+    }
+
+    // ASC handbook chapters
+    for (const ch of ascHandbook) {
+      entries.push({
+        id: `asc-${ch.levelId}`,
+        title: ch.title,
+        subtitle: ch.overview?.slice(0, 120) ?? "",
+        module: "asc",
+        levelId: ch.levelId,
+        aiContext: [
+          ch.overview ?? "",
+          (ch.riskPoints ?? []).join(". "),
+        ].filter(Boolean).join(" ").slice(0, 800),
+      });
+    }
+
+    return entries;
+  }, []);
+
+  // ── Search state ────────────────────────────────────────────────────────
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [quizEntry, setQuizEntry] = useState<SearchEntry | null>(null);
+  const [quizOpen, setQuizOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  const searchResults = useMemo<SearchEntry[]>(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (q.length < 2) return [];
+    const words = q.split(/\s+/);
+    const scored = searchIndex
+      .filter((e) => {
+        const haystack = `${e.title} ${e.subtitle}`.toLowerCase();
+        return words.every((w) => haystack.includes(w));
+      })
+      .map((e) => {
+        const title = e.title.toLowerCase();
+        let score = 0;
+        if (title === q) score += 100;
+        else if (title.startsWith(q)) score += 50;
+        else if (title.includes(q)) score += 20;
+        return { entry: e, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map((x) => x.entry);
+    return scored;
+  }, [searchQuery, searchIndex]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
   const dailyGoal = user?.dailyGoal || 5;
   const todayQuestions = todayActivity?.questionsAnswered || 0;
   const goalProgress = Math.min((todayQuestions / dailyGoal) * 100, 100);
@@ -358,6 +450,100 @@ export default function DashboardPage() {
 
           {/* ── LEFT: Training content ── */}
           <div className="flex flex-col gap-6">
+
+            {/* ── Search Bar ── */}
+            <div ref={searchRef} className="relative" data-testid="search-container">
+              <div className="relative flex items-center">
+                <Search size={16} className="absolute left-3.5 text-muted-foreground pointer-events-none" />
+                <input
+                  type="text"
+                  placeholder="Search any topic, standard, or concept…"
+                  value={searchQuery}
+                  onChange={(e) => { setSearchQuery(e.target.value); setSearchOpen(true); }}
+                  onFocus={() => setSearchOpen(true)}
+                  className="w-full pl-10 pr-10 py-3 rounded-2xl border border-border bg-card text-sm font-medium placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+                  data-testid="input-search"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => { setSearchQuery(""); setSearchOpen(false); }}
+                    className="absolute right-3.5 text-muted-foreground hover:text-foreground transition-colors"
+                    data-testid="button-search-clear"
+                  >
+                    <XIcon size={15} />
+                  </button>
+                )}
+              </div>
+
+              <AnimatePresence>
+                {searchOpen && searchResults.length > 0 && (
+                  <motion.div
+                    key="search-dropdown"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute top-full mt-2 left-0 right-0 z-50 rounded-2xl border border-border bg-card shadow-xl overflow-hidden"
+                    data-testid="search-results"
+                  >
+                    <div className="flex flex-col divide-y divide-border/60">
+                      {searchResults.map((entry) => (
+                        <div
+                          key={entry.id}
+                          className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
+                        >
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold truncate" data-testid={`search-result-title-${entry.id}`}>
+                              {entry.title}
+                            </p>
+                            <p className="text-xs text-muted-foreground truncate mt-0.5">
+                              <span className={`inline-block mr-1.5 px-1 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
+                                entry.module === "asc"
+                                  ? "bg-teal-500/15 text-teal-600"
+                                  : "bg-primary/10 text-primary"
+                              }`}>
+                                {entry.module === "asc" ? "ASC" : "Hospital"}
+                              </span>
+                              {entry.subtitle}
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => {
+                              setQuizEntry(entry);
+                              setQuizOpen(true);
+                              setSearchOpen(false);
+                            }}
+                            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-95"
+                            data-testid={`button-quick-quiz-${entry.id}`}
+                          >
+                            <BrainCircuit size={12} />
+                            Quick Quiz
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="px-4 py-2 bg-muted/30 border-t border-border/60">
+                      <p className="text-[10px] text-muted-foreground font-semibold">
+                        {searchResults.length} result{searchResults.length !== 1 ? "s" : ""} · AI generates 5 focused questions on any topic
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+                {searchOpen && searchQuery.trim().length >= 2 && searchResults.length === 0 && (
+                  <motion.div
+                    key="search-empty"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    className="absolute top-full mt-2 left-0 right-0 z-50 rounded-2xl border border-border bg-card shadow-xl px-4 py-5 text-center"
+                    data-testid="search-empty"
+                  >
+                    <p className="text-sm font-semibold text-muted-foreground">No matching topics found</p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">Try different keywords or a shorter phrase</p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* ── Due Flashcards Banner ── */}
             {dueData && dueData.count > 0 && (
@@ -864,6 +1050,13 @@ export default function DashboardPage() {
         {PATHWAY_DISCLAIMERS[userModule]}{" "}
         <Link href="/terms" className="underline hover:text-primary">Terms & Privacy</Link>
       </div>
+
+      {/* AI Topic Quiz Modal */}
+      <TopicQuizModal
+        entry={quizEntry}
+        open={quizOpen}
+        onClose={() => { setQuizOpen(false); setQuizEntry(null); }}
+      />
     </div>
   );
 }
