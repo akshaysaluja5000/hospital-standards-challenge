@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle, MoreHorizontal } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle, MoreHorizontal, Moon, Sun } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -325,6 +325,19 @@ export default function DashboardPage() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [quizEntry, setQuizEntry] = useState<SearchEntry | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
+  const [isDark, setIsDark] = useState(() => localStorage.getItem("ar_night_mode") === "1");
+
+  function toggleDark() {
+    const next = !isDark;
+    setIsDark(next);
+    if (next) {
+      localStorage.setItem("ar_night_mode", "1");
+      document.documentElement.classList.add("dark");
+    } else {
+      localStorage.removeItem("ar_night_mode");
+      document.documentElement.classList.remove("dark");
+    }
+  }
   const searchRef = useRef<HTMLDivElement>(null);
 
   const searchResults = useMemo<SearchEntry[]>(() => {
@@ -462,6 +475,11 @@ export default function DashboardPage() {
             </Button>
             <Button variant="outline" size="sm" onClick={async () => { await logout(); setLocation("/auth"); }} data-testid="button-logout" className="hidden sm:flex">
               <LogOut size={16} />
+            </Button>
+
+            {/* Dark mode toggle — always visible */}
+            <Button variant="outline" size="sm" onClick={toggleDark} data-testid="button-toggle-dark" title={isDark ? "Switch to light mode" : "Switch to night mode"}>
+              {isDark ? <Sun size={16} /> : <Moon size={16} />}
             </Button>
 
             {/* Mobile overflow menu — replaces Trophy / Help / Settings / Logout */}
