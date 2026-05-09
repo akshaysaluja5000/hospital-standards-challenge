@@ -2770,10 +2770,10 @@ const hospitalLevelsRaw: Level[] = [
         id: "or4",
         question: "During a procedure, the skin prep was applied and appears wet and shiny. The surgeon asks to begin draping. Should draping proceed?",
         options: [
-          "The prep must dry and then a second application must be applied before draping to ensure adequate antimicrobial coverage",
-          "The skin prep must be fully dry before draping to prevent fire risk with electrosurgery",
-          "As long as the prep was applied with the correct technique and dwell time has started, draping over wet prep is acceptable",
-          "The prep is applied and the antiseptic begins working on contact, so draping can proceed immediately"
+          "No — a second application is also required once the first dries to ensure adequate antimicrobial coverage before draping",
+          "No — the skin prep must be fully dry before draping to prevent fire risk with electrosurgery",
+          "Yes — draping over wet prep is acceptable as long as correct technique was used and dwell time has started",
+          "Yes — the antiseptic begins working on contact, so draping can proceed immediately"
         ],
         correctIndex: 1,
         explanation: "Alcohol-based skin preps are flammable. Draping over wet prep can create pooled alcohol under drapes, which is a serious fire risk when electrosurgery is used.",
