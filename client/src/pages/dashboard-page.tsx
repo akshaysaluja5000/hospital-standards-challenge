@@ -274,9 +274,15 @@ export default function DashboardPage() {
   const searchIndex = useMemo<SearchEntry[]>(() => {
     const entries: SearchEntry[] = [];
 
-    // Hospital levels
+    // Hospital levels — one rich entry per level covering ALL searchable content
     const hospLevels = getVisibleLevelsForModule("hospital");
     for (const lvl of hospLevels) {
+      const conceptText = (lvl.studyMaterial ?? [])
+        .map((c) => `${c.title} ${c.content} ${c.keyPoint} ${c.extraInfo ?? ""}`)
+        .join(" ");
+      const questionText = (lvl.questions ?? [])
+        .map((q) => `${q.text} ${(q.options ?? []).join(" ")} ${q.explanation ?? ""}`)
+        .join(" ");
       entries.push({
         id: `hosp-${lvl.id}`,
         title: lvl.name,
@@ -287,26 +293,26 @@ export default function DashboardPage() {
           lvl.description ?? "",
           lvl.chapterSummary?.plainLanguageSummary ?? "",
           (lvl.chapterSummary?.commonRiskPoints ?? []).join(". "),
-        ].filter(Boolean).join(" ").slice(0, 800),
+          (lvl.chapterSummary?.keyOperationalExpectations ?? []).join(". "),
+          conceptText,
+          questionText,
+        ].filter(Boolean).join(" "),
       });
-      // Also index individual study concept titles so e.g. "moderate sedation" hits specific cards
-      for (const concept of lvl.studyMaterial ?? []) {
-        entries.push({
-          id: `hosp-concept-${lvl.id}-${concept.title.slice(0, 20)}`,
-          title: concept.title,
-          subtitle: `${lvl.name} — ${concept.keyPoint}`,
-          module: "hospital",
-          levelId: lvl.id,
-          aiContext: `${concept.title}: ${concept.content} Key point: ${concept.keyPoint}`.slice(0, 800),
-        });
-      }
     }
 
-    // ASC handbook chapters — index title, overview, risk points, AND all section content
+    // ASC handbook chapters — index title, overview, risk points, section content, study material, and questions
+    const ascLevelsAll = getVisibleLevelsForModule("asc");
     for (const ch of ascHandbook) {
+      const ascLvl = ascLevelsAll.find((l) => l.id === ch.levelId);
       const sectionText = ((ch as any).sections ?? [])
         .map((s: any) => `${s.title ?? ""} ${s.content ?? ""}`.trim())
         .filter(Boolean)
+        .join(" ");
+      const conceptText = (ascLvl?.studyMaterial ?? [])
+        .map((c) => `${c.title} ${c.content} ${c.keyPoint} ${c.extraInfo ?? ""}`)
+        .join(" ");
+      const questionText = (ascLvl?.questions ?? [])
+        .map((q) => `${q.text} ${(q.options ?? []).join(" ")} ${q.explanation ?? ""}`)
         .join(" ");
       entries.push({
         id: `asc-${ch.levelId}`,
@@ -318,7 +324,9 @@ export default function DashboardPage() {
           ch.overview ?? "",
           (ch.riskPoints ?? []).join(". "),
           sectionText,
-        ].filter(Boolean).join(" ").slice(0, 2000),
+          conceptText,
+          questionText,
+        ].filter(Boolean).join(" "),
       });
     }
 
