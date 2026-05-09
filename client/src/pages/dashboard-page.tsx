@@ -2,9 +2,10 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle, MoreHorizontal } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StreakFlame } from "@/components/streak-flame";
 import { XpBar } from "@/components/xp-bar";
@@ -389,25 +390,27 @@ export default function DashboardPage() {
     <div className="min-h-screen pb-20">
       {/* Sub-header */}
       <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10 border border-border">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-2">
+          {/* Left: avatar + name */}
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10 border border-border">
               <span className="font-black text-sm text-primary">
                 {user?.username?.charAt(0).toUpperCase()}
               </span>
             </div>
             <div className="min-w-0">
-              <h1 className="font-bold text-base text-foreground truncate" data-testid="text-username">
+              <h1 className="font-bold text-sm sm:text-base text-foreground truncate max-w-[120px] sm:max-w-none" data-testid="text-username">
                 {user?.username}
               </h1>
-              <p className="text-xs text-muted-foreground">Welcome back!</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Welcome back!</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
+
+          {/* Right: actions */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
             <PathwayMenu triggerVariant="outline" triggerSize="sm" />
-            <Button variant="outline" size="sm" onClick={() => setLocation("/leaderboard")} data-testid="button-leaderboard">
-              <Trophy size={16} />
-            </Button>
+
+            {/* Educator console — always visible, text collapses on mobile */}
             {user?.leadershipRole === "educator" && !user?.isAdmin && (
               <Button
                 variant="outline"
@@ -417,10 +420,11 @@ export default function DashboardPage() {
                 className="gap-1.5 font-semibold text-violet-600 border-violet-400/40 hover:bg-violet-500/5"
               >
                 <GraduationCap size={15} />
-                <span className="hidden sm:inline">Educator Console</span>
-                <span className="sm:hidden">Team</span>
+                <span className="hidden sm:inline">Educator</span>
               </Button>
             )}
+
+            {/* Leadership console — always visible, text collapses on mobile */}
             {(user?.isAdmin || ["director","ceo","admin","super_admin"].includes(user?.leadershipRole ?? "")) && (
               <Button
                 variant="outline"
@@ -430,10 +434,14 @@ export default function DashboardPage() {
                 className="gap-1.5 font-semibold text-primary border-primary/40 hover:bg-primary/5"
               >
                 <BarChart3 size={15} />
-                <span className="hidden sm:inline">Leadership Console</span>
-                <span className="sm:hidden">Console</span>
+                <span className="hidden sm:inline">Console</span>
               </Button>
             )}
+
+            {/* Desktop-only secondary actions */}
+            <Button variant="outline" size="sm" onClick={() => setLocation("/leaderboard")} data-testid="button-leaderboard" className="hidden sm:flex">
+              <Trophy size={16} />
+            </Button>
             <a
               href={
                 (user?.isAdmin || ["director","ceo","admin","super_admin"].includes(user?.leadershipRole ?? "") || user?.leadershipRole === "educator")
@@ -443,17 +451,58 @@ export default function DashboardPage() {
               target="_blank"
               rel="noopener noreferrer"
               data-testid="link-tutorial-help"
+              className="hidden sm:block"
             >
               <Button variant="outline" size="sm" title="How-to guide">
                 <HelpCircle size={16} />
               </Button>
             </a>
-            <Button variant="outline" size="sm" onClick={() => setLocation("/profile")} data-testid="button-profile">
+            <Button variant="outline" size="sm" onClick={() => setLocation("/profile")} data-testid="button-profile" className="hidden sm:flex">
               <Settings size={16} />
             </Button>
-            <Button variant="outline" size="sm" onClick={async () => { await logout(); setLocation("/auth"); }} data-testid="button-logout">
+            <Button variant="outline" size="sm" onClick={async () => { await logout(); setLocation("/auth"); }} data-testid="button-logout" className="hidden sm:flex">
               <LogOut size={16} />
             </Button>
+
+            {/* Mobile overflow menu — replaces Trophy / Help / Settings / Logout */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="sm:hidden" data-testid="button-mobile-menu">
+                  <MoreHorizontal size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={() => setLocation("/leaderboard")} data-testid="menu-item-leaderboard">
+                  <Trophy size={14} className="mr-2 text-muted-foreground" /> Leaderboard
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <a
+                    href={
+                      (user?.isAdmin || ["director","ceo","admin","super_admin"].includes(user?.leadershipRole ?? "") || user?.leadershipRole === "educator")
+                        ? "/tutorial-leadership.html"
+                        : "/tutorial-employee.html"
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="menu-item-tutorial"
+                    className="flex items-center"
+                  >
+                    <HelpCircle size={14} className="mr-2 text-muted-foreground" /> How-to Guide
+                  </a>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLocation("/profile")} data-testid="menu-item-profile">
+                  <Settings size={14} className="mr-2 text-muted-foreground" /> Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={async () => { await logout(); setLocation("/auth"); }}
+                  data-testid="menu-item-logout"
+                  className="text-destructive focus:text-destructive"
+                >
+                  <LogOut size={14} className="mr-2" /> Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
