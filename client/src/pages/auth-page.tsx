@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, Building2 } from "lucide-react";
+import { Zap, Flame, Trophy, Eye, EyeOff, Loader2, ArrowLeft, KeyRound, Building2, Moon, Sun } from "lucide-react";
 import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,14 @@ export default function AuthPage() {
   const { login, register } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("ar_night_mode") === "1");
+
+  function toggleDark() {
+    const next = !darkMode;
+    setDarkMode(next);
+    localStorage.setItem("ar_night_mode", next ? "1" : "0");
+    document.documentElement.classList.toggle("dark", next);
+  }
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -124,15 +132,26 @@ export default function AuthPage() {
     <div className="min-h-screen flex flex-col lg:flex-row bg-background">
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12">
         <div className="w-full max-w-md bg-card rounded-2xl shadow-2xl p-8 lg:p-10">
-          <button
-            type="button"
-            className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 -mt-2"
-            onClick={() => setLocation("/")}
-            data-testid="button-back-to-home"
-          >
-            <ArrowLeft size={15} />
-            Back to home
-          </button>
+          <div className="flex items-center justify-between mb-6 -mt-2">
+            <button
+              type="button"
+              className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => setLocation("/")}
+              data-testid="button-back-to-home"
+            >
+              <ArrowLeft size={15} />
+              Back to home
+            </button>
+            <button
+              type="button"
+              onClick={toggleDark}
+              data-testid="button-toggle-dark-auth"
+              className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

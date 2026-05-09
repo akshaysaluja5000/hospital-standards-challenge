@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck } from "lucide-react";
+import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck, Moon, Sun } from "lucide-react";
 import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
@@ -48,6 +49,14 @@ const proofPoints = [
 
 export default function LandingPage() {
   const [, setLocation] = useLocation();
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("ar_night_mode") === "1");
+
+  function toggleDark() {
+    const next = !darkMode;
+    setDarkMode(next);
+    localStorage.setItem("ar_night_mode", next ? "1" : "0");
+    document.documentElement.classList.toggle("dark", next);
+  }
 
   const scrollToFeatures = () => {
     document.getElementById("features-section")?.scrollIntoView({ behavior: "smooth" });
@@ -75,6 +84,16 @@ export default function LandingPage() {
             >
               Tutorials
             </a>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleDark}
+              data-testid="button-toggle-dark-landing"
+              className="text-muted-foreground hover:text-foreground"
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? <Sun size={16} /> : <Moon size={16} />}
+            </Button>
             <Button
               variant="ghost"
               onClick={() => setLocation("/auth")}
