@@ -195,6 +195,7 @@ export const diagnosticSessions = pgTable("diagnostic_sessions", {
   answers: text("answers").notNull().default("[]"),
   currentQuestion: integer("current_question").notNull().default(0),
   shuffleMaps: text("shuffle_maps").notNull().default("{}"),
+  questionData: text("question_data"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

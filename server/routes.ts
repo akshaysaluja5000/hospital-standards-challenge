@@ -1832,11 +1832,29 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     return { options: shuffledOptions, shuffleMap: shuffledIndices };
   }
 
+  const DIAGNOSTIC_CHAPTER_TOPICS: Record<string, string> = {
+    transport: "Transport of Instruments (soiled corridors, sealed containers, PPE, enzymatic pre-treatment)",
+    environment: "Environment & Surfaces (temperature/humidity control, terminal cleaning, high-touch disinfection)",
+    segregation: "Clean vs. Dirty Segregation (physical separation, traffic flow, color-coded containers)",
+    sterile_storage: "Sterile Storage (event-related sterility, shelf conditions, STE indicators, expiration)",
+    instruments: "Instrument Integrity (damage inspection, tracking, loaner instruments, biological indicators)",
+    facilities: "Facilities & Equipment (fire safety, utility management, EOC rounds, ILSM)",
+    spd_decontam: "SPD & Decontamination (decontamination workflow, washer/disinfector cycles, sterilization parameters)",
+    or_sterile_field: "OR & Sterile Technique (sterile field maintenance, gown/glove technique, back table setup)",
+    universal_protocol: "Surgical Safety & Consent (time-out procedure, site marking, fire risk assessment, informed consent)",
+    patient_care_docs: "Patient Care & Documentation (H&P timeliness, nursing assessments, medication reconciliation)",
+    eoc_safety: "EOC & Safety Compliance (RACE/PASS, hazardous materials, OSHA compliance, fall prevention)",
+    asc_governance: "ASC Governance (AAAHC standards, board oversight, administrator authority, bylaws compliance)",
+    asc_clinical_records: "ASC Clinical Records (medical record retention, documentation completeness, EHR standards)",
+    asc_credentialing: "ASC Credentialing (peer review, privileges, delineation of privileges, reappointment)",
+    asc_quality_management: "ASC Quality Management (QI/QAPI program, performance improvement, benchmarking)",
+    asc_patient_rights: "ASC Patient Rights (informed consent, patient privacy, grievance process, patient dignity)",
+    asc_infection_prevention_safety: "ASC Infection Prevention (hand hygiene, sterilization, SSI prevention, standard precautions)",
+  };
+
   app.get("/api/diagnostic/questions", requireAuth, async (req, res) => {
-    const DIAG_PER_SECTION = 2;
-    const DIAG_EXTRAS = 3;
+    const NUM_QUESTIONS = 15;
     let assignedChapters = await storage.getUserAssignedChapters(req.user!.id);
-    // Fallback: if DB chapter mapping is empty, derive chapters directly from ROLE_CONFIGS
     if (assignedChapters.length === 0 && req.user!.roleId) {
       const dbRole = await storage.getRoleById(req.user!.roleId);
       if (dbRole) {
@@ -1844,25 +1862,54 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
         if (roleConfig) assignedChapters = roleConfig.chapters;
       }
     }
-    const pool = assignedChapters.length > 0
-      ? diagnosticQuestions.filter(q => assignedChapters.includes(q.sectionId))
-      : diagnosticQuestions;
-    let selected = pickRandomPerSection(pool, DIAG_PER_SECTION);
-    const usedIds = new Set(selected.map(q => q.id));
-    const remaining = pool.filter(q => !usedIds.has(q.id));
-    const shuffledRemaining = shuffleArray([...remaining]);
-    selected = selected.concat(shuffledRemaining.slice(0, DIAG_EXTRAS));
-    selected = shuffleArray(selected);
-    res.json(selected.map(q => {
-      const { options, shuffleMap } = shuffleQuestionOptions(q);
-      return {
-        id: q.id,
-        sectionId: q.sectionId,
-        question: q.question,
-        options,
-        shuffleMap,
-      };
-    }));
+    const relevantChapters = assignedChapters.length > 0
+      ? assignedChapters.filter(c => DIAGNOSTIC_CHAPTER_TOPICS[c])
+      : Object.keys(DIAGNOSTIC_CHAPTER_TOPICS).slice(0, 6);
+    const topicList = relevantChapters
+      .map(c => `- ${c}: ${DIAGNOSTIC_CHAPTER_TOPICS[c]}`)
+      .join("\n");
+    const prompt = `You are writing multiple-choice compliance quiz questions for healthcare professionals preparing for accreditation survey. Generate exactly ${NUM_QUESTIONS} scenario-based questions covering these specific topics:\n\n${topicList}\n\nRules:\n- Each question MUST be a realistic clinical or operational scenario (someone doing something, a situation occurring, a surveyor finding something)\n- Each question has exactly 4 answer choices\n- Exactly one choice is correct\n- The other three are plausible, realistic distractors — not obviously wrong\n- Vary difficulty: mix straightforward and tricky questions\n- Distribute questions across the provided topics as evenly as possible\n- The sectionId field must be EXACTLY one of these keys: ${relevantChapters.join(", ")}\n\nReturn ONLY a valid JSON array with exactly ${NUM_QUESTIONS} items. Each item must have this exact shape:\n{"id":"ai-dq-N","sectionId":"<topic key>","question":"...","options":["...","...","...","..."],"correctIndex":0}\n\nNo markdown fences, no explanation, no extra text — just the raw JSON array starting with [ and ending with ].`;
+    try {
+      const message = await callAnthropicWithRetry({
+        model: "claude-haiku-4-5",
+        max_tokens: 4000,
+        messages: [{ role: "user", content: prompt }],
+      });
+      const raw = message.content[0]?.type === "text" ? message.content[0].text.trim() : "[]";
+      const jsonText = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
+      let generated: { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
+      try {
+        generated = JSON.parse(jsonText);
+      } catch {
+        console.error("[Diagnostic AI] JSON parse failed:", jsonText.slice(0, 200));
+        return res.status(500).json({ message: "Failed to parse AI-generated questions" });
+      }
+      generated = generated.filter(q =>
+        q.id && q.sectionId && q.question &&
+        Array.isArray(q.options) && q.options.length === 4 &&
+        typeof q.correctIndex === "number" && q.correctIndex >= 0 && q.correctIndex < 4
+      );
+      if (generated.length === 0) {
+        return res.status(500).json({ message: "AI returned no valid questions" });
+      }
+      const shuffleMaps: Record<string, number[]> = {};
+      const clientQuestions = generated.map(q => {
+        const { options, shuffleMap } = shuffleQuestionOptions(q);
+        shuffleMaps[q.id] = shuffleMap;
+        return { id: q.id, sectionId: q.sectionId, question: q.question, options, shuffleMap };
+      });
+      await storage.upsertDiagnosticSession(req.user!.id, {
+        questionOrder: generated.map(q => q.id),
+        answers: "[]",
+        currentQuestion: 0,
+        shuffleMaps: JSON.stringify(shuffleMaps),
+        questionData: JSON.stringify(generated),
+      });
+      res.json(clientQuestions);
+    } catch (err: any) {
+      console.error("[Diagnostic AI]", err?.message);
+      res.status(500).json({ message: "Failed to generate diagnostic questions" });
+    }
   });
 
   app.get("/api/diagnostic/results", requireAuth, async (req, res) => {
@@ -1873,19 +1920,32 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   app.get("/api/diagnostic/session", requireAuth, async (req, res) => {
     const session = await storage.getDiagnosticSession(req.user!.id);
     if (!session) return res.json(null);
-    const questionIds = session.questionOrder;
     const savedAnswers = JSON.parse(session.answers);
     const savedShuffleMaps = session.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
-    const questionsData = questionIds.map((id, idx) => {
-      const q = diagnosticQuestions.find(dq => dq.id === id);
-      if (!q) return null;
-      if (savedShuffleMaps && savedShuffleMaps[id]) {
-        const sm = savedShuffleMaps[id] as number[];
-        return { id: q.id, sectionId: q.sectionId, question: q.question, options: sm.map(i => q.options[i]), shuffleMap: sm };
-      }
-      const { options, shuffleMap } = shuffleQuestionOptions(q);
-      return { id: q.id, sectionId: q.sectionId, question: q.question, options, shuffleMap };
-    }).filter(Boolean);
+    let questionsData: any[];
+    if (session.questionData) {
+      const stored = JSON.parse(session.questionData) as { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
+      questionsData = stored.map(q => {
+        if (savedShuffleMaps && savedShuffleMaps[q.id]) {
+          const sm = savedShuffleMaps[q.id] as number[];
+          return { id: q.id, sectionId: q.sectionId, question: q.question, options: sm.map((i: number) => q.options[i]), shuffleMap: sm };
+        }
+        const { options, shuffleMap } = shuffleQuestionOptions(q);
+        return { id: q.id, sectionId: q.sectionId, question: q.question, options, shuffleMap };
+      });
+    } else {
+      const questionIds = session.questionOrder;
+      questionsData = questionIds.map(id => {
+        const q = diagnosticQuestions.find(dq => dq.id === id);
+        if (!q) return null;
+        if (savedShuffleMaps && savedShuffleMaps[id]) {
+          const sm = savedShuffleMaps[id] as number[];
+          return { id: q.id, sectionId: q.sectionId, question: q.question, options: sm.map((i: number) => q.options[i]), shuffleMap: sm };
+        }
+        const { options, shuffleMap } = shuffleQuestionOptions(q);
+        return { id: q.id, sectionId: q.sectionId, question: q.question, options, shuffleMap };
+      }).filter(Boolean);
+    }
     res.json({
       questions: questionsData,
       answers: savedAnswers,
@@ -1918,6 +1978,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const session = await storage.getDiagnosticSession(req.user!.id);
     const serverShuffleMaps = session?.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
     const trustedMaps = serverShuffleMaps || clientShuffleMaps || {};
+    const storedQuestions: { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[] | null =
+      session?.questionData ? JSON.parse(session.questionData) : null;
 
     let score = 0;
     const detailedResults: {
@@ -1925,7 +1987,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       selectedIndex: number; correctIndex: number; correct: boolean;
     }[] = [];
     for (const ans of answers) {
-      const q = diagnosticQuestions.find(dq => dq.id === ans.questionId);
+      const q = storedQuestions
+        ? storedQuestions.find(sq => sq.id === ans.questionId)
+        : diagnosticQuestions.find(dq => dq.id === ans.questionId);
       if (q) {
         const sm = trustedMaps[q.id] as number[] | undefined;
         let displayOptions = q.options;

@@ -140,6 +140,7 @@ export async function ensureTablesExist() {
         shuffle_maps TEXT NOT NULL DEFAULT '{}',
         updated_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      ALTER TABLE diagnostic_sessions ADD COLUMN IF NOT EXISTS question_data TEXT;
       CREATE TABLE IF NOT EXISTS mastery_sessions (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL REFERENCES users(id),
@@ -654,6 +655,7 @@ export class DatabaseStorage implements IStorage {
       answers: data.answers || "[]",
       currentQuestion: data.currentQuestion || 0,
       shuffleMaps: data.shuffleMaps || "{}",
+      questionData: data.questionData ?? null,
     }).returning();
     return created;
   }
