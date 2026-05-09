@@ -778,5 +778,406 @@ export const handbook: HandbookChapter[] = [
       { fact: "Pill cutters", detail: "Clean between patients" },
       { fact: "Fire response", detail: "RACE (Rescue, Alarm, Contain, Extinguish) + PASS" }
     ]
+  },
+
+  // ── MEDICATION MANAGEMENT ──────────────────────────────────────────────────
+  {
+    levelId: "medication_management",
+    title: "Medication Management",
+    overview: "The Joint Commission's Medication Management chapter requires hospitals to ensure medications are ordered correctly, dispensed safely, stored securely, and administered with verified patient identity. High-alert medications — heparin, insulin, concentrated electrolytes — carry a heightened risk of patient harm and require specific safeguards beyond standard practices. Look-alike/sound-alike drug pairs must be clearly differentiated at every point in the medication use process. Medication reconciliation must occur at every care transition: admission, transfer, and discharge. Surveyors frequently cite abbreviation violations, unlabeled syringes in ORs, and concentrated electrolytes stored on patient care units.",
+    sections: [
+      {
+        heading: "High-Alert Medications and Required Safeguards",
+        content: "High-alert medications are drugs that bear a heightened risk of causing significant patient harm when used in error. The Joint Commission requires facilities to identify their high-alert medications and implement specific safeguards. The Institute for Safe Medication Practices (ISMP) publishes a reference list that includes anticoagulants (heparin, warfarin), insulin, concentrated electrolytes (KCl >10 mEq, hypertonic saline), neuromuscular blocking agents, opioids, and chemotherapy agents. Safeguards must include at minimum: separate storage, clear warning labels, double-check verification before administration, and required staff education. A warning label alone does not constitute a sufficient safeguard system — JC expects a documented policy with multiple layers of protection for each high-alert drug.",
+        criticalValues: [
+          { label: "ISMP high-alert examples", value: "Heparin, insulin, concentrated KCl, NMBAs, opioids, chemotherapy" },
+          { label: "Required safeguards", value: "Separate storage, labels, double-check, staff education" },
+          { label: "Label alone", value: "Not sufficient — must have documented multi-layer policy" }
+        ],
+        thinkAboutIt: "A pharmacist proposes adding a red sticker to all high-alert medications as the sole safeguard. A surveyor asks staff to explain the high-alert medication program. What else does the system need to pass?"
+      },
+      {
+        heading: "Concentrated Electrolytes: The Pharmacy-Only Rule",
+        content: "The Joint Commission issued a Sentinel Event Alert prohibiting concentrated potassium chloride (KCl) and other concentrated electrolytes from being stored in patient care areas outside the pharmacy. This originated from multiple sentinel events where concentrated KCl was mistakenly administered IV push, causing fatal cardiac arrhythmias. Hypertonic saline solutions greater than 0.9% are also restricted. Facilities must remove these from unit stock and restrict their access to pharmacy, with a documented exception process for ICUs with specific protocols. Finding a vial of concentrated KCl in a medication room on a medical-surgical unit is an immediate citation regardless of whether it is locked.",
+        criticalValues: [
+          { label: "Restricted items", value: "Concentrated KCl (>10 mEq) and hypertonic saline (>0.9%)" },
+          { label: "Storage location", value: "Pharmacy only — not on patient care units" },
+          { label: "ICU exception", value: "Allowed only with documented specific protocols" }
+        ]
+      },
+      {
+        heading: "Look-Alike/Sound-Alike (LASA) Drug Management",
+        content: "Look-alike/sound-alike drugs are medications with names or packaging that appear similar to other drugs, creating dangerous mix-up potential. JC requires facilities to identify LASA pairs in their formulary and implement differentiation strategies. ISMP recommends tall-man (mixed-case) lettering (e.g., DOBUTamine vs DOPamine), physical separation in storage, alerting labels, and electronic warnings in the ordering system. High-risk LASA pairs include heparin/Hespan, HydrOXYzine/hydrALAzine, morphine/HYDROmorphone, and DOBUTamine/DOPamine. Adjacent storage of LASA medications in automated dispensing cabinets — even with pocket labeling — is insufficient differentiation and is a compliance finding.",
+        criticalValues: [
+          { label: "Key LASA pairs", value: "DOBUTamine/DOPamine, HydrOXYzine/hydrALAzine, morphine/HYDROmorphone" },
+          { label: "Required strategies", value: "Physical separation, tall-man lettering, electronic alerts" },
+          { label: "ADC alone", value: "Not sufficient — separation and labeling required even in ADCs" }
+        ],
+        thinkAboutIt: "DOBUTamine and DOPamine are stored in adjacent bins in the automated dispensing cabinet with clear pocket labels. A surveyor flags this as a finding. Why isn't the pocket label enough?"
+      },
+      {
+        heading: "Medication Reconciliation at Every Transition",
+        content: "Medication reconciliation is the process of comparing a patient's medication orders at care transitions to the complete list of medications the patient was taking before. JC requires reconciliation at every transition: (1) Admission — compare home medications to admission orders; (2) Transfer between units or levels of care — compare current orders to transfer orders; (3) Discharge — reconcile the discharge medication list against what was ordered during the stay and provide a complete list to the patient. Omissions, duplications, dosing errors, and interactions must be identified and resolved. A home medication that is intentionally discontinued at discharge must have a documented clinical rationale — it cannot simply be omitted.",
+        criticalValues: [
+          { label: "Required at", value: "Admission, every intra-hospital transfer, and discharge" },
+          { label: "What to compare", value: "Complete home medication list vs. new/current orders" },
+          { label: "Discontinuations", value: "Must have documented clinical rationale — cannot just omit" }
+        ]
+      },
+      {
+        heading: "Do Not Use Abbreviations",
+        content: "The Joint Commission's 'Do Not Use' list prohibits specific abbreviations in all medical orders and drug-related documentation because they have been associated with medication errors. The official required list includes: (1) U or u — can be mistaken for 0, 4, or 'cc'; use 'units'. (2) IU — can be mistaken for IV or 10; use 'international units'. (3) QD or QOD — misread as each other; use 'daily' or 'every other day'. (4) Trailing zeros (1.0 mg) — the decimal can be missed, turning 1 mg into 10 mg; write 1 mg. (5) Lack of leading zero (.5 mg) — can be misread as 5 mg; write 0.5 mg. (6) MS, MSO4, MgSO4 — confused with each other; write 'morphine sulfate' or 'magnesium sulfate' fully.",
+        criticalValues: [
+          { label: "Prohibited", value: "U, IU, QD, QOD, trailing zeros (1.0 mg), missing leading zeros (.5 mg), MS/MSO4/MgSO4" },
+          { label: "Write instead", value: "units, international units, daily, every other day, 0.5 mg, 1 mg, morphine sulfate" },
+          { label: "Scope", value: "All medical orders and drug-related documentation" }
+        ]
+      },
+      {
+        heading: "Medication Labeling at the Point of Preparation",
+        content: "The Joint Commission requires that all medications prepared in advance of immediate administration must be labeled. This applies particularly in procedural settings, ORs, and at the bedside when syringes are drawn up. A label must include: medication name, strength/concentration, volume, preparation date/time, and expiration date/time. Any medication or solution that is not labeled must be discarded — it cannot be administered regardless of how certain staff are about its contents. This rule is a top source of OR-related findings because syringes are often pre-drawn without labels during procedures.",
+        criticalValues: [
+          { label: "Required label elements", value: "Drug name, concentration, volume, date, time, expiration" },
+          { label: "Unlabeled medication", value: "Must be discarded immediately — no exceptions" },
+          { label: "Common violation site", value: "Operating room sterile field — syringes pre-drawn without labels" }
+        ],
+        thinkAboutIt: "A scrub tech draws up three syringes on the sterile field and plans to label them after the next step. The surgeon is ready to proceed. What must happen before any syringe is used?"
+      },
+      {
+        heading: "Crash Carts and PRN Medication Documentation",
+        content: "Emergency medications must be immediately accessible throughout the hospital. Crash carts must be stocked per an approved formulary, inspected and sealed at regular intervals, checked for expiration dates on all medications, and restocked promptly after use. Expired medications in a crash cart are a direct compliance finding — the cart being sealed does not exempt it from expiration date requirements. PRN (as-needed) medications require post-administration documentation of effectiveness. After giving a PRN medication, nurses must document the patient's response within a timeframe defined by facility policy. Failure to document PRN effectiveness is one of the most commonly missed documentation elements during JC surveys.",
+        criticalValues: [
+          { label: "Crash carts", value: "Formulary-stocked, inspected, sealed, no expired items — documented" },
+          { label: "Expired crash cart meds", value: "Immediate finding — sealed cart is not an exemption" },
+          { label: "PRN effectiveness", value: "Must be documented after administration — follow-up charted" }
+        ]
+      }
+    ],
+    quickReference: [
+      { fact: "High-alert medications", detail: "Separate storage, labels, double-check, education — policy required" },
+      { fact: "Concentrated KCl / hypertonic saline", detail: "Pharmacy only — never on patient care units" },
+      { fact: "LASA drugs", detail: "Physical separation + tall-man lettering + electronic alerts" },
+      { fact: "Medication reconciliation", detail: "Admission, every transfer, and discharge" },
+      { fact: "Prohibited abbreviations", detail: "U, IU, QD, QOD, trailing zeros, .5 mg → 0.5 mg, MS" },
+      { fact: "Sterile field syringes", detail: "Label at time of preparation — unlabeled = discard" },
+      { fact: "Crash cart meds", detail: "No expired drugs — sealed cart not exempt from expiration check" },
+      { fact: "PRN documentation", detail: "Effectiveness must be charted after every PRN administration" }
+    ]
+  },
+
+  // ── NATIONAL PATIENT SAFETY GOALS ─────────────────────────────────────────
+  {
+    levelId: "npsg",
+    title: "National Patient Safety Goals",
+    overview: "The Joint Commission's National Patient Safety Goals (NPSGs) are specific, evidence-based requirements updated each year to target the most common causes of serious patient harm. Every hospital staff member must know the NPSGs relevant to their role. Core goals address patient identification, verbal order read-back, anticoagulant safety, clinical alarm management, hand hygiene compliance, pressure injury prevention, suicide risk screening, and fall prevention. NPSGs are not aspirational guidelines — they are requirements enforced during every JC survey, and surveyors test staff knowledge directly.",
+    sections: [
+      {
+        heading: "NPSG 1: Patient Identification — The Two-Identifier Rule",
+        content: "NPSG.01.01.01 requires using at least two patient-specific identifiers before administering medications, blood or blood components, collecting specimens, or performing procedures. Acceptable identifiers include: patient name, date of birth, medical record number, and assigned identification number. Unacceptable identifiers include: room number, bed number, and diagnosis. The two identifiers must match both the patient's identification band and the order or label. Both identifiers must be independently verified — asking 'What's your name?' and confirming DOB is the standard. Passive identification (nurse reads the wristband without asking the patient to confirm) is insufficient. A patient without an ID band must have one applied before any clinical task proceeds.",
+        criticalValues: [
+          { label: "Acceptable identifiers", value: "Name, date of birth, MRN, assigned ID number" },
+          { label: "Never acceptable", value: "Room number, bed number, diagnosis" },
+          { label: "No ID band", value: "Apply replacement before any medication, specimen, or procedure" }
+        ],
+        thinkAboutIt: "A nurse is about to administer medication and the patient's ID band has fallen off. The nurse knows this patient from prior shifts. What must happen before the medication is given?"
+      },
+      {
+        heading: "NPSG 2: Verbal Order Read-Back and Critical Value Reporting",
+        content: "NPSG.02.03.01 requires that all verbal and telephone orders be verified using a read-back process. The receiver (nurse or pharmacist) writes down the order and reads it back to the prescriber completely before acting. The prescriber must confirm the order is correct. This same read-back applies to critical laboratory values — when a critical lab result is reported verbally, the clinician receiving the result must read back the value to confirm accuracy. Documentation must indicate the read-back was completed. Simply writing the order without reading it back does not satisfy the requirement.",
+        criticalValues: [
+          { label: "Process", value: "Write it → Read it back completely → Get prescriber confirmation → Act" },
+          { label: "Applies to", value: "Verbal orders, telephone orders, AND critical lab value reporting" },
+          { label: "Documentation", value: "Must indicate that read-back was performed" }
+        ]
+      },
+      {
+        heading: "NPSG 3: Anticoagulant Safety",
+        content: "NPSG.03.05.01 requires hospitals to implement specific practices to reduce anticoagulant-related harm. Anticoagulants are consistently among the top drug classes involved in serious adverse events. Requirements include: weight-based dosing protocols for heparin infusions (deviation from protocol must be physician-documented); baseline and ongoing INR/PTT monitoring; patient and family education on anticoagulant risks at admission and discharge; defined reversal agent availability (protamine for heparin, vitamin K and FFP for warfarin); and pharmacy notification before dispensing. At discharge, warfarin patients must receive education covering drug purpose, INR monitoring schedule, signs of bleeding, and food and drug interactions.",
+        criticalValues: [
+          { label: "Heparin dosing", value: "Weight-based protocol required — verbal rate without protocol verification is a bypass" },
+          { label: "Monitoring", value: "INR/PTT baselines and ongoing monitoring documented" },
+          { label: "Discharge education", value: "Drug purpose, monitoring schedule, bleeding signs, food/drug interactions" }
+        ]
+      },
+      {
+        heading: "NPSG 6: Clinical Alarm Safety",
+        content: "NPSG.06.01.01 addresses alarm fatigue — a condition where excessive non-actionable clinical alarms lead staff to silence, disable, or ignore alarms, missing true critical events. JC requires hospitals to establish an alarm management policy, identify the most important alarms requiring clinical staff response, set individualized alarm parameters based on each patient's clinical values rather than relying on universal defaults, and monitor alarm frequency and response. If a patient's baseline heart rate consistently triggers a non-actionable alarm, the threshold should be individualized to that patient's clinical baseline. Default settings applied to every patient create preventable false alarms.",
+        criticalValues: [
+          { label: "Root problem", value: "Alarm fatigue from excess false alarms → ignored alarms → missed emergencies" },
+          { label: "Required action", value: "Individualize alarm parameters to patient's clinical baseline" },
+          { label: "Default settings", value: "Not acceptable for all patients — individualization is the standard" }
+        ],
+        thinkAboutIt: "A COPD patient on 2L O2 has a baseline SpO2 of 90-92%. The pulse ox alarm is set at <88% and fires constantly. Staff silence it repeatedly. What should be changed and what risk does the current approach create?"
+      },
+      {
+        heading: "NPSG 7: Hand Hygiene",
+        content: "NPSG.07.01.01 requires hospitals to comply with WHO or CDC hand hygiene guidelines. The five moments for hand hygiene (WHO): (1) Before patient contact, (2) Before aseptic/clean procedures, (3) After body fluid exposure, (4) After patient contact, (5) After contact with patient surroundings. Alcohol-based hand rub (ABHR) is the preferred method for most situations — it kills more pathogens faster than soap and water. Soap and water is specifically required when hands are visibly soiled or after contact with Clostridioides difficile (C. diff). ABHR does not kill C. diff spores — this is a critical distinction tested on surveys.",
+        criticalValues: [
+          { label: "5 WHO moments", value: "Before patient contact, before procedure, after fluid, after patient, after surroundings" },
+          { label: "ABHR preferred", value: "For most situations — faster, kills more pathogens" },
+          { label: "Soap and water required", value: "Visibly soiled hands AND C. diff contact — ABHR doesn't kill spores" }
+        ]
+      },
+      {
+        heading: "NPSG 15: Suicide Risk Screening",
+        content: "NPSG.15.01.01 requires that all hospital patients — not just psychiatric patients — be screened for suicide risk using a validated tool such as the Columbia Suicide Severity Rating Scale (C-SSRS) or Ask Suicide-Screening Questions (ASQ). Informal questions like 'Are you feeling safe?' are not validated instruments and do not satisfy this requirement. Patients who screen positive — including passive ideation (wishing they were dead without an active plan) — must receive a formal safety assessment, care planning addressing the identified risk, and environmental safety modifications (removing ligature risks, locking down means access). Medical-surgical patients are among those who die from inpatient suicide.",
+        criticalValues: [
+          { label: "Who is screened", value: "ALL hospital patients — not just psychiatric admissions" },
+          { label: "Validated tools", value: "C-SSRS, ASQ — informal questions don't qualify" },
+          { label: "Positive screen requires", value: "Safety assessment + care plan + environmental modifications" }
+        ]
+      },
+      {
+        heading: "Fall Prevention Program Requirements",
+        content: "JC requires a systematic, individualized fall prevention approach. Required elements: (1) a validated fall risk assessment tool (Morse Fall Scale or similar) at admission, each shift, and after any fall; (2) individualized care planning with documented fall prevention interventions tailored to the specific risk factors identified — generic 'standard fall precautions' documentation is insufficient for high-risk patients; (3) patient and family education about fall risk and prevention; (4) post-fall analysis to identify contributing factors and system improvements. Universal fall precautions apply to all patients; high-risk patients require enhanced individualized interventions.",
+        criticalValues: [
+          { label: "Assessment timing", value: "Admission, each shift, and after every fall" },
+          { label: "High-risk documentation", value: "Individualized interventions — 'standard precautions' note is insufficient" },
+          { label: "Post-fall", value: "Analysis required to identify contributing factors and improvements" }
+        ]
+      }
+    ],
+    quickReference: [
+      { fact: "Two patient identifiers", detail: "Name + DOB or MRN — never room number" },
+      { fact: "No ID band", detail: "Apply replacement before any treatment or specimen collection" },
+      { fact: "Verbal order read-back", detail: "Write → Read back → Confirm → Document → Act" },
+      { fact: "Anticoagulant protocol", detail: "Weight-based heparin, INR/PTT monitoring, patient education at discharge" },
+      { fact: "Alarm fatigue", detail: "Individualize parameters to patient baseline — no universal defaults" },
+      { fact: "C. diff hand hygiene", detail: "Soap and water required — ABHR does not kill spores" },
+      { fact: "Suicide screening", detail: "All patients, validated tool (C-SSRS/ASQ) — positive = assess + plan + environment" },
+      { fact: "Fall risk", detail: "Assessed every shift; individualized interventions documented for high-risk" }
+    ]
+  },
+
+  // ── INFECTION PREVENTION & CONTROL ────────────────────────────────────────
+  {
+    levelId: "infection_control",
+    title: "Infection Prevention & Control",
+    overview: "The Joint Commission's Infection Control (IC) chapter requires hospitals to maintain a comprehensive infection prevention program that reduces the risk of healthcare-associated infections (HAIs). Every staff member must understand standard precautions — which apply to all patients, always — and transmission-based precautions layered on top for patients with known or suspected infections. CLABSI, CAUTI, SSI, and MRSA/C. diff infections are the primary HAI targets. Surveillance data must drive active improvement, not just be collected and filed. Single-use devices must never be reused, and specific pathogens demand specific hand hygiene methods.",
+    sections: [
+      {
+        heading: "Standard vs. Transmission-Based Precautions",
+        content: "Standard precautions apply to ALL patients regardless of known infection status, based on the assumption that any patient may have an unrecognized transmissible infection. They include hand hygiene, appropriate PPE (gloves when touching blood/body fluids, gown for splash risk, mask/eye protection for splash to face), safe injection practices, and proper handling of contaminated equipment. Transmission-based precautions are ADDED ONTO standard precautions for patients with known or suspected infections requiring additional controls. The three types: Contact precautions (MRSA, C. diff, VRE) — gown and gloves upon room entry; Droplet precautions (influenza, pertussis) — surgical mask within 3 feet; Airborne precautions (TB, measles, varicella) — negative pressure room and N95 respirator.",
+        criticalValues: [
+          { label: "Standard precautions", value: "All patients, always — hand hygiene + PPE based on task risk" },
+          { label: "Contact (MRSA/C. diff/VRE)", value: "Gown + gloves on room entry — applies to staff AND visitors" },
+          { label: "Airborne (TB/measles/varicella)", value: "Negative pressure room + N95 respirator — surgical mask is insufficient" }
+        ],
+        thinkAboutIt: "A visitor enters a MRSA contact precaution room with gloves only, saying 'I'm just dropping off food.' What PPE is missing and does the contact precaution rule apply to visitors?"
+      },
+      {
+        heading: "CLABSI Prevention: Insertion and Maintenance Bundles",
+        content: "Central Line-Associated Bloodstream Infection (CLABSI) prevention requires both an insertion bundle and a maintenance bundle. Insertion bundle: (1) Hand hygiene before insertion, (2) Maximal barrier precautions (mask, cap, gown, sterile gloves, large sterile drape), (3) Chlorhexidine gluconate (CHG) skin antisepsis, (4) Optimal catheter site selection (subclavian preferred, femoral avoided in adults), (5) Daily review of line necessity. Maintenance bundle: sterile dressing changes per protocol, CHG-impregnated dressing at the insertion site, 'scrub the hub' before every access, and daily assessment of continued necessity. Extended dwell time is the primary modifiable CLABSI risk factor — every unnecessary day of catheterization increases risk.",
+        criticalValues: [
+          { label: "Insertion bundle", value: "Hand hygiene, maximal barrier, CHG skin prep, optimal site, daily necessity" },
+          { label: "Maintenance", value: "Sterile dressing, CHG sponge, scrub the hub, daily necessity review" },
+          { label: "Primary risk factor", value: "Duration — remove as soon as clinically unnecessary" }
+        ]
+      },
+      {
+        heading: "CAUTI Prevention: Necessity Is the Standard",
+        content: "Catheter-Associated Urinary Tract Infection (CAUTI) prevention is centered on two principles: insert only when necessary and remove as soon as possible. JC requires documented clinical indication for every urinary catheter, daily assessment of catheter necessity, and removal when the indication no longer exists. Spontaneous voiding indicates the urinary retention indication has resolved — the catheter must be removed. Key elements: aseptic insertion technique, closed drainage system (never break without a clinical reason), bag kept below bladder level at all times, and perineal hygiene. The most effective CAUTI prevention measure is removing unnecessary catheters — each additional day of catheterization increases CAUTI risk measurably.",
+        criticalValues: [
+          { label: "Required for insertion", value: "Documented clinical indication — not convenience or routine monitoring" },
+          { label: "Daily", value: "Assess necessity — remove when indication resolves" },
+          { label: "Drainage bag", value: "Always below bladder level — closed system, never broken unnecessarily" }
+        ]
+      },
+      {
+        heading: "Surgical Site Infection Prevention",
+        content: "JC requires hospitals to implement evidence-based SSI prevention practices. Key elements: (1) Pre-operative antibiotic prophylaxis within 1 hour before incision — 2 hours for vancomycin and fluoroquinolones; antibiotic selection is procedure-specific; (2) Hair removal using electric clippers only — razors create micro-abrasions that increase SSI risk; (3) Maintaining normothermia during surgery — hypothermia impairs immune function; (4) Blood glucose control — hyperglycemia impairs wound healing; (5) CHG-based pre-operative skin antisepsis; (6) Appropriate sterile technique throughout. Administering antibiotics more than 1 hour before incision allows drug levels to fall below effective tissue concentrations before the wound is opened.",
+        criticalValues: [
+          { label: "Antibiotic timing", value: "Within 1 hour before incision (2 hours for vanco/fluoroquinolones)" },
+          { label: "Hair removal", value: "Electric clippers only — razors cause micro-abrasions that increase SSI risk" },
+          { label: "Normothermia", value: "Required during surgery — hypothermia impairs immune response" }
+        ]
+      },
+      {
+        heading: "Single-Use Devices and Multi-Dose Vial Rules",
+        content: "Single-use devices (SUDs) are labeled by the manufacturer for one-time use with one patient. JC and the FDA prohibit reuse of single-use devices unless the facility uses an FDA-cleared third-party reprocessing program. Commonly misused SUDs: lancets (blood glucose testing), syringes, needles, single-dose vials, catheter supplies, and biopsy needles. Multi-dose vials are the exception — they may be used for multiple patients if handled correctly: one needle per access, dated when opened, stored per label, and discarded within 28 days of opening or per manufacturer's beyond-use date. Single-dose vials must never be used for more than one patient. Outbreaks of hepatitis B have been traced to lancet sharing and shared blood glucose monitoring devices.",
+        criticalValues: [
+          { label: "Single-use devices", value: "One patient, one time — reuse without FDA reprocessing program is prohibited" },
+          { label: "Multi-dose vials", value: "Date on opening, one needle per access, discard within 28 days" },
+          { label: "Blood glucose lancets", value: "Single-use only — sharing = direct bloodborne pathogen transmission risk" }
+        ],
+        thinkAboutIt: "A phlebotomist runs out of lancets and uses the same one on two patients, wiping with alcohol between uses. Why is this a serious safety finding even if both patients appear healthy?"
+      },
+      {
+        heading: "HAI Surveillance and Improvement Requirements",
+        content: "JC requires hospitals to have an infection prevention and control program that conducts surveillance for HAIs, analyzes data to identify trends, benchmarks rates against national data (NHSN), reports findings to leadership and the governing body, implements evidence-based interventions when rates exceed benchmarks, and measures the effectiveness of interventions. Surveillance data alone is insufficient — it must drive improvement. When a unit's CAUTI or MRSA rate rises above national benchmarks, the required response includes root cause analysis, evidence-based interventions, defined improvement goals, and ongoing monitoring. Reviewing the data without action does not satisfy IC chapter requirements.",
+        criticalValues: [
+          { label: "Surveillance targets", value: "CLABSI, CAUTI, SSI, C. diff, MRSA, ventilator-associated events" },
+          { label: "Benchmark source", value: "NHSN (National Healthcare Safety Network)" },
+          { label: "Elevated rates require", value: "Root cause analysis + interventions + measurement — not just continued monitoring" }
+        ]
+      }
+    ],
+    quickReference: [
+      { fact: "Standard precautions", detail: "All patients, always — hand hygiene + PPE per task" },
+      { fact: "Contact precautions", detail: "Gown + gloves — staff AND visitors, MRSA / VRE / C. diff" },
+      { fact: "Airborne precautions", detail: "TB, measles, varicella — negative pressure room + N95 (not surgical mask)" },
+      { fact: "C. diff hand hygiene", detail: "Soap and water — ABHR does not kill C. diff spores" },
+      { fact: "CLABSI insertion bundle", detail: "Hand hygiene, maximal barrier, CHG skin prep, optimal site, daily necessity" },
+      { fact: "CAUTI prevention", detail: "Document indication, daily necessity review, remove when resolved" },
+      { fact: "SSI antibiotic timing", detail: "Within 1 hour of incision (2 hours for vanco/fluoroquinolones)" },
+      { fact: "Hair removal", detail: "Electric clippers only — no razors" },
+      { fact: "Single-use devices", detail: "One patient, one time — lancets, syringes, single-dose vials never shared" },
+      { fact: "Multi-dose vials", detail: "Date on opening, one needle/access, discard within 28 days" }
+    ]
+  },
+
+  // ── PATIENT RIGHTS & RESPONSIBILITIES ─────────────────────────────────────
+  {
+    levelId: "patient_rights",
+    title: "Patient Rights & Responsibilities",
+    overview: "The Joint Commission's Rights and Responsibilities of the Individual (RI) chapter ensures that patients are treated with dignity and respect, receive complete information about their care, and can make informed decisions. Every patient has the right to informed consent, privacy, access to their medical records, a formal grievance process, and freedom from unnecessary restraint. Advance directives must be honored and documented in the active chart. Staff must protect patients from abuse, neglect, and exploitation, with mandatory reporting obligations when abuse is suspected. Surveyors test these rights directly — asking patients, reviewing records, and observing consent and communication practices.",
+    sections: [
+      {
+        heading: "Informed Consent: Requirements and Who Can Obtain It",
+        content: "Informed consent is the process by which a patient voluntarily agrees to a proposed treatment after receiving complete information about it. For consent to be valid: (1) the patient must have decision-making capacity; (2) they must receive adequate information — diagnosis, proposed treatment, purpose, risks, benefits, alternatives, and consequences of no treatment; (3) they must have the opportunity to ask questions; (4) consent must be voluntary, without coercion. Only a licensed practitioner who has the training to explain the procedure and answer clinical questions may obtain informed consent. Nurses, medical assistants, and clerical staff may witness the signature but cannot perform the consent discussion. Informed consent obtained after the patient has received sedating pre-medication is presumptively invalid.",
+        criticalValues: [
+          { label: "Who obtains it", value: "Licensed practitioner only — not nurses, MAs, or clerical staff as the consenting provider" },
+          { label: "Required information", value: "Diagnosis, procedure, purpose, risks, benefits, alternatives, consequences of refusal" },
+          { label: "After sedation", value: "Consent is invalid — must be obtained before sedating medications are given" }
+        ],
+        thinkAboutIt: "A patient received 4 mg IV lorazepam for anxiety 20 minutes ago. The surgeon asks a nurse to have the patient sign the consent form now. What should the nurse do and why?"
+      },
+      {
+        heading: "Advance Directives: Asking, Documenting, and Honoring",
+        content: "Advance directives are legal documents in which patients express their healthcare preferences if they lose decision-making capacity. Types include living wills, healthcare power of attorney/healthcare proxy, and DNR/DNAR orders. Hospitals must: (1) Ask every patient on admission whether they have an advance directive; (2) Document the response — whether yes or no; (3) Request a copy and place it in the active, readily accessible section of the medical record — not the history section; (4) Not refuse to care for a patient based on whether they have a directive; (5) Honor the directive when the patient lacks capacity. An advance directive in the history section of the chart may not be seen in an emergency, and has been the cause of patients being resuscitated against their documented wishes.",
+        criticalValues: [
+          { label: "Ask every patient at admission", value: "And document the response — 'no' must also be documented" },
+          { label: "Placement", value: "Active section of the chart — not the history section" },
+          { label: "Cannot refuse care", value: "Based on presence or absence of advance directive" }
+        ]
+      },
+      {
+        heading: "Restraints: Order Requirements and Monitoring",
+        content: "The Joint Commission and CMS have strict requirements for restraint use. Every restraint requires a physician order specifying type, clinical justification, and duration limit. Before applying a restraint, the least restrictive alternatives must be documented as tried. Monitoring requirements: behavioral restraints — every 2 hours for circulation, sensation, skin integrity, repositioning, and toileting needs; violent/self-destructive restraints — every 15 minutes. Orders expire and patients cannot remain restrained on an expired order under any circumstances — the restraint must be removed immediately when the order expires if no renewal has been obtained. Threatening restraints as a behavioral deterrent without a clinical indication and physician order is a patient rights violation.",
+        criticalValues: [
+          { label: "Order must specify", value: "Type, clinical justification, time limit" },
+          { label: "Monitoring", value: "Q2h behavioral restraints / Q15min violent — circulation, skin, positioning, toileting" },
+          { label: "Expired order", value: "Remove restraint immediately — no verbal extensions, no nursing extensions" }
+        ]
+      },
+      {
+        heading: "Patient Grievance Process",
+        content: "JC requires hospitals to have a defined process for receiving, investigating, and responding to patient grievances. A grievance differs from a complaint: a complaint is resolved at the point of care immediately and does not require the formal process; a grievance is an unresolved complaint or any written complaint. Key requirements: (1) Patients must be informed of their right to file a grievance and the process on admission; (2) All grievances must be acknowledged in writing and investigated; (3) Written response within 7 days (CMS requirement) including: the hospital contact name, steps taken to investigate, results, and date of completion; (4) Grievance data tracked and used for performance improvement. Failing to provide a written response within the required timeframe is a documented compliance failure.",
+        criticalValues: [
+          { label: "Grievance vs. complaint", value: "Unresolved complaint or any WRITTEN complaint = grievance requiring formal process" },
+          { label: "Written response timeframe", value: "7 days (CMS) — must include investigation steps, results, date" },
+          { label: "At admission", value: "Patients must be proactively informed of their right to file a grievance" }
+        ]
+      },
+      {
+        heading: "Language Access and Communication Rights",
+        content: "Patients with limited English proficiency have the right to receive healthcare information in a language they understand. JC requires professional interpreter services for all clinical communication — not family members as interpreters for clinical or consent discussions. Professional interpreter services may be in-person, video, or telephone. A patient may choose to use a family member only after professional services have been offered and declined. For consent discussions, professional interpreters are required because family members may filter information or have conflicts of interest. A non-English-speaking patient who signs a consent form written entirely in English — with no interpreter present — has not given valid informed consent.",
+        criticalValues: [
+          { label: "Professional interpreters", value: "Required for clinical discussions, consent, and discharge education" },
+          { label: "Family as interpreter", value: "Only if patient explicitly requests after professional services are offered" },
+          { label: "English-only consent", value: "Invalid for non-English-speaking patient without interpreter" }
+        ]
+      },
+      {
+        heading: "Right to Refuse Treatment and Privacy Protections",
+        content: "Competent adult patients have an absolute right to refuse any treatment, including life-sustaining treatment such as CPR, mechanical ventilation, or artificial nutrition — even when refusal may result in death. Staff obligations: inform the patient of consequences in understandable terms, document the refusal and the information provided, notify the physician, and honor the decision. Privacy and confidentiality: patient health information — including medication lists, diagnosis, and condition — cannot be shared with anyone, including family members, without the patient's explicit authorization. Medical discussions must not occur in public areas where they can be overheard. Patients must receive a Notice of Privacy Practices on admission.",
+        criticalValues: [
+          { label: "Right to refuse", value: "Absolute for competent adults — including life-sustaining care" },
+          { label: "Required documentation", value: "Refusal, consequences explained, patient understanding demonstrated, physician notified" },
+          { label: "PHI sharing", value: "Cannot share with family — even medication list — without patient authorization" }
+        ],
+        thinkAboutIt: "A competent patient with religious objections refuses a blood transfusion the care team considers essential. The team believes they know what's best for the patient. What are the required steps?"
+      }
+    ],
+    quickReference: [
+      { fact: "Informed consent", detail: "Licensed practitioner only — after sedation = invalid" },
+      { fact: "Required consent elements", detail: "Diagnosis, procedure, risks, benefits, alternatives, consequences" },
+      { fact: "Advance directives", detail: "Ask every patient at admission, document response, place in active chart" },
+      { fact: "Restraint order", detail: "Type, justification, time limit — physician must order" },
+      { fact: "Restraint monitoring", detail: "Q2h behavioral / Q15min violent" },
+      { fact: "Expired restraint order", detail: "Remove immediately — no extensions" },
+      { fact: "Grievance response", detail: "Written, within 7 days, include investigation results" },
+      { fact: "Professional interpreters", detail: "Required for clinical discussions — family only if patient requests after offer" },
+      { fact: "Right to refuse", detail: "Absolute for competent adults — document refusal, honor decision" },
+      { fact: "PHI", detail: "Cannot share with family without patient authorization" }
+    ]
+  },
+
+  // ── LIFE SAFETY ────────────────────────────────────────────────────────────
+  {
+    levelId: "life_safety",
+    title: "Life Safety",
+    overview: "The Joint Commission's Life Safety (LS) chapter aligns with NFPA 101 Life Safety Code and requires hospitals to maintain a physical environment that protects patients and staff from fire, smoke, and structural hazards. Every staff member must know and be able to demonstrate the RACE fire response protocol and PASS fire extinguisher technique — surveyors ask staff directly. Fire doors must remain closed, egress routes must be kept clear, and fire drills must occur quarterly on every shift including nights. When construction or renovation compromises any fire safety system, Interim Life Safety Measures must be implemented immediately.",
+    sections: [
+      {
+        heading: "RACE: The Four-Step Fire Response Protocol",
+        content: "RACE is the universal hospital fire response framework required by JC. Every staff member must know and be able to demonstrate all four steps: R — Rescue: Move any person in immediate danger to safety — this is the first priority. A — Alarm: Activate the nearest fire alarm pull station AND call the internal emergency number immediately. C — Contain/Confine: Close all doors between the fire and other areas to prevent smoke and fire spread — do not lock doors. E — Extinguish or Evacuate: Attempt to extinguish only if the fire is very small, contained, there is a clear egress path, and you are trained; otherwise evacuate. Horizontal evacuation (moving patients through fire doors to the next fire compartment on the same floor) is the first approach. Vertical evacuation via stairs is used only when horizontal is not possible.",
+        criticalValues: [
+          { label: "R — Rescue", value: "Remove anyone in immediate danger — first priority" },
+          { label: "A — Alarm", value: "Pull station + internal emergency number — do not delay alarm to rescue" },
+          { label: "C — Contain", value: "Close all doors — do not lock them" },
+          { label: "E — Extinguish/Evacuate", value: "Horizontal first, vertical only if necessary; attempt extinguishment only if small fire + clear exit + trained" }
+        ],
+        thinkAboutIt: "A fire breaks out in a supply room. A patient is in the adjacent room. The nurse sees the fire is small but growing. Walk through each RACE step and explain the decisions the nurse faces at each stage."
+      },
+      {
+        heading: "PASS: How to Use a Fire Extinguisher",
+        content: "PASS is the four-step fire extinguisher operation method all healthcare staff must know. P — Pull: Pull the safety pin from the handle (breaks the tamper seal). A — Aim: Aim the nozzle at the BASE of the fire — not at the flames. Addressing the base removes the fuel source; aiming at the flames is ineffective. S — Squeeze: Squeeze the handle to release the extinguishing agent. S — Sweep: Sweep side to side at the base of the fire until extinguished or the extinguisher is empty. Attempt extinguishment only when: the fire is very small (wastebasket size), there is a clear exit behind you, and you are trained. If in doubt, evacuate. Most hospital fires should be managed through evacuation and door closure, not extinguisher use.",
+        criticalValues: [
+          { label: "Aim target", value: "BASE of the fire — not the flames" },
+          { label: "When to attempt", value: "Small fire + clear exit behind you + trained — otherwise evacuate" },
+          { label: "Sweep motion", value: "Side to side at the base until out or extinguisher empty" }
+        ]
+      },
+      {
+        heading: "Fire Drill Requirements",
+        content: "JC requires hospitals to conduct fire drills at least quarterly on each shift — this means at least four drills per shift per year. Drills must be: unannounced to test actual staff response; inclusive of all shifts (day, evening, night, and weekend — night shift cannot be omitted because patient census is lower); documented with date, time, shift, location, participating staff, and a performance critique; followed by corrective action when deficiencies are identified. Conducting drills only on day and evening shifts is a compliance deficiency. Drills can be structured to minimize patient disruption while still testing staff response knowledge — the alarm does not always need to be audibly activated throughout the facility.",
+        criticalValues: [
+          { label: "Frequency", value: "At least quarterly on EACH shift — 4+ per shift per year" },
+          { label: "All shifts required", value: "Night, weekend — cannot be omitted for any reason" },
+          { label: "Must be", value: "Unannounced, documented, with corrective action for deficiencies" }
+        ]
+      },
+      {
+        heading: "Fire Compartmentalization and Fire Door Rules",
+        content: "Hospitals are built in fire compartments — sections separated by fire-rated walls and doors that contain fire and smoke to prevent spread throughout the building. This compartmentalization is the primary life safety design for hospitals where full patient evacuation is difficult. Fire doors must: remain closed at all times or be held open only by an approved automatic closing device that releases when the alarm activates; never be propped open with doorstops, furniture, equipment, or wedges; have functioning latches that allow them to close completely. A propped fire door is one of the most commonly cited immediate JC findings because it defeats the compartment design — it applies to stairwell doors, corridor fire doors, and all other fire-rated doors.",
+        criticalValues: [
+          { label: "Fire doors", value: "Must remain closed — or use approved auto-close devices only" },
+          { label: "Never prop", value: "No doorstops, furniture, wedges — even briefly, even non-patient areas" },
+          { label: "Propped door", value: "Immediate JC finding — defeats the compartmentalization design" }
+        ],
+        thinkAboutIt: "An EVS staff member props a stairwell fire door open with a rubber wedge while cleaning the corridor to make it easier to move carts back and forth. What is the compliance finding and what should they do instead?"
+      },
+      {
+        heading: "Egress Routes and Interim Life Safety Measures",
+        content: "Egress routes are the designated exit paths from any area — corridors leading to exits, stairwells, and exit doors. JC and NFPA 101 require egress routes to be: unobstructed at all times (no stored items narrowing the required clear width); clearly marked with illuminated exit signs visible from any corridor point; and free of locking mechanisms that could prevent exit. Corridor storage is one of the most-cited JC findings. Wheelchairs, gurneys, and IV poles staged in corridors are compliant as long as minimum clear width is maintained. When a Life Safety Code deficiency exists — during construction, sprinkler repair, or a compromised fire door — hospitals must immediately implement Interim Life Safety Measures (ILSMs): temporary fire watches, additional drills, extra extinguishers, and compartmentalization barriers.",
+        criticalValues: [
+          { label: "Egress", value: "Always unobstructed, illuminated exit signs, no locks preventing exit" },
+          { label: "Corridor staging", value: "Compliant if minimum clear width maintained — stored items are a citation" },
+          { label: "ILSMs", value: "Required immediately when any life safety system is impaired — fire watch, extra drills, extinguishers" }
+        ]
+      },
+      {
+        heading: "Medical Gas Safety and Electrical Safety",
+        content: "All medical gas zone shutoff valves must be labeled with the areas they control, and staff in patient care areas must know the location of their zone valves and how to operate them. Medical gas cylinders must be stored secured (chained or in a rack) — never free-standing. Empty cylinders must be segregated from full cylinders and labeled. Oxygen is an oxidizing gas that significantly increases combustion risk and must never be stored with flammable materials. Electrical: extension cords are prohibited from permanent use in healthcare facilities — only temporary use is allowed. Hospital-grade, UL-listed power strips with surge protection may be used; standard household strips are prohibited. Daisy-chaining power strips is always prohibited.",
+        criticalValues: [
+          { label: "Gas valves", value: "Labeled by zone — staff must know location and operation" },
+          { label: "Cylinders", value: "Secured (chained or racked) — never free-standing; empty and full segregated" },
+          { label: "Extension cords", value: "Temporary only — never permanent. Hospital-grade power strips only. No daisy-chaining" }
+        ]
+      }
+    ],
+    quickReference: [
+      { fact: "RACE order", detail: "Rescue → Alarm → Contain (close doors) → Extinguish or Evacuate" },
+      { fact: "PASS aim point", detail: "Base of the fire — not the flames" },
+      { fact: "Fire drills", detail: "Quarterly per shift, unannounced, all shifts including nights" },
+      { fact: "Fire doors", detail: "Always closed — never propped. Propped door = immediate JC finding" },
+      { fact: "Horizontal evacuation", detail: "First approach — through fire doors to next compartment, same floor" },
+      { fact: "Vertical evacuation", detail: "Stairs only when horizontal is not possible" },
+      { fact: "Egress routes", detail: "Always clear, illuminated signs, no locks — stored items are a citation" },
+      { fact: "ILSMs", detail: "Implement immediately when any fire safety system is impaired" },
+      { fact: "Gas cylinders", detail: "Secured (chained), full/empty segregated, labeled" },
+      { fact: "Extension cords", detail: "Temporary only — hospital-grade power strips, no daisy-chaining" }
+    ]
   }
 ];
