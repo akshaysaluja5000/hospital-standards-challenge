@@ -282,7 +282,7 @@ function calcRiskStatus(plans: ExecPlan[], trendData: TrendPoint[]): RiskLevel {
   const recentCompleted = recent.reduce((s, w) => s + w.completed, 0);
   const worsening = recentAssigned > 0 && recentCompleted < recentAssigned * 0.6;
   if (overdueActive.some((p) => p.quizScore < 55) || worsening) return "red";
-  if (overdueActive.length > 0) return "yellow";
+  if (overdueActive.length > 0) return "red";
   return "green";
 }
 
@@ -394,9 +394,9 @@ const RISK_CONFIG = {
     Icon: ShieldAlert,
     label: "Learner Attention Required",
     sub: "Some guided education plans are overdue. Learner follow-up recommended.",
-    bg: "bg-amber-500/10 border-amber-500/25",
-    text: "text-amber-400",
-    dot: "bg-amber-400",
+    bg: "bg-destructive/10 border-destructive/30",
+    text: "text-destructive",
+    dot: "bg-destructive",
   },
   red: {
     Icon: ShieldX,
@@ -443,7 +443,7 @@ export default function ExecutiveReportPage() {
   const { user, facilityId: scopedFacilityId, facilityName: scopedFacilityName, permissions, isSuperAdmin } = facilityAuth;
   const [, setLocation] = useLocation();
 
-  const [dataMode, setDataMode] = useState<"demo" | "live">("demo");
+  const [dataMode, setDataMode] = useState<"demo" | "live">("live");
   const [selectedFacility, setSelectedFacility] = useState("All Facilities");
   const [chapter, setChapter] = useState("All Chapters");
   const [status, setStatus] = useState<PlanStatus | "All">("All");
@@ -547,25 +547,25 @@ export default function ExecutiveReportPage() {
             </p>
           </div>
           <div className="flex gap-2 items-center">
-            {/* Demo / Live toggle */}
+            {/* Live / Demo toggle */}
             <div className="flex items-center rounded-lg border border-border bg-white/5 p-0.5" data-testid="container-mode-toggle">
               <button
-                onClick={() => setDataMode("demo")}
-                className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
-                  dataMode === "demo" ? "bg-amber-500/20 text-amber-700 dark:text-amber-300" : "text-muted-foreground hover:text-foreground"
-                }`}
-                data-testid="button-exec-mode-demo"
-              >
-                <FlaskConical size={11} /> Demo
-              </button>
-              <button
                 onClick={() => setDataMode("live")}
-                className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
-                  dataMode === "live" ? "bg-green-500/15 text-green-700 dark:text-green-400" : "text-muted-foreground hover:text-foreground"
+                className={`flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-md transition-all ${
+                  dataMode === "live" ? "bg-green-600 text-white shadow-sm" : "text-muted-foreground hover:text-foreground"
                 }`}
                 data-testid="button-exec-mode-live"
               >
-                <Database size={11} /> Live
+                <Database size={12} /> Live Data
+              </button>
+              <button
+                onClick={() => setDataMode("demo")}
+                className={`flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-md transition-all ${
+                  dataMode === "demo" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+                data-testid="button-exec-mode-demo"
+              >
+                <FlaskConical size={12} /> Demo
               </button>
             </div>
             <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => setFiltersOpen((v) => !v)} data-testid="button-toggle-filters">
