@@ -1670,9 +1670,16 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
       const { query } = parsed.data;
 
       const { handbook } = await import("@shared/handbook");
+      const { getVisibleLevelsForModule } = await import("@shared/all-levels");
       const queryLower = query.toLowerCase();
+      const words = queryLower.split(/\s+/).filter(Boolean);
       const relevantSections: string[] = [];
 
+      let sourceLevelId: string | null = null;
+      let sourceTitle: string | null = null;
+      let sourceType: "handbook" | "module" = "handbook";
+
+      // Search the SPD/infection-control handbook chapters
       for (const chapter of handbook) {
         for (const section of chapter.sections) {
           if (
@@ -1686,12 +1693,30 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
               sectionText += "\nCritical Values: " + section.criticalValues.map(cv => `${cv.label}: ${cv.value}`).join("; ");
             }
             relevantSections.push(sectionText);
+            if (!sourceLevelId) { sourceLevelId = chapter.levelId; sourceTitle = chapter.title; sourceType = "handbook"; }
           }
         }
         for (const qr of chapter.quickReference) {
           if (qr.fact.toLowerCase().includes(queryLower) || qr.detail.toLowerCase().includes(queryLower)) {
             relevantSections.push(`[${chapter.title} > Quick Reference]\n${qr.fact}: ${qr.detail}`);
+            if (!sourceLevelId) { sourceLevelId = chapter.levelId; sourceTitle = chapter.title; sourceType = "handbook"; }
           }
+        }
+      }
+
+      // If handbook didn't have enough context, also search hospital quiz module study material
+      if (relevantSections.length < 4) {
+        const hospLevels = getVisibleLevelsForModule("hospital");
+        for (const lvl of hospLevels) {
+          const matchingConcepts = (lvl.studyMaterial ?? []).filter(c => {
+            const hay = `${c.title} ${c.content} ${c.keyPoint} ${c.extraInfo ?? ""}`.toLowerCase();
+            return words.some(w => hay.includes(w));
+          });
+          for (const c of matchingConcepts.slice(0, 2)) {
+            relevantSections.push(`[${lvl.name} > ${c.title}]\n${c.content}\nKey point: ${c.keyPoint}`);
+            if (!sourceLevelId) { sourceLevelId = lvl.id; sourceTitle = lvl.name; sourceType = "module"; }
+          }
+          if (relevantSections.length >= 8) break;
         }
       }
 
@@ -1701,7 +1726,7 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
-        max_tokens: 200,
+        max_tokens: 250,
         messages: [
           {
             role: "user",
@@ -1711,7 +1736,7 @@ Question: "${query}"
 
 Reference material: ${contextText}
 
-After your answer, add one line: "See: [source]" with the relevant handbook section. If no match, say it's general guidance. Keep it short.`,
+After your answer, add one line: "See: [source]" naming the specific chapter or module. Keep it short.`,
           },
         ],
       });
@@ -1720,7 +1745,7 @@ After your answer, add one line: "See: [source]" with the relevant handbook sect
       if (!content || content.type !== "text" || !content.text) {
         return res.status(502).json({ error: "Unable to generate answer." });
       }
-      res.json({ answer: content.text });
+      res.json({ answer: content.text, sourceLevelId, sourceTitle, sourceType });
     } catch (error: any) {
       console.error("AI Handbook error:", error?.status, error?.message, error?.error?.type);
       res.status(502).json({ error: "AI Handbook search is temporarily unavailable." });

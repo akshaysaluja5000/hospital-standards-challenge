@@ -1,13 +1,22 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BrainCircuit, Loader2, MessageSquare, Send, Volume2, VolumeX } from "lucide-react";
+import { BrainCircuit, Loader2, MessageSquare, Send, Volume2, VolumeX, BookOpen, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { apiRequest } from "@/lib/queryClient";
+import { useLocation } from "wouter";
+
+type SourceInfo = {
+  levelId: string;
+  title: string;
+  type: "handbook" | "module";
+};
 
 export function AiHandbookSearch() {
+  const [, setLocation] = useLocation();
   const [query, setQuery] = useState("");
   const [answer, setAnswer] = useState<string | null>(null);
+  const [source, setSource] = useState<SourceInfo | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -55,6 +64,7 @@ export function AiHandbookSearch() {
     setLoading(true);
     setError(null);
     setAnswer(null);
+    setSource(null);
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
@@ -65,6 +75,13 @@ export function AiHandbookSearch() {
       });
       const data = await res.json();
       setAnswer(data.answer);
+      if (data.sourceLevelId) {
+        setSource({
+          levelId: data.sourceLevelId,
+          title: data.sourceTitle ?? "View Source",
+          type: data.sourceType ?? "handbook",
+        });
+      }
     } catch (e: any) {
       const msg = e?.message || "";
       if (msg.includes("429")) {
@@ -83,6 +100,11 @@ export function AiHandbookSearch() {
     }
   };
 
+  function navigateToSource() {
+    if (!source) return;
+    setLocation(source.type === "handbook" ? `/handbook/${source.levelId}` : `/study/${source.levelId}`);
+  }
+
   return (
     <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
       <div className="flex items-center gap-2 mb-3">
@@ -94,7 +116,7 @@ export function AiHandbookSearch() {
       </p>
       <div className="flex gap-2">
         <Input
-          placeholder='e.g. "What are the key SPD indicators for peel-packs?"'
+          placeholder='e.g. "What are the requirements for moderate sedation?"'
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -141,7 +163,28 @@ export function AiHandbookSearch() {
               <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">
                 {answer}
               </div>
-              <p className="text-xs text-muted-foreground mt-3 italic" data-testid="text-handbook-ai-disclaimer">
+
+              {source && (
+                <div className="mt-3 pt-3 border-t border-border/60 flex items-center justify-between gap-2 flex-wrap">
+                  <p className="text-xs text-muted-foreground italic">
+                    Source: <span className="font-semibold text-foreground/70">{source.title}</span>
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={navigateToSource}
+                    className="h-7 text-xs gap-1.5 flex-shrink-0"
+                    data-testid="button-go-to-source"
+                  >
+                    {source.type === "handbook"
+                      ? <><BookOpen size={12} /> Go to Chapter</>
+                      : <><Layers size={12} /> Open Study Module</>
+                    }
+                  </Button>
+                </div>
+              )}
+
+              <p className="text-xs text-muted-foreground mt-2 italic" data-testid="text-handbook-ai-disclaimer">
                 Check your organization's policies; this is a learning aid, not clinical guidance.
               </p>
             </div>

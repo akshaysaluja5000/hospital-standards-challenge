@@ -274,7 +274,7 @@ export default function DashboardPage() {
   const searchIndex = useMemo<SearchEntry[]>(() => {
     const entries: SearchEntry[] = [];
 
-    // Hospital levels — one rich entry per level covering ALL searchable content
+    // Hospital levels — module-level entry + one entry per study concept for granular search
     const hospLevels = getVisibleLevelsForModule("hospital");
     for (const lvl of hospLevels) {
       const conceptText = (lvl.studyMaterial ?? [])
@@ -283,21 +283,34 @@ export default function DashboardPage() {
       const questionText = (lvl.questions ?? [])
         .map((q) => `${q.text} ${(q.options ?? []).join(" ")} ${q.explanation ?? ""}`)
         .join(" ");
+      const moduleAiContext = [
+        lvl.description ?? "",
+        lvl.chapterSummary?.plainLanguageSummary ?? "",
+        (lvl.chapterSummary?.commonRiskPoints ?? []).join(". "),
+        (lvl.chapterSummary?.keyOperationalExpectations ?? []).join(". "),
+        conceptText,
+        questionText,
+      ].filter(Boolean).join(" ");
+      // Module-level entry
       entries.push({
         id: `hosp-${lvl.id}`,
         title: lvl.name,
         subtitle: lvl.description ?? "",
         module: "hospital",
         levelId: lvl.id,
-        aiContext: [
-          lvl.description ?? "",
-          lvl.chapterSummary?.plainLanguageSummary ?? "",
-          (lvl.chapterSummary?.commonRiskPoints ?? []).join(". "),
-          (lvl.chapterSummary?.keyOperationalExpectations ?? []).join(". "),
-          conceptText,
-          questionText,
-        ].filter(Boolean).join(" "),
+        aiContext: moduleAiContext,
       });
+      // Concept-level entries — one per study concept for specific topic searches
+      for (const concept of (lvl.studyMaterial ?? [])) {
+        entries.push({
+          id: `hosp-${lvl.id}-${concept.title.toLowerCase().replace(/[^a-z0-9]+/g, "_")}`,
+          title: concept.title,
+          subtitle: `${lvl.name} · ${(concept.keyPoint ?? "").slice(0, 80)}`,
+          module: "hospital",
+          levelId: lvl.id,
+          aiContext: `${concept.title} ${concept.content} ${concept.keyPoint} ${concept.extraInfo ?? ""}`,
+        });
+      }
     }
 
     // ASC handbook chapters — index title, overview, risk points, section content, study material, and questions
@@ -607,7 +620,7 @@ export default function DashboardPage() {
                             onClick={() => {
                               setSearchOpen(false);
                               setSearchQuery("");
-                              setLocation(`/handbook/${entry.levelId}`);
+                              setLocation(entry.module === "asc" ? `/handbook/${entry.levelId}` : `/study/${entry.levelId}`);
                             }}
                             data-testid={`button-explore-${entry.id}`}
                           >
