@@ -1157,6 +1157,7 @@ export default function DashboardPage() {
       <div className="max-w-6xl mx-auto px-6 mt-4 mb-6 text-xs text-muted-foreground" data-testid="text-disclaimer-footer">
         {PATHWAY_DISCLAIMERS[userModule]}{" "}
         <Link href="/terms" className="underline hover:text-primary">Terms & Privacy</Link>
+        <p className="text-muted-foreground/60 mt-1" data-testid="text-company-dashboard">Division of Innovans LLC</p>
       </div>
 
       {/* AI Topic Quiz Modal */}
