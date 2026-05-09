@@ -113,13 +113,6 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
         </Button>
       )}
 
-      {loading && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground py-2" data-testid="ai-tutor-loading">
-          <Loader2 size={16} className="animate-spin" />
-          AI Tutor is thinking...
-        </div>
-      )}
-
       <AnimatePresence>
         {explanations.map((text, idx) => (
           <motion.div
@@ -167,6 +160,13 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
           </motion.div>
         ))}
       </AnimatePresence>
+
+      {loading && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground py-2 mt-3" data-testid="ai-tutor-loading">
+          <Loader2 size={16} className="animate-spin" />
+          AI Tutor is thinking...
+        </div>
+      )}
 
       {currentDepth > 0 && currentDepth < maxDepth && !loading && (
         <Button
