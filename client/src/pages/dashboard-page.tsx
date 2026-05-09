@@ -302,8 +302,12 @@ export default function DashboardPage() {
       }
     }
 
-    // ASC handbook chapters
+    // ASC handbook chapters — index title, overview, risk points, AND all section content
     for (const ch of ascHandbook) {
+      const sectionText = ((ch as any).sections ?? [])
+        .map((s: any) => `${s.title ?? ""} ${s.content ?? ""}`.trim())
+        .filter(Boolean)
+        .join(" ");
       entries.push({
         id: `asc-${ch.levelId}`,
         title: ch.title,
@@ -313,7 +317,8 @@ export default function DashboardPage() {
         aiContext: [
           ch.overview ?? "",
           (ch.riskPoints ?? []).join(". "),
-        ].filter(Boolean).join(" ").slice(0, 800),
+          sectionText,
+        ].filter(Boolean).join(" ").slice(0, 2000),
       });
     }
 
@@ -340,25 +345,41 @@ export default function DashboardPage() {
   }
   const searchRef = useRef<HTMLDivElement>(null);
 
-  const searchResults = useMemo<SearchEntry[]>(() => {
+  const searchResults = useMemo<Array<SearchEntry & { snippet?: string }>>(() => {
     const q = searchQuery.trim().toLowerCase();
     if (q.length < 2) return [];
     const words = q.split(/\s+/);
+
+    function extractSnippet(text: string, query: string): string | undefined {
+      const lc = text.toLowerCase();
+      const firstWord = query.split(/\s+/)[0];
+      const idx = lc.indexOf(firstWord);
+      if (idx === -1) return undefined;
+      const start = Math.max(0, idx - 35);
+      const end = Math.min(text.length, idx + query.length + 90);
+      return (start > 0 ? "…" : "") + text.slice(start, end).replace(/\s+/g, " ").trim() + (end < text.length ? "…" : "");
+    }
+
     const scored = searchIndex
       .filter((e) => {
-        const haystack = `${e.title} ${e.subtitle}`.toLowerCase();
+        const haystack = `${e.title} ${e.subtitle} ${e.aiContext}`.toLowerCase();
         return words.every((w) => haystack.includes(w));
       })
       .map((e) => {
         const title = e.title.toLowerCase();
+        const subtitle = e.subtitle.toLowerCase();
         let score = 0;
         if (title === q) score += 100;
         else if (title.startsWith(q)) score += 50;
         else if (title.includes(q)) score += 20;
-        return { entry: e, score };
+        else if (subtitle.includes(q)) score += 10;
+        // Content-only match — lower priority but still shown
+        const inContent = !title.includes(q) && !subtitle.includes(q);
+        const snippet = inContent ? extractSnippet(e.aiContext, q) : undefined;
+        return { entry: { ...e, snippet }, score };
       })
       .sort((a, b) => b.score - a.score)
-      .slice(0, 8)
+      .slice(0, 12)
       .map((x) => x.entry);
     return scored;
   }, [searchQuery, searchIndex]);
@@ -574,19 +595,25 @@ export default function DashboardPage() {
                           className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
                         >
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold truncate" data-testid={`search-result-title-${entry.id}`}>
-                              {entry.title}
-                            </p>
-                            <p className="text-xs text-muted-foreground truncate mt-0.5">
-                              <span className={`inline-block mr-1.5 px-1 py-0.5 rounded text-[9px] font-black uppercase tracking-wider ${
+                            <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
+                              <span className={`flex-shrink-0 px-1.5 py-0.5 rounded text-xs font-black uppercase tracking-wider ${
                                 entry.module === "asc"
-                                  ? "bg-teal-500/15 text-teal-600"
+                                  ? "bg-teal-500/15 text-teal-700 dark:text-teal-400"
                                   : "bg-primary/10 text-primary"
                               }`}>
                                 {entry.module === "asc" ? "ASC" : "Hospital"}
                               </span>
-                              {entry.subtitle}
-                            </p>
+                              <p className="text-sm font-bold truncate" data-testid={`search-result-title-${entry.id}`}>
+                                {entry.title}
+                              </p>
+                            </div>
+                            {(entry as any).snippet ? (
+                              <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed mt-0.5 italic">
+                                {(entry as any).snippet}
+                              </p>
+                            ) : (
+                              <p className="text-xs text-muted-foreground truncate mt-0.5">{entry.subtitle}</p>
+                            )}
                           </div>
                           <button
                             onClick={() => {
@@ -604,7 +631,7 @@ export default function DashboardPage() {
                       ))}
                     </div>
                     <div className="px-4 py-2 bg-muted/30 border-t border-border/60">
-                      <p className="text-[10px] text-muted-foreground font-semibold">
+                      <p className="text-xs text-muted-foreground font-semibold">
                         {searchResults.length} result{searchResults.length !== 1 ? "s" : ""} · AI generates 5 focused questions on any topic
                       </p>
                     </div>
@@ -619,8 +646,8 @@ export default function DashboardPage() {
                     className="absolute top-full mt-2 left-0 right-0 z-50 rounded-2xl border border-border bg-card shadow-xl px-4 py-5 text-center"
                     data-testid="search-empty"
                   >
-                    <p className="text-sm font-semibold text-muted-foreground">No matching topics found</p>
-                    <p className="text-xs text-muted-foreground/70 mt-1">Try different keywords or a shorter phrase</p>
+                    <p className="text-sm font-semibold text-muted-foreground">No matching content found</p>
+                    <p className="text-xs text-muted-foreground/70 mt-1">Searches module titles, descriptions, study concepts, and chapter content</p>
                   </motion.div>
                 )}
               </AnimatePresence>
