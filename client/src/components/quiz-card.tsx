@@ -38,6 +38,14 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer, module 
 
   const isCorrect = selected === question.correctIndex;
 
+  const isYesNoFormat = question.options.every(opt => /^(yes|no)\s*[—\-]/i.test(opt.trim()));
+
+  function parseYesNoOption(opt: string): { label: string; explanation: string } {
+    const match = opt.match(/^(yes|no)\s*[—\-]\s*(.*)/is);
+    if (!match) return { label: "", explanation: opt };
+    return { label: match[1].toUpperCase(), explanation: match[2] };
+  }
+
   return (
     <motion.div
       className="w-full max-w-lg mx-auto"
@@ -70,6 +78,49 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer, module 
               }
             } else if (index === selected) {
               optionStyle = "border-primary bg-primary/10";
+            }
+
+            if (isYesNoFormat) {
+              const { label, explanation } = parseYesNoOption(option);
+              const isYes = label === "YES";
+              let badgeColor = isYes
+                ? "bg-chart-1/15 text-chart-1 border-chart-1/30"
+                : "bg-destructive/15 text-destructive border-destructive/30";
+              if (showResult) {
+                if (index === question.correctIndex) badgeColor = "bg-chart-1/20 text-chart-1 border-chart-1/50";
+                else if (index === selected && !isCorrect) badgeColor = "bg-destructive/20 text-destructive border-destructive/50";
+                else badgeColor = "bg-muted/40 text-muted-foreground border-border";
+              }
+
+              return (
+                <motion.button
+                  key={index}
+                  className={`w-full text-left p-4 rounded-xl border-2 font-medium transition-colors ${optionStyle} ${
+                    !showResult && !disabled ? "cursor-pointer" : "cursor-default"
+                  }`}
+                  onClick={() => handleSelect(index)}
+                  whileTap={!showResult && !disabled ? { scale: 0.98 } : {}}
+                  data-testid={`button-option-${index}`}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full border-2 border-current/20 flex items-center justify-center text-sm font-bold mt-0.5">
+                      {String.fromCharCode(65 + index)}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <span className={`inline-block px-2.5 py-0.5 rounded-md border text-xs font-black tracking-widest uppercase mb-1.5 ${badgeColor}`}>
+                        {label}
+                      </span>
+                      <p className="text-sm leading-relaxed text-foreground/80">{explanation}</p>
+                    </div>
+                    {showResult && index === question.correctIndex && (
+                      <CheckCircle2 size={20} className="flex-shrink-0 text-chart-1 mt-0.5" />
+                    )}
+                    {showResult && index === selected && !isCorrect && (
+                      <XCircle size={20} className="flex-shrink-0 text-destructive mt-0.5" />
+                    )}
+                  </div>
+                </motion.button>
+              );
             }
 
             return (

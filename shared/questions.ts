@@ -2784,10 +2784,10 @@ const hospitalLevelsRaw: Level[] = [
         id: "or5",
         question: "A surveyor sees two labeled syringes on the sterile field: one marked 'Lidocaine 1%' and one marked 'Marcaine 0.25%.' Both labels show drug name and concentration. Is the labeling compliant?",
         options: [
-          "Labels must also include the patient's name and the time drawn up to meet labeling standards",
-          "Labels must include the drug name, concentration, date, time prepared, and the preparer's initials",
-          "Both syringes are labeled with the required minimum: drug name and strength/concentration",
-          "But the labels should also include an expiration time since medications on the sterile field expire after 1 hour"
+          "No — Labels must also include the patient's name and the time drawn up to meet labeling standards",
+          "No — Labels must include the drug name, concentration, date, time prepared, and the preparer's initials",
+          "Yes — Both syringes are labeled with the required minimum: drug name and strength/concentration",
+          "Yes — But the labels should also include an expiration time since medications on the sterile field expire after 1 hour"
         ],
         correctIndex: 2,
         explanation: "The minimum labeling requirement for medications on the sterile field is drug name and strength/concentration. Both syringes meet this requirement.",
