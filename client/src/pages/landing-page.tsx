@@ -79,7 +79,7 @@ export default function LandingPage() {
               href="/tutorial-employee.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="hidden sm:inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1"
+              className="hidden sm:inline-flex items-center text-sm text-foreground hover:text-foreground transition-colors px-2 py-1"
               data-testid="link-nav-tutorials"
             >
               Tutorials
