@@ -82,13 +82,8 @@ interface ReviewCard {
 export default function FlashcardReviewPage() {
   const [, setLocation] = useLocation();
 
-  const { data: dueReviews, isLoading } = useQuery<FlashcardReview[]>({
+  const { data: dueReviews, isLoading, isError } = useQuery<FlashcardReview[]>({
     queryKey: ["/api/flashcards/due"],
-    queryFn: async () => {
-      const res = await fetch("/api/flashcards/due");
-      if (!res.ok) return [];
-      return res.json();
-    },
     staleTime: 0,
   });
 
@@ -172,6 +167,19 @@ export default function FlashcardReviewPage() {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6">
+        <p className="text-muted-foreground text-sm text-center max-w-xs mb-6">
+          Unable to load your flashcard queue. Please try again.
+        </p>
+        <Button onClick={() => setLocation("/")} data-testid="button-back-to-dashboard">
+          Back to Dashboard
+        </Button>
+      </div>
+    );
+  }
+
   if (reviewCards.length === 0) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6">
@@ -192,7 +200,7 @@ export default function FlashcardReviewPage() {
   const currentSlot = queue[queueIndex];
   const currentCard = reviewCards[currentSlot];
   const currentLevel = currentCard ? findLevelById(currentCard.levelId) : undefined;
-  const currentConcept = currentLevel?.studyMaterial[currentCard?.cardIndex ?? 0];
+  const currentConcept = currentLevel?.studyMaterial?.[currentCard?.cardIndex ?? 0];
   const catKey = currentConcept?.category;
   const cat = catKey ? CATEGORY_CONFIG[catKey] : null;
   const levelColor = currentLevel?.color ?? "#7c3aed";
