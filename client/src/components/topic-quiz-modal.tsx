@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,8 @@ export function TopicQuizModal({
   const [score, setScore] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
 
+  const loadingRef = useRef(false);
+
   function resetState() {
     setPhase("loading");
     setQuestions([]);
@@ -53,10 +55,19 @@ export function TopicQuizModal({
     setRevealed(false);
     setScore(0);
     setErrorMsg("");
+    loadingRef.current = false;
   }
 
   async function loadQuiz(e: SearchEntry) {
-    resetState();
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    setPhase("loading");
+    setQuestions([]);
+    setQIndex(0);
+    setSelected(null);
+    setRevealed(false);
+    setScore(0);
+    setErrorMsg("");
     try {
       const data = await apiRequest("POST", "/api/ai/topic-quiz", {
         topic: e.title,
@@ -70,11 +81,21 @@ export function TopicQuizModal({
     } catch (err: any) {
       setErrorMsg(err.message || "Could not generate quiz. Please try again.");
       setPhase("error");
+    } finally {
+      loadingRef.current = false;
     }
   }
 
+  useEffect(() => {
+    if (open && entry) {
+      loadQuiz(entry);
+    }
+    if (!open) {
+      loadingRef.current = false;
+    }
+  }, [open, entry?.id]);
+
   function handleOpen(isOpen: boolean) {
-    if (isOpen && entry) loadQuiz(entry);
     if (!isOpen) onClose();
   }
 

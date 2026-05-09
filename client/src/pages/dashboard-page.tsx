@@ -607,7 +607,7 @@ export default function DashboardPage() {
                             onClick={() => {
                               setSearchOpen(false);
                               setSearchQuery("");
-                              setLocation(entry.module === "asc" ? `/handbook/${entry.levelId}` : `/study/${entry.levelId}`);
+                              setLocation(`/handbook/${entry.levelId}`);
                             }}
                             data-testid={`button-explore-${entry.id}`}
                           >
