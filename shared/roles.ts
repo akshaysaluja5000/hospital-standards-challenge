@@ -40,7 +40,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/or_sterile_field",
     firstModuleId: "or_sterile_field",
     reportingScope: "own_department",
-    chapters: ["or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "facilities", "anesthesia_sedation"],
+    chapters: ["or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "facilities", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "or_manager",
@@ -52,7 +52,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/or_sterile_field",
     firstModuleId: "or_sterile_field",
     reportingScope: "own_plus_all",
-    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation"],
+    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "scrub_tech",
@@ -64,7 +64,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/or_sterile_field",
     firstModuleId: "or_sterile_field",
     reportingScope: "own_department",
-    chapters: ["transport", "or_sterile_field", "instruments", "universal_protocol", "spd_decontam", "anesthesia_sedation"],
+    chapters: ["transport", "or_sterile_field", "instruments", "universal_protocol", "spd_decontam", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "surgical_ortho_assistant",
@@ -76,7 +76,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/or_sterile_field",
     firstModuleId: "or_sterile_field",
     reportingScope: "own_department",
-    chapters: ["or_sterile_field", "universal_protocol", "instruments", "patient_care_docs", "eoc_safety", "anesthesia_sedation"],
+    chapters: ["or_sterile_field", "universal_protocol", "instruments", "patient_care_docs", "eoc_safety", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "anesthesia_assistant",
@@ -88,7 +88,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/anesthesia_sedation",
     firstModuleId: "anesthesia_sedation",
     reportingScope: "own_department",
-    chapters: ["anesthesia_sedation", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"],
+    chapters: ["anesthesia_sedation", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "spd_tech",
@@ -100,7 +100,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/spd_decontam",
     firstModuleId: "spd_decontam",
     reportingScope: "own_department",
-    chapters: ["transport", "spd_decontam", "segregation", "sterile_storage", "instruments"],
+    chapters: ["transport", "spd_decontam", "segregation", "sterile_storage", "instruments", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "pacu_nurse",
@@ -112,7 +112,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/patient_care_docs",
     firstModuleId: "patient_care_docs",
     reportingScope: "own_department",
-    chapters: ["patient_care_docs", "eoc_safety", "universal_protocol", "anesthesia_sedation"],
+    chapters: ["patient_care_docs", "eoc_safety", "universal_protocol", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "evs",
@@ -124,7 +124,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/environment",
     firstModuleId: "environment",
     reportingScope: "own_department",
-    chapters: ["environment", "segregation", "eoc_safety"],
+    chapters: ["environment", "segregation", "eoc_safety", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "facilities_maint",
@@ -136,7 +136,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/play/facilities",
     firstModuleId: "facilities",
     reportingScope: "own_department",
-    chapters: ["facilities", "eoc_safety", "environment"],
+    chapters: ["facilities", "eoc_safety", "environment", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "compliance_officer",
@@ -148,7 +148,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/diagnostic",
     firstModuleId: "diagnostic",
     reportingScope: "enterprise",
-    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation"],
+    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
     id: "nurse_educator",
@@ -160,7 +160,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/diagnostic",
     firstModuleId: "diagnostic",
     reportingScope: "own_plus_all",
-    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation"],
+    chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
 
   // ==========================================================================

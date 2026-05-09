@@ -6,6 +6,12 @@ import { ddOrLevel } from "./deep-dive-questions-part3a";
 import { ddSurgicalSafetyLevel } from "./deep-dive-questions-part3b";
 import { ddPatientCareLevel } from "./deep-dive-questions-part3c";
 import { ddEocLevel } from "./deep-dive-questions-part3d";
+import { ddAnesthesiaLevel } from "./deep-dive-questions-anesthesia";
+import { ddMedicationLevel } from "./deep-dive-questions-medication";
+import { ddNpsgLevel } from "./deep-dive-questions-npsg";
+import { ddInfectionControlLevel } from "./deep-dive-questions-ic";
+import { ddPatientRightsLevel } from "./deep-dive-questions-rights";
+import { ddLifeSafetyLevel } from "./deep-dive-questions-life-safety";
 
 export type { DeepDiveLevel } from "./schema";
 
@@ -18,4 +24,10 @@ export const deepDiveLevels = [
   ddSurgicalSafetyLevel,
   ddPatientCareLevel,
   ddEocLevel,
+  ddAnesthesiaLevel,
+  ddMedicationLevel,
+  ddNpsgLevel,
+  ddInfectionControlLevel,
+  ddPatientRightsLevel,
+  ddLifeSafetyLevel,
 ];
