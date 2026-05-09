@@ -1,4 +1,5 @@
 <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 37.6 13 A 18 18 0 1 1 22 4" stroke="hsl(218, 68%, 32%)" stroke-width="3" stroke-linecap="round" fill="none"/>
-  <text x="22" y="25" text-anchor="middle" dominant-baseline="middle" font-family="'Arial Black', 'Arial', 'Helvetica', sans-serif" font-weight="900" font-size="17" fill="hsl(218, 68%, 32%)" letter-spacing="-1">AR</text>
+  <circle cx="22" cy="22" r="22" fill="hsl(218, 68%, 32%)"/>
+  <path d="M 35.5 13.5 A 15 15 0 1 1 22 7" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <text x="22" y="25" text-anchor="middle" dominant-baseline="middle" font-family="'Arial Black', 'Arial', 'Helvetica', sans-serif" font-weight="900" font-size="16" fill="white" letter-spacing="-0.5">AR</text>
 </svg>
