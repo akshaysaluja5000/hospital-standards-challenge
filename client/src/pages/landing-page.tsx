@@ -66,6 +66,15 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-2">
             <PathwayMenu />
+            <a
+              href="/tutorial-employee.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors px-2 py-1"
+              data-testid="link-nav-tutorials"
+            >
+              Tutorials
+            </a>
             <Button
               variant="ghost"
               onClick={() => setLocation("/auth")}
