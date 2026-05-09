@@ -10,9 +10,10 @@ interface AiTutorBoxProps {
   correctAnswer: string;
   explanation: string;
   allOptions?: string[];
+  module?: "hospital" | "asc";
 }
 
-export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanation, allOptions }: AiTutorBoxProps) {
+export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanation, allOptions, module }: AiTutorBoxProps) {
   const [explanations, setExplanations] = useState<string[]>([]);
   const [currentDepth, setCurrentDepth] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -44,6 +45,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
         depth,
         previousExplanations: explanations,
         allOptions: allOptions || [],
+        module: module || "hospital",
       });
       const data = await res.json();
       setExplanations(prev => [...prev, data.aiExplanation]);

@@ -23,7 +23,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
   const [, setLocation] = useLocation();
   const Icon = iconMap[level.icon] || Star;
   const bestScore = progress?.bestScore || 0;
-  const totalQuestions = level.questions.length;
+  const totalQuestions = level.questions.filter((q) => !q.draft).length;
   const percentage = totalQuestions > 0 ? Math.round((bestScore / totalQuestions) * 100) : 0;
   const hasInProgress = !!savedSession;
   const inProgressQuestion = savedSession?.currentQuestion || 0;

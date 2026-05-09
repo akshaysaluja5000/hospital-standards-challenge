@@ -1386,7 +1386,7 @@ export async function registerRoutes(
     try {
       const start = Date.now();
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 50,
         messages: [{ role: "user", content: "Say 'ok' in one word." }],
       });
@@ -1412,6 +1412,7 @@ export async function registerRoutes(
       depth: z.number().int().min(1).max(3).default(1),
       previousExplanations: z.array(z.string().max(3000)).max(2).optional(),
       allOptions: z.array(z.string().max(500)).max(6).optional(),
+      module: z.enum(["hospital", "asc"]).default("hospital"),
     });
     const parsed = aiTutorSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -1428,22 +1429,27 @@ export async function registerRoutes(
     aiTutorRateLimit.set(userId, userCalls);
 
     try {
-      const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations, allOptions } = parsed.data;
+      const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations, allOptions, module: tutorModule } = parsed.data;
 
       const wrongOptions = (allOptions || []).filter(o => o !== correctAnswer);
       const wrongList = wrongOptions.map((o, i) => `"${o}"`).join(", ");
 
+      const isAsc = tutorModule === "asc";
+      const tutorLabel = isAsc ? "ASC (ambulatory surgery center) AAAHC compliance tutor" : "Hospital Joint Commission compliance tutor";
+      const orgLabel = isAsc ? "ASC" : "hospital";
+      const standardsBody = isAsc ? "AAAHC" : "Joint Commission";
+
       const depthPrompts: Record<number, string> = {
-        1: `Hospital compliance tutor. Staff answered a question wrong. Explain why the correct answer matters in 2 sentences. No headers, no bullet points, no markdown. Plain conversational text only.
+        1: `${tutorLabel}. Staff answered a question wrong. Explain why the correct answer matters in 2 sentences. No headers, no bullet points, no markdown. Plain conversational text only.
 
 Question: ${question}
 They answered: ${userAnswer}
 Correct answer: ${correctAnswer}
 Why: ${explanation}
 
-Reply in exactly 2 sentences. First sentence: why it matters practically. Second sentence: a quick tip. No formatting.`,
+Reply in exactly 2 sentences. First sentence: why it matters practically for ${standardsBody} compliance. Second sentence: a quick tip. No formatting.`,
 
-        2: `Hospital compliance tutor follow-up. Two parts, plain text only, no headers, no bullets, no markdown.
+        2: `${tutorLabel} follow-up. Two parts, plain text only, no headers, no bullets, no markdown.
 
 Already covered: ${(previousExplanations || []).join(" ")}
 
@@ -1451,24 +1457,24 @@ Question: ${question}
 Correct answer: ${correctAnswer}
 Wrong choices: ${wrongList}
 
-Part 1 (2 sentences): One new insight about how surveyors check this or a common citation to avoid.
+Part 1 (2 sentences): One new insight about how surveyors check this ${standardsBody} standard or a common citation to avoid.
 Part 2 (1 sentence per wrong choice): Briefly explain why each wrong choice is incorrect.
 
 Keep it concise. No formatting, just plain sentences. Separate the two parts with a blank line.`,
 
-        3: `Hospital compliance tutor — final expert tip. Plain text only, no headers, no bullets, no markdown.
+        3: `${tutorLabel} — final expert tip. Plain text only, no headers, no bullets, no markdown.
 
 Already covered: ${(previousExplanations || []).join(" ")}
 
 Topic: ${question}
 Correct answer: ${correctAnswer}
 
-Give ONE actionable takeaway in 2 sentences about what great hospitals do differently for this standard. No formatting, just plain sentences.`,
+Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do differently for this ${standardsBody} standard. No formatting, just plain sentences.`,
       };
 
       const tokenLimit = depth === 2 ? 400 : 200;
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: tokenLimit,
         messages: [
           {
@@ -1558,7 +1564,7 @@ Give ONE actionable takeaway in 2 sentences about what great hospitals do differ
         .join(", ");
 
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 350,
         messages: [
           {
@@ -1623,7 +1629,7 @@ Write a 5-6 sentence plain-text summary. Cover: overall readiness, the #1 priori
         : "No missed questions — perfect score!";
 
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 300,
         messages: [
           {
@@ -1725,7 +1731,7 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
         : "No directly matching sections found. Answer based on general Joint Commission compliance knowledge relevant to the question.";
 
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 250,
         messages: [
           {
@@ -1780,7 +1786,7 @@ After your answer, add one line: "See: [source]" naming the specific chapter or 
 
     try {
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 1200,
         messages: [
           {
@@ -1899,7 +1905,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const prompt = `You are writing multiple-choice compliance quiz questions for healthcare professionals preparing for accreditation survey. Generate exactly ${NUM_QUESTIONS} scenario-based questions covering these specific topics:\n\n${topicList}\n\nRules:\n- Each question MUST be a realistic clinical or operational scenario (someone doing something, a situation occurring, a surveyor finding something)\n- Each question has exactly 4 answer choices\n- Exactly one choice is correct\n- The other three are plausible, realistic distractors — not obviously wrong\n- Vary difficulty: mix straightforward and tricky questions\n- Distribute questions across the provided topics as evenly as possible\n- The sectionId field must be EXACTLY one of these keys: ${relevantChapters.join(", ")}\n\nReturn ONLY a valid JSON array with exactly ${NUM_QUESTIONS} items. Each item must have this exact shape:\n{"id":"ai-dq-N","sectionId":"<topic key>","question":"...","options":["...","...","...","..."],"correctIndex":0}\n\nNo markdown fences, no explanation, no extra text — just the raw JSON array starting with [ and ending with ].`;
     try {
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 4000,
         messages: [{ role: "user", content: prompt }],
       });
@@ -2697,7 +2703,7 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
 
     try {
       const message = await callAnthropicWithRetry({
-        model: "claude-haiku-4-5",
+        model: "claude-haiku-4-5-20251001",
         max_tokens: 2000,
         messages: [{ role: "user", content: prompt }],
       });

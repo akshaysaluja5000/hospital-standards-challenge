@@ -789,6 +789,7 @@ export default function DeepDivePage() {
                           correctAnswer={displayOptions[displayCorrectIdx] || ""}
                           explanation={displayExplanation}
                           allOptions={displayOptions}
+                          module={user?.organizationType === "asc" ? "asc" : "hospital"}
                         />
                       </div>
                     </div>

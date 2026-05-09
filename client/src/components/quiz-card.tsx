@@ -10,9 +10,10 @@ interface QuizCardProps {
   onAnswer: (selectedIndex: number) => void;
   disabled?: boolean;
   previousAnswer?: { selectedIndex: number; correct: boolean } | null;
+  module?: "hospital" | "asc";
 }
 
-export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizCardProps) {
+export function QuizCard({ question, onAnswer, disabled, previousAnswer, module }: QuizCardProps) {
   const [selected, setSelected] = useState<number | null>(previousAnswer?.selectedIndex ?? null);
   const [showResult, setShowResult] = useState(!!previousAnswer);
   const [tutorOpen, setTutorOpen] = useState(false);
@@ -193,6 +194,7 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer }: QuizC
                       correctAnswer={question.options[question.correctIndex]}
                       explanation={question.explanation}
                       allOptions={question.options}
+                      module={module}
                     />
                   )}
                 </div>

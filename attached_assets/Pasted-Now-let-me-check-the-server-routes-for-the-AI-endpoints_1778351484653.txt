@@ -1,0 +1,83 @@
+Now let me check the server routes for the AI endpoints and the handbook page:---
+
+Here's a comprehensive bug report based on my analysis of the full codebase:
+
+---
+
+## Accreditation Ready — Bug Report
+
+### 🔴 Bug 1 (Critical): Wrong Anthropic Model String — All AI Features Broken
+
+**File:** `server/routes.ts` (all 8 AI endpoints)
+
+Every AI call uses `"claude-haiku-4-5"` but the correct API model string is **`"claude-haiku-4-5-20251001"`**. The abbreviated form is not a recognized model ID and will cause `invalid_request_error` responses from the Anthropic API, breaking:
+- AI Tutor (wrong answers explanation)
+- AI Debrief
+- AI Handbook Search
+- Topic Quiz Modal
+- Admin AI Insights
+- AI Leadership Coach
+
+**Fix:** Replace all 8 instances of `"claude-haiku-4-5"` → `"claude-haiku-4-5-20251001"`
+
+---
+
+### 🟡 Bug 2: `LevelCard` Shows Wrong Question Count & Percentage — Draft Questions Not Filtered
+
+**File:** `client/src/components/level-card.tsx`, line 26
+
+```ts
+// WRONG — includes draft questions
+const totalQuestions = level.questions.length;
+
+// CORRECT — matches how AscChapterCard does it in dashboard-page.tsx
+const totalQuestions = level.questions.filter((q) => !q.draft).length;
+```
+
+This causes the "Best: X%" badge, "X questions" label, and "In Progress (Y/X)" counter to display inflated totals. `AscChapterCard` in `dashboard-page.tsx` line 56 already does this correctly — `level-card.tsx` is inconsistent.
+
+---
+
+### 🟡 Bug 3: `AiTutorBox` Doesn't Send `module` Field, But Context Prompt References It
+
+**File:** `client/src/components/ai-tutor-box.tsx` (apiRequest at line 39) vs `server/routes.ts`
+
+The `ai-tutor-box` component doesn't pass a `module` field. The server schema defaults to `hospital` (via zod `.default()`), so ASC users get hospital-framed explanations. The fix is to accept and forward a `module` prop from the parent.
+
+---
+
+### 🟢 Minor: `queryClient` default `on401: "throw"` will redirect all unauthorized users to error page instead of `/auth`
+
+**File:** `client/src/lib/queryClient.ts`
+
+```ts
+queryFn: getQueryFn({ on401: "throw" }),
+```
+A 401 response will throw and surface as an unhandled error rather than redirecting to `/auth`. Most auth-gated pages handle this through `ProtectedRoute`, but background data refetches after session expiry will show error states rather than a clean redirect.
+
+---
+
+### Prompt for Replit
+
+Here's a copy-paste prompt for Replit:
+
+---
+
+**Please fix the following bugs in the codebase:**
+
+**1. (Critical) Fix Anthropic model string in `server/routes.ts`**
+Replace every instance of `model: "claude-haiku-4-5"` with `model: "claude-haiku-4-5-20251001"` (there are 8 occurrences). The abbreviated model name is not recognized by the Anthropic API and is breaking all AI features (AI Tutor, AI Debrief, AI Handbook Search, Topic Quiz Modal, AI Insights, AI Leadership Coach).
+
+**2. Fix draft question filtering in `client/src/components/level-card.tsx` line 26**
+Change:
+```ts
+const totalQuestions = level.questions.length;
+```
+to:
+```ts
+const totalQuestions = level.questions.filter((q) => !q.draft).length;
+```
+This matches how `AscChapterCard` computes it in `dashboard-page.tsx`. Without this fix, the Best % badge, question count label, and in-progress counter all include unpublished draft questions in their totals.
+
+**3. Pass `module` to AI Tutor from play-page/study-page**
+In `client/src/components/ai-tutor-box.tsx`, add a `module?: "hospital" | "asc"` prop and pass it in the `apiRequest` body so ASC users get AAAHC-framed explanations rather than always defaulting to Joint Commission hospital framing.
