@@ -30,3 +30,33 @@ id = "e7Ce0g9xnZ9MBfp3qrBvq"
 uri = "file://screenshots/remediation-asc-example.jpg"
 type = "image"
 title = "10. ASC Remediation Example — ASC Staff A"
+
+[[outputs]]
+id = "Z9M340egc0NOPVGmyDT14"
+uri = "file://exports/part1-config-and-schema.zip"
+type = "unspecified"
+title = "Part 1 — Config & Schema (17 KB)"
+
+[[outputs]]
+id = "NadqBweVZB4R6Q4g53REC"
+uri = "file://exports/part2-server.zip"
+type = "unspecified"
+title = "Part 2 — Server (31 KB)"
+
+[[outputs]]
+id = "XA4SQKvpIE9B_ndpwQJF4"
+uri = "file://exports/part3-client-core.zip"
+type = "unspecified"
+title = "Part 3 — Client Core: App, components, lib, hooks (124 KB)"
+
+[[outputs]]
+id = "HKE6XwkU5V78GXRQbzuPW"
+uri = "file://exports/part4-client-pages.zip"
+type = "unspecified"
+title = "Part 4 — Client Pages: dashboard, gameplay, leadership (93 KB)"
+
+[[outputs]]
+id = "gnLrQ9bdcYYd5OXDe8s5n"
+uri = "file://exports/part5-shared-content.zip"
+type = "unspecified"
+title = "Part 5 — Shared Content: questions, ASC chapters, handbook (789 KB)"
