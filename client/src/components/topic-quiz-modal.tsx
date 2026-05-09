@@ -121,9 +121,9 @@ export function TopicQuizModal({
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogContent className="max-w-lg w-full gap-0 p-0 overflow-hidden">
-        {/* Header */}
-        <DialogHeader className="px-6 pt-5 pb-4 border-b border-border">
+      <DialogContent className="max-w-lg w-full gap-0 p-0 flex flex-col max-h-[90dvh]">
+        {/* Header — always visible, never scrolls away */}
+        <DialogHeader className="px-6 pt-5 pb-4 border-b border-border flex-shrink-0">
           <div className="flex items-center gap-2">
             <BrainCircuit size={18} className="text-primary flex-shrink-0" />
             <DialogTitle className="text-base font-black leading-tight">
@@ -135,7 +135,7 @@ export function TopicQuizModal({
           </p>
         </DialogHeader>
 
-        <div className="px-6 py-5">
+        <div className="px-6 py-5 overflow-y-auto flex-1">
           <AnimatePresence mode="wait">
 
             {/* Loading */}
