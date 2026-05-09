@@ -2629,7 +2629,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   app.post("/api/ai/topic-quiz", requireAuth, async (req: Request, res: Response) => {
     const schema = z.object({
       topic: z.string().min(1).max(200),
-      context: z.string().max(1000).optional(),
+      context: z.string().max(4000).optional(),
       module: z.enum(["hospital", "asc"]).default("hospital"),
     });
     const parsed = schema.safeParse(req.body);

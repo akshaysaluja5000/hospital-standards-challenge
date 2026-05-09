@@ -71,7 +71,7 @@ export function TopicQuizModal({
     try {
       const data = await apiRequest("POST", "/api/ai/topic-quiz", {
         topic: e.title,
-        context: e.aiContext,
+        context: e.aiContext?.slice(0, 3500),
         module: e.module,
       });
       const json = await data.json();
