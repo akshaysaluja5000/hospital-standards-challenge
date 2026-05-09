@@ -468,7 +468,7 @@ export default function DashboardPage() {
                 className="gap-1.5 font-semibold text-primary border-primary/40 hover:bg-primary/5"
               >
                 <BarChart3 size={15} />
-                <span className="hidden sm:inline">Console</span>
+                <span className="hidden sm:inline">Leadership</span>
               </Button>
             )}
 
@@ -1157,7 +1157,7 @@ export default function DashboardPage() {
       <div className="max-w-6xl mx-auto px-6 mt-4 mb-6 text-xs text-muted-foreground" data-testid="text-disclaimer-footer">
         {PATHWAY_DISCLAIMERS[userModule]}{" "}
         <Link href="/terms" className="underline hover:text-primary">Terms & Privacy</Link>
-        <p className="text-muted-foreground/60 mt-1" data-testid="text-company-dashboard">Division of Innovans LLC</p>
+        <p className="text-sm font-medium text-muted-foreground mt-1" data-testid="text-company-dashboard">Division of Innovans LLC</p>
       </div>
 
       {/* AI Topic Quiz Modal */}

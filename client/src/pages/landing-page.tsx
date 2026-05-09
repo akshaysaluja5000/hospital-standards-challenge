@@ -377,7 +377,7 @@ export default function LandingPage() {
             <span className="opacity-30">·</span>
             <a href="/tutorial-leadership.html" target="_blank" className="underline hover:text-foreground" data-testid="link-tutorial-leadership">Leadership Guide</a>
           </p>
-          <p className="text-xs text-muted-foreground/60 mt-3" data-testid="text-company-landing">Division of Innovans LLC</p>
+          <p className="text-sm font-medium text-muted-foreground mt-3" data-testid="text-company-landing">Division of Innovans LLC</p>
         </div>
       </footer>
     </div>
