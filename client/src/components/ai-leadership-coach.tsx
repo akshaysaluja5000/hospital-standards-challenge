@@ -82,7 +82,7 @@ export function AiLeadershipCoach() {
           <BrainCircuit size={18} className="text-primary" />
           AI Leadership Coach
         </h3>
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           Get AI-generated insights on unit readiness, priority focus areas, and actionable next steps for survey prep.
         </p>
       </div>
@@ -115,7 +115,7 @@ export function AiLeadershipCoach() {
             >
               {levelStats.length > 0 && (
                 <div className="rounded-xl bg-muted/50 p-4">
-                  <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3">Topic Performance</h4>
+                  <h4 className="text-xs font-bold text-foreground/60 uppercase tracking-wider mb-3">Topic Performance</h4>
                   <div className="flex flex-col gap-2">
                     {levelStats.map((l) => (
                       <div key={l.levelId} className="flex items-center gap-3 text-sm">
@@ -132,7 +132,7 @@ export function AiLeadershipCoach() {
                 </div>
               )}
 
-              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4" data-testid="ai-insights-response">
+              <div className="rounded-xl border border-primary/40 bg-primary/8 p-4" data-testid="ai-insights-response">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <BrainCircuit size={16} className="text-primary" />
@@ -150,10 +150,10 @@ export function AiLeadershipCoach() {
                     </Button>
                   )}
                 </div>
-                <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">
+                <div className="text-sm text-foreground leading-relaxed whitespace-pre-line">
                   {insights}
                 </div>
-                <p className="text-xs text-muted-foreground mt-4 italic" data-testid="text-insights-disclaimer">
+                <p className="text-sm text-muted-foreground mt-4 italic" data-testid="text-insights-disclaimer">
                   Check your organization's policies; this is a learning aid, not clinical guidance.
                 </p>
               </div>

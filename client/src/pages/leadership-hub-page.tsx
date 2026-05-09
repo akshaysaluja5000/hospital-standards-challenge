@@ -126,7 +126,7 @@ export default function LeadershipHubPage() {
                 {moduleLabel}
               </span>
             </div>
-            <p className="text-xs text-muted-foreground" data-testid="text-role-label">
+            <p className="text-sm font-medium text-foreground/70" data-testid="text-role-label">
               {leadershipLabel} · facility-scoped view
             </p>
           </div>
@@ -168,7 +168,7 @@ export default function LeadershipHubPage() {
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border-2 border-primary/30 bg-primary/5 p-5 flex items-start gap-4"
+            className="rounded-2xl border-2 border-primary/50 bg-primary/8 p-5 flex items-start gap-4"
             data-testid="banner-mfa-verify"
           >
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -229,7 +229,7 @@ export default function LeadershipHubPage() {
 
         {/* Console cards */}
         <div>
-          <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4" data-testid="text-tools-label">
+          <h2 className="text-sm font-bold uppercase tracking-wider text-foreground/60 mb-4" data-testid="text-tools-label">
             Leadership Tools
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -246,7 +246,7 @@ export default function LeadershipHubPage() {
                   className={`rounded-2xl border-2 p-5 flex flex-col gap-3 transition-all ${
                     accessible
                       ? "border-border bg-card hover:border-primary/40 hover:shadow-md cursor-pointer"
-                      : "border-border/50 bg-muted/30 opacity-60 cursor-not-allowed"
+                      : "border-border/60 bg-muted/30 opacity-75 cursor-not-allowed"
                   }`}
                   onClick={() => accessible && setLocation(card.href)}
                 >
@@ -262,17 +262,17 @@ export default function LeadershipHubPage() {
                           {card.title}
                         </h3>
                         {card.badge && accessible && (
-                          <span className={`px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider ${card.iconBg} ${card.iconColor}`}>
+                          <span className={`px-1.5 py-0.5 rounded text-xs font-black uppercase tracking-wider ${card.iconBg} ${card.iconColor}`}>
                             {card.badge}
                           </span>
                         )}
                         {!accessible && (
-                          <span className="px-1.5 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-muted text-muted-foreground">
+                          <span className="px-1.5 py-0.5 rounded text-xs font-bold uppercase tracking-wider bg-muted text-muted-foreground">
                             Restricted
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                      <p className="text-sm text-muted-foreground mt-1 leading-relaxed">
                         {card.description}
                       </p>
                     </div>
@@ -310,7 +310,7 @@ export default function LeadershipHubPage() {
               { label: "Data Access", value: isAsc ? "ASC Only" : "Hospital Only", testid: "text-summary-data" },
             ].map(item => (
               <div key={item.label} className="flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{item.label}</span>
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{item.label}</span>
                 <span className="text-sm font-bold" data-testid={item.testid}>{item.value}</span>
               </div>
             ))}

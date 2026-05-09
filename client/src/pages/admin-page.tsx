@@ -125,7 +125,7 @@ export default function AdminPage() {
           </Button>
           <div>
             <h1 className="font-bold text-base text-foreground">User Management</h1>
-            <p className="text-xs text-muted-foreground">Track engagement, accuracy, and assign roles</p>
+            <p className="text-sm font-medium text-foreground/70">Track engagement, accuracy, and assign roles</p>
           </div>
         </div>
       </div>
@@ -163,7 +163,7 @@ export default function AdminPage() {
               Registered Users ({stats?.totalUsers || 0})
             </h3>
             {callerIsAdmin && (
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground font-semibold">
+              <div className="flex items-center gap-1.5 text-sm text-foreground/70 font-semibold">
                 <Shield size={13} className="text-primary" />
                 Role management enabled
               </div>
@@ -254,7 +254,7 @@ export default function AdminPage() {
             <div className="p-5 border-b border-card-border flex items-center gap-2">
               <ScrollText size={18} className="text-primary" />
               <h3 className="font-bold text-base">Access Audit Log</h3>
-              <span className="ml-auto text-xs text-muted-foreground font-medium">Last {auditLogEntries?.length ?? 0} events</span>
+              <span className="ml-auto text-sm text-foreground/60 font-medium">Last {auditLogEntries?.length ?? 0} events</span>
             </div>
             <div className="overflow-x-auto max-h-80 overflow-y-auto">
               {!auditLogEntries || auditLogEntries.length === 0 ? (
@@ -278,7 +278,7 @@ export default function AdminPage() {
                         </td>
                         <td className="p-2 font-medium">{entry.username ?? "—"}</td>
                         <td className="p-2 text-muted-foreground">{entry.leadershipRole}</td>
-                        <td className="p-2 font-mono text-[10px] text-chart-4">{entry.action}</td>
+                        <td className="p-2 font-mono text-xs text-chart-4">{entry.action}</td>
                         <td className="p-2 text-muted-foreground hidden sm:table-cell">{entry.facilityName ?? "—"}</td>
                       </tr>
                     ))}

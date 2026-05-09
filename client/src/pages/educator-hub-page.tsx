@@ -50,12 +50,12 @@ export default function EducatorHubPage() {
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="font-bold text-base text-foreground">Educator Console</h1>
               {department && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-violet-500/10 text-violet-600 border border-violet-500/20">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold bg-violet-500/15 text-violet-700 dark:text-violet-400 border border-violet-500/30">
                   <Building2 size={10} /> {department}
                 </span>
               )}
             </div>
-            <p className="text-xs text-muted-foreground">My team — {team.length} learner{team.length !== 1 ? "s" : ""}</p>
+            <p className="text-sm font-medium text-foreground/70">My team — {team.length} learner{team.length !== 1 ? "s" : ""}</p>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function EducatorHubPage() {
                 <tbody>
                   {team.map((m, i) => (
                     <tr key={m.id} className="border-b border-card-border/50 last:border-0" data-testid={`row-team-${m.id}`}>
-                      <td className="p-3 font-bold text-muted-foreground">{i + 1}</td>
+                      <td className="p-3 font-bold text-foreground/60">{i + 1}</td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary flex-shrink-0">
@@ -129,7 +129,7 @@ export default function EducatorHubPage() {
                           </div>
                         </div>
                       </td>
-                      <td className="p-3 text-muted-foreground hidden sm:table-cell text-xs">{m.department ?? "—"}</td>
+                      <td className="p-3 text-muted-foreground hidden sm:table-cell text-sm">{m.department ?? "—"}</td>
                       <td className="p-3 text-right font-bold text-chart-4">{m.totalXp}</td>
                       <td className="p-3 text-right">
                         <span className={`font-bold ${m.currentStreak > 0 ? "text-chart-2" : "text-muted-foreground"}`}>
@@ -144,7 +144,7 @@ export default function EducatorHubPage() {
           )}
         </div>
 
-        <p className="text-xs text-center text-muted-foreground px-2">
+        <p className="text-sm text-center text-muted-foreground px-2">
           Showing learners in your assigned department only. Contact an administrator to adjust access.
         </p>
       </div>
