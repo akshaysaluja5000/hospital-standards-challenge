@@ -4455,7 +4455,7 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         id: "anes19",
-        question: "A patient scheduled for a nerve block at an orthopedic surgery center has already signed the general surgical consent listing 'femoral nerve block for analgesia.' The physician prepares to perform the block. Is separate consent required?",
+        question: "A patient scheduled for a knee replacement at a hospital has already signed the general surgical consent listing 'femoral nerve block for analgesia.' The physician prepares to perform the block. Is separate consent required?",
         options: [
           "No — listing the nerve block on the surgical consent with the patient's signature satisfies the consent requirement",
           "Yes — a separate, dedicated informed consent document specifically for the nerve block must be signed prior to sedation",
