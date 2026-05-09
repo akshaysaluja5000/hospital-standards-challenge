@@ -572,8 +572,8 @@ export default function AuthPage() {
 
           <div className="grid grid-cols-3 gap-6">
             {[
-              { icon: Flame, label: "Daily Streaks", color: "text-amber-500" },
-              { icon: Zap, label: "Earn XP", color: "text-amber-500" },
+              { icon: Flame, label: "Daily Streaks", color: "text-orange-500" },
+              { icon: Zap, label: "Earn XP", color: "text-orange-500" },
               { icon: Trophy, label: "Level Up", color: "text-violet-500" },
             ].map((item, i) => (
               <motion.div

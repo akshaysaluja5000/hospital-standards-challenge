@@ -96,13 +96,13 @@ export function RemediationPlanBox({ levelId, percentage }: RemediationPlanBoxPr
               {/* Reassessment notice */}
               {hasReassessment ? (
                 <div
-                  className="flex gap-3 rounded-xl border border-amber-500/30 bg-amber-500/8 p-3.5 items-start"
+                  className="flex gap-3 rounded-xl border border-orange-500/30 bg-orange-500/8 p-3.5 items-start"
                   data-testid="container-reassessment-notice"
                 >
-                  <AlertCircle size={15} className="text-amber-400 flex-shrink-0 mt-0.5" />
+                  <AlertCircle size={15} className="text-orange-500 flex-shrink-0 mt-0.5" />
                   <div className="flex flex-col gap-0.5">
-                    <p className="text-xs font-bold text-amber-300">Supervisor check-in recommended</p>
-                    <p className="text-xs text-amber-300/70 leading-relaxed">
+                    <p className="text-xs font-bold text-orange-500">Supervisor check-in recommended</p>
+                    <p className="text-xs text-orange-500/80 leading-relaxed">
                       Because your score was below 50%, we recommend completing these steps and then confirming your readiness with your supervisor or educator before your next attempt.
                     </p>
                   </div>

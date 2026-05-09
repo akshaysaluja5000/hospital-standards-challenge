@@ -278,7 +278,7 @@ export default function HandbookPage() {
             {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
           </p>
           {(chapter as AscHandbookChapter).surveyRiskCount != null && (
-            <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold mt-0.5">
+            <p className="text-xs text-red-500 dark:text-red-400 font-semibold mt-0.5">
               ⚠ {(chapter as AscHandbookChapter).surveyRiskCount} common survey failures
             </p>
           )}

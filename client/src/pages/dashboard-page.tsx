@@ -901,19 +901,19 @@ export default function DashboardPage() {
             {/* Final Assessment — hospital only */}
             {masteryEligibility?.eligible && userModule !== "asc" && (
               <motion.div
-                className="w-full rounded-2xl border-2 p-5 text-left bg-amber-500/5 border-amber-500/30"
+                className="w-full rounded-2xl border-2 p-5 text-left bg-primary/5 border-primary/30"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 data-testid="card-mastery-cta"
               >
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-primary to-indigo-600 shadow-md">
                     <Crown size={28} className="text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <h3 className="font-bold text-lg leading-tight">Final Assessment</h3>
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/15 text-amber-500 uppercase tracking-wider">Unlocked</span>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-primary/10 text-primary uppercase tracking-wider">Unlocked</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1 leading-snug">
                       25 advanced questions to see how much you've learned — compare your results to your Diagnostic score
@@ -924,7 +924,7 @@ export default function DashboardPage() {
                   <button
                     onClick={() => setLocation("/mastery")}
                     data-testid="button-mastery-cta"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md transition-all active:scale-95"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-700 text-white shadow-md transition-all active:scale-95"
                   >
                     Take Assessment <ChevronRight size={16} />
                   </button>
@@ -935,18 +935,18 @@ export default function DashboardPage() {
             {/* ASC Final Assessment */}
             {userModule === "asc" && (
               <motion.div
-                className="w-full rounded-2xl border-2 p-4 bg-amber-500/5 border-amber-500/20"
+                className="w-full rounded-2xl border-2 p-4 bg-primary/5 border-primary/20"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
               >
                 <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-amber-500 to-orange-600 shadow-md">
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 bg-gradient-to-br from-primary to-indigo-600 shadow-md">
                     <Trophy size={24} className="text-white" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="font-bold text-lg leading-tight">Final Assessment</h3>
-                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-amber-500/10 text-amber-700 dark:text-amber-400 uppercase tracking-wider">Check growth</span>
+                      <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-primary/10 text-primary uppercase tracking-wider">Check growth</span>
                     </div>
                     <p className="text-sm text-muted-foreground mt-1 leading-snug">25 fresh questions to compare against your Diagnostic score</p>
                   </div>
@@ -955,7 +955,7 @@ export default function DashboardPage() {
                   <button
                     onClick={() => setLocation("/asc-posttest")}
                     data-testid="button-asc-posttest-cta"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-md transition-all active:scale-95"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-r from-primary to-indigo-600 hover:from-primary/90 hover:to-indigo-700 text-white shadow-md transition-all active:scale-95"
                   >
                     Take Assessment <ChevronRight size={16} />
                   </button>
@@ -1108,7 +1108,7 @@ export default function DashboardPage() {
                   data-testid="card-readiness-gaps"
                 >
                   <div className="flex items-center gap-2 mb-3">
-                    <ShieldAlert size={15} className="text-amber-500" />
+                    <ShieldAlert size={15} className="text-orange-500" />
                     <h3 className="font-bold text-sm">Focus Areas</h3>
                   </div>
 
@@ -1121,11 +1121,11 @@ export default function DashboardPage() {
                             <div className="flex items-center gap-1.5 mt-0.5">
                               <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
                                 <div
-                                  className={`h-full rounded-full ${pct >= 60 ? "bg-amber-500" : "bg-red-500"}`}
+                                  className={`h-full rounded-full ${pct >= 60 ? "bg-orange-500" : "bg-red-500"}`}
                                   style={{ width: `${pct}%` }}
                                 />
                               </div>
-                              <span className={`text-[10px] font-bold ${pct >= 60 ? "text-amber-500" : "text-red-500"}`}>{pct}%</span>
+                              <span className={`text-[10px] font-bold ${pct >= 60 ? "text-orange-500" : "text-red-500"}`}>{pct}%</span>
                             </div>
                           </div>
                           <button

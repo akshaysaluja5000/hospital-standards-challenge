@@ -365,7 +365,7 @@ function sortForAttention(plans: ExecPlan[]) {
 
 function scoreColor(score: number, threshold: number) {
   const gap = threshold - score;
-  if (gap <= 6) return "text-amber-400";
+  if (gap <= 6) return "text-orange-500";
   if (gap <= 16) return "text-orange-400";
   return "text-red-400";
 }
@@ -373,7 +373,7 @@ function scoreColor(score: number, threshold: number) {
 function statusIcon(s: PlanStatus) {
   switch (s) {
     case "Assigned": return <ClipboardList size={12} className="text-blue-400" />;
-    case "In Progress": return <Clock size={12} className="text-amber-400" />;
+    case "In Progress": return <Clock size={12} className="text-blue-400" />;
     case "Completed": return <CheckCircle2 size={12} className="text-green-400" />;
     case "Verified": return <ShieldCheck size={12} className="text-purple-400" />;
   }
@@ -659,11 +659,11 @@ export default function ExecutiveReportPage() {
 
         {/* ── Demo Banner ── */}
         {dataMode === "demo" && (
-          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/50 bg-amber-50 dark:bg-amber-500/12 px-4 py-3" data-testid="banner-exec-demo-mode">
-            <FlaskConical size={14} className="text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-amber-800 dark:text-amber-300 leading-relaxed">
-              <span className="font-bold text-amber-900 dark:text-amber-200">Demo Data — </span>
-              Sample guided education plans for demonstration. Switch to <strong className="text-amber-900 dark:text-amber-200">Live</strong> to see your facility's real plan data.
+          <div className="flex items-start gap-2.5 rounded-xl border border-orange-500/40 bg-orange-50 dark:bg-orange-500/10 px-4 py-3" data-testid="banner-exec-demo-mode">
+            <FlaskConical size={14} className="text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-foreground/80 leading-relaxed">
+              <span className="font-bold text-foreground">Demo Data — </span>
+              Sample guided education plans for demonstration. Switch to <strong className="text-foreground">Live</strong> to see your facility's real plan data.
             </p>
           </div>
         )}

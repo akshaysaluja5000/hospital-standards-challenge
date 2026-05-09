@@ -133,8 +133,8 @@ export default function LeaderboardPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <Crown size={24} className="text-yellow-500" />
-              <div className="w-20 h-20 rounded-full bg-yellow-500/20 border-2 border-yellow-500 flex items-center justify-center">
+              <Crown size={24} className="text-orange-400" />
+              <div className="w-20 h-20 rounded-full bg-orange-400/20 border-2 border-orange-400 flex items-center justify-center">
                 <span className="text-2xl font-black">{initials(topThree[0])}</span>
               </div>
               <p className="text-sm font-black truncate w-full text-center" data-testid={`text-rank-1-name`}>{displayName(topThree[0])}</p>
@@ -147,10 +147,10 @@ export default function LeaderboardPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <div className="w-16 h-16 rounded-full bg-amber-700/20 border-2 border-amber-700 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-orange-500/20 border-2 border-orange-500 flex items-center justify-center">
                   <span className="text-xl font-black">{initials(topThree[2])}</span>
                 </div>
-                <Medal size={20} className="text-amber-700" />
+                <Medal size={20} className="text-orange-600" />
                 <p className="text-xs font-bold truncate w-full text-center" data-testid={`text-rank-3-name`}>{displayName(topThree[2])}</p>
                 <p className="text-xs text-muted-foreground font-medium">{topThree[2].totalXp} XP</p>
               </motion.div>
@@ -179,11 +179,11 @@ export default function LeaderboardPage() {
                 >
                   <div className="w-8 text-center flex-shrink-0">
                     {i === 0 ? (
-                      <Crown size={18} className="text-yellow-500 mx-auto" />
+                      <Crown size={18} className="text-orange-400 mx-auto" />
                     ) : i === 1 ? (
                       <Medal size={18} className="text-gray-400 mx-auto" />
                     ) : i === 2 ? (
-                      <Medal size={18} className="text-amber-700 mx-auto" />
+                      <Medal size={18} className="text-orange-600 mx-auto" />
                     ) : (
                       <span className="font-black text-sm text-muted-foreground">{i + 1}</span>
                     )}

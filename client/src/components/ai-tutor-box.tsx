@@ -133,7 +133,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
                   ? "border-primary/20 bg-primary/5"
                   : idx === 1
                   ? "border-violet-500/20 bg-violet-500/5"
-                  : "border-amber-500/20 bg-amber-500/5"
+                  : "border-orange-500/20 bg-orange-500/5"
               }`}
               data-testid={`ai-tutor-response-${idx + 1}`}
             >
@@ -141,7 +141,7 @@ export function AiTutorBox({ questionText, userAnswer, correctAnswer, explanatio
                 <div className="flex items-center gap-2">
                   <span className="text-base">{depthIcons[idx]}</span>
                   <span className={`text-sm font-bold ${
-                    idx === 0 ? "text-primary" : idx === 1 ? "text-violet-500" : "text-amber-600"
+                    idx === 0 ? "text-primary" : idx === 1 ? "text-violet-500" : "text-orange-500"
                   }`}>
                     {headerLabels[idx]}
                   </span>

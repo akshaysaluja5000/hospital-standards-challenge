@@ -173,20 +173,20 @@ function needsReassessment(score: number): boolean {
 function statusConfig(status: PlanStatus) {
   switch (status) {
     case "Assigned":
-      return { color: "text-blue-300", bg: "bg-blue-500/15 border-blue-400/30", icon: ClipboardList, next: "In Progress" as PlanStatus, nextLabel: "Mark In Progress", nextColor: "text-amber-300 border-amber-400/40 hover:bg-amber-500/15" };
+      return { color: "text-blue-400", bg: "bg-blue-500/20 border-blue-400/40", icon: ClipboardList, next: "In Progress" as PlanStatus, nextLabel: "Mark In Progress", nextColor: "text-blue-400 border-blue-400/50 hover:bg-blue-500/20" };
     case "In Progress":
-      return { color: "text-amber-300", bg: "bg-amber-500/15 border-amber-400/30", icon: Clock, next: "Completed" as PlanStatus, nextLabel: "Mark Completed", nextColor: "text-green-300 border-green-400/40 hover:bg-green-500/15" };
+      return { color: "text-blue-400", bg: "bg-blue-500/20 border-blue-400/40", icon: Clock, next: "Completed" as PlanStatus, nextLabel: "Mark Completed", nextColor: "text-green-400 border-green-400/50 hover:bg-green-500/20" };
     case "Completed":
-      return { color: "text-green-300", bg: "bg-green-500/15 border-green-400/30", icon: CheckCircle2, next: "Verified" as PlanStatus, nextLabel: "Mark Verified", nextColor: "text-purple-300 border-purple-400/40 hover:bg-purple-500/15" };
+      return { color: "text-green-400", bg: "bg-green-500/20 border-green-400/40", icon: CheckCircle2, next: "Verified" as PlanStatus, nextLabel: "Mark Verified", nextColor: "text-purple-500 border-purple-400/50 hover:bg-purple-500/20" };
     case "Verified":
-      return { color: "text-purple-300", bg: "bg-purple-500/15 border-purple-400/30", icon: ShieldCheck, next: null, nextLabel: null, nextColor: "" };
+      return { color: "text-purple-500", bg: "bg-purple-500/20 border-purple-400/40", icon: ShieldCheck, next: null, nextLabel: null, nextColor: "" };
   }
 }
 
 function scoreColor(score: number, threshold: number) {
   const gap = threshold - score;
-  if (gap <= 10) return "text-amber-300";
-  if (gap <= 20) return "text-orange-400";
+  if (gap <= 10) return "text-orange-500";
+  if (gap <= 20) return "text-orange-500";
   return "text-red-400";
 }
 
@@ -269,10 +269,10 @@ function PlanDirectoryCard({ facilityTypeFilter }: { facilityTypeFilter: "All" |
 
                   {/* Step 1 — Score 60–69% */}
                   <div className="flex flex-col gap-2">
-                    <span className="self-start text-xs font-bold px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300">
+                    <span className="self-start text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-500/20 border border-blue-400/40 text-blue-400">
                       Score 60–69% — Step 1 assigned
                     </span>
-                    <div className="pl-4 border-l-2 border-amber-400/40 flex flex-col gap-0.5">
+                    <div className="pl-4 border-l-2 border-blue-400/40 flex flex-col gap-0.5">
                       <p className="text-sm font-semibold">{steps[0].title}</p>
                       <p className="text-xs text-muted-foreground leading-relaxed">{steps[0].description}</p>
                     </div>
@@ -363,9 +363,9 @@ function HowToReadBox() {
                 <p className="font-bold text-foreground/90 mb-2 text-sm uppercase tracking-wide">Status</p>
                 <ul className="space-y-2 pl-1">
                   <li><span className="font-semibold text-blue-300">Assigned</span> — the guided education plan has been created and assigned</li>
-                  <li><span className="font-semibold text-amber-300">In Progress</span> — the learner is completing review or reinforcement steps</li>
+                  <li><span className="font-semibold text-blue-400">In Progress</span> — the learner is completing review or reinforcement steps</li>
                   <li><span className="font-semibold text-green-300">Completed</span> — the learner finished the assigned education activities</li>
-                  <li><span className="font-semibold text-purple-300">Verified</span> — a supervisor or educator confirmed completion</li>
+                  <li><span className="font-semibold text-purple-500">Verified</span> — a supervisor or educator confirmed completion</li>
                 </ul>
               </div>
               <div>
@@ -821,7 +821,7 @@ function PlanCard({
           </span>
         )}
         {plan.reassessmentRequired && (
-          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border bg-orange-500/15 border-orange-400/30 text-orange-300" data-testid={`badge-reassessment-${plan.id}`}>
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border bg-orange-500/20 border-orange-500/50 text-orange-500" data-testid={`badge-reassessment-${plan.id}`}>
             <ShieldAlert size={11} /> Reassessment Required
           </span>
         )}
@@ -897,7 +897,7 @@ function PlanCard({
           {plan.verifiedBy && (
             <div className="flex flex-col gap-0.5" data-testid={`text-plan-verified-by-${plan.id}`}>
               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/55">Verified By</span>
-              <span className="text-purple-300 font-medium flex items-center gap-1">
+              <span className="text-purple-500 font-medium flex items-center gap-1">
                 <ShieldCheck size={11} /> {plan.verifiedBy}
               </span>
             </div>
@@ -931,7 +931,7 @@ function PlanCard({
         )}
         {plan.status === "Verified" && (
           <div className="pt-2 border-t border-border/30">
-            <div className="flex items-center justify-center gap-2 rounded-xl border border-purple-400/25 bg-purple-500/8 py-2.5 text-sm font-bold text-purple-300">
+            <div className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/40 bg-purple-500/15 py-2.5 text-sm font-bold text-purple-500">
               <ShieldCheck size={15} /> Plan Verified
             </div>
           </div>
@@ -1223,7 +1223,7 @@ export default function CorrectiveActionPage() {
               <GraduationCap size={18} className="text-primary flex-shrink-0" />
               <h2 className="font-bold text-xl" data-testid="text-page-title">Guided Education Plans</h2>
               {dataMode === "demo" ? (
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-500/40 bg-amber-500/15 text-amber-300" data-testid="badge-mode-demo">
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-orange-500/50 bg-orange-500/20 text-orange-500" data-testid="badge-mode-demo">
                   <FlaskConical size={10} /> Demo Data
                 </span>
               ) : (
@@ -1254,7 +1254,7 @@ export default function CorrectiveActionPage() {
               onClick={() => { setDataMode("demo"); setActiveStatus("All"); }}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-bold transition-all ${
                 dataMode === "demo"
-                  ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                  ? "bg-orange-500/20 text-orange-500 border border-orange-500/50"
                   : "text-muted-foreground hover:text-foreground hover:bg-white/4"
               }`}
               data-testid="button-mode-demo"
@@ -1274,10 +1274,10 @@ export default function CorrectiveActionPage() {
             </button>
           </div>
           {dataMode === "demo" && (
-            <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/8 px-4 py-3" data-testid="banner-demo-mode">
-              <FlaskConical size={14} className="text-amber-400 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-300/80 leading-relaxed">
-                <span className="font-bold text-amber-300">Demo Data — </span>
+            <div className="flex items-start gap-2.5 rounded-xl border border-orange-500/40 bg-orange-500/10 px-4 py-3" data-testid="banner-demo-mode">
+              <FlaskConical size={14} className="text-orange-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-orange-500/90 leading-relaxed">
+                <span className="font-bold text-orange-500">Demo Data — </span>
                 Sample guided education plans for demonstration. In production, plans are assigned automatically when a learner scores below the passing threshold on a final test.
               </p>
             </div>

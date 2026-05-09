@@ -64,7 +64,7 @@ const CATEGORY_CONFIG: Record<
 > = {
   rule:       { label: "Rule",           bg: "bg-blue-500/15",    text: "text-blue-400",    border: "border-blue-500/25" },
   definition: { label: "Definition",     bg: "bg-indigo-500/15",  text: "text-indigo-400",  border: "border-indigo-500/25" },
-  scenario:   { label: "Scenario",       bg: "bg-amber-500/15",   text: "text-amber-400",   border: "border-amber-500/25" },
+  scenario:   { label: "Scenario",       bg: "bg-orange-500/15",   text: "text-orange-500",   border: "border-orange-500/25" },
   mistake:    { label: "Common Mistake", bg: "bg-red-500/15",     text: "text-red-400",     border: "border-red-500/25" },
   number:     { label: "Key Number",     bg: "bg-emerald-500/15", text: "text-emerald-400", border: "border-emerald-500/25" },
   tip:        { label: "Surveyor Tip",   bg: "bg-violet-500/15",  text: "text-violet-400",  border: "border-violet-500/25" },

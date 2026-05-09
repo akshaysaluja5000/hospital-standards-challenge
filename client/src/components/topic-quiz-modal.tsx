@@ -255,7 +255,7 @@ export function TopicQuizModal({
                 className="flex flex-col items-center gap-5 py-4"
               >
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${
-                  pct >= 80 ? "bg-emerald-500" : pct >= 60 ? "bg-amber-500" : "bg-red-500"
+                  pct >= 80 ? "bg-emerald-500" : pct >= 60 ? "bg-orange-500" : "bg-red-500"
                 }`}>
                   <Trophy size={28} className="text-white" />
                 </div>
@@ -272,8 +272,8 @@ export function TopicQuizModal({
                 </div>
 
                 {pct < 100 && (
-                  <div className="w-full rounded-xl bg-amber-500/10 border border-amber-500/20 px-4 py-3">
-                    <p className="text-xs font-bold text-amber-600 dark:text-amber-400">
+                  <div className="w-full rounded-xl bg-orange-500/10 border border-orange-500/20 px-4 py-3">
+                    <p className="text-xs font-bold text-orange-500">
                       Survey tip: This topic is frequently cited. Review the full chapter in the Compliance Handbook for documentation requirements surveyors look for.
                     </p>
                   </div>

@@ -44,7 +44,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
     <motion.div
       className={`w-full rounded-2xl border-2 p-5 transition-all shadow-md hover:shadow-xl ${
         hasInProgress
-          ? "border-amber-400/60 bg-primary"
+          ? "border-primary bg-primary"
           : "border-primary/80 bg-primary"
       }`}
       initial={{ opacity: 0, y: 20 }}
@@ -67,7 +67,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
               {level.name}
             </h3>
             {hasInProgress && (
-              <span className="px-2 py-0.5 rounded-full bg-amber-400/20 text-amber-200 text-sm font-bold" data-testid={`badge-in-progress-${level.id}`}>
+              <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-sm font-bold" data-testid={`badge-in-progress-${level.id}`}>
                 In Progress ({inProgressQuestion + 1}/{totalQuestions})
               </span>
             )}

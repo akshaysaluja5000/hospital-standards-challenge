@@ -435,7 +435,7 @@ export default function DiagnosticQuizPage() {
   if (phase === "results" && result) {
     const percentage = Math.round((result.score / result.totalQuestions) * 100);
     const grade = percentage >= 90 ? "Excellent" : percentage >= 75 ? "Strong" : percentage >= 60 ? "Developing" : "Needs Focus";
-    const gradeColor = percentage >= 90 ? "text-emerald-600" : percentage >= 75 ? "text-teal-600" : percentage >= 60 ? "text-amber-600" : "text-red-500";
+    const gradeColor = percentage >= 90 ? "text-emerald-600" : percentage >= 75 ? "text-teal-600" : percentage >= 60 ? "text-orange-500" : "text-red-500";
 
     const sortedSections = Object.entries(result.sectionScores).sort((a, b) => {
       const pctA = a[1].total > 0 ? a[1].correct / a[1].total : 0;
@@ -470,7 +470,7 @@ export default function DiagnosticQuizPage() {
             <div className="space-y-3">
               {sortedSections.map(([sectionId, scores]) => {
                 const pct = scores.total > 0 ? Math.round((scores.correct / scores.total) * 100) : 0;
-                const barColor = pct >= 80 ? "bg-emerald-500" : pct >= 60 ? "bg-amber-500" : "bg-red-500";
+                const barColor = pct >= 80 ? "bg-emerald-500" : pct >= 60 ? "bg-orange-500" : "bg-red-500";
                 const label = pct >= 80 ? "Strong" : pct >= 60 ? "Developing" : "Needs Focus";
                 return (
                   <div key={sectionId}>
@@ -482,7 +482,7 @@ export default function DiagnosticQuizPage() {
                       <div className="flex-1 h-2 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
                         <div className={`h-full rounded-full ${barColor} transition-all`} style={{ width: `${pct}%` }} />
                       </div>
-                      <span className={`text-[10px] font-bold uppercase ${pct >= 80 ? "text-emerald-600" : pct >= 60 ? "text-amber-600" : "text-red-500"}`}>{label}</span>
+                      <span className={`text-[10px] font-bold uppercase ${pct >= 80 ? "text-emerald-600" : pct >= 60 ? "text-orange-500" : "text-red-500"}`}>{label}</span>
                     </div>
                   </div>
                 );
