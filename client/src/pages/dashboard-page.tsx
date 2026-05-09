@@ -126,7 +126,7 @@ function AscChapterCard({
 
             {/* Practice / test options — always visible as a pair */}
             <div className="flex items-center gap-2 pt-1 border-t border-white/10 flex-wrap">
-              <span className="text-[10px] font-black uppercase tracking-wider text-white/50">Practice:</span>
+              <span className="text-xs font-bold text-white/90">Practice:</span>
               {hasPublishedQuiz && quizId && (
                 <button
                   onClick={() => onPlay(quizId)}
@@ -151,7 +151,7 @@ function AscChapterCard({
           {riskPoints && riskPoints.length > 0 && (
             <div className="mt-4 border-t border-white/10 pt-3">
               <button
-                className="flex items-center gap-1.5 text-amber-300 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
+                className="flex items-center gap-1.5 text-red-400 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
                 onClick={() => setRiskExpanded(!riskExpanded)}
                 data-testid={`button-asc-risk-toggle-${chapter.levelId}`}
               >
@@ -163,7 +163,7 @@ function AscChapterCard({
                 <ul className="mt-2 flex flex-col gap-1.5" data-testid={`list-asc-risk-points-${chapter.levelId}`}>
                   {riskPoints.map((point, i) => (
                     <li key={i} className="flex items-start gap-2 text-xs text-white leading-snug">
-                      <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-amber-400/70" />
+                      <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-red-400/80" />
                       {point}
                     </li>
                   ))}
