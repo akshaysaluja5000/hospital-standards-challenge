@@ -79,6 +79,18 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     chapters: ["or_sterile_field", "universal_protocol", "instruments", "patient_care_docs", "eoc_safety"],
   },
   {
+    id: "anesthesia_assistant",
+    facilityType: "hospital",
+    department: "Operating Room",
+    title: "Anesthesia Assistant / CRNA",
+    description: "Anesthesia services, sedation levels, monitoring, regional techniques, perioperative assessment",
+    scope: "DEPT",
+    destinationRoute: "/play/anesthesia_sedation",
+    firstModuleId: "anesthesia_sedation",
+    reportingScope: "own_department",
+    chapters: ["anesthesia_sedation", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety"],
+  },
+  {
     id: "spd_tech",
     facilityType: "hospital",
     department: "Sterile Processing",
