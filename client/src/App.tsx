@@ -360,6 +360,15 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error
   }
 }
 
+function RouterErrorBoundary({ children }: { children: ReactNode }) {
+  const [location] = useLocation();
+  return (
+    <AppErrorBoundary key={location}>
+      {children}
+    </AppErrorBoundary>
+  );
+}
+
 function App() {
   useEffect(() => {
     if (localStorage.getItem("ar_night_mode") === "1") {
@@ -375,7 +384,9 @@ function App() {
         <TooltipProvider>
           <AuthProvider>
             <Toaster />
-            <Router />
+            <RouterErrorBoundary>
+              <Router />
+            </RouterErrorBoundary>
           </AuthProvider>
         </TooltipProvider>
       </QueryClientProvider>

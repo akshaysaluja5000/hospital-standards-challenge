@@ -172,7 +172,7 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
               <h3 className="font-bold text-base">Quick Reference — {chapter.title}</h3>
             </div>
             <div className="divide-y divide-border">
-              {chapter.quickReference.map((item, i) => (
+              {(chapter.quickReference ?? []).map((item, i) => (
                 <div key={i} className="px-4 py-3.5 flex gap-4 text-base" data-testid={`quickref-item-${i}`}>
                   <span className="font-bold text-foreground min-w-[140px] flex-shrink-0">{item.fact}</span>
                   <span className="text-foreground/70 whitespace-pre-line leading-relaxed">{item.detail}</span>
@@ -182,7 +182,7 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
           </motion.div>
         ) : (
           <div className="flex flex-col gap-3">
-            {chapter.sections.map((section, i) => (
+            {(chapter.sections ?? []).map((section, i) => (
               <SectionCard key={i} section={section} levelColor={color} index={i} />
             ))}
           </div>
@@ -194,15 +194,15 @@ function ChapterView({ chapter, onBack }: { chapter: HandbookChapter; onBack: ()
 
 function chapterMatchesQuery(ch: HandbookChapter, q: string) {
   if (ch.title.toLowerCase().includes(q)) return true;
-  if (ch.overview.toLowerCase().includes(q)) return true;
-  return ch.sections.some(
+  if (ch.overview?.toLowerCase().includes(q)) return true;
+  return (ch.sections ?? []).some(
     (s) =>
-      s.heading.toLowerCase().includes(q) ||
-      s.content.toLowerCase().includes(q) ||
-      s.criticalValues?.some((cv) => cv.value.toLowerCase().includes(q) || cv.label.toLowerCase().includes(q)) ||
+      s.heading?.toLowerCase().includes(q) ||
+      s.content?.toLowerCase().includes(q) ||
+      s.criticalValues?.some((cv) => cv.value?.toLowerCase().includes(q) || cv.label?.toLowerCase().includes(q)) ||
       s.thinkAboutIt?.toLowerCase().includes(q)
-  ) || ch.quickReference.some(
-    (qr) => qr.fact.toLowerCase().includes(q) || qr.detail.toLowerCase().includes(q)
+  ) || (ch.quickReference ?? []).some(
+    (qr) => qr.fact?.toLowerCase().includes(q) || qr.detail?.toLowerCase().includes(q)
   );
 }
 
@@ -275,7 +275,7 @@ export default function HandbookPage() {
             {chapter.title}
           </h3>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {chapter.sections.length} standards · {chapter.quickReference.length} quick reference items
+            {(chapter.sections ?? []).length} standards · {(chapter.quickReference ?? []).length} quick reference items
           </p>
           {(chapter as AscHandbookChapter).surveyRiskCount != null && (
             <p className="text-xs text-red-500 dark:text-red-400 font-semibold mt-0.5">
