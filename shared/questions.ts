@@ -1493,7 +1493,7 @@ const hospitalLevelsRaw: Level[] = [
           "Event-related sterility only applies for the first 12 months; after that, time-based expiration takes effect",
           "Re-inspection and documentation of intact packaging satisfies the over-1-year requirement",
           "Any item stored over 12 months must be automatically reprocessed, not just re-inspected",
-          "But only if the item is returned to SPD for biological indicator testing before it can be released for use"
+          "Re-inspection alone is insufficient — the item must be returned to SPD for biological indicator testing before release"
         ],
         correctIndex: 1,
         explanation: "Under event-related sterility, items over 1 year must be re-inspected. If the packaging remains intact with no compromise events, re-inspection with documentation is sufficient. Automatic reprocessing is not required if the package passes inspection.",
@@ -2729,7 +2729,7 @@ const hospitalLevelsRaw: Level[] = [
         question: "A circulating nurse needs to hand a supply to the scrub tech. She walks around the sterile field and presents the item without reaching over it. Is this technique correct?",
         options: [
           "Only scrubbed team members can handle items near the sterile field under any circumstances",
-          "But only if the circulator is wearing sterile gloves when presenting the item to the scrub tech",
+          "The circulator must wear sterile gloves when presenting items directly to the scrub tech",
           "The circulator must place items on a designated transfer table rather than presenting them directly",
           "Walking around and not reaching over the field is proper technique"
         ],
@@ -2742,7 +2742,7 @@ const hospitalLevelsRaw: Level[] = [
         id: "or2",
         question: "A scrub nurse has a properly fitted mask that covers the mouth and nose, a bouffant cap covering all hair, earrings removed, and no jewelry. She enters the restricted OR. Is her attire compliant?",
         options: [
-          "But only if she has also completed the surgical hand scrub before entering the restricted area",
+          "Surgical hand scrub completion is also required before entering the restricted OR",
           "All surgical attire requirements are met",
           "Shoe covers are also required in restricted OR areas and were not mentioned",
           "Bouffant caps do not adequately cover sideburns and neckline hair; a surgical hood is always required in restricted areas"
@@ -2798,7 +2798,7 @@ const hospitalLevelsRaw: Level[] = [
         id: "or6",
         question: "Anesthesia equipment was cleaned between patients using approved disinfectant wipes. The tech wiped all surfaces of the anesthesia machine, monitors, and cart. Is this adequate between-patient care?",
         options: [
-          "But the tech should also replace all disposable circuits and tubing even if they appear clean",
+          "Surface wipes are only adequate if disposable circuits and tubing are also replaced between each patient",
           "Anesthesia equipment requires full terminal cleaning with liquid disinfectant, not just surface wipes",
           "Anesthesia equipment only needs terminal cleaning at the end of the day, not between cases",
           "All anesthesia equipment surfaces must be cleaned and disinfected between every patient"
@@ -2814,7 +2814,7 @@ const hospitalLevelsRaw: Level[] = [
         options: [
           "Sterile team members must face the sterile field at all times",
           "A brief turn is acceptable for necessary communication as long as the team member does not leave the immediate area",
-          "But only if the team member's hands drop below waist level during the turn",
+          "A brief turn is only a break in technique if the team member's hands drop below waist level",
           "The back of the sterile gown is considered sterile down to the waist, so brief turns do not compromise the field"
         ],
         correctIndex: 0,
@@ -2897,7 +2897,7 @@ const hospitalLevelsRaw: Level[] = [
         question: "A nurse wearing stud earrings covered by a surgical cap enters the restricted OR. Is this compliant?",
         options: [
           "Earrings that are covered by the surgical cap are acceptable",
-          "But only stud earrings smaller than 5mm are permitted under surgical caps in restricted areas",
+          "Only stud earrings smaller than 5mm may be worn under a surgical cap in restricted areas",
           "All jewelry must be removed in restricted areas regardless of coverage since metal can harbor bacteria",
           "Only clip-on earrings are permitted in restricted areas; pierced earrings must always be removed"
         ],
@@ -3242,7 +3242,7 @@ const hospitalLevelsRaw: Level[] = [
           "The patient must create an advance directive before any procedure involving anesthesia",
           "The staff offered assistance, which fulfills the requirement even if the patient declines",
           "The patient's refusal must be documented with a witness signature to be compliant",
-          "But only if the offer and refusal are documented using a facility-specific advance directive waiver form"
+          "The offer and refusal must be documented on a facility-specific advance directive waiver form to be compliant"
         ],
         correctIndex: 1,
         explanation: "The requirement is to offer assistance with advance directives when none exist. Patients are not required to create one — the obligation is to inform and offer help. Declining is the patient's right.",
