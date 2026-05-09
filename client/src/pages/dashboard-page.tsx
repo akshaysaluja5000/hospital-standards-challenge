@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -434,6 +434,20 @@ export default function DashboardPage() {
                 <span className="sm:hidden">Console</span>
               </Button>
             )}
+            <a
+              href={
+                (user?.isAdmin || ["director","ceo","admin","super_admin"].includes(user?.leadershipRole ?? "") || user?.leadershipRole === "educator")
+                  ? "/tutorial-leadership.html"
+                  : "/tutorial-employee.html"
+              }
+              target="_blank"
+              rel="noopener noreferrer"
+              data-testid="link-tutorial-help"
+            >
+              <Button variant="outline" size="sm" title="How-to guide">
+                <HelpCircle size={16} />
+              </Button>
+            </a>
             <Button variant="outline" size="sm" onClick={() => setLocation("/profile")} data-testid="button-profile">
               <Settings size={16} />
             </Button>

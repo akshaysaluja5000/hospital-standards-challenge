@@ -361,8 +361,12 @@ export default function LandingPage() {
           <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-disclaimer">
             Accreditation <em>Ready</em> is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.
           </p>
-          <p className="text-sm text-muted-foreground mt-2">
+          <p className="text-sm text-muted-foreground mt-2 flex items-center justify-center gap-3 flex-wrap">
             <a href="/terms" className="underline hover:text-foreground" data-testid="link-terms-landing">Terms & Privacy</a>
+            <span className="opacity-30">·</span>
+            <a href="/tutorial-employee.html" target="_blank" className="underline hover:text-foreground" data-testid="link-tutorial-employee">Staff Training Guide</a>
+            <span className="opacity-30">·</span>
+            <a href="/tutorial-leadership.html" target="_blank" className="underline hover:text-foreground" data-testid="link-tutorial-leadership">Leadership Guide</a>
           </p>
         </div>
       </footer>
