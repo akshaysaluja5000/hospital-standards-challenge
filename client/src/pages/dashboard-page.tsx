@@ -494,13 +494,13 @@ export default function DashboardPage() {
             <Button variant="outline" size="sm" onClick={() => setLocation("/profile")} data-testid="button-profile" className="hidden sm:flex">
               <Settings size={16} />
             </Button>
-            <Button variant="outline" size="sm" onClick={async () => { await logout(); setLocation("/auth"); }} data-testid="button-logout" className="hidden sm:flex">
-              <LogOut size={16} />
-            </Button>
-
             {/* Dark mode toggle — always visible */}
             <Button variant="outline" size="sm" onClick={toggleDark} data-testid="button-toggle-dark" title={isDark ? "Switch to light mode" : "Switch to night mode"}>
               {isDark ? <Sun size={16} /> : <Moon size={16} />}
+            </Button>
+
+            <Button variant="outline" size="sm" onClick={async () => { await logout(); setLocation("/auth"); }} data-testid="button-logout" className="hidden sm:flex">
+              <LogOut size={16} />
             </Button>
 
             {/* Mobile overflow menu — replaces Trophy / Help / Settings / Logout */}
