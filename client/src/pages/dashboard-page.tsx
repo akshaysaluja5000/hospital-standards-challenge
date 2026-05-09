@@ -600,9 +600,17 @@ export default function DashboardPage() {
                       {searchResults.map((entry) => (
                         <div
                           key={entry.id}
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
+                          className="flex items-center gap-2 px-4 py-3 hover:bg-muted/50 transition-colors"
                         >
-                          <div className="flex-1 min-w-0">
+                          <button
+                            className="flex-1 min-w-0 text-left cursor-pointer"
+                            onClick={() => {
+                              setSearchOpen(false);
+                              setSearchQuery("");
+                              setLocation(entry.module === "asc" ? `/handbook/${entry.levelId}` : `/study/${entry.levelId}`);
+                            }}
+                            data-testid={`button-explore-${entry.id}`}
+                          >
                             <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
                               <span className={`flex-shrink-0 px-1.5 py-0.5 rounded text-xs font-black uppercase tracking-wider ${
                                 entry.module === "asc"
@@ -622,25 +630,31 @@ export default function DashboardPage() {
                             ) : (
                               <p className="text-xs text-muted-foreground truncate mt-0.5">{entry.subtitle}</p>
                             )}
-                          </div>
-                          <button
-                            onClick={() => {
-                              setQuizEntry(entry);
-                              setQuizOpen(true);
-                              setSearchOpen(false);
-                            }}
-                            className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-95"
-                            data-testid={`button-quick-quiz-${entry.id}`}
-                          >
-                            <BrainCircuit size={12} />
-                            Quick Quiz
+                            <p className="text-[10px] text-primary/60 font-semibold mt-0.5 flex items-center gap-1">
+                              <BookOpen size={9} />
+                              Click to explore
+                            </p>
                           </button>
+                          <div className="flex flex-col gap-1.5 flex-shrink-0">
+                            <button
+                              onClick={() => {
+                                setQuizEntry(entry);
+                                setQuizOpen(true);
+                                setSearchOpen(false);
+                              }}
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-95"
+                              data-testid={`button-quick-quiz-${entry.id}`}
+                            >
+                              <BrainCircuit size={12} />
+                              Quick Quiz
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
                     <div className="px-4 py-2 bg-muted/30 border-t border-border/60">
                       <p className="text-xs text-muted-foreground font-semibold">
-                        {searchResults.length} result{searchResults.length !== 1 ? "s" : ""} · AI generates 5 focused questions on any topic
+                        {searchResults.length} result{searchResults.length !== 1 ? "s" : ""} · Click a result to explore · Quick Quiz for AI questions
                       </p>
                     </div>
                   </motion.div>
