@@ -302,13 +302,14 @@ export default function DashboardPage() {
       });
       // Concept-level entries — one per study concept for specific topic searches
       for (const concept of (lvl.studyMaterial ?? [])) {
+        if (!concept?.title) continue;
         entries.push({
           id: `hosp-${lvl.id}-${concept.title.toLowerCase().replace(/[^a-z0-9]+/g, "_")}`,
           title: concept.title,
           subtitle: `${lvl.name} · ${(concept.keyPoint ?? "").slice(0, 80)}`,
           module: "hospital",
           levelId: lvl.id,
-          aiContext: `${concept.title} ${concept.content} ${concept.keyPoint} ${concept.extraInfo ?? ""}`,
+          aiContext: `${concept.title} ${concept.content ?? ""} ${concept.keyPoint ?? ""} ${concept.extraInfo ?? ""}`,
         });
       }
     }

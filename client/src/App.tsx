@@ -1,5 +1,5 @@
 import { Switch, Route, useLocation, Redirect } from "wouter";
-import { useEffect } from "react";
+import { useEffect, Component, type ReactNode } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -324,6 +324,42 @@ function Router() {
   );
 }
 
+class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-6 bg-background">
+          <div className="max-w-sm w-full text-center flex flex-col items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-destructive/15 flex items-center justify-center">
+              <AlertCircle size={28} className="text-destructive" />
+            </div>
+            <h2 className="text-xl font-bold">Something went wrong</h2>
+            <p className="text-sm text-muted-foreground">
+              The app encountered an unexpected error. Try refreshing the page.
+            </p>
+            <Button onClick={() => { this.setState({ error: null }); window.location.reload(); }}>
+              Refresh page
+            </Button>
+            {import.meta.env.DEV && (
+              <pre className="text-left text-xs text-destructive bg-destructive/5 rounded-lg p-3 w-full overflow-auto max-h-40">
+                {this.state.error.message}
+              </pre>
+            )}
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function App() {
   useEffect(() => {
     if (localStorage.getItem("ar_night_mode") === "1") {
@@ -334,14 +370,16 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <Toaster />
-          <Router />
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <AppErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <AuthProvider>
+            <Toaster />
+            <Router />
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </AppErrorBoundary>
   );
 }
 
