@@ -105,7 +105,7 @@ export default function StudyPage() {
 
   // Spaced-repetition queue state
   const [queue, setQueue] = useState<number[]>(() =>
-    buildInitialQueue(level?.studyMaterial.length ?? 0)
+    buildInitialQueue(level?.studyMaterial?.length ?? 0)
   );
   const [queueIndex, setQueueIndex] = useState(0);
   // Last rating per original card index
@@ -114,11 +114,6 @@ export default function StudyPage() {
   // ── Persistence: fetch existing review schedule for this level ─────────────
   const { data: existingReviews } = useQuery<FlashcardReview[]>({
     queryKey: ["/api/flashcards", levelId],
-    queryFn: async () => {
-      const res = await fetch(`/api/flashcards/${levelId}`);
-      if (!res.ok) return [];
-      return res.json();
-    },
     enabled: !!levelId,
     staleTime: 30_000,
   });
