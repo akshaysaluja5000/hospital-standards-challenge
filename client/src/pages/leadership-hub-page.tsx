@@ -145,15 +145,15 @@ export default function LeadershipHubPage() {
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border-2 border-amber-500/40 bg-amber-500/8 p-5 flex items-start gap-4"
+            className="rounded-2xl border-2 border-amber-500/60 bg-amber-50 dark:bg-amber-500/15 p-5 flex items-start gap-4"
             data-testid="banner-mfa-setup"
           >
-            <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center flex-shrink-0">
-              <AlertTriangle size={20} className="text-amber-600" />
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+              <AlertTriangle size={20} className="text-amber-600 dark:text-amber-400" />
             </div>
             <div className="flex-1 min-w-0">
-              <h2 className="font-bold text-sm mb-1 text-amber-800">Two-Factor Authentication Required</h2>
-              <p className="text-sm text-amber-700 leading-relaxed mb-3">
+              <h2 className="font-bold text-sm mb-1 text-amber-900 dark:text-amber-200">Two-Factor Authentication Required</h2>
+              <p className="text-sm text-amber-800 dark:text-amber-300 leading-relaxed mb-3">
                 Your role requires MFA to access reporting tools. Set up your authenticator app now to unlock the Executive Report, AI Coach, and data exports.
               </p>
               <Button size="sm" onClick={() => setLocation("/mfa-setup")} data-testid="button-setup-mfa-from-hub">
@@ -217,10 +217,10 @@ export default function LeadershipHubPage() {
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-xl border border-amber-500/30 bg-amber-500/5 px-4 py-3 flex items-center gap-2 text-sm text-amber-700"
+            className="rounded-xl border border-amber-500/60 bg-amber-50 dark:bg-amber-500/12 px-4 py-3 flex items-center gap-2 text-sm text-amber-900 dark:text-amber-300"
             data-testid="banner-multi-module"
           >
-            <ClipboardList size={15} className="flex-shrink-0" />
+            <ClipboardList size={15} className="flex-shrink-0 text-amber-700 dark:text-amber-400" />
             <span>
               <strong>Multi-module admin:</strong> Hospital and ASC data are segregated. Use the pathway switcher on the learner dashboard to change your active module context.
             </span>

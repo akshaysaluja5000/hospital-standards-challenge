@@ -552,7 +552,7 @@ export default function ExecutiveReportPage() {
               <button
                 onClick={() => setDataMode("demo")}
                 className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
-                  dataMode === "demo" ? "bg-amber-500/20 text-amber-300" : "text-muted-foreground hover:text-foreground"
+                  dataMode === "demo" ? "bg-amber-500/20 text-amber-700 dark:text-amber-300" : "text-muted-foreground hover:text-foreground"
                 }`}
                 data-testid="button-exec-mode-demo"
               >
@@ -561,7 +561,7 @@ export default function ExecutiveReportPage() {
               <button
                 onClick={() => setDataMode("live")}
                 className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
-                  dataMode === "live" ? "bg-green-500/15 text-green-400" : "text-muted-foreground hover:text-foreground"
+                  dataMode === "live" ? "bg-green-500/15 text-green-700 dark:text-green-400" : "text-muted-foreground hover:text-foreground"
                 }`}
                 data-testid="button-exec-mode-live"
               >
@@ -659,11 +659,11 @@ export default function ExecutiveReportPage() {
 
         {/* ── Demo Banner ── */}
         {dataMode === "demo" && (
-          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/8 px-4 py-3" data-testid="banner-exec-demo-mode">
-            <FlaskConical size={14} className="text-amber-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-amber-300/80 leading-relaxed">
-              <span className="font-bold text-amber-300">Demo Data — </span>
-              Sample guided education plans for demonstration. Switch to <strong className="text-amber-300">Live</strong> to see your facility's real plan data.
+          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/50 bg-amber-50 dark:bg-amber-500/12 px-4 py-3" data-testid="banner-exec-demo-mode">
+            <FlaskConical size={14} className="text-amber-700 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-amber-800 dark:text-amber-300 leading-relaxed">
+              <span className="font-bold text-amber-900 dark:text-amber-200">Demo Data — </span>
+              Sample guided education plans for demonstration. Switch to <strong className="text-amber-900 dark:text-amber-200">Live</strong> to see your facility's real plan data.
             </p>
           </div>
         )}
@@ -793,7 +793,7 @@ export default function ExecutiveReportPage() {
               <Icon size={15} className={color} />
               <span className="text-3xl font-black mt-0.5">{value}</span>
               <span className="text-xs text-muted-foreground font-semibold leading-tight">{label}</span>
-              <span className="text-[10px] text-muted-foreground/60 mt-0.5">{sub}</span>
+              <span className="text-xs text-muted-foreground mt-0.5">{sub}</span>
             </motion.div>
           ))}
         </div>
@@ -815,11 +815,11 @@ export default function ExecutiveReportPage() {
             </div>
             <ResponsiveContainer width="100%" height={180}>
               <BarChart data={trendData} barGap={2} barSize={9}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                <XAxis dataKey="week" tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 9, fill: "rgba(255,255,255,0.4)" }} axisLine={false} tickLine={false} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "rgba(255,255,255,0.98)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", fontSize: 11 }} labelStyle={{ color: "rgba(255,255,255,0.65)", marginBottom: 3 }} />
-                <Legend wrapperStyle={{ fontSize: 10, paddingTop: 6 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(128,128,128,0.15)" />
+                <XAxis dataKey="week" tick={{ fontSize: 10, fill: "#888" }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: "#888" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <Tooltip contentStyle={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: 12 }} labelStyle={{ color: "#374151", marginBottom: 3 }} />
+                <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
                 <Bar dataKey="assigned" name="Assigned" fill="hsl(var(--primary))" radius={[3, 3, 0, 0]} opacity={0.8} />
                 <Bar dataKey="completed" name="Completed" fill="hsl(var(--chart-2))" radius={[3, 3, 0, 0]} opacity={0.8} />
               </BarChart>
@@ -841,8 +841,8 @@ export default function ExecutiveReportPage() {
               {chapterBreakdown.map(({ category: cat, active, overdue }) => (
                 <div key={cat} className="grid grid-cols-4 text-xs px-1 py-1.5 rounded-lg hover:bg-white/5 transition-colors items-center" data-testid={`row-dept-${cat}`}>
                   <span className="col-span-2 font-medium truncate pr-2 text-[11px]">{cat}</span>
-                  <span className="text-center font-bold text-blue-400">{active || "—"}</span>
-                  <span className={`text-center font-bold ${overdue > 0 ? "text-destructive" : "text-muted-foreground/40"}`}>
+                  <span className="text-center font-bold text-blue-600 dark:text-blue-400">{active || "—"}</span>
+                  <span className={`text-center font-bold ${overdue > 0 ? "text-destructive" : "text-muted-foreground"}`}>
                     {overdue > 0 ? overdue : "—"}
                   </span>
                 </div>
