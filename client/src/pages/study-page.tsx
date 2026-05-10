@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Play,
   AlertTriangle, ListChecks, FileText, CheckCircle2, RotateCcw,
-  Trophy, RefreshCw, Timer, Clock, X, HelpCircle, Trash2,
+  Trophy, RefreshCw, Timer, Clock, X, HelpCircle, Trash2, Microscope,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -114,6 +114,11 @@ export default function StudyPage() {
   // ── Persistence: fetch existing review schedule for this level ─────────────
   const { data: existingReviews } = useQuery<FlashcardReview[]>({
     queryKey: ["/api/flashcards", levelId],
+    queryFn: async () => {
+      const res = await fetch(`/api/flashcards/${levelId}`, { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
     enabled: !!levelId,
     staleTime: 30_000,
   });

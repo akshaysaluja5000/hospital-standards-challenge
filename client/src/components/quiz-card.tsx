@@ -41,7 +41,7 @@ export function QuizCard({ question, onAnswer, disabled, previousAnswer, module 
   const isYesNoFormat = question.options.every(opt => /^(yes|no)\s*[—\-]/i.test(opt.trim()));
 
   function parseYesNoOption(opt: string): { label: string; explanation: string } {
-    const match = opt.match(/^(yes|no)\s*[—\-]\s*(.*)/is);
+    const match = opt.match(/^(yes|no)\s*[—\-]\s*([\s\S]*)/i);
     if (!match) return { label: "", explanation: opt };
     return { label: match[1].toUpperCase(), explanation: match[2] };
   }

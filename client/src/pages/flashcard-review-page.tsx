@@ -84,6 +84,11 @@ export default function FlashcardReviewPage() {
 
   const { data: dueReviews, isLoading, isError } = useQuery<FlashcardReview[]>({
     queryKey: ["/api/flashcards/due"],
+    queryFn: async () => {
+      const res = await fetch("/api/flashcards/due", { credentials: "include" });
+      if (!res.ok) return [];
+      return res.json();
+    },
     staleTime: 0,
   });
 
