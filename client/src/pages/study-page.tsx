@@ -99,9 +99,7 @@ export default function StudyPage() {
   const [view, setView] = useState<"summary" | "concepts">("concepts");
   const [flipped, setFlipped] = useState(false);
   const [sessionDone, setSessionDone] = useState(false);
-  const [howItWorksOpen, setHowItWorksOpen] = useState(
-    () => localStorage.getItem("ar_flashcard_tip_dismissed") !== "1"
-  );
+  const [howItWorksOpen, setHowItWorksOpen] = useState(true);
 
   // Spaced-repetition queue state
   const [queue, setQueue] = useState<number[]>(() =>
@@ -409,7 +407,7 @@ export default function StudyPage() {
                   <p className="text-xs font-black uppercase tracking-wide text-primary">How flashcards work</p>
                 </div>
                 <button
-                  onClick={() => { setHowItWorksOpen(false); localStorage.setItem("ar_flashcard_tip_dismissed", "1"); }}
+                  onClick={() => setHowItWorksOpen(false)}
                   className="text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
                   data-testid="button-dismiss-tip"
                 >
