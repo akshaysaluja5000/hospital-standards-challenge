@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus, Shield, ScrollText } from "lucide-react";
+import { ArrowLeft, Users, TrendingUp, Target, BarChart3, Calendar, UserPlus, Shield, ScrollText, FlaskConical, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth";
@@ -40,14 +41,38 @@ const LEADERSHIP_RANK: Record<string, number> = {
   learner: 0, educator: 1, director: 2, ceo: 3, admin: 4, super_admin: 5,
 };
 
+const DEMO_USERS: AdminUser[] = [
+  { id: 1001, username: "jessica.martinez", firstName: "Jessica", lastName: "Martinez", totalXp: 4820, currentStreak: 12, longestStreak: 18, questionsAnswered: 347, questionsToday: 14, correctTotal: 295, correctToday: 12, accuracy: 85, lastActive: new Date(Date.now() - 68 * 60000).toISOString(), joinedAt: "2026-01-15T00:00:00Z", leadershipRole: "learner" },
+  { id: 1002, username: "david.chen", firstName: "David", lastName: "Chen", totalXp: 3940, currentStreak: 7, longestStreak: 14, questionsAnswered: 289, questionsToday: 8, correctTotal: 228, correctToday: 5, accuracy: 79, lastActive: new Date(Date.now() - 185 * 60000).toISOString(), joinedAt: "2026-01-20T00:00:00Z", leadershipRole: "learner" },
+  { id: 1003, username: "sarah.nguyen", firstName: "Sarah", lastName: "Nguyen", totalXp: 5210, currentStreak: 21, longestStreak: 21, questionsAnswered: 412, questionsToday: 20, correctTotal: 366, correctToday: 18, accuracy: 89, lastActive: new Date(Date.now() - 22 * 60000).toISOString(), joinedAt: "2026-01-10T00:00:00Z", leadershipRole: "learner" },
+  { id: 1004, username: "michael.okafor", firstName: "Michael", lastName: "Okafor", totalXp: 2100, currentStreak: 3, longestStreak: 9, questionsAnswered: 178, questionsToday: 4, correctTotal: 125, correctToday: 2, accuracy: 70, lastActive: new Date(Date.now() - 390 * 60000).toISOString(), joinedAt: "2026-02-01T00:00:00Z", leadershipRole: "learner" },
+  { id: 1005, username: "lisa.patel", firstName: "Lisa", lastName: "Patel", totalXp: 1650, currentStreak: 0, longestStreak: 6, questionsAnswered: 134, questionsToday: 0, correctTotal: 80, correctToday: 0, accuracy: 60, lastActive: new Date(Date.now() - 2 * 24 * 60 * 60000).toISOString(), joinedAt: "2026-02-10T00:00:00Z", leadershipRole: "learner" },
+  { id: 1006, username: "james.wilson", firstName: "James", lastName: "Wilson", totalXp: 3280, currentStreak: 5, longestStreak: 11, questionsAnswered: 251, questionsToday: 6, correctTotal: 201, correctToday: 5, accuracy: 80, lastActive: new Date(Date.now() - 135 * 60000).toISOString(), joinedAt: "2026-01-25T00:00:00Z", leadershipRole: "learner" },
+  { id: 1007, username: "anna.rodriguez", firstName: "Anna", lastName: "Rodriguez", totalXp: 890, currentStreak: 2, longestStreak: 4, questionsAnswered: 76, questionsToday: 3, correctTotal: 41, correctToday: 1, accuracy: 54, lastActive: new Date(Date.now() - 23 * 60 * 60000).toISOString(), joinedAt: "2026-03-05T00:00:00Z", leadershipRole: "learner" },
+  { id: 1008, username: "kevin.thomas", firstName: "Kevin", lastName: "Thomas", totalXp: 4100, currentStreak: 9, longestStreak: 15, questionsAnswered: 318, questionsToday: 11, correctTotal: 267, correctToday: 9, accuracy: 84, lastActive: new Date(Date.now() - 47 * 60000).toISOString(), joinedAt: "2026-01-18T00:00:00Z", leadershipRole: "learner" },
+  { id: 1009, username: "priya.sharma", firstName: "Priya", lastName: "Sharma", totalXp: 2760, currentStreak: 6, longestStreak: 10, questionsAnswered: 221, questionsToday: 7, correctTotal: 172, correctToday: 5, accuracy: 78, lastActive: new Date(Date.now() - 330 * 60000).toISOString(), joinedAt: "2026-02-14T00:00:00Z", leadershipRole: "learner" },
+  { id: 1010, username: "rachel.kim", firstName: "Rachel", lastName: "Kim", totalXp: 6050, currentStreak: 30, longestStreak: 30, questionsAnswered: 489, questionsToday: 22, correctTotal: 441, correctToday: 20, accuracy: 90, lastActive: new Date(Date.now() - 4 * 60000).toISOString(), joinedAt: "2026-01-05T00:00:00Z", leadershipRole: "educator" },
+];
+
+const DEMO_STATS: AdminStats = {
+  totalUsers: 10,
+  activeToday: 7,
+  totalQuestionsAnswered: 2715,
+  averageAccuracy: 77,
+  userList: DEMO_USERS,
+};
+
 export default function AdminPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const [dataMode, setDataMode] = useState<"live" | "demo">("live");
 
-  const { data: stats, isLoading } = useQuery<AdminStats>({
+  const { data: liveStats, isLoading } = useQuery<AdminStats>({
     queryKey: ["/api/admin/stats"],
   });
+
+  const stats = dataMode === "demo" ? DEMO_STATS : liveStats;
 
   const callerRank = LEADERSHIP_RANK[(user?.leadershipRole as string) || "learner"] ?? 0;
   const callerIsAdmin = user?.isAdmin || callerRank >= LEADERSHIP_RANK["admin"];
@@ -57,7 +82,7 @@ export default function AdminPage() {
     facilityName: string | null; action: string; createdAt: string;
   }>>({
     queryKey: ["/api/audit-log"],
-    enabled: callerIsAdmin,
+    enabled: callerIsAdmin && dataMode === "live",
   });
 
   const roleChangeMutation = useMutation({
@@ -74,7 +99,7 @@ export default function AdminPage() {
     },
   });
 
-  if (isLoading) {
+  if (isLoading && dataMode === "live") {
     return (
       <div className="min-h-screen p-4 max-w-4xl mx-auto">
         <div className="flex flex-col gap-6 pt-16">
@@ -119,18 +144,68 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen pb-20">
       <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
-            <ArrowLeft size={20} />
-          </Button>
-          <div>
-            <h1 className="font-bold text-base text-foreground">User Management</h1>
-            <p className="text-sm font-medium text-foreground/70">Track engagement, accuracy, and assign roles</p>
+        <div className="max-w-4xl mx-auto px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
+              <ArrowLeft size={20} />
+            </Button>
+            <div>
+              <h1 className="font-bold text-base text-foreground">User Management</h1>
+              <p className="text-xs font-medium text-foreground/70">Track engagement, accuracy, and assign roles</p>
+            </div>
+          </div>
+          <div className="flex items-center rounded-lg border border-border bg-white/5 p-0.5 sm:ml-auto sm:flex-shrink-0" data-testid="container-mode-toggle">
+            <button
+              onClick={() => setDataMode("live")}
+              className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
+                dataMode === "live" ? "bg-primary text-white shadow-sm" : "text-muted-foreground hover:text-foreground"
+              }`}
+              data-testid="button-mode-live"
+            >
+              <Database size={11} /> Live
+            </button>
+            <button
+              onClick={() => setDataMode("demo")}
+              className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
+                dataMode === "demo" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+              data-testid="button-mode-demo"
+            >
+              <FlaskConical size={11} /> Demo
+            </button>
           </div>
         </div>
       </div>
 
       <div className="max-w-4xl mx-auto px-4 pt-6 flex flex-col gap-6">
+
+        {dataMode === "demo" && (
+          <div className="flex items-start gap-3 rounded-xl border border-orange-500/40 bg-orange-500/8 px-4 py-3" data-testid="banner-demo-mode">
+            <FlaskConical size={15} className="text-orange-500 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-foreground/80">
+              <span className="font-bold text-orange-500">Demo Data — </span>
+              Sample staff roster for demonstration. Switch to Live to see your facility's actual learners.
+            </p>
+          </div>
+        )}
+
+        {dataMode === "live" && !isLoading && (!liveStats?.userList || liveStats.userList.length === 0) && (
+          <div className="flex flex-col items-center justify-center gap-4 py-16 text-center" data-testid="container-live-empty">
+            <div className="w-14 h-14 rounded-full border-2 border-border flex items-center justify-center bg-muted/20">
+              <Users size={24} className="text-muted-foreground" />
+            </div>
+            <div>
+              <p className="font-bold text-base mb-1">No learners yet</p>
+              <p className="text-sm text-muted-foreground max-w-xs">
+                Share the facility code to get started. Switch to Demo to explore a sample staff roster.
+              </p>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setDataMode("demo")} data-testid="button-view-demo">
+              <FlaskConical size={14} className="mr-1.5" /> View Demo Roster
+            </Button>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { label: "Registered Users", value: stats?.totalUsers || 0, icon: UserPlus, color: "text-primary" },
@@ -154,15 +229,15 @@ export default function AdminPage() {
           ))}
         </div>
 
-        <AiLeadershipCoach />
+        <AiLeadershipCoach isDemo={dataMode === "demo"} />
 
         <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
           <div className="p-5 border-b border-card-border flex items-center justify-between gap-2">
             <h3 className="font-bold text-base flex items-center gap-2">
               <Users size={18} className="text-primary" />
-              Registered Users ({stats?.totalUsers || 0})
+              {dataMode === "demo" ? "Sample Staff Roster" : `Registered Users (${stats?.totalUsers || 0})`}
             </h3>
-            {callerIsAdmin && (
+            {callerIsAdmin && dataMode === "live" && (
               <div className="flex items-center gap-1.5 text-sm text-foreground/70 font-semibold">
                 <Shield size={13} className="text-primary" />
                 Role management enabled
@@ -182,7 +257,7 @@ export default function AdminPage() {
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Today</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden sm:table-cell">Accuracy</th>
                   <th className="text-right p-3 font-bold text-muted-foreground hidden lg:table-cell">Last Active</th>
-                  {callerIsAdmin && (
+                  {callerIsAdmin && dataMode === "live" && (
                     <th className="text-left p-3 font-bold text-muted-foreground hidden lg:table-cell">Access Role</th>
                   )}
                 </tr>
@@ -205,7 +280,7 @@ export default function AdminPage() {
                         </div>
                       </td>
                       <td className="p-3 text-muted-foreground hidden sm:table-cell" data-testid={`text-username-${u.id}`}>{u.username}</td>
-                      <td className="p-3 text-right font-bold text-chart-4">{u.totalXp}</td>
+                      <td className="p-3 text-right font-bold text-chart-4">{u.totalXp.toLocaleString()}</td>
                       <td className="p-3 text-right font-bold">{u.currentStreak}</td>
                       <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsAnswered}</td>
                       <td className="p-3 text-right text-muted-foreground hidden sm:table-cell">{u.questionsToday}</td>
@@ -217,7 +292,7 @@ export default function AdminPage() {
                       <td className="p-3 text-right text-muted-foreground text-xs hidden lg:table-cell">
                         {formatRelativeTime(u.lastActive)}
                       </td>
-                      {callerIsAdmin && (
+                      {callerIsAdmin && dataMode === "live" && (
                         <td className="p-3 hidden lg:table-cell">
                           <select
                             className="text-xs border border-border rounded-lg px-2 py-1 bg-background font-semibold focus:outline-none focus:ring-1 focus:ring-primary"
@@ -235,7 +310,7 @@ export default function AdminPage() {
                     </tr>
                   );
                 })}
-                {(!stats?.userList || stats.userList.length === 0) && (
+                {(!stats?.userList || stats.userList.length === 0) && dataMode === "live" && (
                   <tr>
                     <td colSpan={12} className="p-8 text-center text-muted-foreground">
                       No users yet. Share the facility code to get started!
@@ -248,7 +323,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {callerIsAdmin && (
+      {callerIsAdmin && dataMode === "live" && (
         <div className="max-w-4xl mx-auto px-4 pb-8 mt-6">
           <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
             <div className="p-5 border-b border-card-border flex items-center gap-2">

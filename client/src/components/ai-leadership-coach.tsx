@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BrainCircuit, Loader2, TrendingUp, Volume2, VolumeX } from "lucide-react";
+import { BrainCircuit, Loader2, TrendingUp, Volume2, VolumeX, FlaskConical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -11,13 +11,61 @@ interface LevelStat {
   avgScore: number;
 }
 
-export function AiLeadershipCoach() {
-  const [insights, setInsights] = useState<string | null>(null);
-  const [levelStats, setLevelStats] = useState<LevelStat[]>([]);
+interface AiLeadershipCoachProps {
+  isDemo?: boolean;
+}
+
+const DEMO_LEVEL_STATS: LevelStat[] = [
+  { levelId: "h1", levelName: "Patient Rights & Responsibilities", attempts: 34, avgScore: 82 },
+  { levelId: "h3", levelName: "Medication Management", attempts: 31, avgScore: 68 },
+  { levelId: "h2", levelName: "Infection Control", attempts: 29, avgScore: 74 },
+  { levelId: "h5", levelName: "Emergency Management", attempts: 18, avgScore: 71 },
+  { levelId: "h4", levelName: "Environment of Care", attempts: 22, avgScore: 88 },
+];
+
+const DEMO_INSIGHTS = `UNIT READINESS SUMMARY — MIDWEST ORTHOPEDIC SPECIALTY HOSPITAL
+
+Overall unit readiness stands at 77% average accuracy across 10 active learners, placing the team in a Moderate Risk preparedness band. Seven staff members were active today, indicating strong daily engagement momentum.
+
+PRIORITY FOCUS AREAS
+▸ Medication Management (68%) — Performance is below the 70% threshold. Recommend targeted review of high-alert medication protocols and two-patient ID verification workflows before the next practice survey.
+▸ Infection Control (74%) — Hand hygiene compliance questions are the most frequently missed. Focus review on WHO 5 Moments and contact precaution entry/exit procedures.
+▸ Emergency Management (71%) — Fire response (RACE/PASS) and code procedures show the highest miss rates. Consider a tabletop drill exercise this quarter.
+
+STRENGTHS
+▸ Environment of Care (88%) and Patient Rights (82%) show strong unit-wide mastery.
+▸ Rachel Kim (90% accuracy, 30-day streak) is performing at mastery level and may be suited for a peer-coaching role.
+▸ 7 of 10 staff completed training today — above the 60% daily engagement benchmark.
+
+RECOMMENDED NEXT STEPS
+1. Schedule a focused 20-minute Medication Management review session this week.
+2. Assign the Infection Control refresher module to the 3 learners below 70% accuracy.
+3. Recognize top performers at next huddle to reinforce engagement momentum.
+
+Survey readiness window: 6–8 weeks with current trajectory.`;
+
+export function AiLeadershipCoach({ isDemo = false }: AiLeadershipCoachProps) {
+  const [insights, setInsights] = useState<string | null>(isDemo ? DEMO_INSIGHTS : null);
+  const [levelStats, setLevelStats] = useState<LevelStat[]>(isDemo ? DEMO_LEVEL_STATS : []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  useEffect(() => {
+    if (isDemo) {
+      setInsights(DEMO_INSIGHTS);
+      setLevelStats(DEMO_LEVEL_STATS);
+    } else {
+      setInsights(null);
+      setLevelStats([]);
+    }
+    setError(null);
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSpeaking(false);
+  }, [isDemo]);
 
   useEffect(() => {
     return () => {
@@ -77,18 +125,25 @@ export function AiLeadershipCoach() {
 
   return (
     <div className="rounded-2xl bg-card border border-card-border overflow-hidden">
-      <div className="p-5 border-b border-card-border">
-        <h3 className="font-bold text-base flex items-center gap-2">
-          <BrainCircuit size={18} className="text-primary" />
-          AI Leadership Coach
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1">
-          Get AI-generated insights on unit readiness, priority focus areas, and actionable next steps for survey prep.
-        </p>
+      <div className="p-5 border-b border-card-border flex items-center justify-between gap-2">
+        <div>
+          <h3 className="font-bold text-base flex items-center gap-2">
+            <BrainCircuit size={18} className="text-primary" />
+            AI Leadership Coach
+          </h3>
+          <p className="text-sm text-muted-foreground mt-1">
+            Get AI-generated insights on unit readiness, priority focus areas, and actionable next steps for survey prep.
+          </p>
+        </div>
+        {isDemo && (
+          <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-orange-500/50 bg-orange-500/15 text-orange-500 flex-shrink-0" data-testid="badge-demo-coach">
+            <FlaskConical size={10} /> Demo
+          </span>
+        )}
       </div>
 
       <div className="p-5">
-        {!insights && !loading && (
+        {!isDemo && !insights && !loading && (
           <Button
             onClick={handleGenerate}
             className="gap-2 w-full"
@@ -137,6 +192,9 @@ export function AiLeadershipCoach() {
                   <div className="flex items-center gap-2">
                     <BrainCircuit size={16} className="text-primary" />
                     <span className="text-sm font-bold text-primary">AI Leadership Insights</span>
+                    {isDemo && (
+                      <span className="text-[10px] font-bold text-orange-500 uppercase tracking-wide">· Sample</span>
+                    )}
                   </div>
                   {typeof window !== "undefined" && window.speechSynthesis && (
                     <Button
@@ -154,21 +212,25 @@ export function AiLeadershipCoach() {
                   {insights}
                 </div>
                 <p className="text-sm text-muted-foreground mt-4 italic" data-testid="text-insights-disclaimer">
-                  Check your organization's policies; this is a learning aid, not clinical guidance.
+                  {isDemo
+                    ? "This is sample data for demonstration purposes. Switch to Live for real facility insights."
+                    : "Check your organization's policies; this is a learning aid, not clinical guidance."}
                 </p>
               </div>
 
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleGenerate}
-                disabled={loading}
-                className="gap-2 self-start"
-                data-testid="button-refresh-insights"
-              >
-                <TrendingUp size={14} />
-                Refresh Report
-              </Button>
+              {!isDemo && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleGenerate}
+                  disabled={loading}
+                  className="gap-2 self-start"
+                  data-testid="button-refresh-insights"
+                >
+                  <TrendingUp size={14} />
+                  Refresh Report
+                </Button>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
