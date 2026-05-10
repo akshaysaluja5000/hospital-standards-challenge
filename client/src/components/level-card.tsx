@@ -150,7 +150,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
           {riskPoints && riskPoints.length > 0 && (
             <div className="mt-4 border-t border-white/10 pt-3">
               <button
-                className="flex items-center gap-1.5 text-red-600 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
+                className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left"
                 onClick={() => setRiskExpanded(!riskExpanded)}
                 data-testid={`button-risk-toggle-${level.id}`}
               >
