@@ -533,66 +533,70 @@ export default function ExecutiveReportPage() {
 
       {/* ── Header ── */}
       <div className="sticky top-[58px] z-40 border-b border-border print:hidden bg-background/95 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
-            <ArrowLeft size={20} />
-          </Button>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <TrendingUp size={16} className="text-primary" />
-              <h2 className="font-bold text-base" data-testid="text-page-title">Executive Readiness Report</h2>
+        <div className="max-w-4xl mx-auto px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          {/* Row 1: back + title */}
+          <div className="flex items-center gap-2 min-w-0">
+            <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
+              <ArrowLeft size={20} />
+            </Button>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2">
+                <TrendingUp size={16} className="text-primary" />
+                <h2 className="font-bold text-base" data-testid="text-page-title">Executive Readiness Report</h2>
+              </div>
+              <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
+                {scopedFacilityName} · {format(TODAY, "MMMM d, yyyy")} · Guided Education Plans
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
-              {scopedFacilityName} · {format(TODAY, "MMMM d, yyyy")} · Guided Education Plans
-            </p>
           </div>
-          <div className="flex gap-2 items-center">
+          {/* Row 2 on mobile / right side on desktop: controls */}
+          <div className="flex gap-2 items-center flex-wrap sm:flex-nowrap sm:ml-auto sm:flex-shrink-0">
             {/* Live / Demo toggle */}
             <div className="flex items-center rounded-lg border border-border bg-white/5 p-0.5" data-testid="container-mode-toggle">
               <button
                 onClick={() => setDataMode("live")}
-                className={`flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-md transition-all ${
+                className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
                   dataMode === "live" ? "bg-green-600 text-white shadow-sm" : "text-muted-foreground hover:text-foreground"
                 }`}
                 data-testid="button-exec-mode-live"
               >
-                <Database size={12} /> Live Data
+                <Database size={11} /> Live
               </button>
               <button
                 onClick={() => setDataMode("demo")}
-                className={`flex items-center gap-1.5 text-sm font-bold px-3 py-1.5 rounded-md transition-all ${
+                className={`flex items-center gap-1 text-xs font-bold px-2.5 py-1.5 rounded-md transition-all ${
                   dataMode === "demo" ? "bg-muted text-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
                 data-testid="button-exec-mode-demo"
               >
-                <FlaskConical size={12} /> Demo
+                <FlaskConical size={11} /> Demo
               </button>
             </div>
-            <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => setFiltersOpen((v) => !v)} data-testid="button-toggle-filters">
-              <Filter size={13} className="mr-1.5" /> Filters {hasFilters && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-primary inline-block" />}
+            <Button variant="ghost" size="sm" className="text-muted-foreground h-8 px-2.5" onClick={() => setFiltersOpen((v) => !v)} data-testid="button-toggle-filters">
+              <Filter size={13} className="mr-1" /> Filters {hasFilters && <span className="ml-1 w-1.5 h-1.5 rounded-full bg-primary inline-block" />}
             </Button>
             {canExportReports ? (
-              <Button variant="outline" size="sm" onClick={() => {
+              <Button variant="outline" size="sm" className="h-8 px-2.5" onClick={() => {
                 exportCsv(filtered, scopedFacilityName);
                 auditLog({ userId: user?.id ?? null, leadershipRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_csv_export", meta: { count: filtered.length } });
               }} data-testid="button-export-csv">
-                <Download size={13} className="mr-1.5" /> CSV
+                <Download size={13} className="mr-1" /> CSV
               </Button>
             ) : (
-              <Button variant="outline" size="sm" disabled title="CEO or Administrator role required to export" data-testid="button-export-csv-locked">
-                <Lock size={13} className="mr-1.5" /> CSV
+              <Button variant="outline" size="sm" className="h-8 px-2.5" disabled title="CEO or Administrator role required to export" data-testid="button-export-csv-locked">
+                <Lock size={13} className="mr-1" /> CSV
               </Button>
             )}
             {canExportReports ? (
-              <Button variant="outline" size="sm" onClick={() => {
+              <Button variant="outline" size="sm" className="h-8 px-2.5" onClick={() => {
                 window.print();
                 auditLog({ userId: user?.id ?? null, leadershipRole, facilityId: scopedFacilityId, facilityName: scopedFacilityName, action: "executive_report_pdf_export" });
               }} data-testid="button-export-pdf">
-                <Printer size={13} className="mr-1.5" /> PDF
+                <Printer size={13} className="mr-1" /> PDF
               </Button>
             ) : (
-              <Button variant="outline" size="sm" disabled title="CEO or Administrator role required to export" data-testid="button-export-pdf-locked">
-                <Lock size={13} className="mr-1.5" /> PDF
+              <Button variant="outline" size="sm" className="h-8 px-2.5" disabled title="CEO or Administrator role required to export" data-testid="button-export-pdf-locked">
+                <Lock size={13} className="mr-1" /> PDF
               </Button>
             )}
           </div>
