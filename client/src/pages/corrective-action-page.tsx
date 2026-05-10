@@ -1214,34 +1214,40 @@ export default function CorrectiveActionPage() {
 
       {/* ── Header ── */}
       <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
-            <ArrowLeft size={20} />
-          </Button>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
-              <GraduationCap size={18} className="text-primary flex-shrink-0" />
-              <h2 className="font-bold text-xl" data-testid="text-page-title">Guided Education Plans</h2>
-              {dataMode === "demo" ? (
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-orange-500/50 bg-orange-500/20 text-orange-500" data-testid="badge-mode-demo">
-                  <FlaskConical size={10} /> Demo Data
-                </span>
-              ) : (
-                <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-green-500/40 bg-green-500/15 text-green-400" data-testid="badge-mode-live">
-                  <Database size={10} /> Live Data
-                </span>
-              )}
+        <div className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 sm:py-4 sm:px-6">
+          {/* Row 1: back + title */}
+          <div className="flex items-center gap-3 min-w-0">
+            <Button variant="ghost" size="icon" onClick={() => setLocation("/leadership")} data-testid="button-back">
+              <ArrowLeft size={20} />
+            </Button>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <GraduationCap size={16} className="text-primary flex-shrink-0" />
+                <h2 className="font-bold text-lg" data-testid="text-page-title">Guided Education Plans</h2>
+                {dataMode === "demo" ? (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-orange-500/50 bg-orange-500/20 text-orange-500" data-testid="badge-mode-demo">
+                    <FlaskConical size={10} /> Demo Data
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border border-green-500/40 bg-green-500/15 text-green-400" data-testid="badge-mode-live">
+                    <Database size={10} /> Live Data
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground truncate" data-testid="text-facility-scope">
+                {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} · Final test only · {PASSING_THRESHOLD}% passing threshold
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground" data-testid="text-facility-scope">
-              {dataMode === "demo" ? "Sample data mode" : scopedFacilityName} · Final test only · {PASSING_THRESHOLD}% passing threshold
-            </p>
           </div>
-          <Button size="lg" variant="outline" onClick={() => setLibraryOpen(true)} data-testid="button-browse-library-header">
-            <Library size={16} className="mr-2" /> Browse Education Library
-          </Button>
-          <Button size="lg" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-header">
-            <Plus size={16} className="mr-2" /> Create Demo Plan
-          </Button>
+          {/* Row 2 on mobile / right side on desktop: action buttons */}
+          <div className="flex gap-2 flex-wrap sm:flex-nowrap sm:ml-auto sm:flex-shrink-0">
+            <Button size="sm" variant="outline" onClick={() => setLibraryOpen(true)} data-testid="button-browse-library-header">
+              <Library size={14} className="mr-1.5" /> Browse Library
+            </Button>
+            <Button size="sm" onClick={() => setCreateOpen(true)} data-testid="button-create-plan-header">
+              <Plus size={14} className="mr-1.5" /> Create Demo Plan
+            </Button>
+          </div>
         </div>
       </div>
 
