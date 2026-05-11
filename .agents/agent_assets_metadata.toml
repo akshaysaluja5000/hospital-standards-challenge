@@ -66,3 +66,9 @@ id = "7wWS6dlGLBIfEwC2hLCP-"
 uri = "file://accreditation-ready-source.zip"
 type = "unspecified"
 title = "Accreditation Ready — Full Source Code"
+
+[[outputs]]
+id = "KwGIALATmg5YARMLU91Af"
+uri = "file://hospital-content-export.txt"
+type = "text"
+title = "Hospital Module Content Export"
