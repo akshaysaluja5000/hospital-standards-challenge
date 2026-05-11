@@ -160,7 +160,7 @@ function AscChapterCard({
           </div>
 
           {riskPoints && riskPoints.length > 0 && (
-            <div className="mt-4 border-t border-white/10 pt-3">
+            <div className="mt-4 border-t border-white/10 pt-3 rounded-lg bg-black/20 px-3 py-2 -mx-1">
               <button
                 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wide hover:opacity-80 transition-opacity w-full text-left text-red-400"
                 onClick={() => setRiskExpanded(!riskExpanded)}
