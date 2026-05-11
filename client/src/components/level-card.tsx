@@ -169,7 +169,7 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
               {riskExpanded && (
                 <ul className="mt-2 flex flex-col gap-1.5" data-testid={`list-risk-points-${level.id}`}>
                   {riskPoints.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-white leading-snug">
+                    <li key={i} className="flex items-start gap-2 text-xs text-red-300 leading-snug">
                       <span className="mt-0.5 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-red-400/80" />
                       {point}
                     </li>
