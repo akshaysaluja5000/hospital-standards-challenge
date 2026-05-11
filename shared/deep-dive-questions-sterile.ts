@@ -222,7 +222,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         "Temperature is too high — must be 68-75°F"
       ],
       baseCorrectIndex: 3,
-      baseExplanation: "Sterile storage temperature must be 68-75°F. At 76°F, the temperature exceeds the upper limit. Humidity of 55% is within the acceptable 20-60% range.",
+      baseExplanation: "Sterile storage temperature must be 68-75°F. At 76°F, the temperature exceeds the upper limit. Humidity of 55% is within the acceptable 30-60% range per AAMI ST79.",
       baseXp: 15,
       followUps: [
         {
@@ -240,13 +240,13 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         {
           question: "After implementing continuous monitoring, the system shows that humidity regularly drops to 15% RH during winter months when the heating system runs heavily. Temperature remains within range. Staff have not noticed any issues with sterile items. Should this be addressed?",
           options: [
-          "The acceptable range is 20-60% but 15% is close enough and no visible issues have occurred",
+          "The acceptable range is 30-60% but 15% is close enough and no visible issues have occurred",
           "Low humidity is not a concern; only high humidity compromises sterile packaging",
           "But only if biological indicators start failing",
           "Humidity below 20% can cause static charge buildup that attracts particulates to"
         ],
         correctIndex: 3,
-          explanation: "The AAMI-recommended humidity range of 20-60% exists for reasons at both ends. Excessively low humidity (below 20%) causes static electricity buildup that attracts airborne particulates to sterile packaging, can desiccate and crack certain packaging materials (especially paper-based wraps), and creates uncomfortable working conditions. The facility must implement humidification controls to maintain humidity within the validated range year-round.",
+          explanation: "The AAMI ST79-recommended humidity range of 30-60% exists for reasons at both ends. Excessively low humidity (below 30%) causes static electricity buildup that attracts airborne particulates to sterile packaging, can desiccate and crack certain packaging materials (especially paper-based wraps), and creates uncomfortable working conditions. The facility must implement humidification controls to maintain humidity within the validated range year-round.",
           expertXp: 30
         },
         {
@@ -512,7 +512,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           "While Joint Commission may not mandate a specific ACH"
         ],
         correctIndex: 3,
-          explanation: "Joint Commission evaluates outcomes and process management, not just prescriptive numbers. Even if a specific ACH is not mandated, the facility must demonstrate that its ventilation design achieves and sustains the required environmental conditions. The engineering rationale should document how the chosen ACH rate, combined with the room's volume, heat load, moisture load, and door-opening frequency, maintains temperature (68-75°F), humidity (20-60%), and positive pressure. Without this documented rationale, the facility cannot demonstrate proactive management of its Environment of Care per EC.02.06.01.",
+          explanation: "Joint Commission evaluates outcomes and process management, not just prescriptive numbers. Even if a specific ACH is not mandated, the facility must demonstrate that its ventilation design achieves and sustains the required environmental conditions. The engineering rationale should document how the chosen ACH rate, combined with the room's volume, heat load, moisture load, and door-opening frequency, maintains temperature (68-75°F), humidity (30-60% per AAMI ST79), and positive pressure. Without this documented rationale, the facility cannot demonstrate proactive management of its Environment of Care per EC.02.06.01.",
           expertXp: 35
         }
       ]
@@ -578,7 +578,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
         "Not acceptable — unless the alcove has a HEPA filtration unit"
       ],
       baseCorrectIndex: 1,
-      baseExplanation: "Sterile storage requires an enclosed area with controlled temperature (68-75°F), humidity (20-60%), restricted access, and protection from environmental contamination. A curtained alcove does not meet these requirements.",
+      baseExplanation: "Sterile storage requires an enclosed area with controlled temperature (68-75°F), humidity (30-60% per AAMI ST79), restricted access, and protection from environmental contamination. A curtained alcove does not meet these requirements.",
       baseXp: 15,
       followUps: [
         {
@@ -614,7 +614,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           "Sterile storage areas sharing an HVAC zone with public corridors cannot independently maintain required"
         ],
         correctIndex: 3,
-          explanation: "Sharing an HVAC zone with a public corridor means the sterile storage room cannot independently control temperature, humidity, pressure relationship, filtration, or air changes. Public hallway HVAC is designed for occupant comfort, not sterile storage requirements. The room needs its own HVAC zone (or at minimum, a dedicated branch with appropriate filtration, pressure control, and independent thermostat/humidistat) to reliably maintain the 68-75°F, 20-60% RH, positive pressure environment required for sterile storage. Per ASHRAE 170 and Joint Commission EC standards, the ventilation design must match the room's intended function.",
+          explanation: "Sharing an HVAC zone with a public corridor means the sterile storage room cannot independently control temperature, humidity, pressure relationship, filtration, or air changes. Public hallway HVAC is designed for occupant comfort, not sterile storage requirements. The room needs its own HVAC zone (or at minimum, a dedicated branch with appropriate filtration, pressure control, and independent thermostat/humidistat) to reliably maintain the 68-75°F, 30-60% RH (AAMI ST79), positive pressure environment required for sterile storage. Per ASHRAE 170 and Joint Commission EC standards, the ventilation design must match the room's intended function.",
           expertXp: 35
         }
       ]

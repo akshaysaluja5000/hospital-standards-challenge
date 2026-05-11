@@ -231,10 +231,10 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Environmental Controls",
-        content: "Sterile storage areas require specific environmental conditions that must be monitored and documented. Temperature must be maintained between 68-75°F (20-24°C). Relative humidity must be kept between 20-60%. These ranges prevent condensation (which can wet and compromise sterile packaging), inhibit microbial growth, and maintain packaging material integrity. Temperature and humidity must be checked and logged daily (or continuously monitored with an automated system). If conditions fall outside these ranges, a corrective action plan must be implemented. Excessive humidity is particularly dangerous because moisture can wick through packaging materials and compromise sterility.",
+        content: "Sterile storage areas require specific environmental conditions that must be monitored and documented. Temperature must be maintained between 68-75°F (20-24°C). Relative humidity must be kept between 30-60% per AAMI ST79. These ranges prevent condensation (which can wet and compromise sterile packaging), inhibit microbial growth, and maintain packaging material integrity. Temperature and humidity must be checked and logged daily (or continuously monitored with an automated system). If conditions fall outside these ranges, a corrective action plan must be implemented. Excessive humidity is particularly dangerous because moisture can wick through packaging materials and compromise sterility.",
         criticalValues: [
           { label: "Temperature", value: "68-75°F (20-24°C)" },
-          { label: "Humidity", value: "20-60% relative humidity" },
+          { label: "Humidity", value: "30-60% relative humidity (AAMI ST79)" },
           { label: "Monitoring", value: "Daily checks with documentation" },
           { label: "Humidity risk", value: "Moisture wicks through packaging, breaks sterile barrier" }
         ]
@@ -263,7 +263,7 @@ export const handbook: HandbookChapter[] = [
       { fact: "Sterility principle", detail: "Event-related — sterile until an event compromises the package" },
       { fact: "Corrugated cardboard", detail: "NEVER allowed in sterile storage, OR, or SPD" },
       { fact: "Temperature range", detail: "68-75°F (20-24°C)" },
-      { fact: "Humidity range", detail: "20-60% relative humidity" },
+      { fact: "Humidity range", detail: "30-60% relative humidity (AAMI ST79)" },
       { fact: "Floor clearance", detail: "8-10 inches on bottom shelf" },
       { fact: "Sprinkler clearance", detail: "18 inches below sprinkler heads" },
       { fact: "Peel packs", detail: "Maximum 2 high" },
@@ -319,14 +319,14 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "FDA Compliance & Single-Use Instruments",
-        content: "All surgical instruments used in the facility must be FDA-cleared for their intended use. This means the manufacturer has demonstrated the instrument's safety and effectiveness to the FDA. Instruments marked with a Pakistan origin stamp or that lack FDA clearance documentation are considered single-use only and must never be reprocessed (cleaned and re-sterilized for another patient). Using non-FDA-cleared instruments as reusable devices is a serious regulatory violation. Additionally, single-use devices (marked with a '2' with a line through it symbol) must be discarded after one use — they cannot be reprocessed even if they appear undamaged.",
+        content: "All surgical instruments used in the facility must be FDA-cleared for their intended use. Single-use designation is determined entirely by manufacturer labeling — specifically the single-use symbol (a '2' with a line through it) or explicit 'Do Not Reprocess' language on the label. Country of origin does not determine single-use status. Single-use instruments must never be placed in peel packs for in-house reprocessing, regardless of where they were manufactured. Single-use devices may only be reprocessed by FDA-registered third-party reprocessors — never in-house. Using a single-use device as a reusable instrument without FDA-registered reprocessing is a serious regulatory violation.",
         criticalValues: [
           { label: "FDA requirement", value: "ALL instruments must be FDA-cleared" },
-          { label: "Pakistan-marked instruments", value: "Single-use ONLY — do not reprocess" },
           { label: "Single-use symbol", value: "'2' with line through it = discard after one use" },
+          { label: "Single-use determination", value: "Manufacturer label only — not country of origin" },
           { label: "Peel pack eligibility", value: "Only FDA-cleared reusable instruments" }
         ],
-        thinkAboutIt: "A new shipment of instruments arrives and some are labeled 'Made in Pakistan' with no FDA clearance documentation. A surgeon wants to use them repeatedly because they look identical to the FDA-cleared version. What's the correct response?"
+        thinkAboutIt: "A shipment of instruments arrives bearing the single-use symbol. A surgeon wants to use them repeatedly because they look identical to the FDA-cleared reusable version. What's the correct response, and where does the single-use determination come from?"
       }
     ],
     quickReference: [
@@ -337,7 +337,7 @@ export const handbook: HandbookChapter[] = [
       { fact: "Peel pack seal", detail: "Must be intact, continuous, no channels" },
       { fact: "Chemical indicator", detail: "Must show proper color change" },
       { fact: "FDA compliance", detail: "ALL instruments must be FDA-cleared" },
-      { fact: "Pakistan instruments", detail: "Single-use only — never reprocess" }
+      { fact: "Single-use instruments", detail: "Determined by manufacturer label (symbol or 'Do Not Reprocess') — never reprocess in-house" }
     ]
   },
   {

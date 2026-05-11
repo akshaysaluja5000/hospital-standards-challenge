@@ -1192,8 +1192,8 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         title: "What Temperature and Humidity Must Sterile Storage Maintain?",
-        content: "Sterile storage rooms must maintain temperature between 68–75°F and relative humidity between 20–60%. These ranges prevent condensation and environmental degradation that could compromise package integrity. Monitoring must be documented.",
-        keyPoint: "Sterile storage: 68–75°F temp, 20–60% humidity. Monitored and documented.",
+        content: "Sterile storage rooms must maintain temperature between 68–75°F and relative humidity between 30–60% per AAMI ST79. These ranges prevent condensation and environmental degradation that could compromise package integrity. Monitoring must be documented.",
+        keyPoint: "Sterile storage: 68–75°F temp, 30–60% humidity (AAMI ST79). Monitored and documented.",
         category: "number",
       },
       {
@@ -1255,10 +1255,10 @@ const hospitalLevelsRaw: Level[] = [
           "The temperature exceeds the 68-75°F requirement for sterile storage areas",
           "A 1-degree variance above range is within acceptable tolerance if humidity is compliant",
           "The humidity at 55% exceeds the 50% maximum for sterile storage environments",
-          "Both readings fall within the acceptable 65-80°F temperature and 20-60% humidity ranges"
+          "Both readings fall within the acceptable 65-80°F temperature and 30-60% humidity ranges"
         ],
         correctIndex: 0,
-        explanation: "Sterile storage must maintain 68-75°F and 20-60% humidity. While the humidity (55%) is within range, the temperature (76°F) exceeds the 75°F maximum.",
+        explanation: "Sterile storage must maintain 68-75°F and 30-60% humidity per AAMI ST79. While the humidity (55%) is within range, the temperature (76°F) exceeds the 75°F maximum.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -1398,7 +1398,7 @@ const hospitalLevelsRaw: Level[] = [
           "The temperature should be maintained between 60-68°F for optimal sterile storage conditions"
         ],
         correctIndex: 1,
-        explanation: "Both readings are within acceptable parameters: temperature 68-75°F (72°F is compliant) and humidity 20-60% (45% is compliant).",
+        explanation: "Both readings are within acceptable parameters: temperature 68-75°F (72°F is compliant) and humidity 30-60% per AAMI ST79 (45% is compliant).",
         xpReward: 10,
         isSwipe: false,
       },
@@ -1436,11 +1436,11 @@ const hospitalLevelsRaw: Level[] = [
         options: [
           "One — the temperature at 73°F exceeds the 72°F maximum for sterile storage",
           "Zero — all parameters including humidity are within the acceptable 20-65% range",
-          "One — the humidity exceeds the 20-60% maximum",
+          "One — the humidity exceeds the 30-60% maximum",
           "Two — the humidity exceeds the maximum and the 19-inch sprinkler clearance does not meet the 24-inch requirement"
         ],
         correctIndex: 2,
-        explanation: "The humidity at 62% exceeds the 20-60% acceptable range. Everything else is compliant: wire shelving with solid bottom (correct), 9 inches off floor (meets 8-10 inch minimum), 19 inches below sprinklers (exceeds 18-inch minimum), 73°F (within 68-75°F), no cardboard.",
+        explanation: "The humidity at 62% exceeds the 30-60% acceptable range per AAMI ST79. Everything else is compliant: wire shelving with solid bottom (correct), 9 inches off floor (meets 8-10 inch minimum), 19 inches below sprinklers (exceeds 18-inch minimum), 73°F (within 68-75°F), no cardboard.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -1569,8 +1569,8 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         title: "Can Single-Use Instruments Be Reprocessed In-House?",
-        content: "All instruments must have proper FDA clearance. 'Pakistan-marked' instruments are single-use only and must never be placed in peel packs for reprocessing. Single-use items can only be reprocessed by FDA-registered third-party reprocessors — never in-house.",
-        keyPoint: "Pakistan-marked = single use only. Never in peel packs. No in-house reprocessing of disposables.",
+        content: "Single-use designation is determined entirely by manufacturer labeling — specifically the single-use symbol (a '2' with a line through it) or explicit 'Do Not Reprocess' language on the label. Country of origin does not determine single-use status. Instruments labeled as single-use must never be placed in peel packs for in-house reprocessing. Single-use devices may only be reprocessed by FDA-registered third-party reprocessors — never in-house.",
+        keyPoint: "Single-use = manufacturer label (single-use symbol or 'Do Not Reprocess'). Never in peel packs in-house. Only FDA-registered third-party reprocessors.",
         category: "rule",
       },
       {
@@ -1649,15 +1649,15 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         id: "i4",
-        question: "A tech finds an instrument marked 'Made in Pakistan' in a peel pack ready for a surgical case. What should be done?",
+        question: "A tech finds an instrument bearing the single-use symbol (the number 2 with a line through it) in a peel pack ready for a surgical case. What should be done?",
         options: [
-          "Remove it — Pakistan-marked instruments are single-use and must never be in peel packs for reuse",
+          "Remove it — the manufacturer's single-use designation means this instrument must never be in a peel pack for in-house reprocessing",
           "Flag it for review — the instrument can be used for this case but must be evaluated before the next reprocessing cycle",
           "Use it — if it's in a peel pack with a changed indicator, it was processed and sterilized correctly",
-          "Use it — country of origin does not affect instrument eligibility as long as the facility's SPD validated the reprocessing cycle"
+          "Use it — the single-use symbol applies only to soft goods (gloves, drapes), not rigid instruments"
         ],
         correctIndex: 0,
-        explanation: "Pakistan-marked instruments are single-use only and lack FDA clearance for reprocessing. Finding one in a peel pack is a serious finding — it must be removed immediately.",
+        explanation: "Single-use designation is determined by the manufacturer's label — the single-use symbol or 'Do Not Reprocess' language — not by country of origin. A single-use instrument in a peel pack for in-house reprocessing is a serious compliance finding. It must be removed immediately. Only FDA-registered third-party reprocessors may reprocess single-use devices.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -3951,15 +3951,15 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         id: "eoc9",
-        question: "Open glucose test strips have a date written on the container showing they were opened 2 weeks ago. The manufacturer states a 90-day open expiration. Are these test strips acceptable?",
+        question: "Open glucose test strips have a date written on the container showing they were opened 2 weeks ago. The manufacturer's IFU specifies the open-vial expiration, and 2 weeks falls well within that window. Are these test strips acceptable?",
         options: [
-          "They are dated and within the manufacturer's open expiration",
-          "All glucose test strips expire 14 days after opening regardless of manufacturer specifications",
+          "Yes — they are dated at opening and within the manufacturer's IFU-specified open-vial expiration",
+          "No — all glucose test strips expire 14 days after opening regardless of manufacturer specifications",
           "The open date alone is insufficient; strips must also have a calculated expiration date written on the container",
           "Glucose test strips must be individually packaged and used within 24 hours of opening per point-of-care testing standards"
         ],
         correctIndex: 0,
-        explanation: "The test strips ARE acceptable. They are properly dated when opened and within the manufacturer's specified 90-day open expiration. The key is they must be dated AND within the stated expiration.",
+        explanation: "The test strips are acceptable. They are properly dated at opening and within the manufacturer's IFU-specified open-vial expiration. Open-vial expiration varies by product — always follow the manufacturer's IFU. The key requirements are: (1) date the container when opened, and (2) use within the manufacturer's stated expiration window.",
         xpReward: 15,
         isSwipe: false,
       },

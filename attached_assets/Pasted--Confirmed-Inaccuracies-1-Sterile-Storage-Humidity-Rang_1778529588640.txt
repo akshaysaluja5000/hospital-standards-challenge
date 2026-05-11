@@ -1,0 +1,40 @@
+🔴 Confirmed Inaccuracies
+1. Sterile Storage Humidity Range — Chapter: Sterile Storage
+Document states: 20–60% relative humidity
+Correct per AAMI ST79:2017: 30–60% relative humidity
+This is a real discrepancy. AAMI ST79 (the standard JC defers to for sterile processing) specifies a minimum of 30%, not 20%. The 20% lower bound appears to be a confusion with OR humidity standards (which do use 20–60% per ASHRAE 170).
+Impact: Quiz questions in the Sterile Storage chapter that test the humidity range will produce incorrect answers. Specifically, Q12 (72°F / 45% scenario) and Q15 (62% humidity scenario) are built around the stated range — the underlying logic still works, but the stated floor is wrong and could confuse trained SPD staff who know the AAMI standard.
+Fix: Change all sterile storage humidity references from 20–60% to 30–60%.
+
+2. "Pakistan-Marked" Instruments Language — Chapter: Instrument Integrity
+Document states: "'Pakistan-marked' instruments are single-use only and must never be placed in peel packs for reprocessing."
+This is factually inaccurate and potentially harmful to include in a compliance training platform.
+Single-use designation is determined entirely by manufacturer labeling — the single-use symbol (a circle with a line through "2," or explicit "Do Not Reuse" language on the label) — not by country of manufacture. Instruments manufactured in Pakistan can be fully reusable if labeled as such. Instruments manufactured in the US, Germany, or Japan can be single-use. The "Pakistan-marked" framing doesn't exist in any JC, FDA, or AAMI standard.
+This language likely originates from a historical clinical shorthand that conflated cheap single-use instruments (which happened to come from certain manufacturers) with country of origin, but it's never been a regulatory standard. Including it in formal compliance training:
+
+Is factually wrong per FDA regulations on single-use device classification
+Could expose the platform to discrimination-adjacent claims
+Will be incorrect for any surveyor or SPD professional who knows the actual standard
+
+Fix: Replace with accurate language: "Instruments labeled by the manufacturer as single-use (bearing the single-use symbol or 'Do Not Reprocess' designation) must never be placed in peel packs for in-house reprocessing. Single-use devices may only be reprocessed by FDA-registered third-party reprocessors." This appears correctly in other parts of the chapter but Study Concept [5] and Q4 need updating.
+
+🟡 Potential Issues Worth Verifying
+3. Sterile Storage Temperature Lower Bound
+Document states: 68–75°F
+AAMI ST79:2017 states: 64–75°F (18–24°C)
+Your document uses a more conservative lower bound. This is commonly taught and some facilities operationalize at 68°F minimum, so it won't cause survey failures — but technically AAMI permits storage down to 64°F. If you're citing AAMI ST79 as your reference, the range should be 64–75°F.
+
+4. OR Temperature Range
+Document states (EOC chapter): 68–73°F
+ASHRAE 170 and many AORN guidelines: 68–75°F
+The 68–73°F range is widely taught and used in surveyor training, and JC surveyors commonly apply it, so this is unlikely to cause a problem in practice. But the formal ASHRAE 170 standard for surgical suites is 68–75°F. Some facilities set internal policy at 68–73°F, which is fine — just be aware this is a facility-policy-level standard, not the literal ASHRAE number.
+
+5. Grievance 7-Day Response Window
+Document attributes this to JC, but the specific 7-day timeframe comes from CMS Conditions of Participation (42 CFR §482.13), not JC's own standards. JC requires "timely" written response and tracks CMS compliance, but doesn't independently define 7 days.
+For any hospital that is both JC-accredited and CMS-certified (nearly all are), the practical answer is the same. But technically, for your AAAHC platform specifically, this is worth checking — AAAHC grievance response standards may state a different timeframe.
+
+6. Peel Pack Storage Orientation ("Paper Side Up")
+Document states this as a rule. AAMI ST79 doesn't explicitly mandate paper-side-up vs. paper-side-down storage. The rationale in the document (visual inspection without handling) is sound and widely taught, but it's institutional best practice rather than a citable JC/AAMI standard. Low risk, but don't cite it as a regulatory requirement if challenged.
+
+7. Glucose Test Strips 90-Day Open Expiration
+One quiz answer references a "manufacturer-specified 90-day open expiration" for glucose test strips. This is manufacturer-specific, not a JC standard. Some strips expire 30 days after opening, some 90 days, some 180 days — it depends on the product. The training should reference manufacturer IFU rather than stating a specific number, or remove the 90-day figure entirely.

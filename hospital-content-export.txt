@@ -1,6 +1,6 @@
 ================================================================================
 ACCREDITATION READY — HOSPITAL MODULE CONTENT EXPORT
-Generated: 2026-05-11T19:54:30.940Z
+Generated: 2026-05-11T20:04:42.567Z
 ================================================================================
 
 Total chapters: 17
@@ -687,8 +687,8 @@ Key Operational Expectations:
     Key Point: Wire shelves, solid bottom shelf, 8–10" off floor, no wall contact, max 2 high stacking.
 
 [5] What Temperature and Humidity Must Sterile Storage Maintain? (number)
-    Content: Sterile storage rooms must maintain temperature between 68–75°F and relative humidity between 20–60%. These ranges prevent condensation and environmental degradation that could compromise package integrity. Monitoring must be documented.
-    Key Point: Sterile storage: 68–75°F temp, 20–60% humidity. Monitored and documented.
+    Content: Sterile storage rooms must maintain temperature between 68–75°F and relative humidity between 30–60% per AAMI ST79. These ranges prevent condensation and environmental degradation that could compromise package integrity. Monitoring must be documented.
+    Key Point: Sterile storage: 68–75°F temp, 30–60% humidity (AAMI ST79). Monitored and documented.
 
 [6] How Far Below Sprinkler Deflectors Must Stored Items Be? (number)
     Content: Sterile supplies and all stored items must be at least 18 inches below sprinkler deflectors. This ensures sprinklers can distribute water effectively in a fire emergency. Items stacked too high blocking sprinkler coverage is both a fire safety and sterile storage finding.
@@ -726,8 +726,8 @@ Q2: undefined
   A) The temperature exceeds the 68-75°F requirement for sterile storage areas
   B) A 1-degree variance above range is within acceptable tolerance if humidity is compliant
   C) The humidity at 55% exceeds the 50% maximum for sterile storage environments
-  D) Both readings fall within the acceptable 65-80°F temperature and 20-60% humidity ranges
-  Explanation: Sterile storage must maintain 68-75°F and 20-60% humidity. While the humidity (55%) is within range, the temperature (76°F) exceeds the 75°F maximum.
+  D) Both readings fall within the acceptable 65-80°F temperature and 30-60% humidity ranges
+  Explanation: Sterile storage must maintain 68-75°F and 30-60% humidity per AAMI ST79. While the humidity (55%) is within range, the temperature (76°F) exceeds the 75°F maximum.
 
 Q3: undefined
   A) Per NFPA 25 Section 5.2.1, supplies must be at least 24 inches below sprinkler deflectors to maintain proper spray distribution
@@ -797,7 +797,7 @@ Q12: undefined
   B) Both temperature and humidity are within the acceptable ranges for sterile storage
   C) The humidity at 45% exceeds the 40% maximum required for sterile storage environments
   D) The temperature should be maintained between 60-68°F for optimal sterile storage conditions
-  Explanation: Both readings are within acceptable parameters: temperature 68-75°F (72°F is compliant) and humidity 20-60% (45% is compliant).
+  Explanation: Both readings are within acceptable parameters: temperature 68-75°F (72°F is compliant) and humidity 30-60% per AAMI ST79 (45% is compliant).
 
 Q13: undefined
   A) The indicator is a slow-reacting type that requires a 24-hour waiting period before reading the final color
@@ -816,9 +816,9 @@ Q14: undefined
 Q15: undefined
   A) One — the temperature at 73°F exceeds the 72°F maximum for sterile storage
   B) Zero — all parameters including humidity are within the acceptable 20-65% range
-  C) One — the humidity exceeds the 20-60% maximum
+  C) One — the humidity exceeds the 30-60% maximum
   D) Two — the humidity exceeds the maximum and the 19-inch sprinkler clearance does not meet the 24-inch requirement
-  Explanation: The humidity at 62% exceeds the 20-60% acceptable range. Everything else is compliant: wire shelving with solid bottom (correct), 9 inches off floor (meets 8-10 inch minimum), 19 inches below sprinklers (exceeds 18-inch minimum), 73°F (within 68-75°F), no cardboard.
+  Explanation: The humidity at 62% exceeds the 30-60% acceptable range per AAMI ST79. Everything else is compliant: wire shelving with solid bottom (correct), 9 inches off floor (meets 8-10 inch minimum), 19 inches below sprinklers (exceeds 18-inch minimum), 73°F (within 68-75°F), no cardboard.
 
 Q16: undefined
   A) An instrument shifting inside the pack may have compromised the seal from the inside; the pack should be inspected more carefully or reprocessed
@@ -898,8 +898,8 @@ Key Operational Expectations:
     Key Point: Six checks before opening: seal, CI color, open position, condition, no crush, max 2 high.
 
 [5] Can Single-Use Instruments Be Reprocessed In-House? (rule)
-    Content: All instruments must have proper FDA clearance. 'Pakistan-marked' instruments are single-use only and must never be placed in peel packs for reprocessing. Single-use items can only be reprocessed by FDA-registered third-party reprocessors — never in-house.
-    Key Point: Pakistan-marked = single use only. Never in peel packs. No in-house reprocessing of disposables.
+    Content: Single-use designation is determined entirely by manufacturer labeling — specifically the single-use symbol (a '2' with a line through it) or explicit 'Do Not Reprocess' language on the label. Country of origin does not determine single-use status. Instruments labeled as single-use must never be placed in peel packs for in-house reprocessing. Single-use devices may only be reprocessed by FDA-registered third-party reprocessors — never in-house.
+    Key Point: Single-use = manufacturer label (single-use symbol or 'Do Not Reprocess'). Never in peel packs in-house. Only FDA-registered third-party reprocessors.
 
 [6] Why Is Lighted Magnification Required at Assembly Stations? (rule)
     Content: Lighted magnification must be available and used at instrument assembly and inspection stations. It enables detection of rust, etching, pitting, and micro-cracks invisible to the naked eye. The absence of lighted magnification at an inspection station is itself a compliance finding.
@@ -944,11 +944,11 @@ Q3: undefined
   Explanation: Surface etching indicates chemical damage from improper cleaning solutions. It appears as rough, dull, or frosted areas where bacteria can hide in microscopic irregularities.
 
 Q4: undefined
-  A) Remove it — Pakistan-marked instruments are single-use and must never be in peel packs for reuse
+  A) Remove it — the manufacturer's single-use designation means this instrument must never be in a peel pack for in-house reprocessing
   B) Flag it for review — the instrument can be used for this case but must be evaluated before the next reprocessing cycle
   C) Use it — if it's in a peel pack with a changed indicator, it was processed and sterilized correctly
-  D) Use it — country of origin does not affect instrument eligibility as long as the facility's SPD validated the reprocessing cycle
-  Explanation: Pakistan-marked instruments are single-use only and lack FDA clearance for reprocessing. Finding one in a peel pack is a serious finding — it must be removed immediately.
+  D) Use it — the single-use symbol applies only to soft goods (gloves, drapes), not rigid instruments
+  Explanation: Single-use designation is determined by the manufacturer's label — the single-use symbol or 'Do Not Reprocess' language — not by country of origin. A single-use instrument in a peel pack for in-house reprocessing is a serious compliance finding. It must be removed immediately. Only FDA-registered third-party reprocessors may reprocess single-use devices.
 
 Q5: undefined
   A) The biological indicator results for the corresponding load must be confirmed before any pack from that load can be used
@@ -2225,11 +2225,11 @@ Q8: undefined
   Explanation: Pill cutters and crushers must be cleaned and free of medication residue between uses to prevent cross-contamination between different patients' medications.
 
 Q9: undefined
-  A) They are dated and within the manufacturer's open expiration
-  B) All glucose test strips expire 14 days after opening regardless of manufacturer specifications
+  A) Yes — they are dated at opening and within the manufacturer's IFU-specified open-vial expiration
+  B) No — all glucose test strips expire 14 days after opening regardless of manufacturer specifications
   C) The open date alone is insufficient; strips must also have a calculated expiration date written on the container
   D) Glucose test strips must be individually packaged and used within 24 hours of opening per point-of-care testing standards
-  Explanation: The test strips ARE acceptable. They are properly dated when opened and within the manufacturer's specified 90-day open expiration. The key is they must be dated AND within the stated expiration.
+  Explanation: The test strips are acceptable. They are properly dated at opening and within the manufacturer's IFU-specified open-vial expiration. Open-vial expiration varies by product — always follow the manufacturer's IFU. The key requirements are: (1) date the container when opened, and (2) use within the manufacturer's stated expiration window.
 
 Q10: undefined
   A) Both visual and auditory privacy measures are in place
