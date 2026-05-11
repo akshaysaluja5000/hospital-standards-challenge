@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /leadership
+Disallow: /educator
+Disallow: /mfa-setup
+Disallow: /mfa-verify
+
+Sitemap: https://accreditationready.ai/sitemap.xml
