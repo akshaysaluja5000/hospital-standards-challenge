@@ -596,7 +596,7 @@ export default function DashboardPage() {
                   value={searchQuery}
                   onChange={(e) => { setSearchQuery(e.target.value); setSearchOpen(true); }}
                   onFocus={() => setSearchOpen(true)}
-                  className="w-full pl-10 pr-10 py-3 rounded-2xl border-2 border-primary/40 bg-background text-sm font-semibold placeholder:text-foreground/50 placeholder:font-bold focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all shadow-sm"
+                  className="w-full pl-10 pr-10 py-3 rounded-2xl border-2 border-primary/40 bg-background text-sm font-semibold placeholder:text-foreground/75 placeholder:font-bold focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all shadow-sm"
                   data-testid="input-search"
                 />
                 {searchQuery && (
