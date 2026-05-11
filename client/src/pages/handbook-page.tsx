@@ -320,7 +320,7 @@ export default function HandbookPage() {
           <Search size={17} className="absolute left-3 top-1/2 -translate-y-1/2 text-primary pointer-events-none z-10" />
           <Input
             placeholder="Search topics, rules, values..."
-            className="pl-10 border-2 border-primary/40 bg-background font-semibold placeholder:text-foreground/50 placeholder:font-medium focus:border-primary focus-visible:ring-primary/40 shadow-sm"
+            className="pl-10 border-2 border-primary/40 bg-background font-semibold placeholder:text-foreground/50 placeholder:font-bold focus:border-primary focus-visible:ring-primary/40 shadow-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             data-testid="input-handbook-search"
