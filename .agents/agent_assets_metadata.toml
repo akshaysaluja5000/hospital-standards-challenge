@@ -72,3 +72,9 @@ id = "KwGIALATmg5YARMLU91Af"
 uri = "file://hospital-content-export.txt"
 type = "text"
 title = "Hospital Module Content — Corrected Export"
+
+[[outputs]]
+id = "hzNb5AICz-XhEy6D-pRW2"
+uri = "file://docs/audit-prompts.md"
+type = "text"
+title = "Content Audit Prompt Library — All 8 Prompts"
