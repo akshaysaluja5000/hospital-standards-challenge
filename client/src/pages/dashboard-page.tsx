@@ -49,6 +49,7 @@ function AscChapterCard({
   onStudy: (quizId: string) => void;
   onDeepDive: () => void;
 }) {
+  const [, setLocation] = useLocation();
   const [riskExpanded, setRiskExpanded] = useState(false);
   const quizId = chapter.quizLevelId;
   const quizLevel = quizId ? findLevelById(quizId) : undefined;
@@ -112,6 +113,16 @@ function AscChapterCard({
                 <FileText size={15} />
                 Read in Handbook
               </button>
+              {quizId && quizLevel?.chapterSummary && (
+                <button
+                  onClick={() => setLocation(`/study/${quizId}?view=summary`)}
+                  data-testid={`button-asc-overview-${chapter.levelId}`}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+                >
+                  <BookOpen size={15} />
+                  Chapter Overview
+                </button>
+              )}
               {hasFlashcards && quizId && (
                 <button
                   onClick={() => onStudy(quizId)}

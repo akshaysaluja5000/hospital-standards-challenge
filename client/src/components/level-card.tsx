@@ -95,6 +95,14 @@ export function LevelCard({ level, progress, savedSession, index, onPlay, onStud
             {/* Study tools */}
             <div className="flex gap-2 flex-wrap">
               <button
+                onClick={() => setLocation(`/study/${level.id}?view=summary`)}
+                data-testid={`button-overview-${level.id}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
+              >
+                <BookOpen size={15} />
+                Chapter Overview
+              </button>
+              <button
                 onClick={onStudy}
                 data-testid={`button-study-${level.id}`}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useRoute, useLocation } from "wouter";
+import { useRoute, useLocation, useSearch } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Play,
@@ -96,7 +96,9 @@ export default function StudyPage() {
   const levelId = params?.levelId;
   const level = useMemo(() => findLevelById(levelId ?? ""), [levelId]);
 
-  const [view, setView] = useState<"summary" | "concepts">("concepts");
+  const searchStr = useSearch();
+  const initialView = new URLSearchParams(searchStr).get("view") === "summary" ? "summary" : "concepts";
+  const [view, setView] = useState<"summary" | "concepts">(initialView);
   const [flipped, setFlipped] = useState(false);
   const [sessionDone, setSessionDone] = useState(false);
   const [howItWorksOpen, setHowItWorksOpen] = useState(true);
