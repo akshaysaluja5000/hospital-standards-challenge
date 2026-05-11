@@ -22,7 +22,7 @@ const hospitalLevelsRaw: Level[] = [
         "Gross bioburden left on instruments — dried-on tissue and blood makes SPD decontamination significantly less effective.",
         "Hinged instruments locked closed during transport, blocking cleaning solution from reaching box locks and jaw areas.",
         "Lids left unsecured on transport containers, creating splash and contamination risk in soiled corridors.",
-        "Transport through clean corridors or shared elevators with clean supply carts.",
+        "Transport through clean corridors or patient care areas — soiled instruments must use designated soiled pathways only.",
         "Clean red bins stored in the soiled utility room instead of the clean supply room.",
       ],
       cmsTags: ["IC.02.02.01", "ST79"],
@@ -357,15 +357,15 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         id: "t19",
-        question: "A facility has one elevator shared by clean and soiled transport. A tech waits for the elevator with a soiled instrument container. A clean supply cart arrives at the same time. Can they share the elevator?",
+        question: "A facility has one elevator shared by clean and soiled transport. A tech waits for the elevator with a properly sealed soiled instrument container. A clean supply cart arrives at the same time. Can they share the elevator?",
         options: [
-          "Shared elevators are permitted if the soiled container is placed on the opposite side from clean supplies",
-          "Clean and soiled items must never share the same transport conveyance simultaneously",
-          "A sealed soiled container poses no cross-contamination risk to clean supplies in the same elevator",
-          "Shared transport is acceptable as long as the soiled items are loaded last and unloaded first"
+          "No — clean and soiled items must never share any transport conveyance under any circumstances",
+          "Yes — a properly sealed soiled container in a closed, leak-proof container does not pose cross-contamination risk and may share an elevator with clean supplies",
+          "Yes, but only if the soiled container is loaded last and unloaded first",
+          "Only if there is a physical barrier separating the two carts inside the elevator"
         ],
         correctIndex: 1,
-        explanation: "Clean and soiled items must be transported separately. Even with a secured lid, placing soiled containers in the same elevator as clean supplies creates cross-contamination risk. One must wait for a separate trip.",
+        explanation: "JC does not prohibit shared elevator use when soiled instruments are in a properly sealed, closed, leak-proof container. Citations occur when soiled items are transported uncovered or improperly contained — not simply because they share an elevator with clean supplies. The core compliance requirement is proper containment, not dedicated elevator use. Facilities with separate dedicated soiled elevators exceed the standard; single shared elevators are acceptable when containers are properly sealed.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -765,18 +765,18 @@ const hospitalLevelsRaw: Level[] = [
     requiredScore: 60,
     chapterSummary: {
       chapterTitle: "Clean vs. Dirty Segregation",
-      plainLanguageSummary: "Clean and soiled items must never share the same pathways, storage areas, or transport conveyances. This applies to corridors, elevators, utility rooms, and how staff handle items after touching soiled materials.",
+      plainLanguageSummary: "Clean and soiled items must be strictly separated in storage areas, corridors, and utility rooms. Soiled items must travel designated soiled pathways. When soiled instruments are in properly sealed, leak-proof containers, shared elevator use is acceptable — citations occur for improper containment, not elevator sharing per se.",
       keyOperationalExpectations: [
-        "Clean and soiled items must be physically separated — different corridors, rooms, and transport trips.",
+        "Clean and soiled items must be physically separated — different corridors and rooms.",
         "Soiled utility rooms are for soiled items only — clean supplies must never be stored or staged there.",
         "Clean supply rooms are for clean items only — soiled items must never enter.",
         "Staff must change gloves and perform hand hygiene after handling soiled items before touching clean supplies.",
-        "Clean and soiled items must never share the same elevator trip simultaneously.",
+        "Soiled instruments must be in sealed, leak-proof containers at all times during transport — this is what prevents citation, not the choice of elevator.",
       ],
       commonRiskPoints: [
         "Clean supplies stored in or passed through soiled utility rooms during workflow shortcuts.",
         "Staff handling soiled items and then touching clean supply packaging without changing gloves.",
-        "Clean and soiled carts sharing the same elevator simultaneously.",
+        "Soiled instrument containers transported without a secured lid — uncovered soiled items in any shared space are a citation regardless of elevator use.",
         "Soiled instrument containers staged temporarily in clean corridors while waiting for transport.",
         "Soiled utility rooms used for both soiled disposal and clean supply staging due to space constraints.",
       ],
@@ -785,8 +785,8 @@ const hospitalLevelsRaw: Level[] = [
     studyMaterial: [
       {
         title: "What Is the Core Clean/Dirty Separation Principle?",
-        content: "The core principle: clean and soiled items must be strictly separated at all times, in all locations — storage rooms, sinks, transport pathways, and workflows. Clean items must never pass through soiled areas, and soiled items must never enter clean spaces.",
-        keyPoint: "Clean and soiled must NEVER share space, sinks, or pathways. This is absolute.",
+        content: "The core principle: clean and soiled items must be strictly separated in storage rooms, sinks, utility rooms, and corridors. Clean items must never pass through soiled areas, and soiled items must never enter clean spaces or corridors. For transport conveyances such as elevators: the critical requirement is proper containment — soiled items must be in sealed, leak-proof containers. Citations occur for improper containment or using clean pathways, not for elevator sharing when items are properly sealed.",
+        keyPoint: "Clean and soiled must be separated in rooms, corridors, sinks, and storage. Elevator sharing is acceptable when soiled containers are properly sealed — citations are for improper containment.",
         category: "definition",
       },
       {
@@ -1272,7 +1272,7 @@ const hospitalLevelsRaw: Level[] = [
           "Wire shelving is not permitted in sterile storage per AAMI ST79 Section 10.3; solid closed shelving is required for particulate control"
         ],
         correctIndex: 1,
-        explanation: "This IS compliant. Wire shelving with solid bottom shelf (correct), 9 inches off floor (meets 8-10 inch minimum), 20 inches below sprinklers (exceeds 18-inch minimum), not touching walls.",
+        explanation: "This IS compliant. Wire shelving with solid bottom shelf (correct per AAMI ST79), 9 inches off floor (meets the minimum 8-inch requirement), 20 inches below sprinkler deflectors (exceeds the 18-inch NFPA 13 minimum), and not touching walls. All parameters meet current standards.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -1338,11 +1338,11 @@ const hospitalLevelsRaw: Level[] = [
         options: [
           "4-6 inches",
           "6-8 inches",
-          "8-10 inches",
+          "At least 8 inches",
           "10-12 inches"
         ],
         correctIndex: 2,
-        explanation: "The bottom shelf in sterile storage must be at least 8-10 inches off the floor — note this is higher than the general 6-8 inch requirement for non-sterile supply areas.",
+        explanation: "Per AAMI ST79, the bottom shelf in sterile storage must be at least 8 inches off the floor. Note: the minimum is 8 inches — not a range of 8-10 inches. This is higher than the general 6-inch minimum used for non-sterile supply storage areas.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -1378,13 +1378,13 @@ const hospitalLevelsRaw: Level[] = [
         id: "ss11",
         question: "A sterile item has been stored for 14 months in intact packaging. A tech pulls it for use without additional inspection. Is this correct?",
         options: [
-          "Re-inspection is only triggered by a documented environmental event, not by time elapsed",
-          "The standard pre-use visual check at the point of use satisfies inspection requirements at any storage duration",
-          "Items stored over 1 year must be re-inspected and potentially reprocessed before use",
-          "Event-related sterility means intact packages remain sterile indefinitely without re-inspection"
+          "Per event-related sterility (AAMI ST79), sterility is maintained by package integrity — not a time limit; however, the standard point-of-use package inspection is always required before use",
+          "The standard pre-use visual check at the point of use satisfies inspection requirements regardless of storage duration",
+          "Items stored over 1 year must be re-inspected and automatically reprocessed before use",
+          "Event-related sterility means intact packages remain sterile and no inspection is ever required"
         ],
-        correctIndex: 2,
-        explanation: "While event-related sterility does not set a fixed expiration, items stored longer than 1 year must be re-inspected. At 14 months, re-inspection before use is required.",
+        correctIndex: 1,
+        explanation: "Per AAMI ST79 and Joint Commission IC.02.02.01, sterility is event-related — package integrity, not elapsed time, determines sterility. There is no AAMI ST79 or JC standard imposing a mandatory 12-month re-inspection trigger. However, ALL sterile packages must be inspected at the point of use before opening. The tech's error is proceeding 'without additional inspection' — the point-of-use integrity check is always required, regardless of storage duration.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -1436,11 +1436,11 @@ const hospitalLevelsRaw: Level[] = [
         options: [
           "One — the temperature at 73°F exceeds the 72°F maximum for sterile storage",
           "Zero — all parameters including humidity are within the acceptable 20-65% range",
-          "One — the humidity exceeds the 30-60% maximum",
+          "One — the humidity exceeds the ≤60% maximum per AAMI ST79",
           "Two — the humidity exceeds the maximum and the 19-inch sprinkler clearance does not meet the 24-inch requirement"
         ],
         correctIndex: 2,
-        explanation: "The humidity at 62% exceeds the 30-60% acceptable range per AAMI ST79. Everything else is compliant: wire shelving with solid bottom (correct), 9 inches off floor (meets 8-10 inch minimum), 19 inches below sprinklers (exceeds 18-inch minimum), 73°F (within 68-75°F), no cardboard.",
+        explanation: "The humidity at 62% exceeds the ≤60% upper limit per AAMI ST79. The controlling limit is that humidity must not exceed 60% — there is no firm lower bound specified by AAMI ST79 itself, though facilities commonly target a range. Everything else is compliant: wire shelving with solid bottom (correct), 9 inches off floor (meets the 8-inch minimum), 19 inches below sprinkler deflectors (exceeds 18-inch minimum per NFPA 13), 73°F (within 68-75°F), no cardboard.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -1477,26 +1477,26 @@ const hospitalLevelsRaw: Level[] = [
         question: "A surveyor finds two issues in sterile storage: (1) a corrugated cardboard divider being used to separate different tray types on a shelf, and (2) peel packs stacked 2 high. Which is the finding?",
         options: [
           "Only the cardboard divider — corrugated cardboard in any form is prohibited in sterile storage; peel packs at 2 high are compliant",
-          "Only the peel packs — per AAMI ST79 Section 10.5, stacking any peel packs creates compression force that may compromise seal integrity over time",
+          "Only the peel packs — stacking compresses seals and AORN recommends storing peel packs on edge whenever possible",
           "Neither — plastic-coated corrugated dividers meet AAMI ST79 requirements for sterile storage, and 2-high stacking is within acceptable stacking limits",
-          "Both — corrugated cardboard is prohibited per AAMI ST79 and peel packs must be stored vertically on edge per AORN Guideline 12.5, not stacked flat"
+          "Both — corrugated cardboard is prohibited per AAMI ST79 and peel packs must be stored vertically on edge, not stacked flat"
         ],
         correctIndex: 0,
-        explanation: "Corrugated cardboard in ANY form is prohibited in sterile storage — including as dividers. Peel packs stacked 2 high are within the maximum stacking allowance.",
+        explanation: "Corrugated cardboard in ANY form is prohibited in sterile storage — including as dividers — because it harbors moisture and insects (AAMI ST79). Regarding peel packs stacked 2 high: while AORN recommends storing peel packs on edge (vertically) whenever possible to avoid seal compression, stacking 2 high is within commonly accepted practice. The cardboard is the clear compliance finding. Facilities should transition to on-edge storage as best practice.",
         xpReward: 15,
         isSwipe: false,
       },
       {
         id: "ss19",
-        question: "A sterile pack was sterilized 13 months ago. The packaging is completely intact with no visible damage, moisture, or contamination. A tech inspects it, documents the re-inspection, and places it back on the shelf for use. Is this process correct?",
+        question: "A sterile pack was sterilized 13 months ago. The packaging is completely intact with no visible damage, moisture, or contamination. A tech inspects it and documents the inspection before placing it back on the shelf. Is this process correct?",
         options: [
-          "Event-related sterility only applies for the first 12 months; after that, time-based expiration takes effect",
-          "Re-inspection and documentation of intact packaging satisfies the over-1-year requirement",
+          "Event-related sterility only applies for the first 12 months; after that, time-based expiration takes effect and the item must be reprocessed",
+          "Yes — per event-related sterility (AAMI ST79), sterility is determined by packaging integrity, not elapsed time; the documented point-of-use inspection is the correct step",
           "Any item stored over 12 months must be automatically reprocessed, not just re-inspected",
           "Re-inspection alone is insufficient — the item must be returned to SPD for biological indicator testing before release"
         ],
         correctIndex: 1,
-        explanation: "Under event-related sterility, items over 1 year must be re-inspected. If the packaging remains intact with no compromise events, re-inspection with documentation is sufficient. Automatic reprocessing is not required if the package passes inspection.",
+        explanation: "Per AAMI ST79, sterility is event-related — sterility is maintained as long as packaging remains intact, regardless of elapsed time. There is no AAMI ST79 standard imposing a mandatory 12-month reprocessing trigger. The tech's documented integrity inspection is the correct process. If the package had shown any compromise (moisture, tears, open seals), it would require reprocessing.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -1504,13 +1504,13 @@ const hospitalLevelsRaw: Level[] = [
         id: "ss20",
         question: "The sterile storage room thermometer shows 74°F and 58% humidity. A tech says both are 'borderline but fine.' A surveyor asks what would happen if the temperature rose 2 degrees. What is the correct response?",
         options: [
-          "At 76°F, the room would exceed the 75°F maximum, requiring immediate corrective action and notification",
+          "At 76°F, the room would exceed the ≤75°F maximum per AAMI ST79, requiring immediate corrective action",
           "The humidity would need to be reduced below 50% to compensate for the temperature increase",
           "Nothing — the acceptable range extends to 78°F for sterile storage areas",
           "A 2-degree rise would be documented in the temperature log but would not require corrective action unless it persisted for over 4 hours"
         ],
         correctIndex: 0,
-        explanation: "The acceptable temperature range for sterile storage is 68-75°F. At 74°F, the room is within range. A 2-degree rise to 76°F would exceed the 75°F maximum, triggering a need for immediate corrective action. The tech should recognize how close they are to the limit.",
+        explanation: "Per AAMI ST79, sterile storage temperature must be ≤75°F (24°C). At 74°F, the room is within range. A 2-degree rise to 76°F would exceed the maximum, triggering an immediate need for corrective action and an impact assessment on stored sterile items. The humidity at 58% is within the ≤60% requirement. The tech is correct that both are compliant but should recognize the narrow temperature margin — 74°F is only 1°F below the threshold.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -1713,7 +1713,7 @@ const hospitalLevelsRaw: Level[] = [
           "Facilities with validated sterilization programs may reprocess single-use devices up to three times"
         ],
         correctIndex: 1,
-        explanation: "Single-use instruments must NEVER be reprocessed in-house. Only FDA-registered third-party reprocessors have the validated processes and oversight required for safe reprocessing.",
+        explanation: "The using facility may NOT reprocess single-use devices (SUDs) in-house unless the facility itself is registered with the FDA as a reprocessor. In practice, this means only FDA-registered third-party reprocessors (meeting 510(k) and labeling requirements) may legally reprocess SUDs. The manufacturer's original safety data applies only to the first use — in-house reprocessing without FDA registration is a regulatory violation that puts patients at risk.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -1721,13 +1721,13 @@ const hospitalLevelsRaw: Level[] = [
         id: "i9",
         question: "Peel packs are stored 2 high on wire shelving with smooth edges. Is this storage compliant?",
         options: [
-          "Max 2 high on non-sharp shelving is correct",
+          "Stacking 2 high on smooth-edged shelving is within accepted practice, though storing on edge is preferred per AORN guidance",
           "Peel packs should be stored on solid shelving only, and stacking of any kind compromises seal integrity",
           "Peel packs must always be stored individually in separate bins to prevent cross-contamination between packages",
           "Wire shelving is never appropriate for peel packs due to the risk of snagging and puncturing the packaging"
         ],
         correctIndex: 0,
-        explanation: "This IS compliant. Peel packs can be stacked up to 2 high, and shelving should NOT have sharp edges that could puncture packaging. Wire shelving with smooth edges is appropriate.",
+        explanation: "Stacking peel packs 2 high on smooth-edged shelving is within commonly accepted practice. However, AORN recommends storing peel packs on edge (vertically) whenever possible, as stacking can compress seals over time and trap moisture. Wire shelving with smooth edges is appropriate — sharp edges that could puncture packaging are the concern to avoid. Facilities should work toward on-edge storage as best practice.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -1876,12 +1876,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "A tray from SPD contains both single-use (disposable) and reusable instruments processed together. The single-use items are marked for reuse. What is the most serious concern?",
         options: [
           "Mixing single-use and reusable instruments in the same sterilization load compromises cycle validation",
-          "Single-use instruments being reprocessed for reuse in-house — they cannot be reprocessed in-house under any circumstances",
+          "Single-use instruments being reprocessed for reuse in-house — the using facility cannot do this without FDA registration as a reprocessor",
           "Single-use instruments require different sterilization parameters than reusable instruments, potentially compromising the cycle",
           "Single-use instruments processed through standard sterilization cycles may release toxic residues not intended for reprocessing"
         ],
         correctIndex: 1,
-        explanation: "The most serious issue is in-house reprocessing of single-use instruments for reuse. Only FDA-registered third-party reprocessors may reprocess single-use devices. This is a regulatory violation that puts patients at risk.",
+        explanation: "The most serious issue is in-house reprocessing of single-use instruments for reuse. Unless the facility is itself registered with the FDA as a reprocessor, only FDA-registered third-party reprocessors may legally reprocess single-use devices (SUDs). The manufacturer's safety guarantees apply only to the first use — reprocessing in-house without FDA registration is both a regulatory violation and a patient safety risk.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -2051,12 +2051,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "A surveyor finds equipment stored 2 feet in front of an unlocked electrical panel. How many compliance issues are present?",
         options: [
           "One — the panel must be locked, but 2 feet of clearance meets the standard for non-emergency electrical panels",
-          "Two — insufficient clearance AND the panel must be locked",
+          "Two — insufficient clearance AND the panel must be locked per NFPA 70",
           "None — 2 feet meets the minimum clearance requirement and electrical panels only need to be locked in patient care areas",
-          "One — the clearance is insufficient at 2 feet; electrical panels require 3 feet but are not required to be locked if in a restricted area"
+          "One — the clearance is insufficient at 2 feet; electrical panels require 3 feet of working clearance per NFPA 70 Article 110.26"
         ],
-        correctIndex: 1,
-        explanation: "Two issues: (1) Electrical panels require 3 feet of clearance, not 2 feet, and (2) electrical panels must be kept locked.",
+        correctIndex: 3,
+        explanation: "The definitive finding is the clearance violation: NFPA 70 (National Electrical Code) Article 110.26 requires at least 3 feet of working clearance in front of electrical panels. At 2 feet, this is a clear deficiency. Regarding locking: NFPA 70 requires panels to be properly enclosed, but does not universally mandate that panels be locked — locking requirements vary by state electrical code, applicable edition of NFPA 70, and facility policy. Surveyors may cite unlocked panels depending on location and local requirements.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -2154,7 +2154,7 @@ const hospitalLevelsRaw: Level[] = [
           "15"
         ],
         correctIndex: 2,
-        explanation: "A maximum of 12 oxygen cylinders may be stored in any non-hazardous room to limit fire and explosion risk.",
+        explanation: "NFPA 99 limits nonflammable medical gas storage outside of a designated hazardous storage room to 300 cubic feet. A standard E-cylinder holds approximately 22-24 cubic feet, making 12 cylinders roughly equivalent to 300 cubic feet — which is why '12 cylinders' is the commonly taught training standard. The binding threshold in NFPA 99 is the 300 cubic feet limit; 12 cylinders is a practical approximation.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -2207,10 +2207,10 @@ const hospitalLevelsRaw: Level[] = [
           "The 12-cylinder limit applies only to full cylinders; empty cylinders are not counted toward the maximum",
           "Empty cylinders must be stored in a separate designated room, not just on a separate rack in the same room",
           "Full and empty are properly segregated on separate racks, and the 12-cylinder limit applies to each category independently",
-          "The total of 14 cylinders exceeds the 12-cylinder maximum for non-hazardous rooms"
+          "The total of 14 cylinders exceeds the NFPA 99 nonflammable gas storage limit for non-hazardous rooms"
         ],
         correctIndex: 3,
-        explanation: "The 12-cylinder maximum applies to the total number of cylinders in a non-hazardous room, not just full ones. While full and empty are properly segregated (correct), the total of 14 exceeds the maximum of 12.",
+        explanation: "NFPA 99 limits nonflammable medical gas storage in a non-hazardous location to 300 cubic feet (~12 E-cylinders). The limit applies to ALL cylinders — full, empty, or partial — in the room. While proper segregation of full and empty cylinders is required (correct here), the combined total of 14 cylinders exceeds the ~12-cylinder practical limit. Both cylinders must count toward the room's storage total.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -2335,8 +2335,8 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         title: "Why Must Instruments Be Fully Dry Before Packaging?",
-        content: "Instruments must be thoroughly dried and visually inspected before packaging. Wet packaging creates conditions for microbial growth and compromises seal integrity. Early release from the sterilizer requires specific documentation and a minimum 30-minute cool-down time.",
-        keyPoint: "Instruments dry before packaging. Early release = document + 30 min cool-down.",
+        content: "Instruments must be thoroughly dried and visually inspected before packaging. Wet packaging creates conditions for microbial growth and compromises seal integrity. Early release from the sterilizer requires specific documentation — including reason for early release and patient identifier. There is no universal fixed cool-down time; the cool-down period must follow the sterilizer and device manufacturer's IFU (AAMI ST79). Citing '30 minutes' as a universal standard is a common misconception.",
+        keyPoint: "Instruments dry before packaging. Early release = document reason + patient ID. Cool-down time follows manufacturer IFU — no universal fixed minimum.",
         category: "rule",
       },
       {
@@ -2399,13 +2399,13 @@ const hospitalLevelsRaw: Level[] = [
         id: "spd4",
         question: "A surveyor asks how often biological indicators (BIs) should be included in sterilization loads. What is the correct answer?",
         options: [
-          "In the first load of each day and in any load containing implants",
+          "At minimum daily, and in EVERY load containing implants",
           "Only in loads containing implants or critical devices",
-          "In every sterilization load",
-          "Daily, placed in a designated test pack run separately from patient loads"
+          "In every sterilization load, no exceptions",
+          "Weekly, placed in a designated test pack run separately from patient loads"
         ],
-        correctIndex: 2,
-        explanation: "Biological indicators must be included in EVERY sterilization load, placed at the most challenging location. This is not limited to implant loads or specific time intervals.",
+        correctIndex: 0,
+        explanation: "Per AAMI ST79, biological indicators are required at minimum once per day the sterilizer is used AND in every load containing implants. While running a BI in every load is considered best practice and recommended, the regulatory minimum is daily plus all implant loads. An implant-containing load must never be released before the BI result is confirmed negative.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -2430,10 +2430,10 @@ const hospitalLevelsRaw: Level[] = [
           "Per AAMI ST79 Section 7 guidelines, all cleaning brushes must be replaced after each individual use to prevent cross-contamination between instrument sets",
           "Brushes only need replacement when bristles are visibly missing or the wire core is exposed, as specified in the brush manufacturer's IFU replacement criteria",
           "Splayed bristles still clean effectively and actually provide broader surface contact for improved bioburden removal from instrument channels and crevices",
-          "Splayed bristles indicate wear and the brush should be inspected more carefully for fraying and replaced if compromised"
+          "No — splayed bristles indicate the brush is already compromised and it must be removed from service and replaced immediately"
         ],
         correctIndex: 3,
-        explanation: "Cleaning brushes must be inspected regularly. Splayed bristles are an early sign of wear that progresses to fraying. The brush needs closer inspection and likely replacement.",
+        explanation: "Per AAMI ST79, splayed bristles indicate a damaged cleaning brush that cannot adequately clean instrument lumens and crevices. Damaged brushes must be removed from service immediately — not inspected more carefully or used until fraying appears. Splayed bristles lose contact with channel surfaces, allowing bioburden to remain and potentially causing sterilization failure.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -2469,13 +2469,13 @@ const hospitalLevelsRaw: Level[] = [
         id: "spd9",
         question: "An instrument is released from the sterilizer for immediate use (early release). The tech allows a 20-minute cool-down period and documents the early release. Is this procedure compliant?",
         options: [
-          "Early release cool-down time is determined by the instrument manufacturer's IFU, not a fixed standard",
+          "Cool-down time for early release is determined by the sterilizer and instrument manufacturer's IFU — there is no universal fixed minimum",
           "20 minutes is sufficient if properly documented and the biological indicator shows a preliminary negative result",
           "Early release requires a minimum 45-minute cool-down time and supervisor sign-off before instruments can be used",
-          "Early release requires a minimum 30-minute cool-down time"
+          "Early release requires a universal minimum 30-minute cool-down time per AAMI ST79"
         ],
-        correctIndex: 3,
-        explanation: "Early release from the sterilizer requires documentation AND a minimum 30-minute cool-down time. Twenty minutes is insufficient, regardless of documentation.",
+        correctIndex: 0,
+        explanation: "Per AAMI ST79, there is no universal fixed cool-down time for immediate-use steam sterilization (IUSS) or early release. The cool-down period must follow the sterilizer manufacturer's IFU and the device manufacturer's IFU — which may vary. Documentation of the early release, reason, and patient identifier is required. Citing a specific number like '30 minutes' as the universal standard is a common misconception not supported by the current standard.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -2718,8 +2718,8 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         title: "What Must a Non-Sterile Circulator Never Do at the Sterile Field?",
-        content: "A non-sterile circulator must never reach over or across the sterile field to hand items directly to the scrub tech. Non-sterile persons must maintain safe distance and pass items to the field by other means — dropped from above or opened from packaging.",
-        keyPoint: "Non-sterile circulator must NEVER reach over the sterile field.",
+        content: "A non-sterile circulator must never reach over or across the sterile field to hand items directly to the scrub tech. The correct technique: the circulator opens peel-pack packaging from the outside edges and presents the open package so the scrub tech can retrieve the sterile item — or carefully dispenses the item onto the sterile field from the package without the circulator's hands crossing over the field. 'Dropping from above' is NOT acceptable technique — it requires the circulator to position hands over the sterile field, risking contamination.",
+        keyPoint: "Non-sterile circulator must NEVER reach over the sterile field. Correct technique: open peel-pack and present to scrub tech — never drop from above.",
         category: "mistake",
       },
     ],
@@ -2782,15 +2782,15 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         id: "or5",
-        question: "A surveyor sees two labeled syringes on the sterile field: one marked 'Lidocaine 1%' and one marked 'Marcaine 0.25%.' Both labels show drug name and concentration. Is the labeling compliant?",
+        question: "A surveyor sees two labeled syringes on the sterile field: one marked 'Lidocaine 1%' and one marked 'Marcaine 0.25%.' Both labels show drug name and concentration only. Is the labeling compliant?",
         options: [
-          "No — Labels must also include the patient's name and the time drawn up to meet labeling standards",
-          "No — Labels must include the drug name, concentration, date, time prepared, and the preparer's initials",
+          "No — Labels must also include the patient's name and the administering provider's initials",
+          "No — Per NPSG.03.04.01, labels must include drug name, strength, and expiration date/time; drug name and concentration alone are insufficient",
           "Yes — Both syringes are labeled with the required minimum: drug name and strength/concentration",
-          "Yes — But the labels should also include an expiration time since medications on the sterile field expire after 1 hour"
+          "Yes — But the labels should also include the lot number from the original vial"
         ],
-        correctIndex: 2,
-        explanation: "The minimum labeling requirement for medications on the sterile field is drug name and strength/concentration. Both syringes meet this requirement.",
+        correctIndex: 1,
+        explanation: "Per TJC NPSG.03.04.01, all medications and solutions on and off the sterile field must be labeled with drug name, strength/concentration, and expiration date/time (when not used within 24 hours or when stability requires it). Drug name and concentration alone are insufficient — an expiration time is also required. The labeling in this scenario is incomplete.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -2958,7 +2958,7 @@ const hospitalLevelsRaw: Level[] = [
           "Since the other syringes on the sterile field are properly labeled with drug name and concentration, the remaining unlabeled cup can be safely identified by process of elimination"
         ],
         correctIndex: 1,
-        explanation: "ALL medications and solutions on the sterile field must be labeled with drug name and concentration — no exceptions. Verbal identification or assumed knowledge is never acceptable. An unlabeled container of clear fluid is a medication error waiting to happen.",
+        explanation: "Per NPSG.03.04.01, ALL medications and solutions on and off the sterile field must be labeled with drug name and strength/concentration — no exceptions. 'Irrigation saline' is still a solution that must be labeled. Verbal identification or assumed knowledge is never acceptable — an unlabeled container of clear fluid is a medication error waiting to happen.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -2966,13 +2966,13 @@ const hospitalLevelsRaw: Level[] = [
         id: "or18",
         question: "A surgical case is delayed 3 hours after the sterile field was set up. No contamination events have occurred, the room has been secured, and a staff member has been present at all times. Should the field be considered sterile?",
         options: [
-          "It depends on facility policy — there is no absolute time limit on a sterile field if it has been continuously monitored with no compromise events",
+          "It depends on facility policy — there is no absolute universal time limit on a sterile field if it has been continuously monitored with no compromise events",
           "AAMI standards require a sterile field to be broken down and re-established if the case is delayed beyond 1 hour",
           "Sterile fields must be used within 2 hours of setup per AORN recommended practices",
           "As long as the room's positive-pressure ventilation is functioning, the sterile field is maintained indefinitely without monitoring"
         ],
         correctIndex: 0,
-        explanation: "There is no absolute time limit specified for a sterile field. The key factors are continuous monitoring, no contamination events, and room security. Facility policy should address prolonged open sterile fields, but if properly monitored with no compromise, the field can remain sterile.",
+        explanation: "Neither JC nor AAMI ST79 specifies an absolute maximum time for a sterile field. AORN recommends preparing sterile fields as close as possible to time of use, but acknowledges that continuous monitoring with no compromise events can maintain sterility. The key requirements are: continuous monitoring by qualified personnel, no contamination events, controlled room access, and facility policy compliance. Most facilities establish their own time limits in policy.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -3018,7 +3018,7 @@ const hospitalLevelsRaw: Level[] = [
       plainLanguageSummary: "The Universal Protocol (pre-procedure verification, site marking, and time-out) is one of the Joint Commission's National Patient Safety Goals. Surveyors trace time-out documentation in charts, observe actual time-outs, and verify site marking policies. Any step skipped or done after the wrong point is a citation.",
       keyOperationalExpectations: [
         "Pre-procedure verification must confirm correct patient, procedure, and site before the patient enters the OR.",
-        "Surgical site must be marked by the operating surgeon with the patient awake and involved — not by nursing alone.",
+        "Surgical site must be marked by the licensed independent practitioner who will perform the procedure, with the patient awake and involved — not by nursing or a provider who will not be performing the case.",
         "Time-Out must be performed immediately before incision, with all team members participating and stopping other tasks.",
         "Time-Out must be documented in the medical record, including who participated and what was verified.",
         "Consent must be obtained before any sedating medication is administered.",
@@ -3026,7 +3026,7 @@ const hospitalLevelsRaw: Level[] = [
       commonRiskPoints: [
         "Time-Out performed while the team continues prepping the patient rather than pausing all activity.",
         "Time-Out not documented in the chart — verbal time-out done but no written record created.",
-        "Site marking delegated to nursing or a resident without the attending surgeon's direct involvement.",
+        "Site marking delegated to nursing or a provider who will not perform the procedure — JC UP.01.02.01 requires the provider accountable for and performing the procedure to mark the site.",
         "Consent signed after pre-op benzodiazepine was administered, making the consent presumptively defective.",
         "Time-Out done after incision has started ('we do it while we're starting') — the universal protocol requires immediately before incision.",
       ],
@@ -3115,11 +3115,11 @@ const hospitalLevelsRaw: Level[] = [
         options: [
           "The abbreviation is universally recognized in orthopedic surgery and patient verbal confirmation validates the intent",
           "Standard medical abbreviations are acceptable on consent forms when the patient can confirm understanding",
-          "Consent forms must use the full procedure name with no abbreviations",
+          "Consent forms must avoid dangerous/unapproved abbreviations — 'L' for left and abbreviations like 'TKA' without the full written name create ambiguity",
           "The site marking and patient confirmation together serve as redundant safeguards that compensate for any abbreviation"
         ],
         correctIndex: 2,
-        explanation: "Consent forms must use the full procedure name with NO abbreviations. 'L TKA' must be written out (e.g., 'Left Total Knee Arthroplasty'). Patient verbal confirmation does not compensate for documentation deficiencies.",
+        explanation: "Per JC standards, consent forms must use the full procedure name to prevent ambiguity. 'L' for 'left' is on the JC 'Do Not Use' list of dangerous abbreviations (it can be misread as '1' or 'right' in certain handwriting). The procedure name should be written out in full (e.g., 'Left Total Knee Arthroplasty'). Patient verbal confirmation does not compensate for written documentation deficiencies on the consent form.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -3189,7 +3189,7 @@ const hospitalLevelsRaw: Level[] = [
           "Implant availability and specifications discussed"
         ],
         correctIndex: 1,
-        explanation: "Insurance status is NOT a Time-Out element. Required elements include: patient identity, correct site, consent, antibiotics, implants, equipment, X-rays, fire risk score, and special needs.",
+        explanation: "Insurance status is NEVER a Time-Out element. The three core required elements per TJC UP.01.03.01 are: correct patient identity, correct site, and correct procedure. Additional elements commonly included in facility Time-Out protocols (based on facility policy and best practice) include antibiotic timing, implant confirmation, fire risk score, and equipment needs. Insurance status has no place in a surgical safety Time-Out.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -3253,13 +3253,13 @@ const hospitalLevelsRaw: Level[] = [
         id: "up12",
         question: "A consent form has the patient's signature but is missing the witness signature. The time and date are present and the full procedure name is written out. Is this consent complete?",
         options: [
-          "The patient's signature is the most important element and the witness signature is optional for routine procedures",
+          "Per JC standards, the required consent elements are: patient/surrogate signature, date, time, full procedure name, and documentation that risks/benefits/alternatives were discussed — witness signature requirements are governed by state law and facility policy, not JC",
           "A witness signature is only required for high-risk or invasive procedures, not for all consents",
           "The surgeon's signature on the operative report serves as the witness verification",
-          "The consent requires both the patient (or surrogate) AND witness signatures"
+          "The consent requires both the patient (or surrogate) AND witness signatures under JC RI.01.03.01"
         ],
-        correctIndex: 3,
-        explanation: "A complete consent form must include: time, date, patient or surrogate signature, witness signature, full procedure name (no abbreviations), and sedation if required. Missing the witness signature makes it incomplete.",
+        correctIndex: 0,
+        explanation: "The Joint Commission (RI.01.03.01) requires informed consent to document that the patient was informed of risks, benefits, and alternatives, and that their questions were answered. JC does NOT independently require a witness signature — this is a state law and facility policy requirement that varies by jurisdiction. However, most facilities DO require witness signatures per their own policies and state law, so staff should follow their facility's consent form requirements. Always check your facility's policy.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -3298,10 +3298,10 @@ const hospitalLevelsRaw: Level[] = [
           "The follow-up assessment timing is flexible as long as it occurs after the original H&P and before surgery",
           "A 36-hour follow-up is within the 48-hour acceptable window for pre-surgical updates",
           "The H&P is within 30 days and a follow-up assessment was performed and documented",
-          "The follow-up assessment must be within 24 hours of registration, not 36 hours before surgery"
+          "The follow-up assessment must be performed within 24 hours after admission/registration AND before surgery"
         ],
         correctIndex: 3,
-        explanation: "While the H&P is within the 30-day window, the follow-up assessment must be performed within 24 hours of registration or before surgery. A 36-hour-old follow-up does not meet the 24-hour recency requirement.",
+        explanation: "While the H&P is within the 30-day window, the required follow-up (update) must be performed and documented within 24 hours AFTER admission/registration AND before surgery. If registration occurred less than 36 hours ago and the update predates registration, it fails. If registration occurred more than 36 hours ago, the 36-hour-old update fails on recency. The update must be contemporaneous — within 24 hours of admission — and current at the time of surgery.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -3312,10 +3312,10 @@ const hospitalLevelsRaw: Level[] = [
           "Only patient identification was missed — all other Time-Out elements are optional for minor injection procedures",
           "Nothing was missed — the Time-Out covered the procedure, bilateral sites, and consent verification",
           "Nothing was missed — bilateral procedures only require site and consent verification since the procedure is the same on both sides",
-          "The Time-Out must also address: antibiotics, implants, equipment concerns, fire risk score, and special needs — not just the procedure and site"
+          "Patient identity was not verbally confirmed — the three core JC Time-Out elements are correct patient identity, correct procedure, and correct site"
         ],
         correctIndex: 3,
-        explanation: "The Time-Out requires verification of ALL elements: patient ID, correct site, consent, provider present, antibiotics, implants discussed, equipment concerns, X-rays, fire risk score, and special needs. Simply confirming the procedure and sites is an incomplete Time-Out.",
+        explanation: "The three CORE required Time-Out elements per TJC UP.01.03.01 are: (1) correct patient identity, (2) correct procedure, and (3) correct site. In this scenario, patient identity was not explicitly verified during the Time-Out. Most facility protocols also include additional elements such as antibiotic timing, fire risk, and equipment, but the universal JC minimum requires all three core elements. A surveyor would flag the missing patient identity confirmation.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -3368,10 +3368,10 @@ const hospitalLevelsRaw: Level[] = [
           "Any visible mark that the patient and surgeon agree on is acceptable as long as it is clearly visible",
           "Individual surgeon preference for marking style is acceptable as long as the mark is at or near the incision site",
           "The variety of marks actually provides additional identification since each surgeon's mark is unique to them",
-          "The marking method must be consistent — the facility should use the same type of mark each time to avoid confusion"
+          "The marking method must be consistent across the facility — TJC UP.01.02.01 requires a standardized organizational approach to site marking"
         ],
         correctIndex: 3,
-        explanation: "Surgical site marking must be consistent — the same type of mark should be used each time to prevent ambiguity. Different surgeons using different marking methods (X, arrow, initials) creates potential confusion and undermines the safety purpose of site marking.",
+        explanation: "Per TJC UP.01.02.01, the organization must define the method for marking the surgical site and that method must be consistently used. Different surgeons using different marks (X, arrow, initials) creates ambiguity and violates the consistency requirement. A single, unambiguous, consistent mark type must be defined by facility policy and used uniformly.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -3487,10 +3487,10 @@ const hospitalLevelsRaw: Level[] = [
           "Reassessing too early produces inaccurate data and should be repeated at the 2-hour mark",
           "Oral medication reassessment should occur at exactly 2 hours when peak therapeutic effect is expected",
           "Oral medication reassessment at 1 hour is premature and the documented result is not clinically valid",
-          "Earlier reassessment is always acceptable"
+          "Earlier reassessment is always acceptable — the required timeframe is the maximum, not the minimum"
         ],
         correctIndex: 3,
-        explanation: "The requirement is reassessment within 2 hours for oral medication. Reassessing at 1 hour is earlier than required, which is acceptable — the 2-hour mark is the maximum, not the minimum.",
+        explanation: "JC PC.01.02.07 requires pain reassessment within timeframes defined by organizational policy — commonly 2 hours for oral medications. Reassessing at 1 hour is earlier than the maximum required interval, which is always acceptable. However, note that reassessment timing policies vary by facility; the key is that reassessment occurred and was documented before the policy-defined maximum.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -3504,7 +3504,7 @@ const hospitalLevelsRaw: Level[] = [
           "1 hour"
         ],
         correctIndex: 2,
-        explanation: "Non-pharmacologic intervention reassessment is at 4 hours. This is longer than IV (1 hour) or oral (2 hours) because non-pharmacologic interventions may take longer to produce effects.",
+        explanation: "JC PC.01.02.07 requires pain reassessment at intervals defined by organizational policy. Many facilities establish a 4-hour reassessment window for non-pharmacologic interventions (longer than IV at 1 hour or oral at 2 hours) because non-pharmacologic interventions take longer to produce measurable effects. The specific timeframe is set by facility policy — '4 hours' reflects the most common training standard used in JC preparation.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -3672,7 +3672,7 @@ const hospitalLevelsRaw: Level[] = [
           "One — sedation level and LOC must be assessed BOTH before AND after opioid administration"
         ],
         correctIndex: 3,
-        explanation: "Sedation and LOC must be assessed before AND after every opioid administration. The pre-administration assessment is missing entirely, and the post-administration LOC at 60 minutes (for IV medication that requires 1-hour reassessment) is at the outer limit. Both pre- and post-assessments must be timely and documented.",
+        explanation: "Per JC PC.01.02.07 and opioid safety standards, sedation level and LOC must be assessed before AND after every opioid administration. The pre-administration assessment is missing entirely in this scenario. The post-administration LOC documented at 60 minutes is within organizational policy limits for IV opioids; however, the missing pre-administration assessment is the deficiency. Both pre- and post-administration assessments must be documented.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -3681,12 +3681,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "A post-anesthesia evaluation documents: respiratory function, cardiovascular function, mental status, pain, nausea/vomiting, and hydration status. It was completed 40 hours after surgery. What is missing or incorrect?",
         options: [
           "The 40-hour timeframe exceeds the 24-hour maximum for post-anesthesia evaluations",
-          "The evaluation is missing temperature assessment — all 7 required elements must be documented",
+          "The evaluation is missing temperature assessment — all required elements must be documented",
           "The evaluation must be completed within the PACU discharge timeframe, not 40 hours post-procedure",
           "Nothing — the six documented elements represent a complete post-anesthesia evaluation within the required timeframe"
         ],
         correctIndex: 1,
-        explanation: "The post-anesthesia evaluation requires 7 elements: respiratory function, cardiovascular function, mental status, TEMPERATURE, pain, nausea/vomiting, and hydration. Temperature is missing. The 40-hour timeframe is within the 48-hour requirement.",
+        explanation: "Per JC standard PC.03.01.07, the post-anesthesia evaluation must include: respiratory function, cardiovascular function, mental status, temperature, pain, nausea/vomiting, and post-operative hydration status. Temperature is missing from this evaluation. The 40-hour timeframe is within the 48-hour requirement. Every element must be present — omitting even one is a finding.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -3742,7 +3742,7 @@ const hospitalLevelsRaw: Level[] = [
           "Restraints require ongoing flowsheet documentation with regular reassessments, not just an initial assessment"
         ],
         correctIndex: 3,
-        explanation: "Restraint use requires ongoing documentation: regular reassessments on the flowsheet, continued monitoring, and proof that less restrictive alternatives were tried. A 4-hour gap in flowsheet documentation for a restrained patient is a significant finding.",
+        explanation: "JC standards require ongoing restraint monitoring and documentation at regular intervals — not just at initiation. Facility policy defines the specific frequency (commonly every 1-2 hours), but a 4-hour documentation gap for a restrained patient is a significant finding. Regular reassessments must document circulation, skin integrity, behavior, and continued need for restraint. Visual monitoring alone does not substitute for documented reassessment.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -3847,7 +3847,7 @@ const hospitalLevelsRaw: Level[] = [
           "Sharps containers must be on a mobile cart for portability, not permanently wall-mounted"
         ],
         correctIndex: 0,
-        explanation: "This IS compliant. Sharps containers must be secured (wall-mounted qualifies), contents below the fill line, and as close as feasible to the point of use.",
+        explanation: "This IS compliant. Per OSHA Bloodborne Pathogens standard (29 CFR 1910.1030) and JC IC standards, sharps containers must be: (1) closable, (2) puncture-resistant, (3) leakproof, (4) labeled/color-coded, (5) kept upright, (6) placed at point of use, and (7) replaced before reaching the fill line (~¾ full). Wall-mounting satisfies the 'secured' requirement. Contents below the fill line = compliant. No additional locking mechanism is required.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -3889,7 +3889,7 @@ const hospitalLevelsRaw: Level[] = [
           "EMTALA requirements for OB are satisfied through admission consent forms rather than posted signage"
         ],
         correctIndex: 2,
-        explanation: "EMTALA signage must be posted in BOTH the Emergency Department AND OB areas, informing patients of their right to emergency medical screening and treatment.",
+        explanation: "Per 42 CFR 489.20(q), EMTALA signage must be posted in the dedicated emergency department AND in areas likely to be used by individuals seeking emergency examination and treatment — which includes OB/Labor & Delivery. OB is specifically called out because obstetric emergencies qualify under EMTALA. Each required area must have its own signage; shared ED signage does not cover separate OB departments.",
         xpReward: 10,
         isSwipe: false,
       },
@@ -3898,12 +3898,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "An EVS closet is locked. The housekeeping cart is in the hallway, locked with all chemical bottles secured. The EVS worker stepped away to respond to a spill. Is this setup compliant?",
         options: [
           "Chemical bottles must be stored inside the locked EVS closet, not on a cart in the hallway regardless of lock status",
-          "Housekeeping carts must be returned to the locked closet whenever the EVS worker leaves the immediate area",
+          "A locked housekeeping cart left unattended in a hallway is a finding — carts must be returned to the locked closet when the worker leaves the area",
           "Housekeeping carts in hallways must have a staff member within line-of-sight at all times per corridor safety standards",
-          "Both the closet and cart are locked and secured"
+          "Both the closet and cart are locked and secured, which satisfies all requirements"
         ],
-        correctIndex: 3,
-        explanation: "This IS compliant. EVS closets must be locked when unattended (it is), and housekeeping carts must be locked and secure when not in use (it is, with chemicals secured).",
+        correctIndex: 1,
+        explanation: "A housekeeping cart left unattended in a hallway is a finding even when the cart is locked. Joint Commission surveyors consistently cite unattended carts containing hazardous chemicals as a patient safety and hazardous materials concern under EC.02.02.01. Carts with chemicals must be returned to the locked EVS closet when the worker is not present to supervise them. A locked cart is not sufficient if it is left unattended and accessible in a patient corridor.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -3928,10 +3928,10 @@ const hospitalLevelsRaw: Level[] = [
           "Fire extinguishers require a 360-degree clearance zone to allow access from any approach angle",
           "3-foot clearance is required in all directions around fire safety equipment per NFPA standards",
           "Items within 3 feet on any side could obstruct emergency retrieval and must be relocated",
-          "The 3-foot clearance requirement applies to the access path in front"
+          "The clearance requirement focuses on unobstructed access to the extinguisher — 3 feet in front is the primary concern"
         ],
         correctIndex: 3,
-        explanation: "The 3-foot clearance requirement focuses on maintaining clear access to fire safety equipment. The chair to the side does not block the access path in front.",
+        explanation: "Per NFPA 10, fire extinguishers must be conspicuous, unobstructed, and immediately accessible. The primary concern is clear access to retrieve and operate the extinguisher. A chair 2.5 feet to the side does not block the access path in front. While surveyors may flag any obstruction that could hinder rapid retrieval, a side object that does not impede the front access path is generally not a finding. The 3-foot clearance applies to the approach path.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -4054,10 +4054,10 @@ const hospitalLevelsRaw: Level[] = [
           "As long as the tech documents the plan to replace it, a brief delay to finish the current patient is acceptable",
           "The container is still functional and replacing it mid-patient would disrupt care continuity",
           "The fill line is a guideline, and containers can safely hold additional sharps up to the closure line",
-          "A sharps container at or above the fill line must be replaced immediately, not after the next patient"
+          "A sharps container at or above the fill line must be replaced immediately — deferring to the next patient is not acceptable"
         ],
         correctIndex: 3,
-        explanation: "Sharps containers must have contents below the fill line at all times. At or above the fill line, the container must be replaced immediately — not deferred. Continuing to use an at-capacity sharps container forces sharps into a full container, greatly increasing injury risk.",
+        explanation: "Sharps containers must be replaced before reaching the fill line (typically marked at ~¾ full) per OSHA 29 CFR 1910.1030. At or above the fill line, immediate replacement is required — not after the next patient. Forcing additional sharps into an at-capacity container greatly increases needlestick injury risk. No deferral is acceptable; the container should be replaced before continuing care.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -4082,10 +4082,10 @@ const hospitalLevelsRaw: Level[] = [
           "The 3-foot zone is a guideline, and the mobile workstation can be easily moved in an emergency",
           "The 2.5-foot distance is within the acceptable variance for mobile equipment near gas shut-off panels",
           "Mobile equipment is exempt from clearance requirements since it can be repositioned by any staff member quickly",
-          "Medical gas shut-off panels require 3-foot clearance at all times; the workstation violates this even though it's mobile"
+          "Medical gas shut-off panels must remain unobstructed at all times; the workstation within the clearance zone is a finding"
         ],
         correctIndex: 3,
-        explanation: "Medical gas shut-off panels require 3 feet of clearance at all times for emergency access. A mobile workstation at 2.5 feet is within the required clearance zone and must be moved. In an emergency, every second counts — clearance requirements are not flexible.",
+        explanation: "Medical gas shut-off valves must remain accessible and unobstructed at all times per NFPA 99. While NFPA 99 does not specify a precise 3-foot measurement, JC surveyors and EC standards require clear, immediate access to emergency shut-offs. A mobile workstation parked within the facility's marked access zone (regardless of whether the 3-foot distance is codified) would be cited as obstructing emergency access. In a gas emergency, seconds matter — no obstacles are acceptable.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -4225,7 +4225,7 @@ const hospitalLevelsRaw: Level[] = [
           "Pre-anesthesia re-assessment and vital signs at the time of discharge",
         ],
         correctIndex: 1,
-        explanation: "The Joint Commission requires all 7 elements in the post-anesthesia evaluation: respiratory function, cardiovascular function, mental status, temperature, pain, nausea/vomiting, and post-operative hydration status. Missing any single element is a finding. Temperature, nausea/vomiting, and hydration status are all absent from this evaluation.",
+        explanation: "Per JC standard PC.03.01.07, the post-anesthesia evaluation must include: respiratory function, cardiovascular function, mental status, temperature, pain, nausea/vomiting, and post-operative hydration status. Three elements are missing: temperature, nausea/vomiting status, and hydration status. The 36-hour timeframe is within the 48-hour requirement. Every element must be present — omitting any one is a citation.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -4253,7 +4253,7 @@ const hospitalLevelsRaw: Level[] = [
           "No — only CRNAs may monitor patients during sedation procedures",
         ],
         correctIndex: 1,
-        explanation: "The Joint Commission requires a dedicated individual responsible for monitoring the patient's sedation level throughout the procedure. The proceduralist performing the procedure cannot simultaneously monitor sedation — these are two distinct responsibilities requiring separate personnel.",
+        explanation: "JC requires a dedicated individual whose primary role during the procedure is monitoring the patient's sedation level and physiologic status. The proceduralist performing the colonoscopy cannot simultaneously fulfill that monitoring role. The dedicated observer is typically a trained RN who monitors the patient and is not performing procedural tasks. This is not specific to CRNAs — any qualified, trained RN can serve as the dedicated sedation monitor.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -4416,12 +4416,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "During a sedation quality review, a director identifies that the post-anesthesia evaluations for 8 of 12 patients documented respiratory function, cardiovascular function, and pain, but routinely omitted temperature and hydration status. What is the compliance status?",
         options: [
           "Partially compliant — 5 of the 7 elements are documented, which satisfies a 70% threshold under JC standards",
-          "Non-compliant — all 7 post-anesthesia evaluation elements are required; omitting temperature and hydration is a finding for each case",
+          "Non-compliant — all required post-anesthesia evaluation elements must be present; omitting temperature and hydration is a finding for each case",
           "Compliant — temperature and hydration are nursing documentation responsibilities, not part of the anesthesia evaluation",
           "Non-compliant only if the omissions caused patient harm during the review period",
         ],
         correctIndex: 1,
-        explanation: "There is no threshold — the Joint Commission requires all 7 post-anesthesia evaluation elements for every case. Temperature and post-operative hydration status are among the 7 required elements. Systematic omission of these elements across multiple charts would be cited as a pattern of deficient post-anesthesia documentation.",
+        explanation: "JC standard PC.03.01.07 requires all required post-anesthesia evaluation elements for every case — there is no partial-credit threshold. The required elements are: respiratory function, cardiovascular function, mental status, temperature, pain, nausea/vomiting, and post-operative hydration status. Systematic omission of temperature and hydration status across 8 of 12 charts represents a pattern of deficient post-anesthesia documentation and would be cited as a finding on every affected record.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -4445,11 +4445,11 @@ const hospitalLevelsRaw: Level[] = [
         options: [
           "No — only a physician anesthesiologist may administer spinal anesthesia in an OR setting",
           "Yes — a CRNA may administer spinal anesthesia and monitor the patient simultaneously because a CRNA is the credentialed provider",
-          "No — even for a CRNA, a dedicated observer monitoring the patient's status is required; the administering provider cannot solely self-monitor",
-          "Yes — the circulating RN assists with monitoring and the CRNA retains primary responsibility, which satisfies the requirement",
+          "No — even for a CRNA, a dedicated observer is required; the CRNA cannot simultaneously administer and solely monitor",
+          "Yes — the CRNA assigning the circulating RN as the dedicated patient monitor satisfies the monitoring requirement",
         ],
-        correctIndex: 2,
-        explanation: "The requirement for a dedicated patient monitor applies regardless of the anesthesia provider's credentials. The provider administering the anesthesia cannot simultaneously fulfill the role of dedicated sedation/anesthesia monitor. A separate observer is required. In this scenario, the circulating RN serves that monitoring role — which is appropriate if the CRNA has assigned and documented that responsibility.",
+        correctIndex: 3,
+        explanation: "This arrangement IS compliant. The administering anesthesia provider (CRNA) cannot simultaneously serve as the sole dedicated patient monitor — a separate observer is required. When the CRNA assigns monitoring responsibility to the qualified circulating RN (who reports patient status to the CRNA), this satisfies the monitoring requirement. The key is that a dedicated observer exists — the arrangement here correctly provides one. The RN's monitoring role should be documented.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -4469,7 +4469,7 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         id: "anes20",
-        question: "A surveyor reviews a chart and finds: signed surgical consent (pre-sedation), written anesthesia plan, pre-anesthesia assessment with airway eval and ASA classification, intraoperative monitoring documented, and a post-anesthesia evaluation completed at 44 hours with all 7 elements present. What is the compliance status?",
+        question: "A surveyor reviews a chart and finds: signed surgical consent (pre-sedation), written anesthesia plan, pre-anesthesia assessment with airway eval and ASA classification, intraoperative monitoring documented, and a post-anesthesia evaluation completed at 44 hours with all required elements present. What is the compliance status?",
         options: [
           "Non-compliant — the post-anesthesia evaluation at 44 hours exceeds the acceptable window",
           "Non-compliant — the written anesthesia plan must be completed after the procedure, not before",
@@ -4477,7 +4477,7 @@ const hospitalLevelsRaw: Level[] = [
           "Non-compliant — the pre-anesthesia assessment must be completed by the surgeon, not the anesthesiologist",
         ],
         correctIndex: 2,
-        explanation: "This chart is fully compliant: consent obtained before sedation, written anesthesia plan in place pre-procedure, complete pre-anesthesia assessment (including airway and ASA classification), intraoperative monitoring documented, and post-anesthesia evaluation completed within 48 hours with all 7 required elements. No deficiencies.",
+        explanation: "This chart is fully compliant: consent obtained before sedation, written anesthesia plan in place pre-procedure, complete pre-anesthesia assessment (including airway evaluation and physical status classification), intraoperative monitoring documented, and post-anesthesia evaluation completed within 48 hours with all required elements present (respiratory function, cardiovascular function, mental status, temperature, pain, nausea/vomiting, hydration). No deficiencies.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -4984,7 +4984,7 @@ const hospitalLevelsRaw: Level[] = [
           "The patient should be moved to telemetry where alarms are monitored centrally",
         ],
         correctIndex: 1,
-        explanation: "NPSG.06.01.01 addresses alarm fatigue. Alarm parameters should be individualized based on each patient's clinical status rather than using universal default settings. If a patient's baseline rate consistently triggers an alarm that is not clinically actionable, the threshold should be adjusted upward to a level that will detect true deterioration while eliminating false positives.",
+        explanation: "JC's alarm safety standards (currently integrated into NPSG and organizational requirements) require that alarm parameters be individualized to each patient's clinical baseline. If a patient's baseline rate consistently triggers alarms that are not clinically actionable, the threshold should be adjusted upward by provider order to detect true deterioration while eliminating false positives. Silencing alarms without assessment is alarm fatigue behavior — the root cause (inappropriate threshold) must be addressed. Any alarm parameter change requires a provider order and documentation.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -5007,12 +5007,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "A patient in a medical-surgical unit expresses passive suicidal ideation (wishing they were dead) but has no active plan. Under NPSG 15, what is required?",
         options: [
           "Document the comment and continue standard monitoring — passive ideation without a plan does not require escalation",
-          "A formal safety assessment, documented care plan addressing the risk, and environmental safety modifications are all required",
+          "A formal safety assessment, documented care plan addressing the risk, and appropriate environmental safety steps are required",
           "Transfer the patient to the psychiatric unit immediately — medical-surgical units are not equipped for suicidal patients",
           "Notify the family only — clinical intervention requires an active plan or intent to be triggered",
         ],
         correctIndex: 1,
-        explanation: "NPSG.15.01.01 requires that any patient who screens positive for suicide risk — including passive ideation — receive a formal safety assessment, documented care plan, and environmental modifications. Passive ideation is still a risk and requires clinical response. Medical-surgical units must be prepared to manage suicidal patients and make necessary environmental modifications.",
+        explanation: "NPSG.15.01.01 requires that patients who screen positive for suicide risk — including passive ideation — receive a formal validated safety assessment (e.g., C-SSRS), a documented care plan addressing the identified risk, and environmental safety measures appropriate to the risk level. Medical-surgical units must be prepared to manage patients at risk for suicide and make risk-appropriate environmental modifications (e.g., removing ligature risks for high-risk patients). Transfer to psychiatry is not automatically required; management depends on the risk level identified in the formal assessment.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -5035,12 +5035,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "A patient is started on a heparin infusion. The nurse is given a verbal rate by the physician and adjusts the pump without checking the patient's weight or the facility's weight-based dosing protocol. What safety requirement was bypassed?",
         options: [
           "Nothing — physicians determine heparin dosing and nursing follows the rate as ordered",
-          "Heparin infusions must follow weight-based dosing protocols — deviation from the protocol requires physician documentation",
+          "Heparin must be administered according to an approved anticoagulation management program — bypassing the protocol is not acceptable",
           "Weight-based protocol is only required for heparin bolus doses, not for continuous infusion rate adjustments",
           "The nurse should have called pharmacy but weight-based verification is optional for experienced nurses",
         ],
         correctIndex: 1,
-        explanation: "NPSG.03.05.01 requires that heparin infusions follow weight-based dosing protocols. This is a safeguard to prevent dosing errors in a high-alert anticoagulant. Adjusting the infusion rate based on a verbal order without protocol verification — especially without weight confirmation — bypasses a critical safety step.",
+        explanation: "NPSG.03.05.01 requires facilities to implement an anticoagulation management program for heparin and other anticoagulants. This includes using approved, evidence-based protocols for dosing and adjustment. Adjusting a heparin infusion based solely on a verbal order without verifying the facility's dosing protocol — and without confirming weight for a weight-based protocol — bypasses a critical safety step. The protocol exists to prevent heparin dosing errors, a leading cause of medication-related harm.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -5152,7 +5152,7 @@ const hospitalLevelsRaw: Level[] = [
           "Switch the patient to continuous telemetry monitoring which has stricter alarm management requirements",
         ],
         correctIndex: 1,
-        explanation: "NPSG.06.01.01 requires individualized alarm parameters. For a COPD patient with a documented baseline of 90-92%, a threshold of 88% will frequently trigger non-actionable alarms, promoting alarm fatigue. Raising the threshold to the patient's clinical baseline (e.g., 89-90%) maintains meaningful alerting while reducing noise. This must be documented as an individualized order.",
+        explanation: "JC alarm safety standards require individualized alarm parameters based on each patient's clinical status. For a COPD patient with a documented baseline of 90-92%, a threshold of 88% will frequently trigger non-actionable alarms, promoting alarm fatigue. Raising the threshold to the patient's clinical baseline (e.g., 89-90%) maintains meaningful alerting while reducing noise. This parameter change requires a provider order and documentation — clinical staff cannot independently modify alarm thresholds without an order.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -5512,12 +5512,12 @@ const hospitalLevelsRaw: Level[] = [
         question: "A patient with a suspected airborne infection is being transported through the hospital for imaging. What precaution must be taken during transport?",
         options: [
           "The patient must wear an N95 respirator during transport to protect others in the hallway",
-          "The patient wears a surgical mask during transport, and the transport team wears N95 respirators",
+          "The patient wears a surgical mask during transport; the hallway should be cleared and the receiving area notified in advance",
           "Transport of airborne precaution patients is prohibited except in declared medical emergencies",
           "The hallway must be cleared of other patients before transport — no additional precautions are required for the patient",
         ],
         correctIndex: 1,
-        explanation: "During transport outside the airborne isolation room, the patient wears a surgical mask (to contain respiratory secretions). The transport team and receiving department staff must wear N95 respirators. The receiving area should be notified in advance to minimize exposure. The patient cannot wear an N95 themselves during transport as it may compromise their breathing if they are medically compromised.",
+        explanation: "During transport of an airborne precaution patient outside their isolation room: the PATIENT wears a surgical mask to contain respiratory secretions. The hallway should be cleared of other patients and the receiving area notified in advance. Transport personnel in the hallway do NOT need to wear N95 respirators if the patient is properly masked — N95 protection is required when staff are in the same room with the patient without a mask. The patient cannot wear an N95 during transport if it would compromise their breathing.",
         xpReward: 20,
         isSwipe: false,
       },
@@ -5565,15 +5565,15 @@ const hospitalLevelsRaw: Level[] = [
       },
       {
         id: "ic20",
-        question: "An influenza patient is placed in a standard private room. Staff wear surgical masks when within 3 feet of the patient. Is this the correct precaution level?",
+        question: "An influenza patient is placed in a standard private room. Staff wear surgical masks when within 6 feet of the patient. Is this the correct precaution level?",
         options: [
           "No — influenza requires airborne precautions and an N95 respirator due to aerosol transmission",
-          "Yes — droplet precautions (surgical mask within 3 feet) are appropriate for seasonal influenza in a private room",
+          "Yes — droplet precautions (surgical mask within 6 feet) are appropriate for seasonal influenza in a private room",
           "No — influenza requires contact precautions only — no mask is needed beyond 1 foot from the patient",
           "Yes — but only if the patient has received antiviral treatment within the past 24 hours",
         ],
         correctIndex: 1,
-        explanation: "Seasonal influenza is transmitted primarily via large respiratory droplets and requires droplet precautions: surgical mask when within 3 feet of the patient, private room preferred (or cohorting with other influenza patients). A standard private room is appropriate — a negative pressure room is not required. N95 respirators are required for aerosol-generating procedures in influenza patients.",
+        explanation: "Seasonal influenza is transmitted primarily via large respiratory droplets and requires droplet precautions: surgical mask when within 6 feet of the patient (per current CDC guidance), and a private room is preferred. A standard private room is appropriate — a negative pressure room is not required. N95 respirators are required for aerosol-generating procedures in influenza patients. Note: the CDC updated droplet precaution distance guidance from 3 feet to 6 feet to reflect current evidence.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -5784,7 +5784,7 @@ const hospitalLevelsRaw: Level[] = [
           "No — patients have the right to immediate real-time access to their records upon request",
         ],
         correctIndex: 1,
-        explanation: "Under HIPAA, covered entities must provide access to medical records within 30 days of a request. One 30-day extension is permitted if the entity notifies the patient in writing with the reason and the new date. A 45-day response without an extension notice violates HIPAA. JC aligns with HIPAA's patient access requirements.",
+        explanation: "Under HIPAA (45 CFR 164.524), covered entities must provide access to medical records within 30 days of a written request. One 30-day extension is permitted if the entity notifies the patient in writing with the reason and the new deadline. A 45-day response without an extension notice violates HIPAA. Note: the ONC Cures Act (2021) additionally requires that certain electronic health information be made available without delay for patient access — further strengthening patient access rights. JC aligns with HIPAA's patient access requirements.",
         xpReward: 15,
         isSwipe: false,
       },
@@ -5938,7 +5938,7 @@ const hospitalLevelsRaw: Level[] = [
           "The hospital's obligation was fulfilled when the patient was informed of the grievance process at admission",
         ],
         correctIndex: 1,
-        explanation: "CMS requires hospitals to provide written responses to formal grievances that include: the hospital's response to the grievance, steps taken to investigate, results, and the date completed. The response must be timely — CMS expects response within 7 days for most grievances. A patient who escalates to JC after not receiving a response highlights a documented compliance failure in the grievance management process.",
+        explanation: "CMS Conditions of Participation and JC standards require hospitals to provide written responses to formal patient grievances. The written response must include: the hospital's response to the grievance, steps taken to investigate, results of the investigation, and the date of completion. CMS interpretive guidance indicates responses should be timely — while no universal binding number is specified for all grievances, many facilities target 7 days for standard grievances. A patient escalating to JC after receiving no response clearly illustrates a documented failure in the grievance management process.",
         xpReward: 15,
         isSwipe: false,
       },

@@ -534,7 +534,7 @@ export const ascPatientRightsLevel: Level = {
       ],
       correctIndex: 0,
       explanation:
-        "Under 42 CFR 416.50(a), the ASC must provide notice of patient rights and obtain consent in a manner the patient can meaningfully understand. Using a qualified medical interpreter — and documenting which interpreter and which method was used — is the surveyor-defensible standard. Family members are not preferred interpreters because they may not be neutral, may filter or summarize, and may not understand medical terminology.",
+        "Under 42 CFR 416.50(a)(1), the ASC must provide notice of patient rights in a manner the patient can meaningfully understand. Additionally, Section 1557 of the ACA (45 CFR Part 92) prohibits reliance on adult family members as interpreters except in emergencies or when the patient specifically requests it. Using a qualified medical interpreter — and documenting the interpreter's identity and method — is the surveyor-defensible standard. Family members are not appropriate interpreters for consent discussions because they may not be neutral, may filter or summarize information, and may lack medical terminology knowledge.",
       xpReward: 15,
       isSwipe: false,
       cmsTag: "Q-0221, Q-0224 (42 CFR 416.50(a) and (c))",

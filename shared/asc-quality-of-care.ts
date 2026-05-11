@@ -170,7 +170,7 @@ export const ascQualityOfCareLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "Standard F requires that patients be educated regarding their condition or illness and regarding appropriate preventive measures. Documentation has to show what was taught — generic phrases tell the surveyor nothing about whether the patient actually received content that meets the standard. In surgical settings, preventive measures explicitly include post-op infection, VTE, and PE awareness when clinically relevant.",
+        "Under AAAHC Chapter 4 Standard F (and CMS 42 CFR 416.50 notice/rights requirements), patients must be educated regarding their condition and appropriate preventive measures. Documentation must show what was actually taught — generic phrases tell the surveyor nothing about whether substantive education occurred. In surgical settings, post-operative care instructions, infection recognition, and relevant preventive topics should be documented specifically. VTE/PE prevention education is best practice and may be required by facility policy or accreditation standard; the key principle is that education must be documented with substance, not just acknowledged.",
       xpReward: 15,
       isSwipe: false,
       cmsTag: "AAAHC Ch. 4 Std. F (patient education)",
@@ -198,7 +198,7 @@ export const ascQualityOfCareLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "Standard G requires that adequate specialty consultation services be available by prior arrangement and that referrals be both clearly outlined to the patient and arranged with the accepting health care professional. 'Go find one' is neither prior arrangement nor an arranged referral — it is abandonment of continuity of care.",
+        "AAAHC Chapter 4 Standard G requires that adequate specialty consultation services be available by prior arrangement and that referrals be clearly outlined to the patient and arranged with the accepting health care professional. Under CMS, continuity of care requirements flow from 42 CFR 416.52(c) (post-surgical assessment and discharge planning). 'Go find one' is neither prior arrangement nor an arranged referral — it is abandonment of continuity of care and will be cited under quality of care standards.",
       xpReward: 15,
       isSwipe: false,
       cmsTag: "AAAHC Ch. 4 Std. G (transfer of care between professionals)",
@@ -273,29 +273,29 @@ export const ascQualityOfCareLevel: Level = {
     {
       id: "asc_qoc_07",
       question:
-        "During a survey, the surveyor asks, 'When was the last time you sent the local hospital written notice of your operations and patient population?' The administrator says, 'They've known us for years — we don't need to send them anything.' Is this acceptable?",
+        "A surveyor reviews an ASC's hospital transfer documentation and finds that the ASC has no written transfer agreement with any hospital. The administrator explains that all physicians performing procedures have admitting privileges at County General, which is a Medicare-certified hospital. Is the ASC compliant under 42 CFR 416.41(b)?",
       options: [
-        "Yes — long-standing relationships satisfy the notification requirement",
-        "Yes — the transfer agreement itself counts as notice",
-        "No — 42 CFR 416.41(b)(3) requires the ASC to periodically provide the local hospital with written notice of its operations and patient population served, and that notice must be documented",
-        "Yes — written notice is required only when the patient population changes substantially",
+        "No — all ASCs must have a formal written transfer agreement regardless of physician privileges",
+        "No — the surveyor would require both a written agreement and admitting privileges as independent safeguards",
+        "Yes — 42 CFR 416.41(b)(1) allows either a written transfer agreement with a qualifying hospital or physicians who have admitting privileges at a Medicare-certified hospital; this ASC satisfies the requirement through admitting privileges",
+        "Yes — as long as transfers have gone smoothly historically, no formal documentation is required",
       ],
       correctIndex: 2,
       explanation:
-        "42 CFR 416.41(b)(3) (Q-0042) is a separate, standing requirement: periodic written notice to the local hospital about operations and patient population. The transfer agreement is one document; the periodic notice is another. Surveyors specifically ask for the notice and want to see a dated letter and proof of delivery.",
+        "42 CFR 416.41(b)(1) requires that an ASC have a written transfer agreement with a hospital that meets specified conditions, OR that the physicians performing surgery at the ASC have admitting privileges at such a hospital. This is an either/or provision — a written agreement is one path, physician admitting privileges are the other. The hospital must be Medicare-certified and meet the other criteria in 416.41(b)(2). Many ASCs satisfy this requirement through admitting privileges rather than a formal written agreement.",
       xpReward: 15,
       isSwipe: false,
-      cmsTag: "Q-0042 (42 CFR 416.41(b)(3))",
+      cmsTag: "Q-0039 / Q-0040 (42 CFR 416.41(b)(1)–(b)(2))",
       tutor: {
         whyCorrect:
-          "The notice exists so the receiving hospital knows what kinds of patients to expect from your facility — case mix, anesthesia type, typical complications, hours of operation. Without it, the hospital is receiving transfers blind.",
+          "The regulation explicitly offers two paths: a transfer agreement or admitting privileges. Understanding this either/or structure is critical — surveyors sometimes incorrectly pressure ASCs without written agreements, but if admitting privileges at a qualifying hospital are documented, the requirement is met.",
         whyWrong: {
-          A: "Familiarity does not satisfy a documented-notice requirement.",
-          B: "The transfer agreement creates the relationship; the notice describes ongoing operations. They are two different documents.",
-          D: "The notice is required periodically regardless of whether the population has changed.",
+          A: "Incorrect — the regulation explicitly allows admitting privileges as an alternative to a written agreement.",
+          B: "Incorrect — both are not required simultaneously; the regulation specifies 'or,' not 'and.'",
+          D: "Historical smooth operations are not a substitute for meeting the regulatory standard — the standard is about having the structural relationship, not about outcomes.",
         },
         operationalContext:
-          "Send the notice annually on the same calendar date (e.g., January 15) by certified mail or with email read-receipt. File the dated copy and the delivery confirmation in the survey-ready binder under 'Hospital Notice.'",
+          "Maintain a current list of all physicians performing procedures, their hospital privileges (with documentation of the hospital's Medicare certification), and renewal dates. If using admitting privileges as your compliance path, audit annually to ensure no surgeon's hospital privileges have lapsed — a lapse creates a gap in the ASC's 416.41(b) compliance.",
       },
     },
     {

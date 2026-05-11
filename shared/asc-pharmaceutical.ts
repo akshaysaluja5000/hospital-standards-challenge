@@ -520,19 +520,19 @@ export const ascPharmaceuticalLevel: Level = {
         "An ASC's pharmacy director is asked, 'Who is permitted to administer medications in the OR?' What is the most defensible answer aligned with Chapter 11 and accepted scope of practice?",
       options: [
         "Any clinical staff member present in the OR may administer medications under the supervision of the surgeon",
-        "Medications may be administered only by individuals authorized by their license, the ASC's policies, and applicable scope of practice — typically physicians, anesthesia providers, and registered nurses (and for blood products specifically, only physicians or RNs per 416.48(a)(2))",
+        "Medications may be administered only by individuals authorized by their license, the ASC's policies, and applicable scope of practice — typically physicians, anesthesia providers, and registered nurses; blood product administration is further restricted by state scope of practice and facility policy to licensed practitioners with appropriate competency",
         "Only the anesthesia provider may administer any OR medication",
         "Medical assistants may administer medications in the OR if the surgeon witnesses the administration",
       ],
       correctIndex: 1,
       explanation:
-        "Medication administration is a scope-of-practice function. Standard F and 416.48(a)(2) specifically restrict blood and blood product administration to physicians or registered nurses. More broadly, every administration must be by an individual authorized by license, by the ASC's policies, and by applicable state scope-of-practice rules. 'Anyone in the OR' is wrong; 'only anesthesia' is too narrow; medical assistants cannot administer in the OR.",
+        "Medication administration is a scope-of-practice function governed by state license, facility policy, and applicable federal Conditions for Coverage. Every administration must be by an individual authorized by their license, by the ASC's policies, and by applicable state scope-of-practice rules. Blood and blood product administration is further restricted to practitioners with appropriate licensure and competency — typically physicians and RNs — per state law and facility policy. 'Anyone in the OR' is wrong; 'only anesthesia' is too narrow; medical assistants cannot administer in the OR.",
       xpReward: 15,
       isSwipe: false,
-      cmsTag: "Q-0183 (42 CFR 416.48(a)(2))",
+      cmsTag: "Q-0183 (42 CFR 416.48 — pharmaceutical services; state scope of practice applies)",
       tutor: {
         whyCorrect:
-          "The CFR explicitly carves out blood products to physicians and RNs. For other medications, the principle is that administration is a licensed function whose scope is set by license, policy, and state law. The pharmacy director should be able to articulate that hierarchy on demand.",
+          "Medication administration is a licensed function — scope is set by the individual's license, the ASC's policies, and state scope-of-practice law. Blood product administration carries additional restrictions under most state nursing practice acts and facility policies, typically limiting it to physicians and RNs. The pharmacy director should be able to articulate that hierarchy on demand.",
         whyWrong: {
           A: "Surgeon supervision does not extend administration authority to unlicensed staff.",
           C: "RNs and physicians (not just anesthesia) routinely administer medications in the OR within their scope.",

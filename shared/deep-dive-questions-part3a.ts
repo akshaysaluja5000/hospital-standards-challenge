@@ -642,7 +642,7 @@ export const ddOrLevel: DeepDiveLevel = {
           "Low humidity only matters in the sterile processing department"
         ],
         correctIndex: 1,
-          explanation: "The recommended OR relative humidity range is 20-60% per ASHRAE and FGI Guidelines. Humidity below 20% increases the risk of electrostatic discharge (which can ignite flammable anesthetic agents or cause equipment malfunction), dries mucous membranes of patients and staff, and can affect the integrity of some sterile packaging materials. Humidity above 60% promotes microbial growth and condensation.",
+          explanation: "The recommended OR relative humidity range is 20-60% per ASHRAE and FGI Guidelines. Humidity below 20% increases the risk of electrostatic discharge (which can cause equipment malfunction and create sparks in oxygen-enriched environments), dries mucous membranes of patients and staff, and can affect the integrity of some sterile packaging materials. Note: modern anesthetic agents are not flammable at clinical concentrations; the primary concern with electrostatic discharge is oxygen enrichment, not flammable anesthetic vapors. Humidity above 60% promotes microbial growth and condensation.",
           expertXp: 30
         },
         {

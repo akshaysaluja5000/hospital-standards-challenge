@@ -18,9 +18,9 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Instrument Positioning for Transport",
-        content: "All hinged instruments — scissors, clamps, hemostats, needle holders — must be placed in the open or unhinged position before transport. This is essential because box locks (the hinged joint mechanism) trap bioburden when locked. If instruments arrive at SPD in the closed position, the cleaning process cannot effectively reach those hidden surfaces. Additionally, heavy instruments must be placed on the bottom of the transport tray to prevent crushing or damaging lighter, more delicate instruments above them. Improper stacking leads to bent tips, misaligned jaws, and premature instrument failure.",
+        content: "All hinged instruments — scissors, clamps, hemostats, needle holders — must be placed in the open, unlocked position before transport. This is essential because box locks (the hinged joint mechanism) trap bioburden when locked. If instruments arrive at SPD in the closed position, the cleaning process cannot effectively reach those hidden surfaces. Additionally, heavy instruments must be placed on the bottom of the transport tray to prevent crushing or damaging lighter, more delicate instruments above them. Improper stacking leads to bent tips, misaligned jaws, and premature instrument failure.",
         criticalValues: [
-          { label: "Hinged instruments", value: "Must be open/unhinged — never locked closed" },
+          { label: "Hinged instruments", value: "Must be open/unlocked — box locks released, never locked closed" },
           { label: "Heavy instruments", value: "Bottom of the tray" },
           { label: "Delicate instruments", value: "Top of the tray, protected from crushing" }
         ],
@@ -61,7 +61,7 @@ export const handbook: HandbookChapter[] = [
     ],
     quickReference: [
       { fact: "Point-of-use treatment", detail: "Enzymatic spray immediately — never let bioburden dry" },
-      { fact: "Instrument position", detail: "Open/unhinged, heavy on bottom, delicate on top" },
+      { fact: "Instrument position", detail: "Open/unlocked (box locks released), heavy on bottom, delicate on top" },
       { fact: "Transport container", detail: "Red rigid bin with secured lid" },
       { fact: "Clean bin storage", detail: "Clean supply room only" },
       { fact: "Required PPE", detail: "Gloves, gown, face shield/goggles, mask" },
@@ -387,11 +387,11 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Clinical Device Management",
-        content: "Clinical devices require specific cleaning protocols and dating. Glucometers must be cleaned between each patient use with the correct disinfectant and contact time: Yellow Top Bleach requires 4 minutes of wet contact time, while PDI Sani-Cloth germicidal wipes require 1 minute of wet contact time. Using the wrong contact time means the device is not properly disinfected and could transmit infections between patients. Ultrasound gel must be dated when opened and discarded 28 days after opening (single-patient use gel is exempt). Multi-dose vials must be dated when opened and used per manufacturer's guidelines. All medications, supplies, and solutions must be checked for expiration dates before use.",
+        content: "Clinical devices require specific cleaning protocols and dating. Glucometers must be cleaned between each patient use with the correct disinfectant and contact time: Yellow Top Bleach requires 4 minutes of wet contact time, while PDI Sani-Cloth germicidal wipes require 1 minute of wet contact time. Using the wrong contact time means the device is not properly disinfected and could transmit infections between patients. Ultrasound gel must be dated when opened and used within the manufacturer's specified beyond-use date — always follow the IFU (some manufacturers specify 28 days, others differ; single-patient use gel packets are exempt). Multi-dose vials must be dated when opened and used per manufacturer's guidelines. All medications, supplies, and solutions must be checked for expiration dates before use.",
         criticalValues: [
           { label: "Glucometer + Yellow Top Bleach", value: "4 minutes wet contact time" },
           { label: "Glucometer + PDI Sani-Cloth", value: "1 minute wet contact time" },
-          { label: "Ultrasound gel", value: "28 days after opening" },
+          { label: "Ultrasound gel", value: "Date when opened — follow manufacturer IFU for beyond-use date" },
           { label: "All supplies", value: "Must be within expiration date" }
         ],
         thinkAboutIt: "After checking a patient's blood glucose, you wipe the glucometer with a PDI Sani-Cloth and move to the next patient 30 seconds later. What did you do wrong?"
@@ -510,7 +510,7 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "OR Attire Standards",
-        content: "OR attire serves as a barrier between the surgical team and the patient. Requirements include: freshly laundered facility-provided scrubs (not worn from home), surgical cap or hood that covers ALL hair (including sideburns, neckline hair, and facial hair), surgical mask worn over both mouth AND nose at all times in restricted areas, shoe covers as required by facility policy. Jewelry must not be worn in the OR — rings, bracelets, and watches harbor bacteria and can puncture sterile gloves. If earrings cannot be removed, they must be fully covered by the surgical cap. Skull caps that leave hair exposed at the sides and back are non-compliant — a bouffant cap or hood that covers all hair must be used.",
+        content: "OR attire serves as a barrier between the surgical team and the patient. Requirements include: freshly laundered facility-provided scrubs (not worn from home), surgical cap or hood that covers ALL hair (including sideburns, neckline hair, and facial hair), surgical mask worn over both mouth AND nose at all times in restricted areas, shoe covers as required by facility policy. Jewelry should be minimized in the OR — rings and bracelets can harbor bacteria and rings worn under sterile gloves present a glove integrity risk; facility policy governs what is permissible (AORN guidance allows jewelry that can be fully contained within attire per facility policy, but many facilities prohibit it entirely in restricted zones). Skull caps that leave hair exposed at the sides and back are non-compliant — a bouffant cap or hood that covers all hair must be used.",
         criticalValues: [
           { label: "Scrubs", value: "Facility-provided, freshly laundered" },
           { label: "Head covering", value: "Cap/hood covering ALL hair including sideburns and neckline" },
@@ -611,11 +611,12 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Patient Identification & Safety Screening",
-        content: "Patient identification using two unique identifiers is required before every interaction involving medications, procedures, treatments, or specimen collection. Acceptable identifiers include: patient's full legal name and date of birth, patient's full legal name and medical record number, or other facility-approved combinations. Room number is NEVER an acceptable identifier. For total hip arthroplasty (THA) and total knee arthroplasty (TKA) patients, opioid use screening must be completed pre-operatively. Pain management goals must be discussed and documented prior to surgery. All patients should have their pain goal documented (the level of pain they consider acceptable for recovery).",
+        content: "Patient identification using two unique identifiers is required before every interaction involving medications, procedures, treatments, or specimen collection. Acceptable identifiers include: patient's full legal name and date of birth, patient's full legal name and medical record number, or other facility-approved combinations. Room number is NEVER an acceptable identifier. Pain assessment is required for ALL surgical patients pre-operatively under PC.01.02.07 — this is a universal standard, not procedure-specific. For total hip arthroplasty (THA) and total knee arthroplasty (TKA) patients, pre-operative opioid risk screening is additionally required as a CMS quality measure. Pain management goals must be discussed and documented prior to surgery. All patients should have their pain goal documented (the level of pain they consider acceptable for recovery).",
         criticalValues: [
           { label: "Identifiers", value: "Two unique identifiers — NEVER room number" },
           { label: "Examples", value: "Name + DOB, Name + MRN" },
-          { label: "THA/TKA patients", value: "Opioid use screening required pre-op" },
+          { label: "Pain assessment", value: "Required pre-op for ALL surgical patients (PC.01.02.07)" },
+          { label: "THA/TKA patients", value: "Additional opioid risk screening required (CMS quality measure)" },
           { label: "Pain management", value: "Pain goal documented before surgery" }
         ]
       }
@@ -627,7 +628,7 @@ export const handbook: HandbookChapter[] = [
       { fact: "Consent form", detail: "Signed, dated, timed — NO abbreviations for procedure" },
       { fact: "H&P timing", detail: "Within 30 days; update within 24 hours if H&P >24 hrs old" },
       { fact: "Pre-anesthesia", detail: "Assessment required before anesthesia" },
-      { fact: "THA/TKA", detail: "Opioid screening required, pain goal documented" },
+      { fact: "Pain assessment", detail: "Required pre-op for ALL surgical patients — THA/TKA additionally require opioid risk screening" },
       { fact: "Consent timing", detail: "Before sedation" }
     ]
   },
@@ -638,10 +639,10 @@ export const handbook: HandbookChapter[] = [
     sections: [
       {
         heading: "Post-Anesthesia & Post-Op Documentation",
-        content: "A post-anesthesia evaluation must be completed within 48 hours of the procedure. This evaluation must document seven required elements: respiratory function, cardiovascular function, mental status, temperature, pain level, nausea/vomiting assessment, and hydration status. The post-operative note must be documented by the surgeon and include: the name of the surgeon who performed the procedure, the procedure performed, findings, specimens removed, estimated blood loss (EBL), and the post-operative diagnosis. This note should be completed as soon as reasonably possible after the procedure and must be in the medical record before the patient is discharged.",
+        content: "A post-anesthesia evaluation must be completed within 48 hours of the procedure by an anesthesia provider. JC and CMS do not enumerate a fixed list of required elements, but the evaluation typically addresses: respiratory function, cardiovascular function, mental status, temperature, pain level, nausea/vomiting, and hydration — consistent with ASA post-anesthesia care standards. The post-operative note must be documented by the surgeon and include: the name of the surgeon who performed the procedure, the procedure performed, findings, specimens removed, estimated blood loss (EBL), and the post-operative diagnosis. This note should be completed as soon as reasonably possible after the procedure and must be in the medical record before the patient is discharged.",
         criticalValues: [
-          { label: "Post-anesthesia eval", value: "Within 48 hours, 7 required elements" },
-          { label: "7 elements", value: "Respiratory, CV, mental status, temp, pain, N/V, hydration" },
+          { label: "Post-anesthesia eval", value: "Within 48 hours — by anesthesia provider" },
+          { label: "Typical elements", value: "Respiratory, CV, mental status, temp, pain, N/V, hydration" },
           { label: "Post-op note", value: "Surgeon, procedure, findings, specimens, EBL, diagnosis" }
         ]
       },
@@ -679,18 +680,18 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Tissue Tracking & Specialty Records",
-        content: "Human tissue products (allografts, bone grafts, skin grafts) require rigorous tracking from supplier to patient. All tissue must come from FDA-registered suppliers. Records must be maintained for 10 years and must enable tracing tissue from donor to recipient and recipient back to donor. Tissue storage must have 24/7 temperature monitoring with alarms that alert staff to out-of-range conditions. Intake and Output (I&O) records must be documented every 8 hours for patients with I&O orders. Restraint use requires: documentation of less restrictive alternatives attempted first, physician order, patient assessment, and monitoring per policy. Restraints are always a last resort.",
+        content: "Human tissue products (allografts, bone grafts, skin grafts) require rigorous tracking from supplier to patient. All tissue must come from FDA-registered suppliers. Records must be maintained for 10 years and must enable tracing tissue from donor to recipient and recipient back to donor. Tissue storage must have 24/7 temperature monitoring with alarms that alert staff to out-of-range conditions. Intake and Output (I&O) documentation frequency is determined by patient condition and facility policy — JC does not mandate a specific interval, but I&O must be completed as ordered and reflect clinical needs. Restraint use requires: documentation of less restrictive alternatives attempted first, physician order, patient assessment, and monitoring per policy (minimum every 2 hours for behavioral restraints; every 15 minutes for violent/self-destructive). Restraints are always a last resort.",
         criticalValues: [
           { label: "Tissue suppliers", value: "FDA-registered only" },
           { label: "Record retention", value: "10 years" },
           { label: "Temperature monitoring", value: "24/7 with alarms" },
-          { label: "I&O documentation", value: "Every 8 hours" },
-          { label: "Restraints", value: "Last resort — document alternatives tried first" }
+          { label: "I&O documentation", value: "Per patient order and facility policy — frequency is clinically determined" },
+          { label: "Restraints", value: "Last resort — document alternatives tried first; monitor ≥ every 2 hours" }
         ]
       }
     ],
     quickReference: [
-      { fact: "Post-anesthesia eval", detail: "Within 48 hours, 7 elements" },
+      { fact: "Post-anesthesia eval", detail: "Within 48 hours — by anesthesia provider; covers respiratory, CV, mental status, pain, temp, N/V" },
       { fact: "Post-op note", detail: "Surgeon, procedure, findings, specimens, EBL, diagnosis" },
       { fact: "Pain assessment", detail: "Minimum 2x per 24 hours" },
       { fact: "Pain reassess: IV", detail: "Within 1 hour" },
@@ -701,7 +702,7 @@ export const handbook: HandbookChapter[] = [
       { fact: "PRN orders", detail: "Must include indication" },
       { fact: "Suicide screening", detail: "C-SSRS screen → SAFE-T if positive → 988 info" },
       { fact: "Tissue tracking", detail: "FDA suppliers, 10-year records, 24/7 alarms" },
-      { fact: "I&O records", detail: "Every 8 hours" }
+      { fact: "I&O records", detail: "Per patient order and facility policy — frequency is clinically determined, not JC-mandated" }
     ]
   },
   {
@@ -752,13 +753,13 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Specialized Equipment & Supplies",
-        content: "All clinical supplies must be within their expiration dates. Expired supplies — even if unopened — must be removed from service. This includes medications, sterile supplies, test strips, reagents, and any item with an expiration date. Pill cutters used for splitting medications must be cleaned between patients to prevent cross-contamination of medication residue. Glucose testing supplies must be dated when opened and used within the manufacturer's specified timeframe. Equipment must be in good repair — cracked housings, frayed cords, damaged connectors, and non-functional alarms all constitute compliance findings. Biomedical equipment must have current preventive maintenance stickers showing the last inspection date and next due date.",
+        content: "All clinical supplies must be within their expiration dates. Expired supplies — even if unopened — must be removed from service. This includes medications, sterile supplies, test strips, reagents, and any item with an expiration date. Pill cutters used for splitting medications must be cleaned between patients to prevent cross-contamination of medication residue. Glucose testing supplies must be dated when opened and used within the manufacturer's specified timeframe. Equipment must be in good repair — cracked housings, frayed cords, damaged connectors, and non-functional alarms all constitute compliance findings. Biomedical equipment must have documented preventive maintenance (PM) completed per the organization's schedule under EC.02.04.03. PM stickers are a common method to show compliance at the point of care, but the underlying requirement is that PM activities are performed and documented — not that a sticker is physically present on the device.",
         criticalValues: [
           { label: "Expired supplies", value: "Remove from service — no exceptions" },
           { label: "Pill cutters", value: "Clean between patients" },
           { label: "Glucose supplies", value: "Dated when opened, within manufacturer timeframe" },
           { label: "Equipment condition", value: "Good repair — no cracks, frays, or damage" },
-          { label: "Biomed stickers", value: "Current PM sticker with dates" }
+          { label: "Biomed PM", value: "Documented per EC.02.04.03 schedule — stickers are evidence, not the requirement itself" }
         ],
         thinkAboutIt: "During a supply check, you find a box of sterile gloves with an expiration date of last month. The gloves look fine and the box is sealed. Can they still be used?"
       }
@@ -1140,11 +1141,11 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Fire Compartmentalization and Fire Door Rules",
-        content: "Hospitals are built in fire compartments — sections separated by fire-rated walls and doors that contain fire and smoke to prevent spread throughout the building. This compartmentalization is the primary life safety design for hospitals where full patient evacuation is difficult. Fire doors must: remain closed at all times or be held open only by an approved automatic closing device that releases when the alarm activates; never be propped open with doorstops, furniture, equipment, or wedges; have functioning latches that allow them to close completely. A propped fire door is one of the most commonly cited immediate JC findings because it defeats the compartment design — it applies to stairwell doors, corridor fire doors, and all other fire-rated doors.",
+        content: "Hospitals are built in fire compartments — sections separated by fire-rated walls and doors that contain fire and smoke to prevent spread throughout the building. This compartmentalization is the primary life safety design for hospitals where full patient evacuation is difficult. Fire doors must: remain closed at all times or be held open only by an approved automatic closing device that releases when the fire alarm activates (magnetically-held doors on alarm release are compliant); never be propped open with doorstops, furniture, equipment, or wedges; have functioning latches that allow them to close and latch completely. Propping a fire door open with an unapproved object is a frequently cited JC finding under LS.02.01.10 because it defeats the compartmentalization design — it applies to stairwell doors, corridor fire doors, and all other fire-rated doors.",
         criticalValues: [
-          { label: "Fire doors", value: "Must remain closed — or use approved auto-close devices only" },
-          { label: "Never prop", value: "No doorstops, furniture, wedges — even briefly, even non-patient areas" },
-          { label: "Propped door", value: "Immediate JC finding — defeats the compartmentalization design" }
+          { label: "Fire doors", value: "Must remain closed — or use approved auto-close/hold-open devices only" },
+          { label: "Never prop", value: "No doorstops, furniture, wedges — unapproved propping is a JC citation" },
+          { label: "Approved hold-open", value: "Magnetic devices that release on alarm activation are compliant" }
         ],
         thinkAboutIt: "An EVS staff member props a stairwell fire door open with a rubber wedge while cleaning the corridor to make it easier to move carts back and forth. What is the compliance finding and what should they do instead?"
       },
@@ -1171,7 +1172,7 @@ export const handbook: HandbookChapter[] = [
       { fact: "RACE order", detail: "Rescue → Alarm → Contain (close doors) → Extinguish or Evacuate" },
       { fact: "PASS aim point", detail: "Base of the fire — not the flames" },
       { fact: "Fire drills", detail: "Quarterly per shift, unannounced, all shifts including nights" },
-      { fact: "Fire doors", detail: "Always closed — never propped. Propped door = immediate JC finding" },
+      { fact: "Fire doors", detail: "Closed or on approved auto-release hold-open. Propping with unapproved objects = JC citation under LS.02.01.10" },
       { fact: "Horizontal evacuation", detail: "First approach — through fire doors to next compartment, same floor" },
       { fact: "Vertical evacuation", detail: "Stairs only when horizontal is not possible" },
       { fact: "Egress routes", detail: "Always clear, illuminated signs, no locks — stored items are a citation" },

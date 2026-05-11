@@ -1554,10 +1554,10 @@ export const deepDiveLevelsPart2: DeepDiveLevel[] = [
         "OR humidity must be maintained above 35% at all times to prevent static discharge, and 28% is significantly below this mandatory minimum threshold",
         "Humidity below 30% is within acceptable limits and requires no corrective action as long as daily readings are logged and reviewed by the safety officer",
         "ASHRAE 170 Table 7.1 removed the minimum humidity requirement for operating rooms in the 2017 revision, establishing only a maximum threshold of 60% relative humidity; the standard defers minimum humidity control to the facility's clinical engineering department based on equipment manufacturer specifications",
-        "OR humidity should be maintained between 20-60%, and while 28% is within range, very low humidity increases electrostatic discharge risk, especially around flammable anesthetic agents"
+        "OR humidity should be maintained between 20-60%, and while 28% is within range, very low humidity increases electrostatic discharge risk and can cause equipment malfunction in oxygen-enriched OR environments"
       ],
       baseCorrectIndex: 3,
-        baseExplanation: "While 28% falls within the 20-60% acceptable range, this is on the lower end. Very low humidity environments increase the risk of electrostatic discharge, which can ignite flammable gases or create sparks near oxygen-enriched atmospheres. The facility should investigate why humidity is consistently at the low end and consider whether HVAC adjustments are needed.",
+        baseExplanation: "While 28% falls within the 20-60% acceptable range, this is on the lower end. Very low humidity environments increase the risk of electrostatic discharge, which can create sparks and cause equipment malfunction in oxygen-enriched OR atmospheres. Note: modern anesthetic agents (sevoflurane, desflurane, isoflurane) are not flammable at clinical concentrations — the concern is oxygen enrichment, not flammable anesthetic vapors. The facility should investigate why humidity is consistently at the low end and consider whether HVAC adjustments are needed.",
         baseXp: 15,
         followUps: [{
           question: "The facilities engineer explains that humidity control is difficult in winter months due to dry outside air. What environmental monitoring documentation does Joint Commission expect?",
