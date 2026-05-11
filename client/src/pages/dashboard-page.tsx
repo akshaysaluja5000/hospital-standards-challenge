@@ -589,14 +589,14 @@ export default function DashboardPage() {
             {/* ── Search Bar ── */}
             <div ref={searchRef} className="relative" data-testid="search-container">
               <div className="relative flex items-center">
-                <Search size={16} className="absolute left-3.5 text-muted-foreground pointer-events-none" />
+                <Search size={17} className="absolute left-3.5 text-primary pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Search any topic, standard, or concept…"
                   value={searchQuery}
                   onChange={(e) => { setSearchQuery(e.target.value); setSearchOpen(true); }}
                   onFocus={() => setSearchOpen(true)}
-                  className="w-full pl-10 pr-10 py-3 rounded-2xl border border-border bg-card text-sm font-medium placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary/50 transition-all"
+                  className="w-full pl-10 pr-10 py-3 rounded-2xl border-2 border-primary/40 bg-background text-sm font-semibold placeholder:text-foreground/50 placeholder:font-medium focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all shadow-sm"
                   data-testid="input-search"
                 />
                 {searchQuery && (
