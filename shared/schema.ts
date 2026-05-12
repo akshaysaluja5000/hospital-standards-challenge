@@ -410,6 +410,17 @@ export const flashcardReviews = pgTable("flashcard_reviews", {
 
 export type FlashcardReview = typeof flashcardReviews.$inferSelect;
 
+// ── Leadership Role Access Codes ──────────────────────────────────────────────
+
+export const leadershipRoleCodes = pgTable("leadership_role_codes", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  facilityId: integer("facility_id").references(() => facilities.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type LeadershipRoleCode = typeof leadershipRoleCodes.$inferSelect;
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;

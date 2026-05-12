@@ -1231,6 +1231,26 @@ export async function registerRoutes(
     res.json(entries);
   });
 
+  // ── Leadership Role Access Codes ────────────────────────────────────────────
+
+  app.post("/api/leadership-code/validate", requireAuth, async (req, res) => {
+    const { code } = req.body;
+    if (!code || typeof code !== "string" || !code.trim()) {
+      return res.status(400).json({ valid: false, message: "Code is required." });
+    }
+    const u = req.user as User;
+    const valid = await storage.validateLeadershipCode(code.trim(), u.facilityId ?? null);
+    if (valid) {
+      return res.json({ valid: true });
+    }
+    return res.status(403).json({ valid: false, message: "Invalid code. Please check with your facility administrator." });
+  });
+
+  app.get("/api/admin/leadership-codes", requireAuth, requireAdmin, async (_req, res) => {
+    const codes = await storage.getLeadershipCodes();
+    res.json(codes);
+  });
+
   app.get("/api/admin/stats", requireLeadershipRole("director"), requireMfa, async (req, res) => {
     try {
       const adminUser = req.user as User;

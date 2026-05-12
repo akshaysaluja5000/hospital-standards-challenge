@@ -42,9 +42,10 @@ import {
   FileText,
   Briefcase,
   DoorOpen,
+  Lock,
   type LucideIcon,
 } from "lucide-react";
-import { MODULE_IDS, MODULE_LABELS, type ModuleId } from "@shared/schema";
+
 import {
   ROLE_CONFIGS,
   DEPARTMENT_ORDER_BY_FACILITY,
@@ -55,6 +56,8 @@ import {
   type RoleConfig,
   type FacilityType,
 } from "@shared/roles";
+
+const LEADERSHIP_RESTRICTED_ROLES = new Set(["compliance_officer", "nurse_educator"]);
 
 const ROLE_ICONS: Record<string, LucideIcon> = {
   // Hospital
@@ -126,6 +129,12 @@ export default function RoleSelectPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showMultiRoleModal, setShowMultiRoleModal] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [codeModalRole, setCodeModalRole] = useState<string | null>(null);
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState("");
+  const [codeLoading, setCodeLoading] = useState(false);
+
+  const isSuperAdmin = user?.username === "akshaysaluja" || user?.username === "rsaluja" || user?.leadershipRole === "super_admin";
 
   const facilityType: FacilityType = (user?.organizationType as FacilityType) || "hospital";
   const visibleRoles = useMemo(() => rolesForFacility(facilityType), [facilityType]);
@@ -249,6 +258,10 @@ export default function RoleSelectPage() {
     () => ROLE_CONFIGS.find((r) => r.id === selectedIds[0]) || null,
     [selectedIds]
   );
+  const selectableRoles = useMemo(
+    () => visibleRoles.filter(r => !r.restricted || isSuperAdmin),
+    [visibleRoles, isSuperAdmin]
+  );
 
   const persist = (ids: string[]) => {
     try { sessionStorage.setItem(SELECTION_KEY, JSON.stringify(ids)); } catch {}
@@ -256,11 +269,51 @@ export default function RoleSelectPage() {
 
   const handleSelect = (id: string) => {
     setShowError(false);
+    if (LEADERSHIP_RESTRICTED_ROLES.has(id) && !isSuperAdmin) {
+      setCodeInput("");
+      setCodeError("");
+      setCodeModalRole(id);
+      return;
+    }
     setSelectedIds((prev) => {
-      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
+      let next: string[];
+      if (prev.includes(id)) {
+        next = prev.filter((x) => x !== id);
+      } else {
+        // Deselect any restricted roles before adding a non-restricted role
+        const withoutRestricted = prev.filter(x => !LEADERSHIP_RESTRICTED_ROLES.has(x));
+        next = [...withoutRestricted, id];
+      }
       persist(next);
       return next;
     });
+  };
+
+  const handleCodeSubmit = async () => {
+    if (!codeModalRole || !codeInput.trim()) return;
+    setCodeLoading(true);
+    setCodeError("");
+    try {
+      const res = await fetch("/api/leadership-code/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ code: codeInput.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.valid) {
+        setSelectedIds([codeModalRole]);
+        persist([codeModalRole]);
+        setCodeModalRole(null);
+        setCodeInput("");
+      } else {
+        setCodeError(data.message || "Invalid code. Please check with your facility administrator.");
+      }
+    } catch {
+      setCodeError("Network error. Please try again.");
+    } finally {
+      setCodeLoading(false);
+    }
   };
 
   const handleContinue = () => {
@@ -497,27 +550,28 @@ export default function RoleSelectPage() {
           <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
             <Button
               type="button"
-              variant={selectedIds.length === visibleRoles.length && visibleRoles.length > 0 ? "default" : "outline"}
+              variant={selectableRoles.length > 0 && selectableRoles.every(r => selectedIds.includes(r.id)) ? "default" : "outline"}
               size="sm"
               data-testid="button-select-all-roles"
-              disabled={visibleRoles.length === 0}
+              disabled={selectableRoles.length === 0}
               onClick={() => {
                 setShowError(false);
-                if (selectedIds.length === visibleRoles.length) {
+                const allSelectableIds = selectableRoles.map((r) => r.id);
+                const allSelected = allSelectableIds.every(id => selectedIds.includes(id));
+                if (allSelected) {
                   setSelectedIds([]);
                   persist([]);
                 } else {
-                  const all = visibleRoles.map((r) => r.id);
-                  setSelectedIds(all);
-                  persist(all);
+                  setSelectedIds(allSelectableIds);
+                  persist(allSelectableIds);
                 }
               }}
             >
-              {selectedIds.length === visibleRoles.length && visibleRoles.length > 0
+              {selectableRoles.length > 0 && selectableRoles.every(r => selectedIds.includes(r.id))
                 ? "Clear all roles"
                 : "Select all roles (full access)"}
             </Button>
-            {selectedIds.length > 0 && selectedIds.length < visibleRoles.length && (
+            {selectedIds.length > 0 && !selectableRoles.every(r => selectedIds.includes(r.id)) && (
               <Button
                 type="button"
                 variant="ghost"
@@ -588,6 +642,7 @@ export default function RoleSelectPage() {
                       const order = selectedIds.indexOf(role.id);
                       const isPrimary = order === 0;
                       const RoleIcon = ROLE_ICONS[role.id] || Users;
+                      const isRestricted = !!role.restricted && !isSuperAdmin;
                       return (
                         <button
                           key={role.id}
@@ -600,6 +655,8 @@ export default function RoleSelectPage() {
                           className={`group relative text-left rounded-xl border-2 bg-card p-4 transition-all hover-elevate active-elevate-2 ${
                             isSelected
                               ? "border-primary ring-2 ring-primary/20 shadow-sm bg-primary/5"
+                              : isRestricted
+                              ? "border-amber-300 dark:border-amber-700/60 bg-amber-50/60 dark:bg-amber-900/10"
                               : "border-border"
                           }`}
                         >
@@ -608,6 +665,8 @@ export default function RoleSelectPage() {
                               className={`shrink-0 rounded-lg p-2.5 transition-colors ${
                                 isSelected
                                   ? "bg-primary text-primary-foreground"
+                                  : isRestricted
+                                  ? "bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400"
                                   : "bg-muted text-muted-foreground"
                               }`}
                             >
@@ -618,7 +677,7 @@ export default function RoleSelectPage() {
                                 <h3 className="font-semibold text-base leading-tight">
                                   {role.title}
                                 </h3>
-                                {isSelected && (
+                                {isSelected ? (
                                   <div className="shrink-0 flex items-center gap-1">
                                     {isPrimary && selectedIds.length > 1 && (
                                       <span
@@ -635,7 +694,11 @@ export default function RoleSelectPage() {
                                       <Check size={14} strokeWidth={3} />
                                     </div>
                                   </div>
-                                )}
+                                ) : isRestricted ? (
+                                  <div className="shrink-0 rounded-full bg-amber-100 dark:bg-amber-900/40 p-1" data-testid={`lock-${role.id}`}>
+                                    <Lock size={12} className="text-amber-600 dark:text-amber-400" />
+                                  </div>
+                                ) : null}
                               </div>
                               <p className="text-sm text-muted-foreground mt-1 leading-snug">
                                 {role.description}
@@ -859,6 +922,67 @@ export default function RoleSelectPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Leadership Role Code Modal */}
+        {codeModalRole && (
+          <div
+            className="fixed inset-0 z-[200] bg-black/50 flex items-center justify-center p-4"
+            onClick={() => setCodeModalRole(null)}
+          >
+            <div
+              className="w-full max-w-sm bg-white dark:bg-card rounded-2xl border border-border shadow-2xl p-6 flex flex-col gap-4"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-11 h-11 rounded-full bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
+                  <Lock size={20} className="text-amber-600 dark:text-amber-400" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-black leading-tight">Leadership Access Required</h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {ROLE_CONFIGS.find(r => r.id === codeModalRole)?.title} requires an access code provided by your facility administrator.
+                  </p>
+                </div>
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Access Code</p>
+                <input
+                  type="text"
+                  className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm font-mono tracking-widest uppercase focus:outline-none focus:ring-2 focus:ring-primary/40 placeholder:text-muted-foreground placeholder:normal-case placeholder:tracking-normal"
+                  placeholder="e.g. ARLD-XXXX-XXXX"
+                  value={codeInput}
+                  onChange={e => { setCodeInput(e.target.value.toUpperCase()); setCodeError(""); }}
+                  onKeyDown={e => { if (e.key === "Enter") handleCodeSubmit(); }}
+                  autoFocus
+                  data-testid="input-leadership-code"
+                />
+                {codeError && (
+                  <p className="text-xs text-destructive mt-1.5 flex items-center gap-1" data-testid="text-code-error">
+                    <AlertCircle size={12} /> {codeError}
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="flex-1 rounded-xl font-bold"
+                  onClick={() => setCodeModalRole(null)}
+                  data-testid="button-cancel-code"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="flex-1 rounded-xl font-bold"
+                  disabled={!codeInput.trim() || codeLoading}
+                  onClick={handleCodeSubmit}
+                  data-testid="button-submit-code"
+                >
+                  {codeLoading ? <Loader2 className="animate-spin" size={14} /> : "Unlock Role"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </TooltipProvider>
   );

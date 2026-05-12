@@ -5,7 +5,7 @@ import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
   ascPretestResults, ascPosttestResults,
-  roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback,
+  roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback, leadershipRoleCodes,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
@@ -207,10 +207,17 @@ export async function ensureTablesExist() {
         message TEXT NOT NULL,
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS leadership_role_codes (
+        id SERIAL PRIMARY KEY,
+        code TEXT NOT NULL UNIQUE,
+        facility_id INTEGER REFERENCES facilities(id),
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
     await seedRoles(client);
+    await seedLeadershipCodes(client);
   } catch (err) {
     console.error("Error ensuring tables exist:", err);
   } finally {
@@ -250,6 +257,31 @@ const ROLE_SEED: { name: string; slug: string; department: string; scope: "stand
 const KNOWN_FACILITIES: { code: string; name: string }[] = [
   { code: "TSC001", name: "The Surgery Center" },
 ];
+
+const LEADERSHIP_CODES_BY_FACILITY: Record<string, string[]> = {
+  TSC001: [
+    "ARLD-K4X9-PQ2M",
+    "ARLD-T7NB-W1CJ",
+    "ARLD-5HFR-D8LZ",
+    "ARLD-M2QV-E6YX",
+    "ARLD-9GUP-A4SK",
+    "ARLD-L1CW-ZB3N",
+  ],
+};
+
+async function seedLeadershipCodes(client: pg.PoolClient) {
+  for (const [facilityCode, codes] of Object.entries(LEADERSHIP_CODES_BY_FACILITY)) {
+    const fRes = await client.query("SELECT id FROM facilities WHERE code = $1", [facilityCode]);
+    if (fRes.rows.length === 0) continue;
+    const facilityId = fRes.rows[0].id;
+    for (const code of codes) {
+      await client.query(
+        "INSERT INTO leadership_role_codes (code, facility_id) VALUES ($1, $2) ON CONFLICT (code) DO NOTHING",
+        [code, facilityId]
+      );
+    }
+  }
+}
 
 async function seedFacilities(client: pg.PoolClient) {
   for (const f of KNOWN_FACILITIES) {
@@ -377,6 +409,9 @@ export interface IStorage {
   getAllFeedback(): Promise<Feedback[]>;
 
   getDailyActivitySince(startDate: string): Promise<DailyActivity[]>;
+
+  validateLeadershipCode(code: string, facilityId: number | null): Promise<boolean>;
+  getLeadershipCodes(): Promise<{ id: number; code: string; facilityId: number | null; facilityName: string | null; createdAt: Date }[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -912,6 +947,30 @@ export class DatabaseStorage implements IStorage {
 
   async getAllFeedback(): Promise<Feedback[]> {
     return db.select().from(feedback).orderBy(desc(feedback.createdAt));
+  }
+
+  async validateLeadershipCode(code: string, facilityId: number | null): Promise<boolean> {
+    const result = await pool.query(
+      "SELECT id FROM leadership_role_codes WHERE UPPER(code) = UPPER($1) AND (facility_id = $2 OR facility_id IS NULL)",
+      [code.trim(), facilityId]
+    );
+    return result.rows.length > 0;
+  }
+
+  async getLeadershipCodes(): Promise<{ id: number; code: string; facilityId: number | null; facilityName: string | null; createdAt: Date }[]> {
+    const result = await pool.query(
+      `SELECT lrc.id, lrc.code, lrc.facility_id, f.name as facility_name, lrc.created_at
+       FROM leadership_role_codes lrc
+       LEFT JOIN facilities f ON f.id = lrc.facility_id
+       ORDER BY f.name NULLS LAST, lrc.code`
+    );
+    return result.rows.map((r: any) => ({
+      id: r.id,
+      code: r.code,
+      facilityId: r.facility_id,
+      facilityName: r.facility_name,
+      createdAt: r.created_at,
+    }));
   }
 
   async getRiskAssessmentsByFacility(facilityId: number | null, module: string): Promise<(RiskAssessment & { username: string; firstName: string; lastName: string; department: string | null })[]> {

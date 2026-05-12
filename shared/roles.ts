@@ -15,6 +15,7 @@ export interface RoleConfig {
   firstModuleId: string;
   reportingScope: ReportingScope;
   chapters: string[];
+  restricted?: boolean;
 }
 
 const ASC_ALL_CHAPTERS = [
@@ -148,6 +149,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/diagnostic",
     firstModuleId: "diagnostic",
     reportingScope: "enterprise",
+    restricted: true,
     chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
   {
@@ -160,6 +162,7 @@ export const ROLE_CONFIGS: RoleConfig[] = [
     destinationRoute: "/diagnostic",
     firstModuleId: "diagnostic",
     reportingScope: "own_plus_all",
+    restricted: true,
     chapters: ["transport", "environment", "segregation", "sterile_storage", "instruments", "facilities", "spd_decontam", "or_sterile_field", "universal_protocol", "patient_care_docs", "eoc_safety", "anesthesia_sedation", "medication_management", "npsg", "infection_control", "patient_rights", "life_safety"],
   },
 
