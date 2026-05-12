@@ -1401,7 +1401,7 @@ export async function registerRoutes(
     try {
       const start = Date.now();
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: 50,
         messages: [{ role: "user", content: "Say 'ok' in one word." }],
       });
@@ -1489,7 +1489,7 @@ Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do dif
 
       const tokenLimit = depth === 2 ? 400 : 200;
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: tokenLimit,
         messages: [
           {
@@ -1579,7 +1579,7 @@ Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do dif
         .join(", ");
 
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: 350,
         messages: [
           {
@@ -1644,7 +1644,7 @@ Write a 5-6 sentence plain-text summary. Cover: overall readiness, the #1 priori
         : "No missed questions — perfect score!";
 
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: 300,
         messages: [
           {
@@ -1746,7 +1746,7 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
         : "No directly matching sections found. Answer based on general Joint Commission compliance knowledge relevant to the question.";
 
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: 250,
         messages: [
           {
@@ -1801,7 +1801,7 @@ After your answer, add one line: "See: [source]" naming the specific chapter or 
 
     try {
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: 1200,
         messages: [
           {
@@ -1920,7 +1920,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const prompt = `You are writing multiple-choice compliance quiz questions for healthcare professionals preparing for accreditation survey. Generate exactly ${NUM_QUESTIONS} scenario-based questions covering these specific topics:\n\n${topicList}\n\nRules:\n- Each question MUST be a realistic clinical or operational scenario (someone doing something, a situation occurring, a surveyor finding something)\n- Each question has exactly 4 answer choices\n- Exactly one choice is correct\n- The other three are plausible, realistic distractors — not obviously wrong\n- Vary difficulty: mix straightforward and tricky questions\n- Distribute questions across the provided topics as evenly as possible\n- The sectionId field must be EXACTLY one of these keys: ${relevantChapters.join(", ")}\n\nReturn ONLY a valid JSON array with exactly ${NUM_QUESTIONS} items. Each item must have this exact shape:\n{"id":"ai-dq-N","sectionId":"<topic key>","question":"...","options":["...","...","...","..."],"correctIndex":0}\n\nNo markdown fences, no explanation, no extra text — just the raw JSON array starting with [ and ending with ].`;
     try {
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: 4000,
         messages: [{ role: "user", content: prompt }],
       });
@@ -2734,7 +2734,7 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
 
     try {
       const message = await callAnthropicWithRetry({
-        model: "claude-3-5-haiku-20241022",
+        model: "claude-haiku-4-5",
         max_tokens: 2000,
         messages: [{ role: "user", content: prompt }],
       });
