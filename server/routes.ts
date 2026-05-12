@@ -306,7 +306,8 @@ export async function registerRoutes(
 
   app.post("/api/auth/register", async (req, res) => {
     try {
-      const { username, firstName, lastName, facilityCode, password, organizationType } = req.body;
+      const { firstName, lastName, facilityCode, password, organizationType } = req.body;
+      const username = typeof req.body.username === "string" ? req.body.username.trim().toLowerCase() : "";
 
       if (!username || !password) {
         return res.status(400).json({ message: "Username and password are required" });

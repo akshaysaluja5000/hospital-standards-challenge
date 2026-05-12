@@ -1,4 +1,4 @@
-import { eq, and, desc, lte } from "drizzle-orm";
+import { eq, and, desc, lte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
@@ -357,7 +357,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.username, username));
+    const normalized = username.trim().toLowerCase();
+    const [user] = await db.select().from(users)
+      .where(sql`lower(${users.username}) = ${normalized}`);
     return user;
   }
 
