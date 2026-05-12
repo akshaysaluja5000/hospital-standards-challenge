@@ -2646,6 +2646,102 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
   });
 
+  // ── Risk Assessments ─────────────────────────────────────────────────────
+
+  app.get("/api/risk-assessment", requireAuth, async (req, res) => {
+    try {
+      const userId = (req.user as User).id;
+      const module = (req.query.module as string) || "hospital";
+      const assessment = await storage.getRiskAssessment(userId, module);
+      res.json({ assessment: assessment || null });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/risk-assessment", requireAuth, async (req, res) => {
+    try {
+      const userId = (req.user as User).id;
+      const schema = z.object({
+        module: z.string().min(1),
+        riskAreas: z.array(z.string()).min(1, "Select at least one risk area"),
+        notes: z.string().max(2000).default(""),
+      });
+      const parsed = schema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ error: parsed.error.errors[0]?.message || "Invalid request." });
+
+      const { module, riskAreas, notes } = parsed.data;
+
+      const prompt = `You are a healthcare compliance educator. A staff member at a ${module === "asc" ? "surgery center (AAAHC)" : "hospital (Joint Commission)"} has identified the following compliance risk areas where they feel they need improvement:
+
+${riskAreas.map((r, i) => `${i + 1}. ${r}`).join("\n")}
+
+${notes ? `Their additional notes: "${notes}"` : ""}
+
+Generate a personalized action plan to help them improve. The plan must include:
+1. A "weeklySchedule" array (4 weeks) — each week has a "week" label, a "focus" title, and an array of "tasks" (2–3 specific daily or weekly activities)
+2. A "studyChapters" array — list the specific chapter/module names from the training they should prioritize, with a brief reason why each is relevant
+3. A "keyRisks" array — identify 3–5 specific surveyor "hot button" items related to their weak areas that they should know cold
+4. A "coachingTip" — one motivating sentence of advice
+
+Return ONLY valid JSON (no markdown, no explanation):
+{
+  "weeklySchedule": [
+    { "week": "Week 1", "focus": "...", "tasks": ["...", "..."] }
+  ],
+  "studyChapters": [
+    { "chapterName": "...", "reason": "..." }
+  ],
+  "keyRisks": ["...", "..."],
+  "coachingTip": "..."
+}`;
+
+      const message = await callAnthropicWithRetry({
+        model: "claude-haiku-4-5",
+        max_tokens: 1800,
+        messages: [{ role: "user", content: prompt }],
+      });
+
+      const raw = message.content[0]?.type === "text" ? message.content[0].text.trim() : "";
+      const jsonStart = raw.indexOf("{");
+      const jsonEnd = raw.lastIndexOf("}");
+      if (jsonStart === -1 || jsonEnd === -1) {
+        return res.status(502).json({ error: "Could not generate action plan. Please try again." });
+      }
+      let actionPlan: Record<string, unknown>;
+      try {
+        actionPlan = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
+      } catch {
+        return res.status(502).json({ error: "Could not parse action plan. Please try again." });
+      }
+
+      const saved = await storage.upsertRiskAssessment(
+        userId,
+        module,
+        JSON.stringify(riskAreas),
+        notes,
+        JSON.stringify(actionPlan),
+      );
+      res.json({ assessment: saved, actionPlan });
+    } catch (error: any) {
+      console.error("Risk assessment error:", error?.message);
+      if (error?.status === 429) return res.status(429).json({ error: "AI service is busy. Please try again in a moment." });
+      res.status(502).json({ error: "Unable to generate action plan right now. Please try again." });
+    }
+  });
+
+  app.get("/api/risk-assessment/team", requireLeadershipRole("director"), async (req, res) => {
+    try {
+      const caller = req.user as User;
+      const module = (req.query.module as string) || "hospital";
+      const facilityId = isFacilityScopeBypass(caller) ? null : (caller.facilityId ?? null);
+      const assessments = await storage.getRiskAssessmentsByFacility(facilityId, module);
+      res.json({ assessments });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
   // ── Educator team view ───────────────────────────────────────────────────
   app.get("/api/educator/team", requireLeadershipRole("educator"), async (req, res) => {
     try {

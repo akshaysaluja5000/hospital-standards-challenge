@@ -34,6 +34,7 @@ import NotFound from "@/pages/not-found";
 import MfaSetupPage from "@/pages/mfa-setup-page";
 import MfaVerifyPage from "@/pages/mfa-verify-page";
 import EducatorHubPage from "@/pages/educator-hub-page";
+import RiskAssessmentPage from "@/pages/risk-assessment-page";
 import { Loader2 } from "lucide-react";
 
 function ScrollToTop() {
@@ -317,6 +318,9 @@ function Router() {
       <Route path="/mfa-verify" component={MfaVerifyPage} />
       <Route path="/educator">
         {() => <EducatorRoute component={EducatorHubPage} />}
+      </Route>
+      <Route path="/risk-assessment">
+        {() => <ProtectedRoute component={RiskAssessmentPage} />}
       </Route>
       <Route component={NotFound} />
     </Switch>

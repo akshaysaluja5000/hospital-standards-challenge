@@ -365,6 +365,20 @@ export const auditLogs = pgTable("audit_logs", {
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 
+// ── Risk Assessments ─────────────────────────────────────────────────────────
+
+export const riskAssessments = pgTable("risk_assessments", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  module: text("module").notNull().default("hospital"),
+  riskAreas: text("risk_areas").notNull().default("[]"),
+  notes: text("notes").notNull().default(""),
+  actionPlan: text("action_plan").notNull().default("{}"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export type RiskAssessment = typeof riskAssessments.$inferSelect;
+
 // ── Flashcard Reviews (Spaced Repetition) ────────────────────────────────────
 
 export const flashcardReviews = pgTable("flashcard_reviews", {

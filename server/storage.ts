@@ -5,11 +5,11 @@ import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
   ascPretestResults, ascPosttestResults,
-  roles, roleChapterMappings, flashcardReviews, auditLogs,
+  roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
-  type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog,
+  type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -187,6 +187,16 @@ export async function ensureTablesExist() {
         updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
         UNIQUE (user_id, level_id, card_index)
       );
+      CREATE TABLE IF NOT EXISTS risk_assessments (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        module TEXT NOT NULL DEFAULT 'hospital',
+        risk_areas TEXT NOT NULL DEFAULT '[]',
+        notes TEXT NOT NULL DEFAULT '',
+        action_plan TEXT NOT NULL DEFAULT '{}',
+        updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        UNIQUE (user_id, module)
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
@@ -348,6 +358,10 @@ export interface IStorage {
   }): Promise<AuditLog>;
   getAuditLogs(limit?: number): Promise<AuditLog[]>;
   getAuditLogsByUser(userId: number): Promise<AuditLog[]>;
+
+  getRiskAssessment(userId: number, module: string): Promise<RiskAssessment | undefined>;
+  upsertRiskAssessment(userId: number, module: string, riskAreas: string, notes: string, actionPlan: string): Promise<RiskAssessment>;
+  getRiskAssessmentsByFacility(facilityId: number | null, module: string): Promise<(RiskAssessment & { username: string; firstName: string; lastName: string; department: string | null })[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -842,6 +856,47 @@ export class DatabaseStorage implements IStorage {
       list.forEach(c => union.add(c));
     }
     return Array.from(union);
+  }
+
+  async getRiskAssessment(userId: number, module: string): Promise<RiskAssessment | undefined> {
+    const [row] = await db.select().from(riskAssessments).where(
+      and(eq(riskAssessments.userId, userId), eq(riskAssessments.module, module))
+    );
+    return row;
+  }
+
+  async upsertRiskAssessment(userId: number, module: string, riskAreas: string, notes: string, actionPlan: string): Promise<RiskAssessment> {
+    const existing = await this.getRiskAssessment(userId, module);
+    if (existing) {
+      const [updated] = await db.update(riskAssessments).set({
+        riskAreas, notes, actionPlan, updatedAt: new Date(),
+      }).where(and(eq(riskAssessments.userId, userId), eq(riskAssessments.module, module))).returning();
+      return updated;
+    }
+    const [created] = await db.insert(riskAssessments).values({
+      userId, module, riskAreas, notes, actionPlan,
+    }).returning();
+    return created;
+  }
+
+  async getRiskAssessmentsByFacility(facilityId: number | null, module: string): Promise<(RiskAssessment & { username: string; firstName: string; lastName: string; department: string | null })[]> {
+    const allUsers = facilityId
+      ? await db.select().from(users).where(eq(users.facilityId, facilityId))
+      : await db.select().from(users);
+    const orgFiltered = allUsers.filter(u => (u.organizationType || "hospital") === module);
+    const userIds = orgFiltered.map(u => u.id);
+    if (userIds.length === 0) return [];
+    const rows = await db.select().from(riskAssessments).where(
+      sql`${riskAssessments.userId} = ANY(${sql`ARRAY[${sql.join(userIds.map(id => sql`${id}`), sql`, `)}]::integer[]`})`
+    );
+    const userMap = new Map(orgFiltered.map(u => [u.id, u]));
+    return rows.map(r => ({
+      ...r,
+      username: userMap.get(r.userId)?.username ?? "",
+      firstName: userMap.get(r.userId)?.firstName ?? "",
+      lastName: userMap.get(r.userId)?.lastName ?? "",
+      department: userMap.get(r.userId)?.department ?? null,
+    }));
   }
 }
 
