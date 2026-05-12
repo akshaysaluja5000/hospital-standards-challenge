@@ -1963,7 +1963,16 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
 
   app.get("/api/diagnostic/results", requireAuth, async (req, res) => {
     const results = await storage.getDiagnosticResults(req.user!.id);
-    res.json(results);
+    const enriched = results.map(r => {
+      try {
+        const parsed = JSON.parse(r.answers);
+        if (parsed && parsed.version === 2) {
+          return { ...r, detailedResults: parsed.detailedResults, sectionScores: parsed.sectionScores };
+        }
+      } catch {}
+      return r;
+    });
+    res.json(enriched);
   });
 
   app.get("/api/diagnostic/session", requireAuth, async (req, res) => {
@@ -2060,18 +2069,17 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       }
     }
     const totalAnswered = detailedResults.length;
-    const graded = detailedResults.map(d => ({ questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct }));
-    const result = await storage.createDiagnosticResult(
-      req.user!.id, score, totalAnswered, JSON.stringify(graded)
-    );
-    await storage.deleteDiagnosticSession(req.user!.id);
-
     const sectionScores: Record<string, { correct: number; total: number }> = {};
     for (const d of detailedResults) {
       if (!sectionScores[d.sectionId]) sectionScores[d.sectionId] = { correct: 0, total: 0 };
       sectionScores[d.sectionId].total++;
       if (d.correct) sectionScores[d.sectionId].correct++;
     }
+    const storedPayload = JSON.stringify({ version: 2, detailedResults, sectionScores });
+    const result = await storage.createDiagnosticResult(
+      req.user!.id, score, totalAnswered, storedPayload
+    );
+    await storage.deleteDiagnosticSession(req.user!.id);
     res.json({ score, totalQuestions: totalAnswered, resultId: result.id, detailedResults, sectionScores });
   });
 
@@ -2388,7 +2396,16 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
 
   app.get("/api/mastery/results", requireAuth, async (req, res) => {
     const results = await storage.getMasteryResults(req.user!.id);
-    res.json(results);
+    const enriched = results.map(r => {
+      try {
+        const parsed = JSON.parse(r.answers);
+        if (parsed && parsed.version === 2) {
+          return { ...r, detailedResults: parsed.detailedResults, sectionScores: parsed.sectionScores };
+        }
+      } catch {}
+      return r;
+    });
+    res.json(enriched);
   });
 
   app.get("/api/mastery/eligibility", requireAuth, async (req, res) => {
@@ -2467,18 +2484,17 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       }
     }
     const totalAnswered = detailedResults.length;
-    const graded = detailedResults.map(d => ({ questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct }));
-    const result = await storage.createMasteryResult(
-      req.user!.id, score, totalAnswered, JSON.stringify(graded)
-    );
-    await storage.deleteMasterySession(req.user!.id);
-
     const sectionScores: Record<string, { correct: number; total: number }> = {};
     for (const d of detailedResults) {
       if (!sectionScores[d.sectionId]) sectionScores[d.sectionId] = { correct: 0, total: 0 };
       sectionScores[d.sectionId].total++;
       if (d.correct) sectionScores[d.sectionId].correct++;
     }
+    const storedPayload = JSON.stringify({ version: 2, detailedResults, sectionScores });
+    const result = await storage.createMasteryResult(
+      req.user!.id, score, totalAnswered, storedPayload
+    );
+    await storage.deleteMasterySession(req.user!.id);
     res.json({ score, totalQuestions: totalAnswered, resultId: result.id, detailedResults, sectionScores });
   });
 

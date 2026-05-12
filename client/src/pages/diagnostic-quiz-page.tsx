@@ -9,6 +9,11 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useAuth } from "@/lib/auth";
 import type { DiagnosticResult } from "@shared/schema";
 
+interface RichDiagnosticResult extends DiagnosticResult {
+  detailedResults?: DetailedResult[];
+  sectionScores?: Record<string, { correct: number; total: number }>;
+}
+
 interface DiagnosticQ {
   id: string;
   sectionId: string;
@@ -69,7 +74,7 @@ export default function DiagnosticQuizPage() {
   const [showAllQuestions, setShowAllQuestions] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const { data: pastResults } = useQuery<DiagnosticResult[]>({
+  const { data: pastResults } = useQuery<RichDiagnosticResult[]>({
     queryKey: ["/api/diagnostic/results"],
   });
 
@@ -237,6 +242,15 @@ export default function DiagnosticQuizPage() {
 
   const hasPastResults = pastResults && pastResults.length > 0;
 
+  const viewLastResults = () => {
+    const last = pastResults?.[0];
+    if (!last?.detailedResults || !last?.sectionScores) return;
+    setResult({ score: last.score, totalQuestions: last.totalQuestions, resultId: last.id, detailedResults: last.detailedResults, sectionScores: last.sectionScores });
+    setPhase("results");
+    setShowAllQuestions(false);
+    setExpandedQuestions(new Set());
+  };
+
   if (phase === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-50 via-cyan-50 to-sky-50 dark:from-teal-950/30 dark:via-cyan-950/30 dark:to-sky-950/30">
@@ -300,9 +314,16 @@ export default function DiagnosticQuizPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="mb-6">
               {hasPastResults && (
                 <div className="rounded-2xl bg-teal-50 dark:bg-teal-950/50 border border-teal-200 dark:border-teal-800 p-4 mb-3">
-                  <div className="flex items-center gap-2 mb-2">
-                    <BarChart3 size={18} className="text-teal-600" />
-                    <span className="font-semibold text-sm text-teal-700 dark:text-teal-300">Previous attempt</span>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <BarChart3 size={18} className="text-teal-600" />
+                      <span className="font-semibold text-sm text-teal-700 dark:text-teal-300">Previous attempt</span>
+                    </div>
+                    {pastResults[0].detailedResults && (
+                      <button onClick={viewLastResults} className="text-xs font-semibold text-teal-600 hover:text-teal-800 dark:text-teal-400 dark:hover:text-teal-200 underline underline-offset-2 transition-colors" data-testid="button-view-last-diagnostic-results">
+                        View full results
+                      </button>
+                    )}
                   </div>
                   <p className="text-sm text-muted-foreground">
                     You scored <span className="font-bold text-teal-600">{pastResults[0].score}/{pastResults[0].totalQuestions}</span> ({Math.round((pastResults[0].score / pastResults[0].totalQuestions) * 100)}%) on {new Date(pastResults[0].completedAt).toLocaleDateString()}

@@ -10,6 +10,11 @@ import { useAuth } from "@/lib/auth";
 import { findLevelById } from "@shared/all-levels";
 import type { MasteryResult } from "@shared/schema";
 
+interface RichMasteryResult extends MasteryResult {
+  detailedResults?: DetailedResult[];
+  sectionScores?: Record<string, { correct: number; total: number }>;
+}
+
 interface MasteryQ {
   id: string;
   sectionId: string;
@@ -82,7 +87,7 @@ export default function MasteryExamPage() {
     queryKey: ["/api/mastery/eligibility"],
   });
 
-  const { data: pastResults } = useQuery<MasteryResult[]>({
+  const { data: pastResults } = useQuery<RichMasteryResult[]>({
     queryKey: ["/api/mastery/results"],
   });
 
@@ -246,6 +251,15 @@ export default function MasteryExamPage() {
 
   const hasPastResults = pastResults && pastResults.length > 0;
 
+  const viewLastResults = () => {
+    const last = pastResults?.[0];
+    if (!last?.detailedResults || !last?.sectionScores) return;
+    setResultData({ score: last.score, totalQuestions: last.totalQuestions, resultId: last.id, detailedResults: last.detailedResults, sectionScores: last.sectionScores });
+    setPhase("results");
+    setShowAllQuestions(false);
+    setExpandedQuestions(new Set());
+  };
+
   if (phase === "loading" || eligLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -312,7 +326,14 @@ export default function MasteryExamPage() {
 
           {hasPastResults && (
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }} className="rounded-2xl bg-primary/5 dark:bg-primary/10 border border-border p-4 mb-6">
-              <div className="flex items-center gap-2 mb-2"><Trophy size={18} className="text-primary" /><span className="font-semibold text-sm text-primary">Best attempt</span></div>
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2"><Trophy size={18} className="text-primary" /><span className="font-semibold text-sm text-primary">Best attempt</span></div>
+                {pastResults[0].detailedResults && (
+                  <button onClick={viewLastResults} className="text-xs font-semibold text-primary hover:text-primary/70 underline underline-offset-2 transition-colors" data-testid="button-view-last-mastery-results">
+                    View full results
+                  </button>
+                )}
+              </div>
               <p className="text-sm text-muted-foreground">
                 You scored <span className="font-bold text-primary">{pastResults[0].score}/{pastResults[0].totalQuestions}</span> ({Math.round((pastResults[0].score / pastResults[0].totalQuestions) * 100)}%) on {new Date(pastResults[0].completedAt).toLocaleDateString()}
               </p>
