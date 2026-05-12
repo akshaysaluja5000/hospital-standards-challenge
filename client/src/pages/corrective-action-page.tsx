@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -417,18 +418,39 @@ function StepsPreview({ facilityType, category, score }: { facilityType: "Hospit
 
 // ── Create Plan Dialog ─────────────────────────────────────────────────────
 
+type PlanPrefill = { learner?: string; facilityType?: "Hospital" | "ASC"; category?: string; score?: number };
+
 function CreatePlanDialog({
-  open, onClose, onSave, defaultFacilityId, defaultFacilityName,
+  open, onClose, onSave, defaultFacilityId, defaultFacilityName, prefill,
 }: {
   open: boolean;
   onClose: () => void;
   onSave: (plan: RemediationPlan) => void;
   defaultFacilityId: string;
   defaultFacilityName: string;
+  prefill?: PlanPrefill;
 }) {
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<CreatePlanForm>({
     defaultValues: { facilityType: "", category: "", learner: "", quizScore: "", dueDate: "", assignedBy: "", notes: "", cadence: "daily" },
   });
+
+  useEffect(() => {
+    if (open && prefill) {
+      reset({
+        facilityType: (prefill.facilityType ?? "") as "Hospital" | "ASC" | "",
+        category: prefill.category ?? "",
+        learner: prefill.learner ?? "",
+        quizScore: prefill.score != null ? String(prefill.score) : "",
+        dueDate: "",
+        assignedBy: "",
+        notes: "",
+        cadence: "daily",
+      });
+      setGeneratedPlan(null);
+      setPlanGenError(null);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
   const facilityType = watch("facilityType");
   const category = watch("category");
   const quizScoreRaw = watch("quizScore");
@@ -1132,6 +1154,109 @@ function LiveEmptyState({ onCreateDemo, onBrowseLibrary }: { onCreateDemo: () =>
   );
 }
 
+// ── Weak Learners Section ──────────────────────────────────────────────────
+
+interface WeakLearner {
+  userId: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  overallAccuracy: number;
+  organizationType: string;
+  weakAreas: { category: string; facilityType: "Hospital" | "ASC"; score: number }[];
+}
+
+function WeakLearnersSection({ onCreatePlan }: {
+  onCreatePlan: (prefill: PlanPrefill) => void;
+}) {
+  const { data: weakLearners, isLoading } = useQuery<WeakLearner[]>({
+    queryKey: ["/api/admin/weak-learners"],
+  });
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-6 flex items-center gap-3" data-testid="container-weak-learners-loading">
+        <Loader2 size={18} className="animate-spin text-muted-foreground" />
+        <p className="text-sm text-muted-foreground">Loading learner performance data…</p>
+      </div>
+    );
+  }
+
+  if (!weakLearners?.length) {
+    return (
+      <div className="rounded-2xl border border-border bg-card p-6 text-center" data-testid="container-weak-learners-empty">
+        <CheckCircle2 size={28} className="mx-auto text-emerald-400 mb-3" />
+        <p className="text-base font-bold mb-1">All learners are on track</p>
+        <p className="text-sm text-muted-foreground">No learners with scores below 70% were found in your facility.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-4" data-testid="container-weak-learners">
+      <div className="flex items-center gap-2">
+        <AlertTriangle size={15} className="text-orange-500 flex-shrink-0" />
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          Learners Below Passing Threshold ({weakLearners.length})
+        </h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {weakLearners.map((learner) => {
+          const displayName = learner.firstName
+            ? `${learner.firstName} ${learner.lastName}`.trim()
+            : learner.username;
+          const worstArea = learner.weakAreas[0];
+          const isHighRisk = learner.overallAccuracy < 50;
+          return (
+            <div
+              key={learner.userId}
+              className={`rounded-2xl border p-4 flex flex-col gap-3 ${isHighRisk ? "border-red-500/30 bg-red-500/5" : "border-orange-500/25 bg-orange-500/5"}`}
+              data-testid={`card-weak-learner-${learner.userId}`}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="font-bold text-base leading-snug">{displayName}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Overall accuracy: <span className={`font-semibold ${isHighRisk ? "text-red-400" : "text-orange-400"}`}>{learner.overallAccuracy}%</span>
+                    {isHighRisk && <span className="ml-2 text-[10px] font-bold uppercase tracking-wider text-red-400">High Risk</span>}
+                  </p>
+                </div>
+                <div className={`shrink-0 text-3xl font-black leading-none ${isHighRisk ? "text-red-400" : "text-orange-400"}`}>
+                  {learner.overallAccuracy}%
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">Weak Areas</p>
+                {learner.weakAreas.map((area, i) => (
+                  <div key={i} className="flex items-center justify-between gap-2 text-sm">
+                    <span className="text-foreground/80 truncate">{area.category}</span>
+                    <span className={`font-bold flex-shrink-0 ${area.score < 50 ? "text-red-400" : "text-orange-400"}`}>{area.score}%</span>
+                  </div>
+                ))}
+              </div>
+              {worstArea && (
+                <button
+                  type="button"
+                  className="mt-1 w-full flex items-center justify-center gap-1.5 py-2 rounded-xl border border-orange-500/40 bg-background text-orange-500 text-sm font-bold hover:bg-orange-500/10 transition-colors"
+                  onClick={() => onCreatePlan({
+                    learner: displayName,
+                    facilityType: worstArea.facilityType,
+                    category: worstArea.category,
+                    score: worstArea.score,
+                  })}
+                  data-testid={`button-create-plan-${learner.userId}`}
+                >
+                  <Plus size={13} /> Create Guided Education Plan
+                </button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ── Main Page ──────────────────────────────────────────────────────────────
 
 export default function CorrectiveActionPage() {
@@ -1145,8 +1270,14 @@ export default function CorrectiveActionPage() {
   const [activeStatus, setActiveStatus] = useState<PlanStatus | "All">("All");
   const [facilityTypeFilter, setFacilityTypeFilter] = useState<"All" | "Hospital" | "ASC">("All");
   const [createOpen, setCreateOpen] = useState(false);
+  const [prefillData, setPrefillData] = useState<PlanPrefill | undefined>(undefined);
   const [libraryOpen, setLibraryOpen] = useState(false);
   const filterInitialized = useRef(false);
+
+  function openWithPrefill(prefill: PlanPrefill) {
+    setPrefillData(prefill);
+    setCreateOpen(true);
+  }
 
   // Auto-default facility type filter to the logged-in user's org type.
   // Hospital users see Hospital plans by default; ASC users see ASC plans.
@@ -1383,6 +1514,11 @@ export default function CorrectiveActionPage() {
           )}
         </div>
 
+        {/* ── Struggling Learners (live mode only) ── */}
+        {dataMode === "live" && (
+          <WeakLearnersSection onCreatePlan={openWithPrefill} />
+        )}
+
         {/* ── Cards area ── */}
         {dataMode === "live" && livePlans.length === 0 ? (
           <LiveEmptyState onCreateDemo={() => setCreateOpen(true)} onBrowseLibrary={() => setLibraryOpen(true)} />
@@ -1418,10 +1554,11 @@ export default function CorrectiveActionPage() {
 
       <CreatePlanDialog
         open={createOpen}
-        onClose={() => setCreateOpen(false)}
+        onClose={() => { setCreateOpen(false); setPrefillData(undefined); }}
         onSave={handleSave}
         defaultFacilityId={scopedFacilityId ?? ""}
         defaultFacilityName={scopedFacilityName ?? ""}
+        prefill={prefillData}
       />
 
       <PlanLibraryDrawer open={libraryOpen} onClose={() => setLibraryOpen(false)} />

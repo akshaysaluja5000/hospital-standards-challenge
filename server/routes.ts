@@ -203,7 +203,7 @@ function requireMfa(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Not authenticated" });
   }
-  if (isBypassUser(req.user!.username)) {
+  if (isFacilityScopeBypass(req.user!)) {
     return next();
   }
   const rank = LEADERSHIP_RANK[getEffectiveLeadershipRole(req.user!)] ?? 0;
@@ -1927,6 +1927,78 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     } catch (error: any) {
       console.error("Lesson plan generation error:", error?.message);
       res.status(502).json({ error: "Lesson plan generation is temporarily unavailable." });
+    }
+  });
+
+  app.get("/api/admin/weak-learners", requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const adminUser = req.user as User;
+      const facilityFilter = getFacilityFilter(adminUser);
+
+      const LEVEL_TO_CATEGORY: Record<string, { category: string; facilityType: "Hospital" | "ASC" }> = {
+        transport:            { category: "Transport of Instruments",       facilityType: "Hospital" },
+        environment:          { category: "Environment & Surfaces",          facilityType: "Hospital" },
+        segregation:          { category: "Clean vs. Dirty",                 facilityType: "Hospital" },
+        sterile_storage:      { category: "Sterile Storage",                 facilityType: "Hospital" },
+        instruments:          { category: "Instrument Integrity",            facilityType: "Hospital" },
+        facilities:           { category: "Facilities & Equipment",          facilityType: "Hospital" },
+        spd_decontam:         { category: "SPD & Decontamination",           facilityType: "Hospital" },
+        or_sterile_field:     { category: "OR & Sterile Technique",          facilityType: "Hospital" },
+        universal_protocol:   { category: "Surgical Safety & Consent",       facilityType: "Hospital" },
+        patient_care_docs:    { category: "Patient Care & Documentation",    facilityType: "Hospital" },
+        eoc_safety:           { category: "EOC & Safety Compliance",         facilityType: "Hospital" },
+        anesthesia_sedation:  { category: "Surgical Safety & Consent",       facilityType: "Hospital" },
+        medication_management:{ category: "Patient Care & Documentation",    facilityType: "Hospital" },
+        npsg:                 { category: "EOC & Safety Compliance",         facilityType: "Hospital" },
+        infection_control:    { category: "Environment & Surfaces",          facilityType: "Hospital" },
+        patient_rights:       { category: "Patient Care & Documentation",    facilityType: "Hospital" },
+        life_safety:          { category: "EOC & Safety Compliance",         facilityType: "Hospital" },
+      };
+
+      const allUsersRaw = await storage.getAllUsers();
+      const allUsers = allUsersRaw.filter(facilityFilter);
+
+      const result: any[] = [];
+      for (const user of allUsers) {
+        const progress = await storage.getProgress(user.id);
+        if (!progress.length) continue;
+
+        const levelAccuracies = progress
+          .map((p) => {
+            const accuracy = p.totalQuestions > 0 ? Math.round((p.score / p.totalQuestions) * 100) : 0;
+            const mapped = LEVEL_TO_CATEGORY[p.levelId];
+            return { levelId: p.levelId, accuracy, mapped };
+          })
+          .filter((p) => p.accuracy < 70 && p.mapped);
+
+        if (!levelAccuracies.length) continue;
+
+        const totalQ = progress.reduce((s, p) => s + p.totalQuestions, 0);
+        const totalC = progress.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0);
+        const overallAccuracy = totalQ > 0 ? Math.round((totalC / totalQ) * 100) : 0;
+
+        const sorted = [...levelAccuracies].sort((a, b) => a.accuracy - b.accuracy);
+
+        result.push({
+          userId: user.id,
+          username: user.username,
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          overallAccuracy,
+          organizationType: user.organizationType || "hospital",
+          weakAreas: sorted.slice(0, 3).map((p) => ({
+            category: p.mapped!.category,
+            facilityType: p.mapped!.facilityType,
+            score: p.accuracy,
+          })),
+        });
+      }
+
+      result.sort((a, b) => a.overallAccuracy - b.overallAccuracy);
+      res.json(result.slice(0, 20));
+    } catch (err: any) {
+      console.error("Error fetching weak learners:", err);
+      res.status(500).json({ error: err.message });
     }
   });
 
