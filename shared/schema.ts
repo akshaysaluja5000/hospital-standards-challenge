@@ -365,6 +365,21 @@ export const auditLogs = pgTable("audit_logs", {
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 
+// ── Feedback ──────────────────────────────────────────────────────────────────
+
+export const feedback = pgTable("feedback", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  username: text("username"),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  facilityId: integer("facility_id"),
+  message: text("message").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type Feedback = typeof feedback.$inferSelect;
+
 // ── Risk Assessments ─────────────────────────────────────────────────────────
 
 export const riskAssessments = pgTable("risk_assessments", {

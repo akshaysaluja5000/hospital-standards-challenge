@@ -1,15 +1,15 @@
-import { eq, and, desc, lte, sql } from "drizzle-orm";
+import { eq, and, desc, lte, gte, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
   users, userProgress, userStreaks, dailyActivity, quizSessions, facilities,
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
   ascPretestResults, ascPosttestResults,
-  roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments,
+  roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
-  type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment,
+  type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment, type Feedback,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -197,6 +197,16 @@ export async function ensureTablesExist() {
         updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
         UNIQUE (user_id, module)
       );
+      CREATE TABLE IF NOT EXISTS feedback (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id),
+        username TEXT,
+        first_name TEXT,
+        last_name TEXT,
+        facility_id INTEGER,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
@@ -362,6 +372,11 @@ export interface IStorage {
   getRiskAssessment(userId: number, module: string): Promise<RiskAssessment | undefined>;
   upsertRiskAssessment(userId: number, module: string, riskAreas: string, notes: string, actionPlan: string): Promise<RiskAssessment>;
   getRiskAssessmentsByFacility(facilityId: number | null, module: string): Promise<(RiskAssessment & { username: string; firstName: string; lastName: string; department: string | null })[]>;
+
+  createFeedback(data: { userId?: number; username?: string; firstName?: string; lastName?: string; facilityId?: number; message: string }): Promise<Feedback>;
+  getAllFeedback(): Promise<Feedback[]>;
+
+  getDailyActivitySince(startDate: string): Promise<DailyActivity[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -535,6 +550,10 @@ export class DatabaseStorage implements IStorage {
 
   async getAllActivities(): Promise<DailyActivity[]> {
     return db.select().from(dailyActivity);
+  }
+
+  async getDailyActivitySince(startDate: string): Promise<DailyActivity[]> {
+    return db.select().from(dailyActivity).where(gte(dailyActivity.date, startDate));
   }
 
   async clearAllActivities(): Promise<void> {
@@ -877,6 +896,22 @@ export class DatabaseStorage implements IStorage {
       userId, module, riskAreas, notes, actionPlan,
     }).returning();
     return created;
+  }
+
+  async createFeedback(data: { userId?: number; username?: string; firstName?: string; lastName?: string; facilityId?: number; message: string }): Promise<Feedback> {
+    const [row] = await db.insert(feedback).values({
+      userId: data.userId ?? null,
+      username: data.username ?? null,
+      firstName: data.firstName ?? null,
+      lastName: data.lastName ?? null,
+      facilityId: data.facilityId ?? null,
+      message: data.message,
+    }).returning();
+    return row;
+  }
+
+  async getAllFeedback(): Promise<Feedback[]> {
+    return db.select().from(feedback).orderBy(desc(feedback.createdAt));
   }
 
   async getRiskAssessmentsByFacility(facilityId: number | null, module: string): Promise<(RiskAssessment & { username: string; firstName: string; lastName: string; department: string | null })[]> {

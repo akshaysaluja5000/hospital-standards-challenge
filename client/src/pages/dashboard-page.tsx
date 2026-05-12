@@ -364,6 +364,9 @@ export default function DashboardPage() {
   const [quizEntry, setQuizEntry] = useState<SearchEntry | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
   const [isDark, setIsDark] = useState(() => localStorage.getItem("ar_night_mode") === "1");
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
   function toggleDark() {
     const next = !isDark;
@@ -546,6 +549,9 @@ export default function DashboardPage() {
               <DropdownMenuContent align="end" className="w-48">
                 <DropdownMenuItem onClick={() => setLocation("/leaderboard")} data-testid="menu-item-leaderboard">
                   <Trophy size={14} className="mr-2 text-muted-foreground" /> Leaderboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setFeedbackOpen(true); setFeedbackSent(false); setFeedbackMessage(""); }} data-testid="menu-item-feedback">
+                  <HelpCircle size={14} className="mr-2 text-muted-foreground" /> Send Feedback
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <a
@@ -1231,6 +1237,84 @@ export default function DashboardPage() {
         open={quizOpen}
         onClose={() => { setQuizOpen(false); setQuizEntry(null); }}
       />
+
+      {/* Floating Feedback Button */}
+      <button
+        onClick={() => { setFeedbackOpen(true); setFeedbackSent(false); setFeedbackMessage(""); }}
+        data-testid="button-open-feedback"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all text-sm font-bold"
+      >
+        <HelpCircle size={16} />
+        Feedback
+      </button>
+
+      {/* Feedback Modal */}
+      {feedbackOpen && (
+        <div
+          className="fixed inset-0 z-[200] bg-black/50 flex items-end sm:items-center justify-center p-4"
+          onClick={() => setFeedbackOpen(false)}
+        >
+          <div
+            className="w-full max-w-lg bg-white dark:bg-card rounded-2xl border border-border shadow-2xl p-6 flex flex-col gap-4"
+            onClick={e => e.stopPropagation()}
+          >
+            {feedbackSent ? (
+              <div className="flex flex-col items-center gap-3 py-4 text-center">
+                <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                  <Target size={28} className="text-emerald-600" />
+                </div>
+                <h2 className="text-lg font-black">Thank you!</h2>
+                <p className="text-sm text-muted-foreground">Your feedback has been sent to the Accreditation Ready team. We read every message.</p>
+                <Button className="mt-2 rounded-xl font-bold" onClick={() => setFeedbackOpen(false)} data-testid="button-close-feedback-sent">
+                  Close
+                </Button>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <h2 className="text-lg font-black">Send Feedback</h2>
+                  <p className="text-sm text-muted-foreground mt-1">Questions, concerns, or suggestions — we want to hear it all.</p>
+                </div>
+                <textarea
+                  className="w-full min-h-[140px] rounded-xl border border-border bg-background px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/40 placeholder:text-muted-foreground"
+                  placeholder="Type your message here… no character limit."
+                  value={feedbackMessage}
+                  onChange={e => setFeedbackMessage(e.target.value)}
+                  autoFocus
+                  data-testid="textarea-feedback"
+                />
+                <div className="flex gap-3">
+                  <Button variant="outline" className="flex-1 rounded-xl font-bold" onClick={() => setFeedbackOpen(false)} data-testid="button-cancel-feedback">
+                    Cancel
+                  </Button>
+                  <Button
+                    className="flex-1 rounded-xl font-bold"
+                    disabled={feedbackMessage.trim().length === 0}
+                    data-testid="button-submit-feedback"
+                    onClick={async () => {
+                      if (!feedbackMessage.trim()) return;
+                      try {
+                        await fetch("/api/feedback", {
+                          method: "POST",
+                          headers: { "Content-Type": "application/json" },
+                          credentials: "include",
+                          body: JSON.stringify({ message: feedbackMessage.trim() }),
+                        });
+                        setFeedbackSent(true);
+                      } catch {
+                        // still show success to not confuse user
+                        setFeedbackSent(true);
+                      }
+                    }}
+                  >
+                    Send Feedback
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

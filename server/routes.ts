@@ -1097,12 +1097,8 @@ export async function registerRoutes(
       const currentUser = req.user as User;
       const facilityFilter = getFacilityFilter(currentUser);
       const orgTypeFilter = getOrganizationTypeFilter(currentUser);
+      const period = (req.query.period as string) || "all";
 
-      // Pre-compute per-module level ID sets so each leaderboard entry can be scored
-      // against ITS OWN module. A non-bypass viewer only sees same-module users (so this
-      // resolves to the viewer's module for everyone). Bypass admins see all users; each
-      // user is scored on their native module's level set so cross-module entries still
-      // show meaningful XP.
       const moduleLevelIdsByModule = new Map<ModuleId, Set<string>>([
         ["hospital", new Set(getVisibleLevelsForModule("hospital", { includeDraft: true }).map((l) => l.id))],
         ["asc", new Set(getVisibleLevelsForModule("asc", { includeDraft: true }).map((l) => l.id))],
@@ -1115,6 +1111,28 @@ export async function registerRoutes(
       const allProgressData = await Promise.all(
         allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
       );
+
+      // For time-based periods, pull daily_activity since startDate
+      let periodActivityByUser: Map<number, number> | null = null;
+      if (period !== "all") {
+        const now = new Date();
+        let startDate: string;
+        if (period === "daily") {
+          startDate = now.toISOString().slice(0, 10);
+        } else if (period === "weekly") {
+          const d = new Date(now);
+          d.setDate(d.getDate() - 6);
+          startDate = d.toISOString().slice(0, 10);
+        } else {
+          // monthly — start of current month
+          startDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-01`;
+        }
+        const activities = await storage.getDailyActivitySince(startDate);
+        periodActivityByUser = new Map();
+        for (const a of activities) {
+          periodActivityByUser.set(a.userId, (periodActivityByUser.get(a.userId) || 0) + (a.xpEarned || 0));
+        }
+      }
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
       const sessionsByUser = new Map<number, typeof allSessions>();
@@ -1142,17 +1160,16 @@ export async function registerRoutes(
         const correct = Math.min(progressC + sessionC, questionsAnswered);
         const accuracy = questionsAnswered > 0 ? Math.min(100, Math.round((correct / questionsAnswered) * 100)) : 0;
         const levelsCompleted = userProgress.filter((p) => p.completed).length;
-        // Module-specific XP: sum xpEarned across the user's quiz_sessions for THIS module's levels.
-        // Quiz sessions persist past completion, so this captures XP from both in-progress and finished levels
-        // without double-counting and without leaking cross-module XP from streak.totalXp.
         const moduleTotalXp = userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
+        const periodXp = periodActivityByUser ? (periodActivityByUser.get(u.id) || 0) : moduleTotalXp;
 
         return {
           id: u.id,
           username: u.username,
           firstName: u.firstName,
           lastName: u.lastName,
-          totalXp: moduleTotalXp,
+          totalXp: periodXp,
+          allTimeXp: moduleTotalXp,
           currentStreak: streak?.currentStreak || 0,
           longestStreak: streak?.longestStreak || 0,
           questionsAnswered,
@@ -1166,6 +1183,52 @@ export async function registerRoutes(
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }
+  });
+
+  // ── Feedback routes ──────────────────────────────────────────────────────────
+  app.post("/api/feedback", requireAuth, async (req, res) => {
+    const { message } = req.body;
+    if (!message || typeof message !== "string" || message.trim().length === 0) {
+      return res.status(400).json({ message: "Message is required" });
+    }
+    const u = req.user as User;
+    const entry = await storage.createFeedback({
+      userId: u.id,
+      username: u.username,
+      firstName: u.firstName,
+      lastName: u.lastName,
+      facilityId: u.facilityId ?? undefined,
+      message: message.trim(),
+    });
+
+    // Attempt email delivery via Resend if API key is configured
+    if (process.env.RESEND_API_KEY) {
+      try {
+        const displayName = (u.firstName || u.lastName) ? `${u.firstName} ${u.lastName}`.trim() : u.username;
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: "AccreditationReady Feedback <feedback@accreditationready.ai>",
+            to: ["akshay@innovans.ai"],
+            subject: `New Feedback from ${displayName}`,
+            text: `From: ${displayName} (@${u.username})\nFacility ID: ${u.facilityId || "N/A"}\n\n${message.trim()}`,
+          }),
+        });
+      } catch (emailErr) {
+        console.error("[Feedback] Email delivery failed:", emailErr);
+      }
+    }
+
+    res.json({ success: true, id: entry.id });
+  });
+
+  app.get("/api/feedback", requireAuth, requireAdmin, async (req, res) => {
+    const entries = await storage.getAllFeedback();
+    res.json(entries);
   });
 
   app.get("/api/admin/stats", requireLeadershipRole("director"), requireMfa, async (req, res) => {
