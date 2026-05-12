@@ -196,6 +196,17 @@ export default function DiagnosticQuizPage() {
     setSelected(index);
   };
 
+  const jumpToQuestion = (idx: number) => {
+    if (!questions || idx === currentQ) return;
+    const newAnswers = [...answers];
+    if (selected !== null && questions[currentQ]) {
+      newAnswers[currentQ] = { questionId: questions[currentQ].id, selectedIndex: selected };
+      setAnswers(newAnswers);
+    }
+    setCurrentQ(idx);
+    setSelected(newAnswers[idx]?.selectedIndex ?? null);
+  };
+
   const handleNext = () => {
     if (selected === null || !questions) return;
     const currentQuestion = questions[currentQ];
@@ -297,7 +308,7 @@ export default function DiagnosticQuizPage() {
                 <span className="font-bold text-sm text-teal-700 dark:text-teal-300">You have a saved quiz in progress</span>
               </div>
               <p className="text-sm text-muted-foreground mb-4">
-                Question {(savedSession?.currentQuestion || 0) + 1} of {savedSession?.questions?.length || 25} — {savedSession?.answers?.length || 0} answers saved
+                Question {(savedSession?.currentQuestion || 0) + 1} of {savedSession?.questions?.length || 15} — {savedSession?.answers?.length || 0} answers saved
               </p>
               <div className="flex gap-3">
                 <Button className="flex-1 h-11 font-bold bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white rounded-xl" onClick={resumeSession} data-testid="button-resume-diagnostic">
@@ -404,7 +415,31 @@ export default function DiagnosticQuizPage() {
               <span className="text-sm font-bold text-muted-foreground">{currentQ + 1} / {totalQuestions}</span>
             </div>
             <Progress value={progressPercent} className="h-2 bg-teal-100 dark:bg-teal-900 [&>div]:bg-gradient-to-r [&>div]:from-teal-500 [&>div]:to-cyan-500" />
-            <p className="text-xs text-muted-foreground mt-1.5 font-medium">{sectionName}</p>
+            <div className="flex items-center justify-between mt-1.5">
+              <p className="text-xs text-muted-foreground font-medium">{sectionName}</p>
+              <div className="flex gap-1 flex-wrap justify-end">
+                {questions.map((_, idx) => {
+                  const isAnswered = answers[idx] !== null && answers[idx] !== undefined;
+                  const isCurrent = idx === currentQ;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => jumpToQuestion(idx)}
+                      disabled={isCurrent}
+                      data-testid={`dot-question-${idx}`}
+                      title={`Question ${idx + 1}${isAnswered ? " (answered)" : ""}`}
+                      className={`w-4 h-4 rounded-full transition-all flex-shrink-0 ${
+                        isCurrent
+                          ? "bg-teal-500 scale-125 cursor-default"
+                          : isAnswered
+                          ? "bg-teal-300 dark:bg-teal-600 hover:bg-teal-400 dark:hover:bg-teal-500 cursor-pointer"
+                          : "bg-gray-200 dark:bg-gray-700 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+            </div>
           </div>
         </div>
 
