@@ -448,11 +448,25 @@ export async function registerRoutes(
         if (r && !additionalIds.includes(r.id)) additionalIds.push(r.id);
       }
     }
-    const updated = await storage.updateUser(req.user!.id, {
+    // Auto-elevate leadershipRole for leadership-scope roles.
+    // Roles with enterprise or cross-department reporting scope are leadership
+    // roles — auto-grant "director" access so the Leadership button appears.
+    // Never downgrade an existing higher leadershipRole.
+    const currentLeadershipRole = (req.user!.leadershipRole as string) || "learner";
+    const currentRank = LEADERSHIP_RANK[currentLeadershipRole] ?? 0;
+    const isLeadershipScopeRole =
+      primaryConfig.reportingScope === "enterprise" ||
+      primaryConfig.reportingScope === "own_plus_all";
+    const autoGrantRank = LEADERSHIP_RANK["director"];
+    const updatePayload: Partial<User> = {
       roleId: role.id,
       additionalRoleIds: additionalIds,
       roleAssignedAt: new Date(),
-    });
+    };
+    if (isLeadershipScopeRole && currentRank < autoGrantRank) {
+      updatePayload.leadershipRole = "director";
+    }
+    const updated = await storage.updateUser(req.user!.id, updatePayload);
     if (!updated) return res.status(500).json({ message: "Failed to update role" });
     const { password: _, ...safeUser } = updated;
     res.json(safeUser);
