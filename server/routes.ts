@@ -1213,7 +1213,7 @@ export async function registerRoutes(
           },
           body: JSON.stringify({
             from: "AccreditationReady Feedback <feedback@innovans.ai>",
-            to: ["akshay@innovans.ai"],
+            to: ["akshay@innovans.ai", "anand@innovans.ai"],
             subject: `New Feedback from ${displayName}`,
             text: `From: ${displayName} (@${u.username})\nFacility ID: ${u.facilityId || "N/A"}\n\n${message.trim()}`,
           }),
