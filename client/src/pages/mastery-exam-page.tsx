@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, Home, Loader2, Lock, ChevronRight, ChevronDown, ChevronUp, Trophy, Crown, Sparkles, LogOut, Save, AlertTriangle, CheckCircle2, XCircle, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowLeft, ArrowRight, Home, Loader2, Lock, ChevronRight, ChevronDown, ChevronUp, Trophy, Crown, Sparkles, Save, AlertTriangle, CheckCircle2, XCircle, TrendingUp, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -367,9 +367,9 @@ export default function MasteryExamPage() {
         <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
           <div className="max-w-2xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between mb-2">
-              <button onClick={() => setShowExitDialog(true)} className="flex items-center gap-1 text-xs font-semibold text-primary uppercase tracking-wide hover:text-primary/70 transition-colors" data-testid="button-exit-mastery">
-                <LogOut size={14} /> Save & Exit
-              </button>
+              <Button variant="ghost" size="sm" onClick={() => setShowExitDialog(true)} className="gap-1.5 text-primary hover:text-primary/80 hover:bg-primary/5 -ml-2" data-testid="button-exit-mastery">
+                <ArrowLeft size={16} /> Back
+              </Button>
               <span className="text-sm font-bold text-muted-foreground">{currentQ + 1} / {totalQuestions}</span>
             </div>
             <Progress value={progressPercent} className="h-2 bg-primary/10 dark:bg-primary/20 [&>div]:bg-primary" />

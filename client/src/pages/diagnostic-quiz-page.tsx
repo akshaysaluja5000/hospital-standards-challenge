@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, ArrowRight, ClipboardCheck, Home, Loader2, CheckCircle2, XCircle, Stethoscope, BarChart3, ChevronRight, ChevronDown, ChevronUp, LogOut, Save, AlertTriangle, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowLeft, ArrowRight, ClipboardCheck, Home, Loader2, CheckCircle2, XCircle, Stethoscope, BarChart3, ChevronRight, ChevronDown, ChevronUp, Save, AlertTriangle, TrendingUp, TrendingDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -377,9 +377,9 @@ export default function DiagnosticQuizPage() {
         <div className="sticky top-[58px] z-40 border-b border-border bg-background/95 backdrop-blur-md">
           <div className="max-w-2xl mx-auto px-4 py-3">
             <div className="flex items-center justify-between mb-2">
-              <button onClick={() => setShowExitDialog(true)} className="flex items-center gap-1 text-xs font-semibold text-teal-600 dark:text-teal-400 uppercase tracking-wide hover:text-teal-800 transition-colors" data-testid="button-exit-diagnostic">
-                <LogOut size={14} /> Save & Exit
-              </button>
+              <Button variant="ghost" size="sm" onClick={() => setShowExitDialog(true)} className="gap-1.5 text-teal-700 dark:text-teal-300 hover:text-teal-900 hover:bg-teal-50 dark:hover:bg-teal-950/50 -ml-2" data-testid="button-exit-diagnostic">
+                <ArrowLeft size={16} /> Back
+              </Button>
               <span className="text-sm font-bold text-muted-foreground">{currentQ + 1} / {totalQuestions}</span>
             </div>
             <Progress value={progressPercent} className="h-2 bg-teal-100 dark:bg-teal-900 [&>div]:bg-gradient-to-r [&>div]:from-teal-500 [&>div]:to-cyan-500" />
