@@ -56,6 +56,7 @@ import {
   type RoleConfig,
   type FacilityType,
 } from "@shared/roles";
+import { MODULE_IDS, MODULE_LABELS, type ModuleId } from "@shared/schema";
 
 const LEADERSHIP_RESTRICTED_ROLES = new Set(["compliance_officer", "nurse_educator"]);
 
