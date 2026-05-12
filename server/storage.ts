@@ -256,6 +256,7 @@ const ROLE_SEED: { name: string; slug: string; department: string; scope: "stand
 
 const KNOWN_FACILITIES: { code: string; name: string }[] = [
   { code: "TSC001", name: "The Surgery Center" },
+  { code: "SITE486045", name: "Midwest Orthopedic Specialty Hospital" },
 ];
 
 const LEADERSHIP_CODES_BY_FACILITY: Record<string, string[]> = {
@@ -263,9 +264,11 @@ const LEADERSHIP_CODES_BY_FACILITY: Record<string, string[]> = {
     "ARLD-K4X9-PQ2M",
     "ARLD-T7NB-W1CJ",
     "ARLD-5HFR-D8LZ",
-    "ARLD-M2QV-E6YX",
-    "ARLD-9GUP-A4SK",
-    "ARLD-L1CW-ZB3N",
+  ],
+  SITE486045: [
+    "MOSH-J7KP-X4NR",
+    "MOSH-B2WQ-T9FV",
+    "MOSH-C6LD-Y3HZ",
   ],
 };
 
