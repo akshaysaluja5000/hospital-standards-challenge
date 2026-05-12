@@ -71,7 +71,7 @@ async function callAnthropicWithRetry(params: Parameters<InstanceType<typeof Ant
       return await client.messages.create({ ...params, stream: false }) as import("@anthropic-ai/sdk/resources/messages").Message;
     } catch (err: any) {
       lastError = err;
-      const isConnectionError = err?.name === "APIConnectionError" || err?.code === "ECONNREFUSED" || err?.cause?.code === "ECONNREFUSED" || (err?.message || "").includes("Connection error") || (err?.message || "").includes("fetch failed");
+      const isConnectionError = err?.name === "APIConnectionError" || err?.name === "APIConnectionTimeoutError" || err?.code === "ECONNREFUSED" || err?.cause?.code === "ECONNREFUSED" || (err?.message || "").includes("Connection error") || (err?.message || "").includes("fetch failed") || (err?.message || "").includes("timeout");
       console.error(`[Anthropic attempt ${attempt}/${maxAttempts}]`, JSON.stringify({ msg: err?.message, code: err?.code, name: err?.name, status: err?.status, cause: err?.cause?.message }));
       if (isConnectionError && attempt < maxAttempts) {
         await new Promise(r => setTimeout(r, 1000 * attempt));
@@ -1420,12 +1420,12 @@ export async function registerRoutes(
   app.post("/api/ai-tutor", requireAuth, async (req: Request, res: Response) => {
     const aiTutorSchema = z.object({
       question: z.string().max(1000),
-      userAnswer: z.string().max(500),
-      correctAnswer: z.string().max(500),
+      userAnswer: z.string().max(1500),
+      correctAnswer: z.string().max(1500),
       explanation: z.string().max(2000),
       depth: z.number().int().min(1).max(3).default(1),
       previousExplanations: z.array(z.string().max(3000)).max(2).optional(),
-      allOptions: z.array(z.string().max(500)).max(6).optional(),
+      allOptions: z.array(z.string().max(1500)).max(6).optional(),
       module: z.enum(["hospital", "asc"]).default("hospital"),
     });
     const parsed = aiTutorSchema.safeParse(req.body);
