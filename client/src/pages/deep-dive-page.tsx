@@ -453,22 +453,16 @@ export default function DeepDivePage() {
     setIsComplete(false);
   }, [level, user?.id, levelId, deleteSessionMutation]);
 
+  useEffect(() => {
+    if (levelError) {
+      setLocation("/deep-dive");
+    }
+  }, [levelError, setLocation]);
+
   if (levelError) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="game-card max-w-sm w-full p-8 text-center">
-          <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
-            <X size={32} className="text-destructive" />
-          </div>
-          <h2 className="text-xl font-black mb-2">Topic Not Found</h2>
-          <p className="text-sm text-muted-foreground mb-6">
-            This deep dive topic doesn't exist or you don't have access to it.
-          </p>
-          <Button onClick={() => setLocation("/deep-dive")} data-testid="button-dd-error-back">
-            <ArrowLeft size={16} className="mr-2" />
-            Back to Topics
-          </Button>
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 size={32} className="animate-spin text-secondary" />
       </div>
     );
   }

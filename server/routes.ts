@@ -930,14 +930,36 @@ export async function registerRoutes(
     }
   });
 
+  const ASC_TO_DEEP_DIVE_BASE: Record<string, string> = {
+    asc_hb_ipc: "infection_control", asc_ipc: "infection_control",
+    asc_hb_med: "medication_management", asc_med: "medication_management",
+    asc_hb_fac: "life_safety", asc_fac: "life_safety",
+    asc_hb_saf: "eoc_safety", asc_saf: "eoc_safety",
+    asc_hb_emg: "eoc_safety", asc_emg: "eoc_safety",
+    asc_hb_cmc: "patient_care_docs", asc_cmc: "patient_care_docs",
+    asc_hb_crd: "patient_care_docs", asc_crd: "patient_care_docs",
+    asc_hb_asg: "universal_protocol", asc_asg: "universal_protocol",
+    asc_hb_gov: "patient_rights", asc_gov: "patient_rights",
+    asc_hb_adm: "patient_care_docs", asc_adm: "patient_care_docs",
+    asc_hb_prr: "patient_rights", asc_prr: "patient_rights",
+    asc_hb_qua: "npsg", asc_qua: "npsg",
+    asc_hb_val: "npsg", asc_val: "npsg",
+  };
+
+  function resolveDeepDiveLevel(levelId: string) {
+    return deepDiveLevels.find((l) => l.id === levelId)
+        ?? deepDiveLevels.find((l) => l.baseLevelId === levelId)
+        ?? deepDiveLevels.find((l) => l.baseLevelId === ASC_TO_DEEP_DIVE_BASE[levelId]);
+  }
+
   app.get("/api/game/deep-dive/session/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId as string;
-      const ddLevel = deepDiveLevels.find((l) => l.id === levelId);
+      const ddLevel = resolveDeepDiveLevel(levelId);
       if (!ddLevel) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }
-      const session = await storage.getQuizSession(req.user!.id, levelId);
+      const session = await storage.getQuizSession(req.user!.id, ddLevel.id);
       if (!session) {
         return res.json(null);
       }
@@ -959,13 +981,13 @@ export async function registerRoutes(
     try {
       const levelId = req.params.levelId as string;
       const userId = req.user!.id;
-      const ddLevel = deepDiveLevels.find((l) => l.id === levelId);
+      const ddLevel = resolveDeepDiveLevel(levelId);
       if (!ddLevel) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }
       const data = deepDiveSessionSchema.parse(req.body);
 
-      const session = await storage.upsertQuizSession(userId, levelId, {
+      const session = await storage.upsertQuizSession(userId, ddLevel.id, {
         questionOrder: data.questionOrder,
         answers: data.answers,
         currentQuestion: data.currentQuestion,
@@ -1012,8 +1034,7 @@ export async function registerRoutes(
   app.get("/api/game/deep-dive/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId;
-      const level = deepDiveLevels.find((l) => l.id === levelId)
-                 ?? deepDiveLevels.find((l) => l.baseLevelId === levelId);
+      const level = resolveDeepDiveLevel(levelId);
       if (!level) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }
