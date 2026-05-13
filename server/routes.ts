@@ -1198,7 +1198,12 @@ export async function registerRoutes(
           levelsCompleted,
           lastActive: streak?.lastPlayedDate || null,
         };
-      }).sort((a, b) => b.totalXp - a.totalXp);
+      }).sort((a, b) => {
+        // Primary: levels completed; Secondary: questions answered; Tertiary: accuracy
+        if (b.levelsCompleted !== a.levelsCompleted) return b.levelsCompleted - a.levelsCompleted;
+        if (b.questionsAnswered !== a.questionsAnswered) return b.questionsAnswered - a.questionsAnswered;
+        return b.accuracy - a.accuracy;
+      });
 
       res.json(leaderboard);
     } catch (err: any) {

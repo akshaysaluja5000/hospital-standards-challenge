@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle, MoreHorizontal, Moon, Sun } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle, MessageSquare, MoreHorizontal, Moon, Sun } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -549,7 +549,7 @@ export default function DashboardPage() {
                   <Trophy size={14} className="mr-2 text-muted-foreground" /> Leaderboard
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => { setFeedbackOpen(true); setFeedbackSent(false); setFeedbackMessage(""); }} data-testid="menu-item-feedback">
-                  <HelpCircle size={14} className="mr-2 text-muted-foreground" /> Send Feedback
+                  <MessageSquare size={14} className="mr-2 text-muted-foreground" /> Send Feedback
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <a
@@ -1241,7 +1241,7 @@ export default function DashboardPage() {
         data-testid="button-open-feedback"
         className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all text-sm font-bold"
       >
-        <HelpCircle size={16} />
+        <MessageSquare size={16} />
         Feedback
       </button>
 
