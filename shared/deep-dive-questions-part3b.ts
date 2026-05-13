@@ -426,7 +426,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
         "Only if the specimen appears abnormal"
       ],
       baseCorrectIndex: 1,
-      baseExplanation: "Joint Commission NPSG.01.03.01 requires labeling of specimens at the point of collection, in the presence of the patient. The label must include at least two patient identifiers, specimen source/site, and any other required information.",
+      baseExplanation: "Joint Commission NPG 1 / formerly NPSG.01.03.01 requires labeling of specimens at the point of collection, in the presence of the patient. The label must include at least two patient identifiers, specimen source/site, and any other required information.",
       baseXp: 15,
       followUps: [
         {

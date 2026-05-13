@@ -125,7 +125,7 @@ export const ascGovLevel: Level = {
       question:
         "GOV.170.50 requires the governing body to ensure fulfillment of applicable obligations under prevailing laws. Which of the following is explicitly mentioned in this standard?",
       options: [
-        "Compliance with the Joint Commission's National Patient Safety Goals",
+        "Compliance with the Joint Commission's National Performance Goals (NPGs)",
         "Reporting to the National Practitioner Data Bank",
         "Submission of annual quality reports to CMS",
         "Filing quarterly tax returns with the IRS",

@@ -61,15 +61,15 @@ export const ddPatientCareLevel: DeepDiveLevel = {
     },
     {
       id: "dd-pc2",
-      baseQuestion: "A surveyor traces a patient who was readmitted within 30 days and finds no evidence of medication reconciliation on the prior discharge. Which Joint Commission NPSG specifically addresses medication reconciliation?",
+      baseQuestion: "A surveyor traces a patient who was readmitted within 30 days and finds no evidence of medication reconciliation on the prior discharge. Which Joint Commission National Performance Goal (NPG) specifically addresses medication reconciliation?",
       baseOptions: [
-        "NPSG.15.01.01 - Suicide Risk",
-        "NPSG.07.01.01 - Hand Hygiene",
-        "NPSG.03.06.01 - Medication Reconciliation",
-        "NPSG.01.01.01 - Patient Identification"
+        "NPG 8 - Suicide Risk Reduction",
+        "NPG 5 - Infection Prevention and Control",
+        "NPG 14 - Medication Management Program",
+        "NPG 1 - Correct Patient, Correct Care, Correct Time"
       ],
       baseCorrectIndex: 2,
-      baseExplanation: "NPSG.03.06.01 requires organizations to maintain and communicate an accurate medication list across transitions of care. This includes reconciliation at admission, transfer, and discharge to prevent adverse drug events.",
+      baseExplanation: "NPG 14 / formerly NPSG.03.06.01 requires organizations to maintain and communicate an accurate medication list across transitions of care. This includes reconciliation at admission, transfer, and discharge to prevent adverse drug events. Effective January 1, 2026, JC renamed the National Patient Safety Goals (NPSGs) to National Performance Goals (NPGs) as part of the Accreditation 360 overhaul.",
       baseXp: 15,
       followUps: [
         {
@@ -85,7 +85,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           expertXp: 30
         },
         {
-          question: "The surveyor reviews this readmitted patient's current admission medication reconciliation and notices that the patient's home medication list includes 'metformin 500mg twice daily,' but the previous discharge summary listed 'metformin 1000mg twice daily.' The patient states they have been taking 500mg because that is what they had at home. Under NPSG.03.06.01, what is the MOST appropriate action?",
+          question: "The surveyor reviews this readmitted patient's current admission medication reconciliation and notices that the patient's home medication list includes 'metformin 500mg twice daily,' but the previous discharge summary listed 'metformin 1000mg twice daily.' The patient states they have been taking 500mg because that is what they had at home. Under NPG 14 / formerly NPSG.03.06.01, what is the MOST appropriate action?",
           options: [
           "Use the patient's reported dose of 500mg since the patient is the most reliable source of their home medication regimen",
           "Consult endocrinology to determine the correct metformin dose before proceeding with reconciliation",
@@ -97,7 +97,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           expertXp: 30
         },
         {
-          question: "During the same tracer, the surveyor discovers that the organization uses a 'best possible medication history' (BPMH) process but finds that the pharmacy technician who obtained the BPMH did not document which sources were used to compile the list. The surveyor asks what NPSG.03.06.01 EP2 requires regarding source documentation. What is the correct answer?",
+          question: "During the same tracer, the surveyor discovers that the organization uses a 'best possible medication history' (BPMH) process but finds that the pharmacy technician who obtained the BPMH did not document which sources were used to compile the list. The surveyor asks what NPG 14 / formerly NPSG.03.06.01 EP2 requires regarding source documentation. What is the correct answer?",
           options: [
           "Source documentation is a best practice recommendation but not an explicit requirement under NPSG.03.06.01",
           "Source documentation is only required when the patient is unable to provide their own medication history due to cognitive or communication barriers",
@@ -120,7 +120,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
         "Place a yellow wristband on the patient"
       ],
       baseCorrectIndex: 0,
-      baseExplanation: "Joint Commission standard PC.01.02.01 and NPSG.09.02.01 require that patients identified as fall risks have individualized interventions implemented and documented in the care plan. Interventions must be tailored to the patient's specific risk factors (e.g., medication effects, mobility deficits, cognitive status), not just a standardized set of actions.",
+      baseExplanation: "Joint Commission standard PC.01.02.01 and NPG 1 / formerly NPSG.09.02.01 require that patients identified as fall risks have individualized interventions implemented and documented in the care plan. Interventions must be tailored to the patient's specific risk factors (e.g., medication effects, mobility deficits, cognitive status), not just a standardized set of actions.",
       baseXp: 15,
       followUps: [
         {
@@ -136,7 +136,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           expertXp: 25
         },
         {
-          question: "The surveyor reviews the fall risk reassessment schedule and finds that the patient's Morse Fall Scale score was obtained on admission but not reassessed after the patient received a new sedating medication (lorazepam). Under NPSG.09.02.01, when must fall risk be reassessed beyond the routine schedule?",
+          question: "The surveyor reviews the fall risk reassessment schedule and finds that the patient's Morse Fall Scale score was obtained on admission but not reassessed after the patient received a new sedating medication (lorazepam). Under NPG 1 / formerly NPSG.09.02.01, when must fall risk be reassessed beyond the routine schedule?",
           options: [
           "Only at shift change and upon transfer to a new unit",
           "Reassessment is only required if the patient or family requests it or if a fall occurs",
@@ -324,7 +324,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
         "The patient's insurance may deny claims"
       ],
       baseCorrectIndex: 2,
-      baseExplanation: "Failure to prominently document and communicate allergies creates a direct patient safety risk. Joint Commission NPSG.03.06.01 and medication management standards require that allergies are documented, visible in all medication-related systems, and communicated at every transition of care to prevent adverse drug reactions.",
+      baseExplanation: "Failure to prominently document and communicate allergies creates a direct patient safety risk. Joint Commission NPG 14 / formerly NPSG.03.06.01 and medication management standards require that allergies are documented, visible in all medication-related systems, and communicated at every transition of care to prevent adverse drug reactions.",
       baseXp: 15,
       followUps: [
         {
@@ -352,7 +352,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           expertXp: 30
         },
         {
-          question: "The surveyor escalates the tracer by asking the pharmacy director about the organization's process for allergy verification during the medication use process. The surveyor finds that the CPOE system allows overriding allergy alerts without documentation of clinical rationale. Under MM.01.01.03 and NPSG.03.06.01, what is the expected compliance standard?",
+          question: "The surveyor escalates the tracer by asking the pharmacy director about the organization's process for allergy verification during the medication use process. The surveyor finds that the CPOE system allows overriding allergy alerts without documentation of clinical rationale. Under MM.01.01.03 and NPG 14 / formerly NPSG.03.06.01, what is the expected compliance standard?",
           options: [
           "CPOE allergy alerts are advisory only and do not require documentation of overrides under Joint Commission standards",
           "Alert overrides are acceptable as long as the pharmacist verifies the order before dispensing",
@@ -493,7 +493,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           expertXp: 25
         },
         {
-          question: "The surveyor now traces a patient with a central venous catheter (CVC) and asks the nurse about the organization's central line bundle. The nurse can name hand hygiene and chlorhexidine dressing changes but cannot articulate the other bundle elements. Under IC.01.05.01 and NPSG.07.04.01, what are the complete evidence-based central line bundle elements?",
+          question: "The surveyor now traces a patient with a central venous catheter (CVC) and asks the nurse about the organization's central line bundle. The nurse can name hand hygiene and chlorhexidine dressing changes but cannot articulate the other bundle elements. Under IC.01.05.01 and NPG 5 / formerly NPSG.07.04.01, what are the complete evidence-based central line bundle elements?",
           options: [
           "Hand hygiene, chlorhexidine bathing, transparent dressings changed weekly, and routine catheter exchange over a guidewire every 7 days",
           "Hand hygiene, site rotation every 72 hours, daily blood cultures, and prophylactic antibiotics",
@@ -681,7 +681,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
         "The pharmacist is solely responsible for reconciliation during transfers"
       ],
       baseCorrectIndex: 1,
-      baseExplanation: "NPSG.03.06.01 requires medication reconciliation at every transition of care, which includes transfers within the same facility (e.g., ICU to floor, OR to PACU, ED to inpatient). The current medication list must be compared with the new orders to ensure accuracy and prevent omissions or duplications.",
+      baseExplanation: "NPG 14 / formerly NPSG.03.06.01 requires medication reconciliation at every transition of care, which includes transfers within the same facility (e.g., ICU to floor, OR to PACU, ED to inpatient). The current medication list must be compared with the new orders to ensure accuracy and prevent omissions or duplications.",
       baseXp: 15,
       followUps: [
         {
