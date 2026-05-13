@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, ShieldAlert, Sparkles, CheckCircle2, BookOpen,
   Calendar, AlertTriangle, ChevronDown, ChevronUp, Loader2,
-  RotateCcw, Target, Lightbulb, ClipboardList,
+  RotateCcw, Target, Lightbulb, ClipboardList, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -280,6 +280,23 @@ export default function RiskAssessmentPage() {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      await apiRequest("DELETE", `/api/risk-assessment?module=${module}`);
+    },
+    onSuccess: () => {
+      setShowForm(false);
+      setSelected([]);
+      setNotes("");
+      setLiveActionPlan(null);
+      queryClient.invalidateQueries({ queryKey: ["/api/risk-assessment"] });
+      toast({ title: "Plan cleared", description: "Your risk assessment plan has been removed." });
+    },
+    onError: () => {
+      toast({ title: "Could not clear plan", description: "Please try again.", variant: "destructive" });
+    },
+  });
+
   function toggleArea(area: string) {
     setSelected(prev => prev.includes(area) ? prev.filter(a => a !== area) : [...prev, area]);
   }
@@ -376,16 +393,35 @@ export default function RiskAssessmentPage() {
             {showForm && (
               <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-6">
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-start justify-between gap-3">
                   <div>
                     <h2 className="font-bold text-base">Select your risk areas</h2>
                     <p className="text-xs text-muted-foreground mt-0.5">Check every area where you feel uncertain or less prepared</p>
                   </div>
-                  {hasPlan && (
-                    <Button variant="ghost" size="sm" onClick={() => setShowForm(false)} data-testid="button-cancel-form">
-                      Cancel
-                    </Button>
-                  )}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {existing && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteMutation.mutate()}
+                        disabled={deleteMutation.isPending}
+                        data-testid="button-clear-plan"
+                        className="gap-1.5 text-destructive hover:text-destructive hover:bg-destructive/8"
+                      >
+                        {deleteMutation.isPending ? (
+                          <Loader2 size={13} className="animate-spin" />
+                        ) : (
+                          <Trash2 size={13} />
+                        )}
+                        Clear plan
+                      </Button>
+                    )}
+                    {hasPlan && (
+                      <Button variant="ghost" size="sm" onClick={() => setShowForm(false)} data-testid="button-cancel-form">
+                        Cancel
+                      </Button>
+                    )}
+                  </div>
                 </div>
 
                 {/* Area selection grid */}

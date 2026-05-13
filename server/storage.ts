@@ -406,6 +406,7 @@ export interface IStorage {
 
   getRiskAssessment(userId: number, module: string): Promise<RiskAssessment | undefined>;
   upsertRiskAssessment(userId: number, module: string, riskAreas: string, notes: string, actionPlan: string): Promise<RiskAssessment>;
+  deleteRiskAssessment(userId: number, module: string): Promise<void>;
   getRiskAssessmentsByFacility(facilityId: number | null, module: string): Promise<(RiskAssessment & { username: string; firstName: string; lastName: string; department: string | null })[]>;
 
   createFeedback(data: { userId?: number; username?: string; firstName?: string; lastName?: string; facilityId?: number; message: string }): Promise<Feedback>;
@@ -934,6 +935,12 @@ export class DatabaseStorage implements IStorage {
       userId, module, riskAreas, notes, actionPlan,
     }).returning();
     return created;
+  }
+
+  async deleteRiskAssessment(userId: number, module: string): Promise<void> {
+    await db.delete(riskAssessments).where(
+      and(eq(riskAssessments.userId, userId), eq(riskAssessments.module, module))
+    );
   }
 
   async createFeedback(data: { userId?: number; username?: string; firstName?: string; lastName?: string; facilityId?: number; message: string }): Promise<Feedback> {

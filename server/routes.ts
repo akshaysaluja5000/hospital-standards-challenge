@@ -2914,6 +2914,17 @@ Return ONLY valid JSON (no markdown, no explanation):
     }
   });
 
+  app.delete("/api/risk-assessment", requireAuth, async (req, res) => {
+    try {
+      const userId = (req.user as User).id;
+      const module = (req.query.module as string) || "hospital";
+      await storage.deleteRiskAssessment(userId, module);
+      res.json({ success: true });
+    } catch (err: any) {
+      res.status(500).json({ error: "Failed to delete risk assessment." });
+    }
+  });
+
   app.get("/api/risk-assessment/team", requireLeadershipRole("director"), async (req, res) => {
     try {
       const caller = req.user as User;
