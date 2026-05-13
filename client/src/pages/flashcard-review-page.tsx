@@ -67,6 +67,25 @@ const FLIP_VARIANTS = {
   exitFront:  { opacity: 0, rotateY: 12,  scale: 0.97 },
 };
 
+function getTopicLabel(title: string): string {
+  const dashIdx = title.indexOf(" — ");
+  if (dashIdx !== -1) return title.slice(dashIdx + 3);
+  return title;
+}
+
+const CATEGORY_PROMPTS: Record<string, string> = {
+  rule:       "What does this standard require?",
+  definition: "How is this term defined?",
+  scenario:   "What applies in this situation?",
+  mistake:    "What's the common mistake to avoid?",
+  number:     "What's the key number or threshold?",
+  tip:        "What would a surveyor check here?",
+};
+
+function getQuestionPrompt(category?: string): string {
+  return CATEGORY_PROMPTS[category ?? ""] ?? "What do you need to know about this?";
+}
+
 function insertAt<T>(arr: T[], idx: number, item: T): T[] {
   const next = [...arr];
   next.splice(idx, 0, item);
@@ -307,10 +326,13 @@ export default function FlashcardReviewPage() {
                         </span>
                       )}
                     </div>
-                    <div className="flex-1 flex items-center">
-                      <h3 className="text-2xl font-black leading-tight" data-testid="text-concept-title">
-                        {currentConcept.title}
-                      </h3>
+                    <div className="flex-1 flex flex-col justify-center gap-4">
+                      <p className="text-xl font-black leading-snug" data-testid="text-concept-question">
+                        {getQuestionPrompt(currentConcept.category)}
+                      </p>
+                      <p className="text-sm font-semibold text-muted-foreground leading-snug" data-testid="text-concept-title">
+                        Topic: {getTopicLabel(currentConcept.title)}
+                      </p>
                     </div>
                     <div className="flex items-center justify-center gap-2 pt-2 border-t border-border/40">
                       <span className="text-xs text-muted-foreground/60 font-medium tracking-wide">
