@@ -1953,6 +1953,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
         infection_control:    { category: "Environment & Surfaces",          facilityType: "Hospital" },
         patient_rights:       { category: "Patient Care & Documentation",    facilityType: "Hospital" },
         life_safety:          { category: "EOC & Safety Compliance",         facilityType: "Hospital" },
+        emergency_management: { category: "Emergency Management",              facilityType: "Hospital" },
       };
 
       const allUsersRaw = await storage.getAllUsers();
