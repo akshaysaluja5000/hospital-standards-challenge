@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BarChart3, TrendingUp, GraduationCap, BrainCircuit,
   Users, Building2, Stethoscope, ChevronRight, ShieldCheck,
-  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert,
+  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -78,6 +78,17 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     href: "/admin",
     minRole: "director",
     badge: "AI",
+  },
+  {
+    id: "executive-console",
+    title: "Executive Compliance Console",
+    description: "Agent-driven compliance operations — Survey Readiness, Content Intelligence, Staff Learning, Incident Intelligence, Regulatory Watch, and Executive Readiness agents.",
+    icon: Zap,
+    iconBg: "bg-violet-500/10",
+    iconColor: "text-violet-500",
+    href: "/executive-console",
+    minRole: "ceo",
+    badge: "Agents",
   },
 ];
 
