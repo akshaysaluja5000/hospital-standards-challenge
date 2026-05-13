@@ -1294,5 +1294,114 @@ export const handbook: HandbookChapter[] = [
       { fact: "Evacuation", detail: "Internal threat — move out, follow staged routes" },
       { fact: "Common citation", detail: "Staff cannot describe their emergency role when asked by a surveyor" }
     ]
+  },
+  {
+    levelId: "patient_safety_systems",
+    title: "Patient Safety Systems",
+    overview: "The Patient Safety Systems (PSS) chapter is the backbone of Joint Commission's Accreditation 360 framework. It requires hospitals to build a genuine culture of safety — not just policies, but a functioning system where staff can report concerns without fear, leadership actively responds, adverse events are analyzed rigorously, and risks are identified before harm occurs. PSS governs Just Culture, sentinel event review, Comprehensive Systemic Analysis (CSA), proactive FMEA risk assessments, safety event classification, and the annual safety program evaluation.",
+    sections: [
+      {
+        heading: "Just Culture — The Three Behavior Types",
+        content: "Just Culture distinguishes between three types of behavior that produce adverse events, each requiring a different organizational response. (1) Human error — a slip, lapse, or mistake that any reasonable person could make under the same conditions. The response is to console the individual and fix the system — not punish. (2) At-risk behavior — a behavioral choice that increases risk, often because the person does not recognize the risk or believes it is justified (e.g., skipping a step because 'we always do it that way'). The response is to coach and create incentives for safer behavior. (3) Reckless behavior — consciously disregarding a substantial and unjustifiable risk; the person knew the risk and chose to proceed. The response is remediation or disciplinary action. Under Just Culture, the same event may involve all three behavior types from different people — the analysis must classify each person's contribution separately. A facility that punishes all adverse events equally suppresses reporting. A facility that excuses all events equally enables reckless behavior.",
+        criticalValues: [
+          { label: "Human error", value: "Unintentional — console and fix the system" },
+          { label: "At-risk behavior", value: "Drift from safe practice — coach and incentivize" },
+          { label: "Reckless behavior", value: "Conscious disregard of known risk — remediate/discipline" },
+          { label: "Key principle", value: "Same event, different behaviors — each classified separately" }
+        ],
+        thinkAboutIt: "A nurse skips the time-out because 'the surgeon is always in a rush and nothing ever happens.' Which Just Culture category is this, and what is the appropriate organizational response?"
+      },
+      {
+        heading: "Safety Event Classification",
+        content: "JC and the Patient Safety Movement use a three-tier safety event classification system. (1) Near miss (also called 'close call' or 'good catch') — an event that did not reach the patient at all. Example: a nurse catches a wrong-patient medication before it leaves the pharmacy. These are high-value learning events and must be encouraged and reported. (2) Precursor safety event — an event that reached the patient but caused no harm, or minor temporary harm. Example: a patient received the wrong dose of a non-critical medication, no adverse effect occurred. (3) Serious safety event — an event that reached the patient and caused significant harm, including sentinel events. JC's sentinel event definition: an unexpected occurrence involving death, permanent harm, or severe temporary harm. Near misses are actually the most valuable for learning — they reveal system vulnerabilities without the cost of patient harm. Organizations that only investigate serious events miss the vast majority of their learning opportunities.",
+        criticalValues: [
+          { label: "Near miss", value: "Did not reach patient — highest value learning opportunity" },
+          { label: "Precursor safety event", value: "Reached patient, no or minor harm" },
+          { label: "Serious safety event", value: "Reached patient, significant harm" },
+          { label: "Sentinel event", value: "Unexpected death, permanent harm, or severe temporary harm" }
+        ]
+      },
+      {
+        heading: "Sentinel Events — Definition, Reporting, and Required Review",
+        content: "A sentinel event is an unexpected occurrence involving death, permanent harm, or severe temporary harm. JC maintains a list of reviewable sentinel event types — including wrong-site surgery, suicide in a 24-hour care setting, infant abduction, and transfusion-related death. When a sentinel event occurs: (1) The organization must notify JC within 72 hours of discovery. (2) A Comprehensive Systemic Analysis (CSA — formerly called RCA2) must be completed within 45 calendar days of the event or JC notification, whichever comes first. (3) An action plan with measurable improvement strategies must be submitted to JC. (4) Implementation of the action plan and verified improvement must be demonstrated. Failure to perform a timely CSA is itself a JC compliance finding. The 45-day clock is firm.",
+        criticalValues: [
+          { label: "JC notification", value: "Within 72 hours of discovery" },
+          { label: "CSA deadline", value: "45 calendar days from event or JC notification" },
+          { label: "Required output", value: "Completed CSA + action plan with measurable strategies" },
+          { label: "Follow-up", value: "Implementation and verified improvement required" }
+        ],
+        thinkAboutIt: "A patient dies by suicide on a 24-hour psychiatric unit on a Tuesday. When is the JC notification due, and when is the CSA due?"
+      },
+      {
+        heading: "Comprehensive Systemic Analysis (CSA) — Formerly RCA2",
+        content: "Accreditation 360 renamed the traditional Root Cause Analysis process to Comprehensive Systemic Analysis (CSA) to emphasize its systemic rather than individual focus. A valid CSA must: (1) Be conducted by a multidisciplinary team that includes frontline staff closest to the event — not just leadership and quality staff. (2) Identify root causes that, if resolved, would prevent recurrence — not just contributing factors. (3) Develop an action plan with specific, measurable interventions that address the identified root causes. (4) Assign accountability for each action item with a completion timeline. (5) Monitor implementation and verify that the interventions achieved the intended improvement. Common CSA failures: identifying 'staff education' as the sole corrective action (education alone rarely prevents recurrence of systemic failures); completing the CSA paperwork without implementing the actions; and blaming individuals rather than examining system design.",
+        criticalValues: [
+          { label: "Team", value: "Multidisciplinary — must include frontline staff involved in the event" },
+          { label: "Focus", value: "System design failures — not individual blame" },
+          { label: "Action plan", value: "Specific, measurable, accountable, time-bound interventions" },
+          { label: "Verification", value: "Implementation AND confirmed improvement — not just completion" },
+          { label: "Common failure", value: "'Staff will be re-educated' is not an acceptable sole corrective action" }
+        ]
+      },
+      {
+        heading: "Proactive Risk Reduction — FMEA",
+        content: "Failure Mode and Effects Analysis (FMEA) is a proactive, structured method for identifying where a high-risk process could fail before an adverse event occurs. JC requires at least one FMEA per year for a high-priority process identified through the organization's risk assessment. The FMEA process: (1) Select a high-risk process (e.g., look-alike/sound-alike medication dispensing, patient handoffs in the ICU). (2) Map the process step by step. (3) Identify all the ways each step could fail (failure modes). (4) Assess the severity and probability of each failure. (5) Redesign the process to eliminate or reduce the highest-priority failures. (6) Implement and measure the redesign. FMEA is the 'before the event' counterpart to the CSA's 'after the event' analysis. Organizations that only react to adverse events — never proactively examining high-risk processes — are not meeting the PSS standard.",
+        criticalValues: [
+          { label: "Frequency", value: "At least 1 FMEA per year" },
+          { label: "Selection criteria", value: "High-priority process — identified through risk assessment" },
+          { label: "Process", value: "Map → Identify failure modes → Assess → Redesign → Implement → Measure" },
+          { label: "Distinction", value: "FMEA = proactive (before harm). CSA = reactive (after harm)." }
+        ]
+      },
+      {
+        heading: "Culture of Safety — Leadership Commitment and Measurement",
+        content: "The PSS chapter places explicit responsibility on hospital leadership for creating and sustaining a culture of safety. This is not a nursing or quality department function — it requires CEO and board-level visibility and accountability. Key requirements: (1) Leadership must receive and act on safety culture data — not just acknowledge it exists. (2) Safety culture must be measured with a validated survey tool (AHRQ's Survey on Patient Safety Culture [SOPS] is most commonly used) at least every 24 months. (3) Survey results must be shared with staff and drive improvement actions. (4) Leaders must demonstrate visible commitment — safety walk rounds, personal involvement in CSA reviews, and modeling of safety behavior. (5) Staff must feel safe reporting concerns without fear of retaliation (psychological safety). A non-punitive reporting environment is foundational — organizations where staff fear punishment suppress the near-miss reports that would prevent sentinel events.",
+        criticalValues: [
+          { label: "Survey frequency", value: "At least every 24 months (2 years)" },
+          { label: "Recommended tool", value: "AHRQ SOPS (Survey on Patient Safety Culture)" },
+          { label: "Leadership role", value: "Visible, active — not delegated to quality department" },
+          { label: "Psychological safety", value: "Staff must feel safe to report without fear of retaliation" },
+          { label: "Non-punitive reporting", value: "Required — event reporting must be encouraged, not penalized" }
+        ]
+      },
+      {
+        heading: "High Reliability Organization (HRO) Principles",
+        content: "High Reliability Organizations are those that operate in high-hazard environments with consistently low error rates. Healthcare has adopted the HRO framework as a safety culture foundation. Five HRO principles: (1) Preoccupation with failure — treat near misses and small deviations as signals of potential catastrophic failure; always assume something could go wrong. (2) Reluctance to simplify — resist simple explanations for complex events; dig into system factors, don't stop at 'human error.' (3) Sensitivity to operations — frontline staff are the most important source of real-time situational awareness; leadership must stay connected to what is actually happening at the bedside. (4) Commitment to resilience — build the capacity to detect, contain, and recover from errors before they cause harm. (5) Deference to expertise — in a crisis, decision authority should go to the person with the most relevant knowledge, not the highest rank. JC uses HRO principles as a framework in its Leadership chapter (LD) and PSS chapter.",
+        criticalValues: [
+          { label: "Preoccupation with failure", value: "Near misses are warnings — treat them seriously" },
+          { label: "Reluctance to simplify", value: "Don't accept 'human error' as the final answer" },
+          { label: "Sensitivity to operations", value: "Stay connected to frontline reality" },
+          { label: "Commitment to resilience", value: "Detect, contain, recover before harm escalates" },
+          { label: "Deference to expertise", value: "Crisis authority follows knowledge, not rank" }
+        ]
+      },
+      {
+        heading: "Annual PSS Program Evaluation and Patient Safety Officer",
+        content: "JC requires hospitals to conduct an annual evaluation of the patient safety program — reviewing whether the PSS systems (reporting, analysis, improvement, culture measurement) are functioning effectively and achieving improvement. The evaluation must be presented to hospital leadership and the governing body. Most accredited hospitals designate a Patient Safety Officer (PSO) — a qualified individual responsible for coordinating the patient safety program, tracking safety events, overseeing CSA and FMEA processes, managing the safety culture survey, and reporting to leadership. The PSO role is distinct from the quality/performance improvement function, though they often overlap. The governing board must also receive safety performance data regularly — board-level accountability for patient safety is a JC Leadership chapter requirement that intersects directly with PSS.",
+        criticalValues: [
+          { label: "Annual evaluation", value: "PSS program must be formally evaluated each year" },
+          { label: "Presented to", value: "Leadership AND the governing body (board)" },
+          { label: "Patient Safety Officer", value: "Designated coordinator of the safety program" },
+          { label: "Board accountability", value: "Governing body must receive regular safety performance data" }
+        ]
+      }
+    ],
+    quickReference: [
+      { fact: "Just Culture: human error", detail: "Unintentional slip — console, fix the system" },
+      { fact: "Just Culture: at-risk behavior", detail: "Drift from safe practice — coach, create incentives" },
+      { fact: "Just Culture: reckless behavior", detail: "Conscious disregard of risk — remediate/discipline" },
+      { fact: "Near miss", detail: "Did not reach patient — encourage reporting, high-value learning" },
+      { fact: "Precursor safety event", detail: "Reached patient, no or minor harm" },
+      { fact: "Serious safety event / Sentinel event", detail: "Death, permanent harm, or severe temporary harm" },
+      { fact: "Sentinel event — JC notification", detail: "Within 72 hours of discovery" },
+      { fact: "CSA (formerly RCA2) deadline", detail: "45 calendar days from event or JC notification" },
+      { fact: "CSA team", detail: "Multidisciplinary — must include frontline staff" },
+      { fact: "FMEA frequency", detail: "At least 1 per year — high-priority process" },
+      { fact: "Safety culture survey", detail: "At least every 24 months — AHRQ SOPS recommended" },
+      { fact: "Leadership role", detail: "Visible, active safety commitment — not delegated to quality dept" },
+      { fact: "HRO: 5 principles", detail: "Preoccupation with failure, Reluctance to simplify, Sensitivity to operations, Commitment to resilience, Deference to expertise" },
+      { fact: "Annual PSS evaluation", detail: "Presented to leadership and governing body each year" },
+      { fact: "Common citation", detail: "'Staff re-education' as sole CSA corrective action — not acceptable" }
+    ]
   }
 ];
