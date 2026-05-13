@@ -88,9 +88,186 @@ const CATEGORY_PROMPTS: Record<string, string> = {
   tip:        "What would a surveyor check here?",
 };
 
+function deriveQuestion(topic: string): string {
+  const t = topic.toLowerCase();
+  if (t.includes("notif") || t.includes("within 15"))
+    return "What events trigger a required notification under this standard, and what is the timeframe?";
+  if (t.includes("public representation") || t.includes("representation of accreditation"))
+    return "What restrictions govern how an organization may publicly represent its accreditation status?";
+  if (t.includes("fiscal") || t.includes("financial control"))
+    return "What fiscal controls or financial accountability does this standard require?";
+  if (t.includes("orientation") || t.includes("personnel polic"))
+    return "What must personnel policies address, and what must new-employee orientation cover?";
+  if (t.includes("professional development") || t.includes("personnel sufficiency"))
+    return "What ongoing professional development and staffing adequacy does this standard require?";
+  if (t.includes("pre-op") || t.includes("pre-operative") || t.includes("pre-procedural"))
+    return "What assessments and documentation must be completed before a procedure begins?";
+  if (t.includes("patient identification") || t.includes("site marking"))
+    return "What does this standard require for correct patient identification and surgical site marking?";
+  if (t.includes("time-out") || t.includes("timeout"))
+    return "What must be verified during the pre-procedural time-out, and who must participate?";
+  if (t.includes("anesthesia monitor") || t.includes("anesthesia management"))
+    return "What monitoring and documentation requirements apply while a patient is under anesthesia?";
+  if (t.includes("post-anesthesia") || t.includes("recovery") || t.includes("discharge criteria"))
+    return "What criteria must be met before a patient can be discharged from the recovery area?";
+  if (t.includes("therapeutic environment") || t.includes("behavioral health setting"))
+    return "What environmental or care standards apply specifically to behavioral health settings?";
+  if (t.includes("individualized treatment") || t.includes("treatment plan"))
+    return "What must an individualized treatment plan address and document?";
+  if (t.includes("staff qualif") || (t.includes("qualified") && t.includes("personnel")))
+    return "What qualifications must staff hold to meet this standard?";
+  if (t.includes("continuity") || t.includes("discharge planning"))
+    return "What must be documented to ensure continuity of care at and after discharge?";
+  if (t.includes("clinical record") && (t.includes("requirement") || t.includes("individual") || t.includes("element")))
+    return "What specific elements must appear in every patient's clinical record?";
+  if (t.includes("records system") || (t.includes("collection") && t.includes("record")))
+    return "What does this standard require for how clinical records are collected, stored, and maintained?";
+  if (t.includes("written polic") && t.includes("record"))
+    return "What written policies governing clinical records must the organization maintain?";
+  if (t.includes("confidentiality") || (t.includes("privacy") && t.includes("record")))
+    return "What safeguards must protect the confidentiality and privacy of clinical records?";
+  if (t.includes("allergy") || t.includes("sensitivity"))
+    return "How must known allergies and sensitivities be documented in the clinical record?";
+  if (t.includes("informed consent") && (t.includes("document") || t.includes("incorporat")))
+    return "How must informed consent discussions be documented in the clinical record?";
+  if (t.includes("informed consent"))
+    return "What elements must be present for informed consent to be legally valid under this standard?";
+  if (t.includes("governing body") && t.includes("credentialing"))
+    return "What accountability does the governing body hold for credentialing and privileging decisions?";
+  if (t.includes("credentialing") || t.includes("privileging"))
+    return "What must a compliant credentialing and privileging process verify and document?";
+  if (t.includes("initial application") || t.includes("evidence of competence"))
+    return "What must an initial credentialing application demonstrate and verify before privileges are granted?";
+  if (t.includes("attestation"))
+    return "What written attestations are required as part of a valid credentialing application?";
+  if (t.includes("source verification") || t.includes("npdb"))
+    return "What primary and secondary source verifications must be completed before granting privileges?";
+  if (t.includes("reappointment"))
+    return "How frequently must reappointment occur, and what must the reappointment process include?";
+  if (t.includes("peer review") && t.includes("who reviews"))
+    return "Who is required to review each physician, dentist, or health care professional — and why does it matter?";
+  if (t.includes("peer review"))
+    return "What does a compliant peer review process require, and who must participate?";
+  if (t.includes("ongoing monitoring") && (t.includes("credential") || t.includes("date-sensitive")))
+    return "What date-sensitive credentialing information must be tracked on an ongoing basis?";
+  if (t.includes("medical emergency") || t.includes("unplanned transfer"))
+    return "What must written procedures for medical emergencies and unplanned transfers address?";
+  if (t.includes("bls") || t.includes("basic life support"))
+    return "Who must hold current BLS certification, and what equipment training is required on-site?";
+  if (t.includes("disaster preparedness") || t.includes("emergency and disaster") || (t.includes("emergency") && t.includes("comprehensive")))
+    return "What must a comprehensive emergency and disaster preparedness plan include?";
+  if (t.includes("drill") || t.includes("quarterly") || t.includes("scenario-based"))
+    return "How frequently must drills be conducted, and what must each written drill evaluation document?";
+  if (t.includes("emergency equipment") && (t.includes("maintained") || t.includes("accessible")))
+    return "What does it mean for emergency equipment to be 'maintained' and 'readily accessible'?";
+  if (t.includes("building code") || t.includes("life safety"))
+    return "What building and life safety code compliance does this standard require?";
+  if (t.includes("patient comfort") || (t.includes("physical environment") && !t.includes("surgical")))
+    return "What physical environment conditions must the facility maintain for patient comfort and privacy?";
+  if (t.includes("clean") || t.includes("visible hazard"))
+    return "What cleanliness and hazard-free conditions would a surveyor expect to observe?";
+  if (t.includes("fire protection") || t.includes("emergency exiting") || t.includes("exit sign"))
+    return "What fire protection equipment and emergency exit requirements does this standard establish?";
+  if (t.includes("equipment maintenance") || t.includes("calibration"))
+    return "What maintenance and calibration records must be current for medical equipment?";
+  if (t.includes("alternate power") || t.includes("backup power") || t.includes("generator"))
+    return "When is alternate power required, and what documentation proves the system is adequate?";
+  if (t.includes("scope of services"))
+    return "What must the governing body formally define in its approved scope of services document?";
+  if (t.includes("contract") || t.includes("arrangement oversight"))
+    return "What oversight must the governing body maintain over contracted services and arrangements?";
+  if (t.includes("meeting frequency") || t.includes("annual review"))
+    return "How often must the governing body meet, and what items require at least annual review?";
+  if (t.includes("oversight of anesthesia") || t.includes("oversight of surgery") || t.includes("anesthesia and surgery"))
+    return "What governing body approval is required before anesthesia techniques or surgical procedures may be performed?";
+  if (t.includes("strategic direction") || t.includes("operational accountability"))
+    return "What strategic and operational responsibilities does the governing body hold under this standard?";
+  if (t.includes("written ipc") || t.includes("ipc program"))
+    return "What elements must a written infection prevention and control program include?";
+  if (t.includes("hand hygiene") || t.includes("safe injection"))
+    return "What surveillance does this standard require for hand hygiene and safe injection practices?";
+  if (t.includes("sterilization") || t.includes("three-indicator"))
+    return "What three types of indicators must validate every sterilization cycle, and what does each confirm?";
+  if (t.includes("sharps"))
+    return "What must a compliant sharps injury prevention program include and actively document?";
+  if (t.includes("surgical environment") || t.includes("surgical safeguard"))
+    return "What environmental safeguards must be maintained in and around surgical procedure areas?";
+  if (t.includes("clia") || t.includes("laboratory license"))
+    return "What laboratory certifications and licenses must the organization maintain and keep current?";
+  if (t.includes("laboratory personnel") || (t.includes("qualified") && t.includes("lab")))
+    return "What qualifications must laboratory personnel hold to perform testing under this standard?";
+  if (t.includes("quality control") && t.includes("lab"))
+    return "What quality control procedures and documentation does this standard require for lab testing?";
+  if (t.includes("test description") || (t.includes("procedure") && t.includes("lab")))
+    return "What written procedures and test descriptions must the laboratory maintain?";
+  if (t.includes("pathology") || t.includes("provider review of results"))
+    return "How must laboratory or pathology results be reviewed and documented in patient care?";
+  if (t.includes("pharmaceutical") || (t.includes("medication") && t.includes("oversight")))
+    return "What oversight responsibilities does this standard assign for pharmaceutical services?";
+  if (t.includes("high-alert") || t.includes("lasa"))
+    return "What safeguards must be in place for high-alert and look-alike/sound-alike medications?";
+  if (t.includes("drug security") || (t.includes("medication") && t.includes("storage")))
+    return "What security and storage requirements apply to medications under this standard?";
+  if (t.includes("medication labeling") || t.includes("labeling outside") || t.includes("original container"))
+    return "What labeling requirements apply when medications are removed from their original containers?";
+  if (t.includes("vaccine"))
+    return "What storage and handling requirements apply to vaccines under this standard?";
+  if (t.includes("anticoagulant"))
+    return "What specific safety requirements apply to anticoagulant medication management?";
+  if (t.includes("alarm"))
+    return "What clinical alarm management and response requirements does this standard establish?";
+  if (t.includes("critical value") || (t.includes("communication") && t.includes("reporting")))
+    return "What requirements govern the communication and documentation of critical test values?";
+  if (t.includes("fall prevention") || t.includes("fall risk"))
+    return "What fall prevention measures and documentation does this standard require?";
+  if (t.includes("pressure injur") || t.includes("pressure ulcer"))
+    return "What prevention measures must be in place for healthcare-associated pressure injuries?";
+  if (t.includes("correct patient") || (t.includes("patient identification") && !t.includes("site")))
+    return "What does this standard require to ensure every patient receives the correct care?";
+  if (t.includes("suicide"))
+    return "What screening and risk-reduction requirements does this standard establish for suicide prevention?";
+  if (t.includes("dental") || t.includes("oncology") || t.includes("chemo") || t.includes("reproductive") || t.includes("ivf") || t.includes("fertilization"))
+    return "What additional requirements apply to organizations providing this specialty service?";
+  if (t.includes("quality monitoring") && t.includes("specialty"))
+    return "What quality monitoring activities are required for specialty and other clinical services?";
+  if (t.includes("dignity") || t.includes("shared decision"))
+    return "What patient rights around dignity, privacy, and shared decision-making does this standard protect?";
+  if (t.includes("communicating rights") || t.includes("before care"))
+    return "When and how must patient rights and responsibilities be communicated before care begins?";
+  if (t.includes("organizational information") || t.includes("accessible to patient"))
+    return "What organizational information must be made accessible to patients upon request?";
+  if (t.includes("language") || t.includes("manner the patient"))
+    return "What communication accommodations must the organization provide for patients with language or literacy barriers?";
+  if (t.includes("risk management"))
+    return "What must a written risk management program include and actively monitor?";
+  if (t.includes("incident") || t.includes("adverse event"))
+    return "How does this standard define incidents, and what actions must follow when one occurs?";
+  if (t.includes("safety program") && !t.includes("risk"))
+    return "What elements must a written safety program include and address?";
+  if (t.includes("product recall") || t.includes("expiration"))
+    return "What processes must be in place for product recalls and expiration date monitoring?";
+  if (t.includes("biolog") || t.includes("bloodborne"))
+    return "What protections must be in place for healthcare workers at risk of biologic hazard exposure?";
+  if (t.includes("val") || t.includes("validation"))
+    return "What does the AAAHC Validation category require, and how does it differ from full accreditation?";
+  if (t.includes("care plan") || t.includes("goal setting"))
+    return "What must the plan of care address, and how must care goals be documented?";
+  if (t.includes("ongoing monitoring") && t.includes("data"))
+    return "What three-step sequence does this standard require for ongoing quality monitoring?";
+  if (t.includes("governing body reporting") || t.includes("privileging connection"))
+    return "How must peer review results be reported to the governing body, and how do they connect to privilege renewal?";
+  if (t.includes("quality improvement stud") || t.includes("qi stud"))
+    return "What components must a compliant quality improvement study include?";
+  if (t.includes("integrating") || (t.includes("ipc") && t.includes("safety") && t.includes("risk")))
+    return "How must quality improvement, IPC, safety, and risk management be formally linked under this standard?";
+  if (t.includes("administrative polic"))
+    return "What administrative policies, procedures, and internal controls must be in place and documented?";
+  return `A surveyor arrives to assess: ${topic}. What evidence of compliance would you need to show?`;
+}
+
 function getQuestionPrompt(category?: string, title?: string): string {
   if (category && CATEGORY_PROMPTS[category]) return CATEGORY_PROMPTS[category];
-  if (title) return `What are the key requirements for: ${getTopicLabel(title)}?`;
+  if (title) return deriveQuestion(getTopicLabel(title));
   return "What does this standard require?";
 }
 
