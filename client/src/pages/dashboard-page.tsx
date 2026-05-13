@@ -39,7 +39,6 @@ function AscChapterCard({
   onRead,
   onPlay,
   onStudy,
-  onDeepDive,
 }: {
   chapter: AscHandbookChapter;
   progressMap: Map<string, UserProgress>;
@@ -47,7 +46,6 @@ function AscChapterCard({
   onRead: () => void;
   onPlay: (quizId: string) => void;
   onStudy: (quizId: string) => void;
-  onDeepDive: () => void;
 }) {
   const [, setLocation] = useLocation();
   const [riskExpanded, setRiskExpanded] = useState(false);
@@ -148,14 +146,6 @@ function AscChapterCard({
                   {hasPlayed || session ? "Quiz Again" : "Practice Quiz"}
                 </button>
               )}
-              <button
-                onClick={onDeepDive}
-                data-testid={`button-asc-deep-dive-${chapter.levelId}`}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold bg-white/15 hover:bg-white/25 text-white border border-white/20 transition-all active:scale-95"
-              >
-                <Microscope size={15} />
-                Deep Dive Tracer
-              </button>
             </div>
           </div>
 
@@ -895,7 +885,6 @@ export default function DashboardPage() {
                             onRead={() => setLocation(`/handbook/${chapter.levelId}`)}
                             onPlay={(quizId) => setLocation(`/play/${quizId}`)}
                             onStudy={(quizId) => setLocation(`/study/${quizId}`)}
-                            onDeepDive={() => setLocation("/deep-dive")}
                           />
                         ))}
                       </div>
