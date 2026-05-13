@@ -933,8 +933,9 @@ export async function registerRoutes(
   app.get("/api/game/deep-dive/session/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId as string;
-      if (!(await userCanAccessLevel(req.user!.id, levelId))) {
-        return res.status(403).json({ message: "Access denied for this level" });
+      const ddLevel = deepDiveLevels.find((l) => l.id === levelId);
+      if (!ddLevel) {
+        return res.status(404).json({ message: "Deep dive level not found" });
       }
       const session = await storage.getQuizSession(req.user!.id, levelId);
       if (!session) {
@@ -958,8 +959,9 @@ export async function registerRoutes(
     try {
       const levelId = req.params.levelId as string;
       const userId = req.user!.id;
-      if (!(await userCanAccessLevel(userId, levelId))) {
-        return res.status(403).json({ message: "Access denied for this level" });
+      const ddLevel = deepDiveLevels.find((l) => l.id === levelId);
+      if (!ddLevel) {
+        return res.status(404).json({ message: "Deep dive level not found" });
       }
       const data = deepDiveSessionSchema.parse(req.body);
 
@@ -1010,10 +1012,8 @@ export async function registerRoutes(
   app.get("/api/game/deep-dive/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId;
-      if (!(await userCanAccessLevel(req.user!.id, levelId))) {
-        return res.status(403).json({ message: "This chapter is not assigned to your role." });
-      }
-      const level = deepDiveLevels.find((l) => l.id === levelId);
+      const level = deepDiveLevels.find((l) => l.id === levelId)
+                 ?? deepDiveLevels.find((l) => l.baseLevelId === levelId);
       if (!level) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }

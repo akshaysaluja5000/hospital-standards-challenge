@@ -484,7 +484,7 @@ export default function StudyPage() {
               <Button variant="default" size="sm" onClick={() => setLocation(`/play/${level.id}`)} data-testid="button-start-quiz">
                 <Play size={14} className="mr-1" /> Quiz
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setLocation(`/deep-dive/${level.id}`)} data-testid="button-header-deep-dive">
+              <Button variant="outline" size="sm" onClick={() => setLocation("/deep-dive")} data-testid="button-header-deep-dive">
                 <Microscope size={14} className="mr-1" /> Deep Dive
               </Button>
             </div>
