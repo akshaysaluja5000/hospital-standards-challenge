@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck, Moon, Sun } from "lucide-react";
+import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck, Moon, Sun, Radar, FileSearch2, Zap } from "lucide-react";
 import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
@@ -221,8 +221,91 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Agent-Driven Model ── */}
+        <section className="py-16 md:py-24" id="features-section">
+          <div className="max-w-5xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-400/20 flex items-center justify-center flex-shrink-0">
+                  <Zap size={20} className="text-violet-500" />
+                </div>
+                <p className="text-xs font-bold tracking-widest uppercase text-violet-500" data-testid="text-agent-eyebrow">
+                  The Agent-Driven Model
+                </p>
+              </div>
+              <h2 className="text-2xl md:text-3xl font-black tracking-tight text-foreground mb-3" data-testid="text-agent-heading">
+                What's different.
+              </h2>
+              <p className="text-base text-muted-foreground leading-relaxed max-w-2xl mb-10" data-testid="text-agent-subhead">
+                Instead of staff completing forms and managers chasing compliance, you deploy a network of specialized agents that run the platform continuously.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Survey Readiness Agent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: 0.05 }}
+                  data-testid="card-agent-survey-readiness"
+                >
+                  <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
+                        <Radar size={22} className="text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Agent 1</p>
+                        <h3 className="font-bold text-base text-foreground leading-tight" data-testid="text-agent-1-title">Survey Readiness Agent</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Continuously monitors every standard across all facilities — which ones have evidence attached, which staff haven't completed training, which policies are expiring. Surfaces a live readiness score that's always current.
+                    </p>
+                    <div className="mt-auto pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">Replaces:</span> the manual binder audit facilities run in the weeks before a survey.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Content Intelligence Agent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: 0.1 }}
+                  data-testid="card-agent-content-intelligence"
+                >
+                  <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-violet-500/10 border border-violet-400/20 flex items-center justify-center flex-shrink-0">
+                        <FileSearch2 size={22} className="text-violet-500" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Agent 2</p>
+                        <h3 className="font-bold text-base text-foreground leading-tight" data-testid="text-agent-2-title">Content Intelligence Agent</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      When a new policy or procedure is uploaded, this agent reads it, auto-tags it to the relevant JC/AAAHC standards, generates quiz questions from it, and flags if the policy contradicts a standard.
+                    </p>
+                    <div className="mt-auto pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">Your clearest differentiator</span> — no other compliance platform does this automatically.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
         {/* ── Features Grid ── */}
-        <section id="features-section" className="max-w-5xl mx-auto px-4 py-16 md:py-24">
+        <section className="max-w-5xl mx-auto px-4 pb-16 md:pb-24">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {features.map((feature, index) => (
               <motion.div
