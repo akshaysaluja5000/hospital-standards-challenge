@@ -247,46 +247,48 @@ export const ascHandbook: AscHandbookChapter[] = [
     category: "Universal Standards",
     quizLevelId: QUIZ_MAP["asc_hb_cpv"],
     surveyRiskCount: 5,
-    surveyRiskLabel: "blanket specialty privileges, procedures outside granted privileges, undocumented temporary privileges",
+    surveyRiskLabel: "hospital privileges accepted without independent verification, NPDB skipped at reappointment, peer review data not incorporated into reappointment decision",
     title: "CPV: Credentialing and Privileging",
     overview:
-      "The Credentialing and Privileging category establishes requirements for defining, granting, and managing the specific clinical activities each health care professional is authorized to perform at the ASC. Privileges must be competency-based, procedure-specific, and formally granted by the governing body. The scope of procedures a practitioner may perform is determined by verified training, education, and demonstrated competence — not simply by license or specialty designation.",
+      "The Credentialing and Privileging category establishes requirements for how an ASC verifies the qualifications of its medical and dental staff and grants clinical privileges. The governing body is ultimately responsible for an independent credentialing and privileging process. Every practitioner must submit a formal application, submit to primary source verification, and be formally appointed by the governing body. Reappointment is required at least every three years. Ongoing monitoring of date-sensitive credentials keeps the credential file current between reappointments.",
     sections: [
       {
-        heading: "CPV.100 / CPV.110 — What Clinical Privileges Are and Who Grants Them",
+        heading: "CPV.100 — Governing Body Accountability for Credentialing and Privileging",
         content:
-          "Clinical privileges define the specific health care services each individual provider is authorized to provide at the organization. Privileges are separate from — and narrower than — a professional license. The governing body grants privileges based on verified credentials, training, and demonstrated competence. CPV.100 requires that privileges are limited to services the organization can safely support with its facilities, equipment, and staff. No practitioner may perform services beyond their granted privileges.",
+          "The governing body is ultimately responsible for credentialing and privileging at the ASC. It must have defined criteria for appointment and reappointment applied uniformly to all applicants. The ASC's credentialing process must be independent — privileges may not be approved solely because another organization (such as a hospital) has approved them. The other institution's status may be considered but does not substitute for independent ASC verification.",
       },
       {
-        heading: "CPV.120 — Competency-Based Delineation of Privileges",
+        heading: "CPV.130 / CPV.140 — Approved Written Processes for All Phases",
         content:
-          "Each privileged practitioner must have a delineation of privileges (DOP) — a specific list of procedures they are authorized to perform at the organization. The DOP is based on documented evidence of training, education, and demonstrated competence for each listed procedure. Blanket 'specialty privileges' without specific procedure listing are not compliant. For practitioners who add a new procedure not previously included in their privileges, a separate privilege request and competency verification is required.",
+          "CPV.130 requires governing body-approved written processes covering: initial credentialing, appointment, reappointment, granting of privileges, suspension or termination of privileges, and the appeal process. CPV.140 requires the initial application to capture: training, experience, and current documented competence; peer references documenting current competence; current state license; NPDB information; and DEA registration (if applicable). All five categories must be addressed on every initial application.",
       },
       {
-        heading: "CPV.130 — Temporary Privileges",
+        heading: "CPV.150 / CPV.160 — Written Attestation and Completed Application",
         content:
-          "Organizations may grant temporary privileges in defined circumstances — for a new practitioner while full credentialing is in process, or to address an immediate patient care need. Temporary privileges must be granted through a defined, documented process with specific governing body authorization, a defined scope, and a defined duration. An informal 'start seeing patients while we finish your paperwork' arrangement is not compliant.",
-      },
-      {
-        heading: "CPV.140 — Privilege Restriction, Suspension, and Revocation",
-        content:
-          "The organization must have a defined process for modifying, restricting, suspending, or revoking privileges when clinical performance concerns arise. The process must include due process protections (notice, opportunity to be heard) and appropriate documentation. Adverse privilege actions based on clinical performance that meet NPDB reporting thresholds must be reported to the National Practitioner Data Bank within 15 days. Voluntary resignation to avoid investigation must still be reported if the investigation was clinical-competence-related.",
+          "The application must include written attestation covering seven categories: liability claims history; licensure actions; adverse professional society reports; privilege denial, suspension, or nonrenewal at any facility; federal sanctions; criminal history (other than minor traffic violations); and health conditions affecting care. The application must also include a liability release, an accuracy attestation, and the applicant's dated signature before processing may begin.",
         criticalValues: [
-          { label: "NPDB Reporting Window", value: "15 days for qualifying adverse actions" },
+          { label: "Attestation Categories", value: "7 required: liability, licensure, society actions, prior privilege actions, federal sanctions, criminal, health status" },
         ],
       },
       {
-        heading: "CPV.150 — Privileges for Advanced Practice Providers",
+        heading: "CPV.170 — Primary Source Verification",
         content:
-          "Physician assistants, APRNs, and other advanced practice providers must be individually privileged in the same manner as physicians. Their DOPs must reflect both their scope of practice under state law AND the specific services the organization can safely support. Supervisory or collaborative agreements required by state law must be documented, and the supervising physician's privileges must encompass the APP's privileged services.",
+          "Upon receipt of a completed and signed application, primary or secondary source verification of credentials must be conducted. Primary source verification means confirming credentials directly with the issuing authority — not by accepting copies from the applicant. Accredited CVOs may conduct primary source verification on the organization's behalf. The same elements required on the application must be primary source verified before privileges are granted.",
+      },
+      {
+        heading: "CPV.180 / CPV.190 / CPV.200 / CPV.210 — Reappointment and Ongoing Monitoring",
+        content:
+          "Reappointment is required at least every three years (CPV.180/190). The reappointment application must include updated information, completed attestation, and a dated signature, followed by re-verification. CPV.200 requires peer review results to be incorporated into reappointment decisions. CPV.210 requires ongoing monitoring of date-sensitive credentials — licensure, DEA registration, and board certifications — between reappointment cycles so that expirations are caught when they occur, not at the next three-year review.",
       },
     ],
     quickReference: [
-      { fact: "CPV.100/110", detail: "Privileges = what you may do HERE. License says you can do it; privilege says you may do it at this facility." },
-      { fact: "CPV.120", detail: "DOP must be procedure-specific — 'general surgery privileges' is not compliant." },
-      { fact: "CPV.130", detail: "Temporary privileges require documented governing body authorization, defined scope, and defined duration." },
-      { fact: "CPV.140", detail: "NPDB reporting required within 15 days for qualifying adverse privilege actions." },
-      { fact: "CPV.150", detail: "APPs are individually privileged with procedure-specific DOPs; supervising physician privileges must encompass APP's scope." },
+      { fact: "CPV.100", detail: "Governing body is responsible. Hospital privileges do not substitute for the ASC's own independent process." },
+      { fact: "CPV.140", detail: "Initial application: training/competence, peer references, current license, NPDB, DEA. All five required." },
+      { fact: "CPV.150/160", detail: "7-category attestation + liability release + accuracy attestation + dated signature = complete application." },
+      { fact: "CPV.170", detail: "Primary source verification required upon receipt of completed, signed application." },
+      { fact: "CPV.180/190", detail: "Reappointment at least every three years with re-verification and attestation." },
+      { fact: "CPV.200", detail: "Peer review results must be incorporated into reappointment decisions." },
+      { fact: "CPV.210", detail: "Ongoing monitoring of license, DEA, and board certification between reappointment cycles." },
     ],
   },
   {
@@ -295,46 +297,48 @@ export const ascHandbook: AscHandbookChapter[] = [
     category: "Universal Standards",
     quizLevelId: QUIZ_MAP["asc_hb_crd"],
     surveyRiskCount: 5,
-    surveyRiskLabel: "licenses collected but not primary-source verified, NPDB not queried at reappointment",
+    surveyRiskLabel: "allergy not asked at each encounter, unsigned visit entries, telephone advice not documented, no problem summary for multi-visit patients",
     title: "CRD: Clinical Records",
     overview:
-      "The Clinical Records category — distinct from the CMC care coordination standards — establishes requirements for the management, security, retention, and accessibility of clinical records. Clinical records must be maintained in a manner that protects patient privacy, ensures appropriate access for authorized personnel, meets applicable legal retention requirements, and supports continuity of care. All records (paper and electronic) must be maintained in a secure and organized manner.",
+      "The Clinical Records category establishes requirements for maintaining complete, accurate, and secure patient clinical records. A designated person must oversee the clinical records system, and written policies must govern how records are collected, stored, protected, and released. Every patient must have an individual record with consistent, legible entries. Allergy information must be recorded prominently, verified at every encounter, and must include a description of the patient's reaction. Clinical records must support continuity of care.",
     sections: [
       {
-        heading: "CRD.100 — Record Ownership and Accessibility",
+        heading: "CRD.120 — Clinical Records System: Collection, Processing, and Maintenance",
         content:
-          "Clinical records are the property of the organization and must be maintained in a secure manner that protects patient privacy. Authorized personnel must have timely access to records needed for patient care. Patients have the right to access their own records in compliance with applicable laws (HIPAA). The organization must have a written policy on record access, including how requests are handled, response timeframes, and any applicable fees.",
+          "CRD.120 requires the organization to maintain a monitored system for collecting, processing, maintaining, storing, retrieving, and distributing clinical records. A designated person must be in charge of clinical records overall, and a designated person must be in charge of the health information system (the same individual may fill both roles in small organizations). The system must have written procedures and must be actively monitored.",
       },
       {
-        heading: "CRD.110 — Record Integrity and Authentication",
+        heading: "CRD.130 / CRD.140 — Written Policies and Records Maintained to Facilitate Safe Care",
         content:
-          "All entries in the clinical record must be legible, dated, and authenticated (signed or countersigned) by the responsible health care professional. Amendments or corrections to records must be made in a manner that preserves the original entry — no obliterations, white-outs, or unauthorized alterations. Electronic record systems must maintain an audit trail. Late entries must be identified as late and include the time and date of the actual entry.",
+          "CRD.130 requires written policies addressing seven areas: security of information; release of patient records; protection from damage or loss (including backup systems for electronic records); methods to deter unauthorized access; timely access for authorized personnel; retention of active records; and retirement of inactive records. CRD.140 requires records to be in a consistent format (legible, organized, accessible) and available to authorized personnel any time the organization is open — including items scanned into electronic records, which must be legible.",
       },
       {
-        heading: "CRD.120 — Record Retention Requirements",
+        heading: "CRD.160 / CRD.180 / CRD.190 — Confidentiality, Individual Record, and Visit Entry Requirements",
         content:
-          "Clinical records must be retained for the period required by applicable state and federal laws — typically a minimum of seven to ten years for adult records, and longer for minor patients (until the patient reaches adulthood plus the applicable adult retention period, or as required by state law). The organization must have a written record retention policy that addresses both active and inactive records, secure destruction of records at the end of the retention period, and backup systems for electronic records.",
-      },
-      {
-        heading: "CRD.130 — Security and Privacy of Records",
-        content:
-          "Records must be maintained in a secure manner that prevents unauthorized access, loss, alteration, or destruction. For paper records, this means secure storage with controlled access. For electronic records, this means access controls, encrypted transmission, and regular data backups. The organization must comply with HIPAA Privacy and Security Rules, including the requirement for a written privacy policy, a designated privacy officer, and a documented breach response process.",
+          "CRD.160 requires strict confidentiality of all patient data — clinical, social, and financial — in all formats. Surveyor observations and interviews are used to verify actual confidential practice, not just written policies. CRD.180 requires individual records with: name, ID number, date of birth, gender, and responsible party. CRD.190 requires each visit entry to include: date, chief complaint/history, clinical findings, care rendered, medication changes, discharge diagnosis/disposition, and provider authentication.",
         criticalValues: [
-          { label: "Federal Standard", value: "HIPAA Privacy and Security Rules" },
+          { label: "CRD.190 Required Entry Elements", value: "7: date, complaint/history, findings, care, medication changes, diagnosis/disposition, provider signature" },
         ],
       },
       {
-        heading: "CRD.140 — Release of Information",
+        heading: "CRD.210 — Allergy and Sensitivity Documentation",
         content:
-          "Records may be released only in accordance with applicable laws and organizational policies. A valid written authorization from the patient (or legal representative) is required for most disclosures. Exceptions include disclosures required by law (e.g., mandatory reporting), disclosures for treatment, payment, and healthcare operations (per HIPAA), and emergency disclosures when patient safety is at risk. SUD records governed by 42 CFR Part 2 require additional patient consent beyond standard HIPAA authorizations.",
+          "Allergy documentation is a Tier 1 patient safety requirement with four specific elements: (1) patients are asked about allergies at each encounter — not just at initial registration; (2) patients reporting allergies describe their specific reaction (anaphylaxis, rash, GI, etc.) — not just the allergen name; (3) information is recorded in a prominent, consistently defined location across all records; (4) information is verified and updated at each encounter. Missing any one of these four elements is a deficiency.",
+      },
+      {
+        heading: "CRD.220 / CRD.230 / CRD.250 — Reports, Informed Consent Discussion, and Continuity",
+        content:
+          "CRD.220 requires that reports (labs, imaging, operative notes) are reviewed and incorporated with evidence of provider review. CRD.230 requires documentation of discussions with patients about the necessity, risks, and alternatives of proposed care — a consent form alone does not satisfy this. CRD.250 requires documentation of: missed/canceled appointments; telephone, text, or email medical advice (including content); and a problem summary for patients with three or more visits or complex records.",
       },
     ],
     quickReference: [
-      { fact: "CRD.100", detail: "Records are organizational property; patients have HIPAA-based right of access." },
-      { fact: "CRD.110", detail: "All entries must be legible, dated, and authenticated. No obliterations — preserve original with addendum." },
-      { fact: "CRD.120", detail: "Retain records per applicable law (typically 7–10 years); longer for minor patients." },
-      { fact: "CRD.130", detail: "HIPAA-compliant security: access controls, encrypted transmission, regular backups." },
-      { fact: "CRD.140", detail: "Written patient authorization required for most disclosures; SUD records require 42 CFR Part 2 consent." },
+      { fact: "CRD.120", detail: "Designated person(s) for records oversight. Monitored system with written procedures." },
+      { fact: "CRD.130", detail: "7 written policy topics: security, release, damage protection, unauthorized access, access, retention, retirement." },
+      { fact: "CRD.140", detail: "Consistent format, legible entries (including scanned documents), accessible, available during all operating hours." },
+      { fact: "CRD.160", detail: "Strict confidentiality of all patient data — verified by surveyor observation, not just written policy." },
+      { fact: "CRD.190", detail: "7 required visit entry elements including provider authentication on every entry." },
+      { fact: "CRD.210", detail: "Allergy: ask each encounter, document reaction type, prominent consistent location, verify and update each encounter." },
+      { fact: "CRD.250", detail: "Document missed appointments, telephone advice (content), and problem summary for 3+ visit patients." },
     ],
   },
   {
@@ -349,47 +353,41 @@ export const ascHandbook: AscHandbookChapter[] = [
       "The Emergency Management category requires ASCs to develop, maintain, and regularly test a comprehensive emergency and disaster preparedness plan. The plan must be based on a hazard vulnerability analysis, address both internal and external emergencies, provide for community coordination, and be exercised through documented drills. Staff must demonstrate knowledge of emergency procedures through training and drill participation.",
     sections: [
       {
-        heading: "EMG.100 — Written Emergency and Disaster Preparedness Plan",
+        heading: "EMG.100 — Medical Emergency and Unplanned Transfer Procedures",
         content:
-          "The organization must have a written emergency and disaster preparedness plan approved by the governing body. The plan must be based on a hazard vulnerability analysis (HVA) that identifies emergencies most likely to affect the organization, considering geographic location, facility type, patient population, and historical events. Required plan elements include: internal emergencies (fire, medical emergency, utility failure); external disasters (natural disasters, mass casualty events, community infrastructure failures); continuity of operations; communication protocols; resource management; evacuation procedures; and patient care during emergencies.",
+          "EMG.100 requires written procedures for managing medical emergencies and unplanned outcomes requiring transfer to a higher level of care. Required elements: who has authority to order a transfer; the transfer process including hospital destination and transport; care of the patient while awaiting transfer; and documentation that accompanies the patient. Staff must be trained on these procedures and training must be documented.",
       },
       {
-        heading: "EMG.110 — Staff Training on the Emergency Plan",
+        heading: "EMG.140 — BLS-Trained Personnel and Emergency Equipment Training",
         content:
-          "All personnel must receive training on the emergency and disaster preparedness plan appropriate to their role — at orientation for new employees and at defined intervals thereafter (at minimum annually). Staff must be able to demonstrate knowledge of: their specific emergency roles, how to initiate emergency responses, locations of emergency equipment and supplies, evacuation routes and assembly points, and communication procedures during emergencies. Training records must document content, date, and participants.",
+          "EMG.140 requires that personnel trained in BLS and in the use of cardiac and all other emergency equipment and supplies are present whenever patients are in the facility. Three documentation requirements: (1) current BLS certifications in personnel files; (2) documentation of training on emergency equipment; and (3) a written policy requiring trained personnel on-site whenever patients are present. All three must be satisfied.",
       },
       {
-        heading: "EMG.120 — Emergency Drills: Frequency, Documentation, and Improvement",
+        heading: "EMG.160 — Comprehensive Written Emergency and Disaster Preparedness Plan",
         content:
-          "Emergency drills must be conducted at defined intervals and must cover emergency types identified in the HVA. At minimum, fire drills are typically required in each occupied facility area on each shift annually per NFPA 101. Each drill must be followed by a documented debrief identifying strengths, deficiencies, and specific corrective actions with owners and completion timelines. Drill documentation must include: date, type, participants, scenario, observations, debriefing findings, and corrective actions taken.",
+          "EMG.160 requires a comprehensive written plan addressing both internal emergencies (fire, medical crisis, utility failure, security) and external disasters (natural disasters, mass casualty events). The plan must include provisions for safe evacuation — with special attention to individuals at greater risk (sedated patients, those with mobility limitations) — and participation in community health emergency preparedness where applicable.",
       },
       {
-        heading: "EMG.130 — Resource Management During Emergencies",
+        heading: "EMG.170 — Scenario-Based Drills: Quarterly Frequency and Written Evaluation",
         content:
-          "The emergency plan must address resource management: identification of critical supply inventories and minimum stock levels, sources for emergency resupply, mutual aid agreements with community organizations, communication systems that function during power outages, and protocols for managing patients and personnel during extended emergencies. Plans must address patients who cannot be immediately transported, including sheltering-in-place protocols.",
-      },
-      {
-        heading: "EMG.140 — Community Coordination",
-        content:
-          "The emergency plan must address coordination with community emergency management organizations including local emergency management agencies, hospitals, public health agencies, and other healthcare organizations. This may include participation in community emergency preparedness planning and exercises, mutual aid agreements with other healthcare facilities, and protocols for communicating with emergency management during a disaster. All community relationships documented in the plan must be current and verified.",
-      },
-      {
-        heading: "EMG — Medical Emergency Response (ACLS, Malignant Hyperthermia, Pediatric)",
-        content:
-          "Standard EMG.200 requires that health care professionals with current ACLS training are present whenever patients are in the facility. EMG.220 requires protocols and annual drills for malignant hyperthermia response if triggering agents are used. EMG.230 requires current PALS training if pediatric patients are served. EMG.270 requires minimum emergency equipment: oxygen, a self-inflating bag resuscitator capable of ≥90% oxygen, appropriate emergency drugs, and a reliable suction source.",
+          "EMG.170 requires scenario-based drills with specific frequency requirements: at least one drill per calendar quarter (minimum 4 per year); at least one CPR technique drill annually; and at least one drill based on the full emergency/disaster plan annually. Each drill requires a written evaluation and prompt implementation of any corrections identified.",
         criticalValues: [
-          { label: "ACLS Requirement", value: "Present whenever patients are in the facility" },
-          { label: "MH Drill Frequency", value: "At least annually (EMG.220.50)" },
+          { label: "Minimum Drill Frequency", value: "1 per calendar quarter (4/year minimum)" },
+          { label: "Annual Requirements", value: "1 CPR technique drill + 1 full plan drill, annually" },
         ],
+      },
+      {
+        heading: "EMG.180 — Emergency Equipment Maintained and Readily Accessible",
+        content:
+          "EMG.180 requires appropriate emergency equipment and supplies to be maintained and readily accessible to all areas of each patient care service site. 'Maintained' means regularly checked, functional, stocked, and not expired. 'Readily accessible' means in defined, known locations — not locked away or requiring a search. Documentation of equipment checks must be present.",
       },
     ],
     quickReference: [
-      { fact: "EMG.100", detail: "Plan must be based on HVA; covers internal emergencies and external disasters." },
-      { fact: "EMG.110", detail: "All staff trained at orientation and annually; must demonstrate — not just attend — knowledge." },
-      { fact: "EMG.120", detail: "Drills require documented debrief and corrective actions with owners and timelines." },
-      { fact: "EMG.130", detail: "Resource management: supplies, mutual aid, backup communications, patient management." },
-      { fact: "EMG.200", detail: "ACLS-trained professional present whenever patients are in the facility." },
-      { fact: "EMG.220", detail: "MH protocols posted and MH drills conducted at least annually if triggering agents used." },
+      { fact: "EMG.100", detail: "Written procedures for medical emergency/transfer: who decides, how it happens, care during transfer, documentation sent." },
+      { fact: "EMG.140", detail: "BLS-certified personnel on-site whenever patients are present. BLS certs + equipment training + written policy = 3 requirements." },
+      { fact: "EMG.160", detail: "Comprehensive plan: internal + external emergencies, evacuation provisions for at-risk patients, community coordination." },
+      { fact: "EMG.170", detail: "Drills: 1/quarter minimum; CPR drill annually; full plan drill annually. Each drill requires written evaluation." },
+      { fact: "EMG.180", detail: "Emergency equipment maintained (checked, stocked, not expired) and readily accessible (known locations)." },
     ],
   },
   {
@@ -409,19 +407,22 @@ export const ascHandbook: AscHandbookChapter[] = [
           "FAC.100 is a Universal/Tier 1 standard requiring that the physical environment is safe for patients, staff, and visitors. This encompasses: compliance with applicable life safety codes (fire safety, egress), elimination or control of identified hazards, compliance with building codes for healthcare facilities, and maintenance of the facility in a clean and organized manner. Documentation of compliance with applicable building codes and regulations (occupancy permit, fire authority letter, building inspection) must be present.",
       },
       {
-        heading: "FAC.150 — Facility Operated in a Safe and Secure Manner",
+        heading: "FAC.110 — Facility Operated in a Safe and Secure Manner",
         content:
-          "The facility must be operated safely and securely. Written policies must address safety and security practices, and observation and staff interviews must confirm security practices are followed. This includes controlled access to patient care areas, management of visitors, and protocols for after-hours security.",
+          "FAC.110 requires that the facility is operated safely and securely. Written policies must address safety and security practices, and observation and staff interviews must confirm security practices are actually followed. This includes controlled access to patient care areas, visitor management, and after-hours security protocols.",
       },
       {
-        heading: "FAC.200 / FAC.210 — Space, Equipment, and Instrument Processing",
+        heading: "FAC.120 / FAC.130 / FAC.140 — Patient Comfort, Cleanliness, and No Visible Hazards",
         content:
-          "FAC.200 requires that space, equipment, and supplies are adequate for the procedures and services performed. FAC.210 specifically addresses the decontamination and instrument processing area: a separate room or area must be designated for decontamination, with unidirectional workflow from soiled to clean to sterile. This physical separation prevents cross-contamination. The decontamination area must have adequate sinks, appropriate personal protective equipment, and proper ventilation.",
+          "FAC.120 requires that the physical environment supports patient comfort and privacy: appropriate reception areas and restrooms, privacy during exams and consultations, smoking prohibition, disability accommodation, adequate lighting and ventilation, and sufficient space for activities performed. FAC.130 requires clean and properly maintained facilities (no dust, soil, mold, rust, or damaged surfaces). FAC.140 requires that no visible hazards exist that could cause slipping, falling, electrical shock, burns, or other trauma.",
       },
       {
-        heading: "FAC.220 / FAC.230 — Environmental Controls in Procedure Areas",
+        heading: "FAC.150 / FAC.160 — Fire Protection and Safe Exiting",
         content:
-          "Written policies must address environmental controls for procedure areas — including temperature, humidity, and ventilation parameters per nationally recognized guidelines (e.g., ASHRAE 170). Environmental controls must be actively implemented and monitored with documentation of monitoring results. Procedure rooms that do not meet required parameters present infection and patient safety risks.",
+          "FAC.150 requires fire extinguishers at visually obvious locations (within 75 feet of any location), with monthly inspection documentation and annual maintenance. FAC.160 requires prominently displayed illuminated exit signs with emergency power capability at all exits. Stairwells that are part of required exit paths must be enclosed in fire walls with fire-rated doors.",
+        criticalValues: [
+          { label: "Fire Extinguisher Placement", value: "Within 75 feet of any location; monthly inspection documented" },
+        ],
       },
       {
         heading: "FAC.250 — Medical Equipment Maintenance",
@@ -436,10 +437,10 @@ export const ascHandbook: AscHandbookChapter[] = [
     ],
     quickReference: [
       { fact: "FAC.100", detail: "Highest-weight standard: safe physical environment per life safety codes and building standards." },
-      { fact: "FAC.210", detail: "Decontamination area physically separate with unidirectional soiled → clean → sterile workflow." },
-      { fact: "FAC.220/230", detail: "OR temperature/humidity/ventilation per ASHRAE 170; monitored and documented continuously." },
-      { fact: "FAC.250", detail: "Medical equipment: calibration records AND preventive maintenance records, both current." },
-      { fact: "FAC.260", detail: "Backup power required if sedation/anesthesia used; must be tested and results documented." },
+      { fact: "FAC.120/130/140", detail: "Patient privacy + smoking prohibition + clean/maintained + no visible hazards — all verified by observation." },
+      { fact: "FAC.150/160", detail: "Fire extinguishers within 75 ft + monthly inspection. Illuminated exit signs with emergency power at all exits." },
+      { fact: "FAC.250", detail: "Medical equipment: calibration records AND preventive maintenance records, both current per manufacturer specs." },
+      { fact: "FAC.260", detail: "Backup power required if sedation/anesthesia used; must be present, adequate, and tested." },
     ],
   },
   {

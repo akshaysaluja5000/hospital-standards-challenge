@@ -3,607 +3,493 @@ import type { Level } from "./schema";
 export const ascCrdLevel: Level = {
   id: "asc_crd",
   module: "asc",
-  name: "Credentialing",
-  description: "AAAHC v44 CRD — verification of health care professional credentials, primary source verification, and ongoing credential maintenance.",
-  icon: "BadgeCheck",
+  name: "Clinical Records",
+  description: "AAAHC v44 CRD — clinical records system, written policies, record content requirements, confidentiality, allergy documentation, informed consent, and continuity of care documentation.",
+  icon: "FileText",
   color: "hsl(200, 65%, 42%)",
   requiredScore: 0,
   chapterSummary: {
-    chapterTitle: "CRD: Credentialing",
+    chapterTitle: "CRD: Clinical Records",
     plainLanguageSummary:
-      "The CRD category establishes requirements for verifying the credentials of health care professionals who provide services at the ASC. Credentials must be verified through primary sources — not simply collected as self-reported documents. All licensed professionals must have their education, training, licensure, and relevant experience verified before they begin providing services. Ongoing credential maintenance requires re-verification at defined intervals and when significant changes occur.",
+      "The CRD category establishes requirements for maintaining complete, accurate, and secure patient clinical records. A designated person must oversee the clinical records system, and written policies must govern how records are collected, stored, protected, and released. Every patient must have an individual record with consistent, legible entries that document the reason for the visit, findings, care provided, medications, and the treating provider's signature. Allergy and sensitivity information must be recorded prominently and verified at every encounter. Clinical records must support continuity of care and maintain strict confidentiality.",
     keyOperationalExpectations: [
-      "All health care professionals providing services have their credentials verified through primary source verification before credentialing.",
-      "Credentials files contain: education/training verification, primary source license verification, malpractice history query, NPDB query, reference letters (for initial appointments), and a signed application.",
-      "Credentials are re-verified at defined intervals (typically every two years).",
-      "Licensed professionals who have a break in service of more than six months undergo re-credentialing.",
-      "The credentialing process is completed before the health care professional begins providing services.",
-      "Credentials files are maintained for all practitioners — employed, contracted, and telemedicine providers.",
+      "A designated person is in charge of clinical records and the health information system.",
+      "Written policies address record security, release, protection from damage or loss, unauthorized access, retention, and retirement.",
+      "Clinical records are maintained in a consistent format that is legible, organized, and accessible to authorized personnel whenever the organization is open.",
+      "An individual clinical record is established for each patient and includes name, ID number, date of birth, gender, and responsible party.",
+      "Each visit entry documents the date, chief complaint, clinical findings, care rendered, medication changes, discharge diagnosis, and provider signature.",
+      "Allergy and sensitivity information is recorded in a prominent, consistent location in every record and verified at each encounter.",
     ],
     commonRiskPoints: [
-      "Licenses are collected but primary source verification is not documented — copies alone are not sufficient.",
-      "NPDB queries are conducted at initial appointment but not at reappointment.",
-      "Telemedicine providers are exempt from the same credentialing rigor as in-person providers.",
-      "A practitioner began seeing patients before the credentialing process was completed.",
+      "Clinical records are not consistently organized — different practitioners use different formats making record navigation unreliable.",
+      "Allergy documentation is missing from some records or recorded in varying locations rather than a prominent, consistent location.",
+      "Patients are not asked about allergies and sensitivities at each encounter — only at initial registration.",
+      "Provider authentication (signature or electronic equivalent) is absent from some visit entries.",
     ],
-    aaahcStandards: ["CRD.100", "CRD.110", "CRD.120", "CRD.130", "CRD.140"],
+    aaahcStandards: ["CRD.120", "CRD.130", "CRD.140", "CRD.160", "CRD.180", "CRD.190", "CRD.210", "CRD.220", "CRD.230", "CRD.250"],
   },
   studyMaterial: [
     {
-      title: "CRD.100 — Who Must Be Credentialed",
+      title: "CRD.120 — Clinical Records System: Collection, Processing, and Maintenance",
       content:
-        "All health care professionals who provide services at or on behalf of the organization must have their credentials verified. This includes employed staff, contractors, locum tenens providers, and telemedicine/telehealth providers. The credentialing requirement applies to physicians, dentists, advanced practice registered nurses (APRNs), physician assistants, podiatrists, psychologists, and any other licensed independent practitioner who provides direct patient care. The credential verification must be completed before the provider begins providing services.",
+        "CRD.120 requires the organization to maintain a system for the accurate collection, processing, maintenance, storage, retrieval, and distribution of clinical records. Two designated persons are required: one in charge of clinical records overall, and one in charge of the health information system. The system must include measures to ensure adherence to written policies and procedures, and it must be monitored on a regular basis. This standard establishes the infrastructure on which all other CRD standards depend — without a defined, monitored system, the organization cannot consistently satisfy record content and security requirements.",
       keyPoint:
-        "All licensed independent practitioners — employed, contracted, locum, or telemedicine — must be credentialed before providing care. Telemedicine providers receive no exemption.",
+        "CRD.120 requires two designated roles (clinical records oversight + health information system) and a monitored system with written procedures. The system must be actively overseen — not simply exist.",
     },
     {
-      title: "CRD.110 / CRD.120 — Primary Source Verification of Credentials",
+      title: "CRD.130 — Written Policies for Clinical Records",
       content:
-        "AAAHC requires primary source verification (PSV) for each credentialed provider. This means verifying information directly with the source that issued or holds the credential — for example, calling or using the online lookup tool of the state licensing board to verify licensure (not accepting a copy of the license). Required PSV elements include: education and/or training (medical school, residency); state licensure (current, valid, and in good standing); board certification (if claimed); clinical privileges at other institutions (when applicable); and malpractice history.",
+        "Written policies for clinical records must address seven specific areas: (1) security of information — including accountability for editing, deletion, and access of record content; (2) release of patient records — including patient authorization requirements; (3) protection of records from damage or loss — including backup systems for electronic records; (4) methods to deter unauthorized access; (5) ensuring timely access to individual records for authorized personnel; (6) retention of active records; and (7) retirement of inactive records. The retention policy must be consistent with applicable state and federal law. Backup systems for electronic records are explicitly required.",
       keyPoint:
-        "Primary source means going directly to the issuing authority — not accepting copies. Every required credential element must be independently verified, not just collected.",
+        "CRD.130 requires seven specific policy topics. Electronic record backup systems are explicitly mentioned — organizations using EHRs must have a documented backup and recovery procedure as part of their written records policies.",
     },
     {
-      title: "CRD.130 — NPDB Query",
+      title: "CRD.140 — Records Maintained to Facilitate Safe Care",
       content:
-        "The National Practitioner Data Bank (NPDB) must be queried for each practitioner at initial appointment and at re-appointment (typically every two years). The NPDB query reveals: malpractice payment history, adverse privileging actions, DEA sanctions, state licensure actions, and other adverse actions. The query results must be reviewed as part of the credentialing process and documented in the credentials file. A negative NPDB report (no reports found) is still a document that must be filed.",
+        "Clinical records must be maintained in a manner that facilitates the provision of safe care. This means: (1) consistent content and format — organized in the same sequence across records except where law requires otherwise; (2) legibility — all entries must be legible, including items scanned into an electronic record; (3) accessibility — entries must be easily accessible within the record by authorized personnel; (4) availability — all clinical information relevant to a patient must be readily available to authorized personnel any time the organization is open to patients; and (5) patient control of release — patients must be given the opportunity to approve or refuse release of their records, except when release is permitted or required by law.",
       keyPoint:
-        "NPDB query is required at initial appointment AND at every reappointment — not just at initial hire. File both positive and negative query results.",
+        "CRD.140 has five elements: consistent format, legible entries, easy accessibility, availability during all operating hours, and patient authorization for release. A scanned document that is illegible violates CRD.140 just as a handwritten illegible entry does.",
     },
     {
-      title: "CRD.140 — Reappointment and Ongoing Credential Maintenance",
+      title: "CRD.160 — Strict Confidentiality of Clinical Records",
       content:
-        "Credentials must be re-verified at the organization's defined reappointment interval — typically every two to three years, but as required by AAAHC. At reappointment, all primary source verifications must be updated: current license, current board certification (if applicable), updated NPDB query, updated malpractice history, and peer review results. Providers who have a break in service exceeding the organization's defined period (often six months) must be re-credentialed as if new. The credentials committee or equivalent body must review and recommend reappointment, with final approval by the governing body.",
+        "Any record containing clinical, social, financial, or other data about a patient must be treated as strictly confidential — except when release is required by law. Written policies must require strict confidentiality, and interviews and observation during survey must confirm that patient data is handled confidentially in practice. This standard applies across all forms of records — paper, electronic, verbal discussions, and any other medium in which patient data is communicated. If the organization provides telehealth or telemedicine services, compliance with the HITECH Act must be included in the confidentiality policies.",
       keyPoint:
-        "Reappointment is a full re-credentialing, not a rubber stamp. All primary sources must be re-verified, NPDB queried again, and peer review results incorporated. Governing body approves.",
+        "Confidentiality covers all patient data — clinical, social, and financial — in all formats. The standard requires both written policies AND observed practice. A staff member discussing a patient case in a public area violates CRD.160 even if no written policies were violated.",
     },
     {
-      title: "CRD — Credentials File Contents",
+      title: "CRD.180 / CRD.190 — Individual Record Requirements and Consistent Visit Entries",
       content:
-        "A complete credentials file for a health care professional should contain: a signed, dated application; proof of education/training (medical school diploma, residency completion certificate, with primary source verification); current valid license with primary source verification documentation; board certification (if applicable, with primary source verification); NPDB query results; malpractice history and current insurance verification; peer references (for initial appointment); clinical performance data at reappointment; signed attestation of no pending investigations or sanctions; and a delineation of privileges form.",
+        "CRD.180 requires that an individual clinical record is established for each person receiving care. The record must include the patient's name, identification number (if used in the organization's system), date of birth, gender, and responsible party. CRD.190 requires that entries for each visit are consistent across records and include: (1) date and department (if departmentalized); (2) chief complaint or purpose of visit and history; (3) clinical findings and studies ordered (labs, imaging); (4) care rendered and therapies administered; (5) any changes in prescription or non-prescription medications with name, dosage, and frequency when available; (6) discharge diagnosis or impression and disposition, recommendations, and instructions given to the patient; and (7) signature or authentication by the healthcare professional.",
       keyPoint:
-        "Credentials files must be complete before the governing body can approve appointment. Incomplete files = incomplete credentialing = compliance deficiency.",
+        "CRD.180/190 together define the minimum record content: patient identifiers plus seven required entry elements per visit. Provider authentication (signature or electronic equivalent) on each entry is a non-negotiable requirement.",
+    },
+    {
+      title: "CRD.210 — Allergy and Sensitivity Documentation",
+      content:
+        "CRD.210 is a Tier 1 patient safety standard requiring that the presence or absence of allergies, sensitivities, and other reactions to drugs, materials, food, and environmental factors is recorded in a prominent and consistently defined location in all clinical records. Four specific requirements apply: (1) patients are asked about allergies and sensitivities at each encounter — not just at registration; (2) patients reporting allergies or sensitivities must be asked to describe their specific reaction (rash, anaphylaxis, GI symptoms, etc.) — not just list the allergen; (3) allergy and sensitivity information is recorded in a prominent and consistently defined location — not buried in free-text notes; and (4) the information is verified at each encounter and updated when changes are reported.",
+      keyPoint:
+        "CRD.210 has four requirements: ask at EACH encounter (not just at intake), document the REACTION (not just the allergen), record in a PROMINENT/CONSISTENT location, and VERIFY and UPDATE at every encounter. Missing any one of these four is a deficiency.",
+    },
+    {
+      title: "CRD.220 / CRD.230 — Incorporating Reports and Documenting Informed Consent Discussions",
+      content:
+        "CRD.220 requires that reports, histories and physicals, progress notes, and other patient information — including laboratory reports, x-ray readings, operative reports, and consultations — are reviewed and incorporated into the record as required by the organization's written policies. Evidence that each item was reviewed prior to incorporation must be present (e.g., a provider's initials or signature with date). CRD.230 requires that clinical records document discussions with the patient about the necessity, appropriateness, and risks of proposed care, surgery, or procedures, as well as discussions of treatment alternatives as applicable. The informed consent discussion must be documented — a signed consent form alone may not capture the substance of the discussion.",
+      keyPoint:
+        "CRD.220: reports must be reviewed (evidenced) and incorporated per policy. CRD.230: the informed consent DISCUSSION must be documented in the record — not just the existence of a signed form.",
+    },
+    {
+      title: "CRD.250 — Continuity of Care Documentation",
+      content:
+        "CRD.250 requires that clinical records demonstrate the organization ensures continuity of care. Three specific elements are required: (1) documentation of missed and canceled appointments (if any occur) — allowing the organization to identify patients who may need follow-up; (2) documentation of medical advice given to a patient by text, email, or telephone — including after-hours medical advice, with the content of the advice documented, not just that a call occurred; and (3) for patients who have had three or more visits or admissions, or who have a complex and lengthy record, a summary of past and current diagnoses, problems, and past procedures must be present in the record to facilitate continuity. This summary may take the form of a problem list, a cumulative medication list, or a structured summary note.",
+      keyPoint:
+        "CRD.250 has three continuity elements: document missed/canceled appointments, document telephone/text/email medical advice (including after-hours), and maintain a problem summary for patients with 3+ visits or complex records.",
     },
   ],
   questions: [
     {
       id: "asc_crd_01",
       question:
-        "A new surgeon submits a copy of her state medical license to the ASC credentialing coordinator. The coordinator files the copy in the credentials file. What credentialing requirement has not been met?",
+        "An ASC uses an electronic health record (EHR) system. Under CRD.130, what written policy element must specifically address the EHR?",
       options: [
-        "The copy is sufficient — the coordinator has the license on file",
-        "Primary source verification requires confirming the license directly with the state licensing board, not simply filing a copy",
-        "Licenses must be notarized before filing",
-        "Only the NPDB query is required at initial appointment — license verification is optional",
+        "An annual review policy for the EHR vendor contract",
+        "A backup system policy to protect records from damage or loss — explicitly including backup systems for electronic records",
+        "A policy designating the EHR as the legal medical record",
+        "A policy requiring paper copies of all electronic records",
       ],
       correctIndex: 1,
       explanation:
-        "CRD requires primary source verification (PSV) for licensure. This means confirming the license status, validity, and good standing directly with the state licensing board — not relying on a copy provided by the practitioner, which could be outdated or altered.",
+        "CRD.130 explicitly requires written policies addressing the protection of records from damage or loss, including backup systems for electronic records. Organizations using EHRs must have a documented backup and recovery procedure as part of their clinical records policies.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The 'primary source' is the issuing authority — in this case, the state medical board. Most states offer free online license verification. The organization must document that this verification was conducted and the result.",
+          "Electronic records are particularly vulnerable to data loss from hardware failure, ransomware, or system crashes. CRD.130 specifically calls out backup systems for electronic records because this is a known high-risk area for healthcare organizations.",
         whyWrong: {
-          A: "A copy is not PSV. The practitioner controls what they copy — an expired or restricted license could be presented as current.",
-          C: "Notarization is not required — PSV is.",
-          D: "License verification is required independently of the NPDB query.",
+          A: "Vendor contract review is a governance matter — not a CRD.130 required policy element.",
+          C: "Designation of the legal medical record is a health information management practice but not a specific CRD.130 requirement.",
+          D: "CRD.130 does not require paper copies of electronic records — it requires backup systems for electronic records.",
         },
         operationalContext:
-          "Use the state licensing board's online lookup portal. Print and date the verification result page. File this with the credentials application — it is your PSV documentation. Repeat at each reappointment.",
+          "Document your EHR backup frequency, backup storage location (offsite or cloud), recovery time objective, and who is responsible for verifying backup integrity. Test your recovery process at least annually and document the results.",
       },
     },
     {
       id: "asc_crd_02",
       question:
-        "Under CRD, must the NPDB be queried at provider reappointment (not just at initial appointment)?",
+        "During an AAAHC survey, a surveyor reviews ten clinical records and finds that allergy information is recorded in different locations in each record — some in a front-page header, some in a free-text nursing note, and some in the medication history section. What CRD standard does this violate?",
       options: [
-        "No — the NPDB is only queried once at initial appointment",
-        "Yes — the NPDB must be queried at both initial appointment and at each reappointment",
-        "Only if the provider has had a malpractice claim since the last appointment",
-        "Only for providers who also work at a hospital",
+        "CRD.120 — the clinical records system is not adequately monitored",
+        "CRD.210 — allergy information must be recorded in a prominent and consistently defined location in all records",
+        "CRD.140 — records must be organized in a consistent format",
+        "CRD.160 — confidentiality of allergy information is not maintained",
       ],
       correctIndex: 1,
       explanation:
-        "CRD requires the NPDB to be queried at initial appointment and at reappointment. Any adverse reports that occurred since the last query — malpractice payments, license actions, privilege revocations — will only be revealed at reappointment if the query is repeated.",
+        "CRD.210 specifically requires that allergy and sensitivity information be recorded in a prominent AND consistently defined location across all records. Variation in where allergies are recorded creates patient safety risk — a provider looking for allergy information in the expected location will miss it if it was recorded elsewhere.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Providers can acquire NPDB reports between appointments. Without querying at reappointment, the ASC would be unaware of malpractice payments, state board sanctions, or privilege revocations that occurred since the initial appointment.",
+          "The 'prominent and consistently defined location' requirement exists for patient safety — in an emergency, a clinician must be able to find allergy information immediately and reliably. Inconsistent placement defeats this safety purpose.",
         whyWrong: {
-          A: "A one-time initial query misses adverse events that occur during the appointment period.",
-          C: "The NPDB is queried as a routine matter at reappointment, not only when claims are suspected.",
-          D: "NPDB query requirements apply to all privileged practitioners regardless of their hospital affiliations.",
+          A: "CRD.120 addresses the overall records system — the specific allergy location requirement is CRD.210.",
+          C: "CRD.140 addresses overall record organization and format consistency — CRD.210 is the specific standard for allergy documentation.",
+          D: "Allergy information is not inherently confidential in the same way as diagnostic or social history — the issue here is safety and consistency.",
         },
         operationalContext:
-          "Build the NPDB query into the reappointment checklist. Set a reminder 90 days before each practitioner's reappointment date to initiate the query through the federal NPDB website (www.npdb.hrsa.gov).",
+          "Designate a specific, prominent field or section in your record/EHR for allergy documentation — for example, a mandatory allergy banner at the top of the record. Configure the EHR to require allergy documentation in this field, not in free-text notes.",
       },
     },
     {
       id: "asc_crd_03",
       question:
-        "A contracted anesthesiologist provides services at the ASC. The administrator says contracted providers are credentialed by the anesthesia group they work for — the ASC does not credential them separately. Is this acceptable?",
+        "A patient reports a penicillin allergy at registration. Under CRD.210, what additional information must be documented beyond the name of the allergen?",
       options: [
-        "Yes — the anesthesia group's credentialing satisfies the ASC's requirements",
-        "No — all health care professionals who provide services at the ASC must have credentials verified by the ASC, regardless of employment arrangement",
-        "Yes — only employed practitioners require ASC-specific credentialing",
-        "Only if the anesthesia group is accredited by a recognized credentialing organization",
+        "The year the allergy was first identified",
+        "The patient's specific reaction to penicillin (e.g., rash, hives, anaphylaxis, GI symptoms)",
+        "Whether the patient has taken penicillin within the past two years",
+        "The name of the prescribing physician who gave penicillin to the patient",
       ],
       correctIndex: 1,
       explanation:
-        "CRD requirements apply to all health care professionals providing services at the organization — employed, contracted, or otherwise. The ASC cannot delegate its credentialing obligation to a contracting group and must maintain its own verified credentials file for each practitioner.",
+        "CRD.210 requires that patients reporting allergies and sensitivities describe their reaction. The nature of the reaction — whether it was a mild rash, severe anaphylaxis, GI intolerance, or other type — is clinically important for prescribing decisions. A documented 'penicillin allergy: rash' is very different from 'penicillin allergy: anaphylaxis' in terms of clinical management.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The AAAHC holds each accredited organization responsible for verifying the credentials of every provider who delivers care under its auspices. A contractor relationship does not transfer this responsibility.",
+          "Documenting only the allergen name ('penicillin allergy') without the reaction type is insufficient under CRD.210 and clinically problematic. A provider cannot make informed prescribing decisions without knowing the severity and nature of the reaction.",
         whyWrong: {
-          A: "The contracting group's credentialing is a separate process — the ASC must conduct its own independent verification.",
-          C: "CRD does not distinguish between employed and contracted providers.",
-          D: "Even if the contracting group is itself credentialing-accredited, the ASC must maintain its own credentials file.",
+          A: "The year the allergy was identified is not a CRD.210 required element.",
+          C: "Recent exposure history is clinically relevant but not the specific CRD.210 requirement being tested here.",
+          D: "The prescribing physician's name is not a required element of allergy documentation under CRD.210.",
         },
         operationalContext:
-          "For contracted providers, the ASC may request credential documentation from the contractor (as a courtesy) but must independently verify each required element through primary sources. Maintain a separate credentials file for each contracted provider.",
+          "Design your allergy documentation template to include fields for: allergen name, type of reaction (rash, hives, anaphylaxis, GI, etc.), and severity. Do not allow staff to save an allergy entry without a reaction description.",
       },
     },
     {
       id: "asc_crd_04",
       question:
-        "A surgeon's credentials file includes a copy of their board certification certificate. What additional step is required to satisfy CRD primary source verification for board certification?",
+        "A patient who has been coming to the ASC for annual colonoscopies for the past five years was not asked about allergies at their most recent visit because staff assumed the allergy information was already in the chart. Under CRD.210, is this acceptable?",
       options: [
-        "Having the surgeon re-sign the certificate in the presence of the credentialing coordinator",
-        "Verifying board certification status directly with the certifying specialty board",
-        "Board certification is self-reported and does not require primary source verification",
-        "Only the NPDB query is needed to confirm board certification",
+        "Yes — if allergy information is already documented, re-asking at each visit is redundant",
+        "No — CRD.210 requires patients to be asked about allergies and sensitivities at each encounter, and the information must be verified and updated at each encounter",
+        "Yes — for established patients with multiple prior visits, annual allergy verification is sufficient",
+        "Only if the existing allergy documentation was verified at the previous visit",
       ],
       correctIndex: 1,
       explanation:
-        "Primary source verification for board certification means confirming current certification status directly with the relevant specialty board (e.g., the American Board of Surgery). Specialty boards maintain online verification portals for this purpose.",
+        "CRD.210 requires that patients are asked about allergies at each encounter and that the information is verified and updated at each encounter. Patients may develop new allergies, may report a reaction to a medication given at the last visit, or may have new food or environmental sensitivities — any of which could be missed if staff assume prior documentation is still current.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Board certification can lapse, be revoked, or expire if Maintenance of Certification (MOC) requirements are not met. A certificate issued years ago may not reflect current status — only PSV confirms current standing.",
+          "The 'at each encounter' requirement exists because allergies change over time. A patient who received contrast dye at their last imaging study may have developed a new contrast allergy. Assuming prior information is current is a patient safety risk and a CRD.210 violation.",
         whyWrong: {
-          A: "Re-signing a copy does not verify current certification status.",
-          C: "Board certification is not exempt from PSV requirements — if claimed, it must be verified.",
-          D: "The NPDB may reflect board sanctions but does not provide confirmation of current board certification status.",
+          A: "Even with documented allergy information, CRD.210 requires verification at each encounter.",
+          C: "Annual verification does not satisfy the 'each encounter' requirement for a patient who is seen more frequently.",
+          D: "Even if the last visit included allergy verification, the current visit still requires its own verification.",
         },
         operationalContext:
-          "Use the specialty board's online lookup tool (e.g., Certificationmatters.org for ABMS boards) to verify current certification. Print and date the result. File with the credentials application.",
+          "Build allergy verification into your pre-procedure nursing workflow as a required step. In an EHR, configure allergy verification as a required field that must be acknowledged (confirmed or updated) at each visit before the encounter can be completed.",
       },
     },
     {
       id: "asc_crd_05",
       question:
-        "A locum tenens physician is filling in for two weeks at the ASC. Does the CRD credentialing requirement apply?",
+        "A surgeon performs a laparoscopic cholecystectomy and dictates an operative report. The operative report is transcribed and available the next day. Under CRD.220, what must happen before the report is placed in the patient's record?",
       options: [
-        "No — locum tenens physicians are exempt from credentialing for stays under 30 days",
-        "Yes — all health care professionals providing services must be credentialed, including locum tenens providers",
-        "Only if the locum tenens physician is a specialist, not a general practitioner",
-        "Only if the locum tenens physician is credentialed at a hospital — then reciprocity applies",
+        "The report may be filed as received — no additional action is required",
+        "The report must be reviewed by the ordering or performing provider before incorporation, with evidence that the review occurred",
+        "The report must be reviewed by the medical records director",
+        "The report must be co-signed by the anesthesiologist before filing",
       ],
       correctIndex: 1,
       explanation:
-        "CRD applies to all health care professionals providing services — including locum tenens providers regardless of the duration of their engagement. A two-week locum must be credentialed before providing care.",
+        "CRD.220 requires that reports, including operative reports, are reviewed and incorporated into the record as required by organizational policy — with evidence that such items were reviewed prior to incorporation. A transcription error in an operative report that was filed without review could result in inaccurate documentation driving future clinical decisions.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "From a patient safety perspective, a two-week locum presents the same risks as a permanent employee. AAAHC does not provide a duration exemption from credentialing requirements.",
+          "The review requirement ensures accuracy of transcribed and external reports before they become a permanent part of the record. A surgeon who reviews and authenticates their own operative report confirms that the transcription accurately reflects what occurred.",
         whyWrong: {
-          A: "There is no 30-day exemption for locum tenens credentialing in AAAHC standards.",
-          C: "The requirement applies to all practitioners regardless of specialty.",
-          D: "Hospital credentialing is a separate process — AAAHC does not recognize automatic reciprocity without the ASC's own verification.",
+          A: "Simply filing reports without evidence of review violates CRD.220.",
+          C: "CRD.220 requires review by the ordering or performing provider — not the medical records director.",
+          D: "The anesthesiologist's co-signature is not required for a surgical operative report.",
         },
         operationalContext:
-          "Develop an expedited credentialing checklist for locum tenens providers. Key elements that can be quickly verified: current license (online PSV), NPDB query, current malpractice insurance verification, and completed application. Build this into a 48–72-hour turnaround process.",
+          "Establish a policy requiring providers to review and authenticate dictated reports (with signature or electronic authentication) within a defined timeframe — for example, 72 hours. Track unauthenticated reports as a quality monitoring indicator.",
       },
     },
     {
       id: "asc_crd_06",
       question:
-        "At reappointment, the credentials committee reviews a surgeon's updated license verification and NPDB query but does not incorporate any peer review data. What CRD-related standard is missing?",
+        "Under CRD.190, which of the following is a required element in a visit entry for every patient encounter?",
       options: [
-        "Peer review data is reviewed separately by the QA committee — it does not belong in credentialing",
-        "QUA.150 requires that peer review results are used as part of the process for granting continuation of clinical privileges",
-        "Peer review data is only required for new appointments, not reappointments",
-        "The credentials committee may waive peer review review if the surgeon has had no complaints",
+        "The patient's insurance authorization number",
+        "The signature or authentication by the healthcare professional",
+        "The time the patient arrived and was discharged",
+        "The patient's vital signs from the prior visit",
       ],
       correctIndex: 1,
       explanation:
-        "QUA.150 specifically requires that peer review results are used as part of the process for granting continuation of clinical privileges at reappointment. Credentials files and peer review must be connected — not maintained in separate silos.",
+        "CRD.190 requires that entries for each visit include, among other elements, the signature or authentication by the healthcare professional. Provider authentication confirms who documented the entry and takes professional responsibility for its content. This is a non-negotiable documentation standard.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "QUA.150 closes the loop between quality and credentialing. If peer review identified concerns about a surgeon's performance during the appointment period, the credentials committee must know this before recommending privilege continuation.",
+          "Provider authentication connects each clinical entry to a specific accountable professional. An unauthenticated note cannot be attributed to a specific provider and creates legal and clinical accountability gaps.",
         whyWrong: {
-          A: "QA/peer review data is specifically required to inform reappointment decisions — the two processes must intersect.",
-          C: "Peer review integration at reappointment is a specific requirement, not limited to initial appointments.",
-          D: "No complaint history does not exempt the credentials committee from reviewing peer review data — absence of complaints is different from documented review of clinical performance.",
+          A: "Insurance authorization numbers are administrative records — not a required CRD.190 clinical entry element.",
+          C: "Exact arrival and discharge times are not specified as required CRD.190 entry elements (though they may be required by other standards for recovery documentation).",
+          D: "CRD.190 requires current visit entries — prior vital signs are historical data, not required entry content for the current visit.",
         },
         operationalContext:
-          "Create a reappointment packet template that includes a mandatory peer review summary section. The quality/peer review committee must sign off on the section before the credentials committee can complete the reappointment recommendation.",
+          "Audit your records regularly for unauthenticated entries. In an EHR, configure workflows to require provider signature/authentication before an encounter note can be finalized. Paper records should require a wet-ink signature before filing.",
       },
     },
     {
       id: "asc_crd_07",
       question:
-        "A nurse practitioner provides telemedicine pre-operative consultations for the ASC. Does the CRD credentialing requirement apply to this provider?",
+        "An ASC nurse gives a patient post-operative discharge instructions by phone because the patient left before the nurse could provide them in person. Under CRD.250, what must be documented?",
       options: [
-        "No — telemedicine providers are not physically present and are exempt from on-site credentialing",
-        "Yes — credentialing requirements apply to all health care professionals who provide services at or on behalf of the organization, including telemedicine providers",
-        "Only if the telemedicine provider is prescribing controlled substances",
-        "Only if the telemedicine provider is located in a different state",
+        "Only that a call was made — the content of instructions given by phone is not a documentation requirement",
+        "The medical advice given by telephone must be documented in the patient's clinical record",
+        "Phone calls to patients are documented in the nurse's personal call log, not the clinical record",
+        "Telephone medical advice is only documented if the patient calls back with a complaint",
       ],
       correctIndex: 1,
       explanation:
-        "CRD applies to all health care professionals providing services at or on behalf of the organization — including telemedicine providers. The physical delivery method does not exempt a provider from credentialing requirements.",
+        "CRD.250 requires documentation of medical advice given to a patient by telephone (as well as text or email). The advice itself — not just the fact that a call was made — must be documented in the clinical record. This ensures continuity of care if the patient presents to another provider who needs to know what instructions were given.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Patients receiving care from a telemedicine provider deserve the same credential verification assurance as patients seen in person. AAAHC's credentialing standards extend to all care delivered under the organization's auspices.",
+          "Post-operative instructions given by phone are clinical communications that affect patient care. Another provider treating complications needs to know what the patient was told — this information belongs in the clinical record.",
         whyWrong: {
-          A: "Physical presence is not a qualifying criterion — the service delivery relationship to the organization is.",
-          C: "The scope of services provided does not determine whether credentialing is required — it is required for all licensed independent practitioners.",
-          D: "Interstate telemedicine introduces additional licensure considerations but does not change whether credentialing is required.",
+          A: "The content of the advice, not just the occurrence of a call, must be documented under CRD.250.",
+          C: "Personal call logs are not clinical records and do not satisfy the CRD.250 documentation requirement.",
+          D: "CRD.250 requires documentation of telephone medical advice regardless of whether the patient subsequently reports problems.",
         },
         operationalContext:
-          "Build telemedicine provider credentials into the main credentialing system. Verify the state license(s) appropriate to where both the provider and patient are located. Note: some states have telemedicine-specific license reciprocity provisions.",
+          "Train staff to document telephone medical advice in the patient's chart with: the date and time of the call, the advice or instructions given, the name of the staff member who gave the advice, and any patient response or concerns noted during the call.",
       },
     },
     {
       id: "asc_crd_08",
       question:
-        "An anesthesiologist's reappointment is due, but a complete set of updated primary source verifications has not been obtained. The credentials committee schedules the governing body vote for next month. May the anesthesiologist continue practicing in the interim?",
+        "A patient cancels their follow-up appointment two days after a minor procedure without rescheduling. Under CRD.250, what documentation is required?",
       options: [
-        "Yes — continuing practice during the reappointment review period is standard",
-        "This depends on the organization's policy — temporary privileges may be granted to prevent patient care gaps, but clear documentation is required",
-        "No — the anesthesiologist must stop practicing until the governing body votes",
-        "Yes — physicians may always continue practicing while credentialing is pending",
+        "No documentation is required for patient-initiated cancellations",
+        "The missed or canceled appointment must be documented in the clinical record",
+        "Only no-shows (not cancellations) require documentation under CRD.250",
+        "Documentation of canceled appointments is required only for patients with known medical complications",
       ],
       correctIndex: 1,
       explanation:
-        "Organizations may grant temporary privileges during the reappointment review period by written policy, but this must be governed by clear criteria and documented authorization. Continuation of practice without a governing policy or documentation is a credentialing gap.",
+        "CRD.250 requires documentation of missed and canceled appointments in the clinical record. This allows the organization to identify patients who may need follow-up outreach and ensures that if a patient later presents with a complication, the record shows the follow-up was offered and the patient did not attend.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Temporary privileges during reappointment transition are a recognized practice, but they require a written policy, defined conditions, and documented authorization — not an informal assumption that the provider simply continues.",
+          "Documenting missed and canceled appointments is both a continuity of care requirement and a medicolegal protection. If a patient later claims they were not followed up appropriately, the documentation of their cancellation demonstrates the organization's attempt to provide follow-up care.",
         whyWrong: {
-          A: "Without a written policy governing interim practice, continuation during reappointment is undocumented and non-compliant.",
-          C: "Immediate cessation is not always required — temporary privileges may be granted per policy.",
-          D: "Practice continuation without documentation or policy is not automatically permissible.",
+          A: "CRD.250 requires documentation of both missed and canceled appointments.",
+          C: "No-shows and patient-initiated cancellations are both covered by CRD.250.",
+          D: "The documentation requirement applies to all canceled appointments, not only those involving patients with known complications.",
         },
         operationalContext:
-          "Develop a 'Temporary Privileges During Reappointment' policy that defines: the conditions under which temporary privileges are granted, the maximum duration, the required minimum credential verification to be completed before granting temporary privileges, and the governing body officer who authorizes them.",
+          "Configure your scheduling system or EHR to require a note entry whenever an appointment is canceled or missed. Include in the note: date of canceled appointment, reason for cancellation (if known), whether the patient was contacted or rescheduled, and any clinical guidance provided.",
       },
     },
     {
       id: "asc_crd_09",
       question:
-        "A practitioner's credentials file contains their signed application and license copy, but no reference letters. At what point in the credentialing process are peer references typically required?",
+        "A patient's clinical record at the ASC is reviewed during survey. The patient has had eight visits over three years for a complex chronic condition managed with multiple medications and prior procedures. Under CRD.250, what must be present in this record?",
       options: [
-        "References are required at every reappointment",
-        "Peer references are typically required for initial appointment — not necessarily at reappointment, when clinical performance data is used instead",
-        "References are never required under AAAHC standards",
-        "Only specialist physicians require references — generalists do not",
+        "A copy of every visit note from all prior treating providers",
+        "A summary of past and current diagnoses, problems, and past procedures to facilitate continuity of care",
+        "An independent second opinion from a specialist",
+        "A medication reconciliation form signed by a pharmacist",
       ],
       correctIndex: 1,
       explanation:
-        "Peer references are a standard credentialing requirement at initial appointment to obtain information about the practitioner's clinical competence, professional behavior, and work ethic from individuals who have directly observed them. At reappointment, peer review results and clinical performance data from the organization's own experience typically replace the initial reference requirement.",
+        "CRD.250 requires that for patients with three or more visits or admissions — or with complex, lengthy records — a summary of past and current diagnoses or problems, including past procedures, must be present in the record to facilitate continuity of care. A patient with eight visits over three years clearly meets this threshold.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "At initial appointment, the organization has no direct experience with the practitioner — references provide independent evidence of competence. At reappointment, the organization's own peer review and performance data serves this role.",
+          "For complex patients seen repeatedly, a provider encountering the patient for the first time (or after a gap) cannot safely and efficiently review years of visit notes. The problem summary serves as a navigational tool that enables safe, informed care.",
         whyWrong: {
-          A: "References at every reappointment would be redundant when the organization has its own performance data — they are primarily an initial appointment tool.",
-          C: "Peer references are a recognized and expected element of initial credentialing under AAAHC.",
-          D: "The reference requirement is not limited by specialty.",
+          A: "CRD.250 requires a summary — not copies of all prior notes from all providers. External records may be incorporated per CRD.220 but a complete external note collection is not the requirement.",
+          C: "Independent second opinions are not a CRD.250 requirement.",
+          D: "Pharmacist medication reconciliation is a clinical practice recommendation but not a specific CRD.250 required element.",
         },
         operationalContext:
-          "Require two to three peer reference letters (from physicians who can attest to the applicant's clinical skills) as part of the initial credentials application. At reappointment, substitute a peer review summary and clinical performance metrics.",
+          "Create a policy requiring that a problem list or cumulative summary be initiated after a patient's third visit and updated at each subsequent visit. In an EHR, use the problem list, medication list, and diagnosis history features as your summary — ensure they are actively maintained.",
       },
     },
     {
       id: "asc_crd_10",
       question:
-        "Under CRD, what does the credentialing process verify about a practitioner's malpractice history?",
+        "A patient requests a copy of their clinical record. Under CRD.130, what written policy must address this request?",
       options: [
-        "Only claims that resulted in plaintiff verdicts are verified",
-        "Malpractice payment history is verified through the NPDB and may also include direct inquiry to the practitioner or malpractice insurer",
-        "Malpractice history is verified only if the practitioner is a surgeon",
-        "Only malpractice claims from the past two years are relevant",
+        "Only HIPAA governs patient record release — a separate organizational policy is not required",
+        "CRD.130 requires written policies addressing the release of patient records, including patient authorization requirements",
+        "Record release is governed only by CRD.140's patient approval requirement — a separate written policy is not needed",
+        "Only records from the past two years must be released upon patient request",
       ],
       correctIndex: 1,
       explanation:
-        "CRD requires verification of malpractice history, which includes NPDB querying (which captures all reported malpractice payments) as well as potential inquiry to the practitioner about pending claims and verification of current malpractice insurance coverage.",
+        "CRD.130 specifically requires written policies addressing the release of patient records as one of its seven required policy topics. This organizational policy must be consistent with HIPAA and applicable state law, and must specify the process for authorizing and fulfilling record release requests.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The NPDB captures malpractice payments made on behalf of practitioners. Additionally, the credentialing application typically asks practitioners to self-report pending claims and provides a basis for insurance verification.",
+          "HIPAA establishes the federal floor for patient privacy rights — but CRD.130 additionally requires the organization to have its own written policies addressing record release. The written policy operationalizes HIPAA requirements in the organization's specific context.",
         whyWrong: {
-          A: "The NPDB reports all malpractice payments — not just those resulting from plaintiff verdicts. Settlements are also reported.",
-          C: "Malpractice verification applies to all health care professionals, not just surgeons.",
-          D: "The NPDB and malpractice history inquiry cover the practitioner's entire career history, not just the past two years.",
+          A: "HIPAA establishes legal requirements, but CRD.130 requires a written organizational policy — which should incorporate HIPAA compliance.",
+          C: "CRD.130 specifically enumerates record release as one of seven required policy topics — it is not covered by CRD.140 alone.",
+          D: "No time limitation on the records to be released is specified by CRD.130.",
         },
         operationalContext:
-          "Include on the credentials application: (1) a disclosure question about pending or settled malpractice claims, (2) current malpractice insurance certificate (with limits and coverage period), and (3) the NPDB query result. Review all three together.",
+          "Your record release policy should specify: required patient authorization elements, identity verification requirements, timeframes for responding to requests (HIPAA allows up to 30 days), fees (if any, per state law), format options (paper, electronic), and procedures for denying requests with the required notice of denial rights.",
       },
     },
     {
       id: "asc_crd_11",
       question:
-        "A physician assistant has been on medical leave for nine months and is returning to practice at the ASC. What must happen before they resume patient care?",
+        "Under CRD.140, a clinical record entry that was scanned into the electronic health record is illegible. What standard does this violate?",
       options: [
-        "They may return immediately — credentials don't expire during medical leave",
-        "They must complete a return-to-practice assessment and the organization's policy for break in service (re-credentialing) must be followed",
-        "Only their supervisor needs to authorize their return",
-        "A 30-day probationary period is automatically required",
+        "No standard — legibility requirements only apply to handwritten entries, not scanned documents",
+        "CRD.140 — clinical records must be legible, including items scanned into an electronic record",
+        "CRD.220 — reports must be reviewed before incorporation, and a legible copy should have been obtained",
+        "CRD.180 — the individual record must be complete",
       ],
       correctIndex: 1,
       explanation:
-        "A break in service longer than the organization's defined threshold (commonly six months) triggers a re-credentialing process — including updated primary source verifications, a new NPDB query, and any required competency demonstration before returning to independent practice.",
+        "CRD.140 explicitly states that clinical record entries must be legible, 'including items that are scanned into an electronic record.' An illegible scan — whether from poor image quality, a rotated document, or other issues — violates CRD.140 regardless of whether it was originally a paper document.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "A nine-month break is significant. Licenses may have been in jeopardy, competencies may need refreshing, and any adverse events during the period need to be captured. Re-credentialing protects patients.",
+          "The AAAHC specifically added 'including items scanned into an electronic record' to address the common practice of scanning poor-quality paper documents. A record entry that cannot be read provides no clinical value and creates patient safety risk.",
         whyWrong: {
-          A: "Credentials can lapse or be restricted during extended leaves — the organization cannot assume status remained unchanged.",
-          C: "Supervisor authorization alone is not a substitute for documented re-credentialing.",
-          D: "A probationary period may be clinically appropriate but it does not substitute for the re-credentialing process itself.",
+          A: "CRD.140 explicitly covers scanned items — legibility requirements apply to all entry types.",
+          C: "CRD.220 review is relevant, but the legibility deficiency is specifically addressed by CRD.140.",
+          D: "CRD.180 addresses required patient identifier elements — legibility of entries is CRD.140.",
         },
         operationalContext:
-          "Establish a 'Return from Extended Absence' policy defining the break threshold (e.g., six months) that triggers re-credentialing. Include: updated license verification, NPDB query, competency assessment, and governing body approval before return.",
+          "When scanning paper documents, use quality settings that ensure legibility. Review each scanned document immediately after scanning. Reject and rescan any document that is not clearly legible. Train scanning staff on quality standards.",
       },
     },
     {
       id: "asc_crd_12",
       question:
-        "What is the primary purpose of requiring a signed, dated application as part of the credentials file?",
+        "A staff member in the front office is overheard discussing a patient's diagnosis and procedure with another staff member in the waiting room where other patients can hear. What CRD standard does this violate?",
       options: [
-        "It establishes the practitioner's legal relationship with the organization",
-        "It documents the practitioner's own attestation of the accuracy of provided information and disclosure of any sanctions or adverse actions",
-        "It is required by the DEA for controlled substance prescribing authorization",
-        "It serves as the practitioner's employment contract",
+        "No CRD standard — verbal discussions are not covered by clinical records standards",
+        "CRD.160 — any record containing patient data must be treated as strictly confidential, and observed practice must confirm confidential handling",
+        "CRD.130 — written policies addressing security of information were not followed",
+        "CRD.140 — patient data must be accessible only to authorized personnel",
       ],
       correctIndex: 1,
       explanation:
-        "The signed credentials application includes the practitioner's attestation that all information provided is complete, accurate, and truthful. It also typically includes a self-disclosure of any pending investigations, sanctions, license restrictions, or adverse actions. This creates a documented accountability basis.",
+        "CRD.160 requires that records containing clinical, social, financial, or other patient data are treated as strictly confidential. Critically, surveyors verify this through 'interviews and observation' — meaning observed practice, not just written policies, is evaluated. Discussing patient information in a public area is a CRD.160 violation discovered through observed practice.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The signed application is both a data-gathering tool and a legal attestation. Any false statement on a credentialing application can be grounds for immediate privilege revocation and, in some jurisdictions, criminal prosecution.",
+          "CRD.160 is unique among the CRD standards in explicitly requiring that compliance be verified through observation and interviews — not just through written policies. A perfect confidentiality policy does not satisfy CRD.160 if staff behavior violates confidentiality in practice.",
         whyWrong: {
-          A: "The legal relationship is established by the employment or contractor agreement — not the credentialing application.",
-          C: "DEA prescribing authorization is governed by DEA registration, not the credentialing application.",
-          D: "Employment contracts are separate legal documents from credentialing applications.",
+          A: "CRD.160 covers all patient data in all forms — including verbal discussions — not only written records.",
+          C: "CRD.130 addresses written security policies. The observed behavior violation is specifically captured by CRD.160's observation requirement.",
+          D: "CRD.140 addresses accessibility within the clinical record — confidentiality of verbal communications is CRD.160.",
         },
         operationalContext:
-          "Include on the credentials application: attestation of accuracy, disclosure questions about sanctions/restrictions/investigations, and an authorization for the organization to conduct verifications. Have an attorney review the form for legal sufficiency in your jurisdiction.",
+          "Train all staff — clinical and administrative — on HIPAA minimum necessary standards and the prohibition on discussing patient information in public areas. Include observation of staff behavior during internal compliance rounds to catch CRD.160 issues before survey.",
       },
     },
     {
       id: "asc_crd_13",
       question:
-        "A new CRNA is joining the anesthesia team. Which organization's primary source would be used to verify their nursing license?",
+        "Under CRD.180, which of the following is a required element in every individual clinical record?",
       options: [
-        "The American Association of Nurse Anesthetists (AANA)",
-        "The state board of nursing that issued the license",
-        "The National Board of Certification and Recertification for Nurse Anesthetists (NBCRNA) — they maintain the license registry",
-        "The state department of health where the ASC is located",
+        "The patient's emergency contact phone number",
+        "Patient date of birth",
+        "The patient's insurance group number",
+        "The patient's primary care physician's name",
       ],
       correctIndex: 1,
       explanation:
-        "For nursing licenses (including CRNAs), the primary source is the state board of nursing that issued the license. Most states offer online license verification portals. The NBCRNA verifies CRNA certification (a separate credential), not the underlying nursing license.",
+        "CRD.180 requires each individual clinical record to include the patient's name, identification number (if used), date of birth, gender, and responsible party. Date of birth is an explicit required element. Emergency contact, insurance information, and PCP name are important administrative elements but are not the specific CRD.180 required clinical record identifiers.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The 'primary source' for any license is the licensing authority — in this case, the state board of nursing. For a CRNA, you would separately verify the CRNA certification through the NBCRNA and the advanced practice registered nurse (APRN) authorization (if required) through the state board.",
+          "CRD.180 specifies five required record identifiers: name, ID number, date of birth, gender, and responsible party. Date of birth also functions as a patient identifier for safety purposes — used to confirm correct patient identity before procedures.",
         whyWrong: {
-          A: "AANA is a professional association — it does not issue or maintain licenses.",
-          C: "NBCRNA issues and maintains CRNA certification, not the nursing license itself.",
-          D: "State departments of health oversee facility licensing, not individual practitioner licenses.",
+          A: "Emergency contact is not among the five required CRD.180 elements.",
+          C: "Insurance information is administrative data not specified in CRD.180.",
+          D: "PCP name is not a required CRD.180 element.",
         },
         operationalContext:
-          "For a CRNA, verify three credentials through their respective primary sources: (1) RN license via state nursing board, (2) CRNA certification via NBCRNA, and (3) APRN authorization via state nursing board (where required). Each requires a separate PSV step.",
+          "Audit a sample of records to confirm all five CRD.180 elements are present in every record: name, ID, DOB, gender, and responsible party. EHR systems typically capture these at registration — ensure they are mandatory fields.",
       },
     },
     {
       id: "asc_crd_14",
       question:
-        "How does the credentialing process relate to the delineation of clinical privileges (CPV)?",
+        "A surgeon discusses treatment alternatives for a patient's knee condition, recommending arthroscopic surgery but also explaining that physical therapy is an option. Under CRD.230, what must the clinical record contain?",
       options: [
-        "Credentialing and privileges are completely separate processes with no connection",
-        "Credentialing verifies qualifications; privileging determines which specific services the practitioner may provide based on those qualifications",
-        "Privileges are granted automatically once credentialing is complete",
-        "Credentialing is for employed staff; privileging is only for contractors",
+        "A signed surgical consent form is sufficient documentation of the discussion",
+        "Documentation of the discussion of treatment alternatives (in this case, physical therapy as an alternative to surgery) in the clinical record",
+        "Documentation is only required if the patient chooses the alternative treatment",
+        "The discussion of alternatives is only required to be documented in the informed consent form, not the clinical record",
       ],
       correctIndex: 1,
       explanation:
-        "Credentialing (CRD) verifies that the practitioner has the education, training, experience, and licensure to practice their profession. Privileging (CPV) uses those verified credentials to determine the specific services the practitioner is authorized to provide at this specific organization. One flows from the other, but they are distinct processes.",
+        "CRD.230 requires that clinical records document discussions with the patient concerning the necessity, appropriateness, and risks of proposed care — as well as discussions of treatment alternatives, as applicable. A signed consent form confirms consent was obtained but does not typically capture the substance of alternative treatment discussions.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Credentialing = who are you and are you qualified? Privileging = what are you authorized to do here? A surgeon may be credentialed as a general surgeon but only privileged for specific procedures that the ASC has determined it can safely support.",
+          "Documenting the discussion of alternatives in the record creates a contemporaneous record of shared decision-making. This protects both the patient (confirming their options were presented) and the organization (demonstrating that informed decision-making occurred).",
         whyWrong: {
-          A: "Credentialing and privileging are deeply connected — verified credentials are the foundation for privilege determination.",
-          C: "Privileges are granted based on credentials — but they are not automatic. The credentials committee and governing body review the specific privileges requested against the verified competencies.",
-          D: "Both processes apply to all practitioners regardless of employment arrangement.",
+          A: "A signed consent form confirms consent was given but typically does not document the specific alternatives discussed.",
+          C: "CRD.230 requires documentation of the discussion regardless of which treatment the patient chooses.",
+          D: "CRD.230 requires documentation in the clinical record — the consent form alone does not satisfy this requirement if it does not capture the alternatives discussion.",
         },
         operationalContext:
-          "The credentials file drives the privileges decision: verified subspecialty training in laparoscopic surgery → eligible to request laparoscopic privileges. The governing body approves the specific procedures listed on the delineation of privileges form.",
+          "Add a dedicated section to your pre-procedure note template for documenting patient education and alternatives discussed. Include: what alternatives were presented, the patient's response/preference, and any questions asked by the patient.",
       },
     },
     {
       id: "asc_crd_15",
       question:
-        "An ASC's credentialing committee discovers a physician's license has a past restriction for substance use disorder that was resolved five years ago. How should this information be handled?",
+        "The CRD.120 standard requires a designated person in charge of clinical records and a designated person in charge of the health information system. At a small ASC, may the same person serve in both roles?",
       options: [
-        "The restriction must result in automatic denial of credentials",
-        "The information must be reviewed as part of the credentialing process and the committee makes a determination based on the full picture, including resolution of the restriction",
-        "Past restrictions are irrelevant once resolved — they need not be reviewed",
-        "Only current restrictions affect credentialing — past restrictions may be disregarded",
+        "No — CRD.120 requires two separate individuals",
+        "Yes — the same person may fill both roles as long as the dual responsibility is documented",
+        "Only if the person is a licensed health information manager (RHIA or RHIT)",
+        "Only for ASCs with fewer than 500 patient encounters per year",
       ],
       correctIndex: 1,
       explanation:
-        "A past license restriction must be reviewed by the credentials committee in the context of the full credentialing picture. This includes the nature of the restriction, how it was resolved, any monitoring or conditions imposed, and the practitioner's performance since resolution. The committee makes a judgment — not an automatic determination.",
+        "CRD.120 designates two roles — clinical records oversight and health information system oversight — but does not prohibit one person from fulfilling both roles. At small ASCs, the same administrator or health information manager often serves both functions. What matters is that the responsibility is designated and documented, not that it is filled by separate individuals.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Credentialing is a contextual, judgment-based process. A resolved substance use disorder with demonstrated recovery and monitoring compliance may not be disqualifying — but it must be reviewed, understood, and documented. Ignoring it is a credentialing failure.",
+          "The designation requirement in CRD.120 ensures accountability — someone is formally responsible for each function. In small organizations, role consolidation is common and acceptable as long as the designations are documented and the functions are being performed.",
         whyWrong: {
-          A: "Automatic denial without review is not compliant with fair and thorough credentialing practices.",
-          C: "Resolved issues must still be reviewed — they provide context for the current risk assessment.",
-          D: "The committee has an obligation to review the full history, not just current status.",
+          A: "CRD.120 does not require two separate individuals — it requires two designated roles.",
+          C: "While RHIA/RHIT certification is valuable, CRD.120 does not specify a required credential for these designees.",
+          D: "No volume threshold is specified for role separation in CRD.120.",
         },
         operationalContext:
-          "When the NPDB or licensing board reveals past adverse actions, request a written explanation from the practitioner. Review the explanation and supporting documentation in committee. Document the committee's analysis and rationale for its credentialing recommendation.",
-      },
-    },
-    {
-      id: "asc_crd_16",
-      question:
-        "A credentials file is complete and verified. Who must give final approval for the practitioner's appointment?",
-      options: [
-        "The medical director",
-        "The credentials committee",
-        "The governing body",
-        "The ASC administrator",
-      ],
-      correctIndex: 2,
-      explanation:
-        "The governing body has ultimate responsibility for the appointment of health care professionals (GOV.190.10). The credentials committee reviews and recommends — but the governing body gives final approval. This may be delegated to a governing body subcommittee but cannot be delegated to staff.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "GOV.190.10 specifically makes the governing body responsible for the employment or contracting of health care professionals. Final appointment approval is a governance function — the medical director and credentials committee make recommendations, but the governing body decides.",
-        whyWrong: {
-          A: "The medical director may co-chair the credentials committee or make a recommendation, but does not give final approval.",
-          B: "The credentials committee recommends — it does not approve. Approval authority rests with the governing body.",
-          D: "The administrator manages operations but does not have credentialing appointment authority.",
-        },
-        operationalContext:
-          "Document governing body appointment approval in board meeting minutes. For time-sensitive situations, a governing body officer or subcommittee may be authorized to approve temporary privileges — with ratification at the next full board meeting.",
-      },
-    },
-    {
-      id: "asc_crd_17",
-      question:
-        "Under CRD, what must be done when a practitioner's credentials file reveals they have current malpractice insurance but the policy has a lower limit than the organization requires?",
-      options: [
-        "The practitioner may be credentialed with the understanding that insurance limits are a personal matter",
-        "The organization must make a credentialing decision consistent with its written credentialing policy — which should include minimum insurance coverage requirements",
-        "Malpractice insurance limits are never part of the credentialing process",
-        "The credentialing committee may waive insurance requirements at its discretion",
-      ],
-      correctIndex: 1,
-      explanation:
-        "Organizations should establish minimum malpractice insurance coverage requirements in their credentialing policy. When a practitioner's coverage does not meet those minimums, the credentials committee must make a decision consistent with the policy — which may include denial, conditional appointment pending coverage upgrade, or a governance-approved exception.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "Minimum insurance requirements protect the organization and patients in the event of a negligence claim. Having a written policy and applying it consistently is the compliance requirement.",
-        whyWrong: {
-          A: "Insurance limits are a governance-level concern — the organization has a legitimate interest in ensuring practitioners carry adequate coverage.",
-          C: "Insurance verification is a standard credentials file element — limits are a credentialing policy matter.",
-          D: "Waivers may be possible but must be documented, policy-consistent, and governing-body-authorized.",
-        },
-        operationalContext:
-          "Establish minimum malpractice coverage requirements in the credentialing policy (e.g., $1M per occurrence/$3M aggregate). Include coverage verification in the credentials checklist and the reappointment checklist.",
-      },
-    },
-    {
-      id: "asc_crd_18",
-      question:
-        "An ASC decides to use a credentialing verification organization (CVO) to conduct primary source verifications on its behalf. Does this satisfy CRD requirements?",
-      options: [
-        "No — primary source verification must be performed directly by ASC staff",
-        "Yes — a CVO may conduct PSV on the organization's behalf, and the organization reviews and uses the CVO's verified results",
-        "Only if the CVO is NCQA-certified",
-        "CVOs are only permitted for initial credentialing — not for reappointments",
-      ],
-      correctIndex: 1,
-      explanation:
-        "Credentialing verification organizations (CVOs) may conduct primary source verifications on behalf of the organization. The organization is responsible for reviewing the verified results and making the credentialing decision. The use of a CVO does not reduce the organization's accountability for the credentialing outcome.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "CVOs are a legitimate mechanism for outsourcing the verification work. The key is that the organization reviews the results, maintains the credentials file, and makes the credentialing decision — these cannot be outsourced.",
-        whyWrong: {
-          A: "PSV may be conducted by a CVO — direct staff verification is not required.",
-          C: "While NCQA-accredited CVOs may offer additional quality assurance, NCQA accreditation is not an AAAHC requirement for CVO use.",
-          D: "CVOs may be used for both initial credentialing and reappointments.",
-        },
-        operationalContext:
-          "If using a CVO, ensure your contract specifies: PSV standards used, turnaround time, documentation provided, and the CVO's liability for verification errors. Review all CVO reports before making credentialing recommendations.",
-      },
-    },
-    {
-      id: "asc_crd_19",
-      question:
-        "A practitioner's NPDB query reveals a malpractice payment was made on their behalf five years ago for an obstetrics case. The ASC does not perform OB procedures. How should this information be handled?",
-      options: [
-        "The malpractice report is irrelevant because OB is not in the ASC's scope — it may be disregarded",
-        "The NPDB report must be reviewed by the credentials committee, which considers the nature and context of the claim relative to the privileges requested",
-        "Any NPDB report automatically disqualifies a practitioner from credentialing",
-        "Malpractice reports more than three years old are automatically excluded from credentialing review",
-      ],
-      correctIndex: 1,
-      explanation:
-        "All NPDB reports must be reviewed by the credentials committee. The committee evaluates the relevance, severity, and context of the report — a prior OB malpractice claim does not automatically disqualify a practitioner from non-OB privileges, but it must be reviewed and documented.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "The credentials committee must review all NPDB findings and document its analysis. A malpractice payment in an unrelated specialty may be minimally relevant to the privileges being requested — but 'may be minimally relevant' requires documented review, not dismissal.",
-        whyWrong: {
-          A: "NPDB findings cannot simply be disregarded — all must be reviewed and the analysis documented.",
-          C: "Automatic disqualification for any NPDB report is neither fair nor consistent with thorough credentialing practice.",
-          D: "There is no three-year exclusion rule for NPDB reports in CRD standards.",
-        },
-        operationalContext:
-          "Create a standard NPDB review worksheet for the credentials committee: report date, nature of claim, specialty involved, settlement/judgment amount, practitioner's explanation, and committee's assessment of relevance to the privileges being requested.",
-      },
-    },
-    {
-      id: "asc_crd_20",
-      question:
-        "A physician applies for initial credentialing and requests privileges for a new surgical technique not previously performed at the ASC. What must the credentials committee evaluate?",
-      options: [
-        "Only whether the physician is board certified in their specialty",
-        "Whether the physician has the training, experience, and competency specifically for the requested technique, AND whether the ASC has the facilities and support to safely support it",
-        "Only whether the governing body has approved the technique as part of the surgical scope",
-        "New techniques are automatically approved for credentialed surgeons without additional review",
-      ],
-      correctIndex: 1,
-      explanation:
-        "Privilege requests for new or specific techniques require evaluation of: the physician's specific training and documented experience with the technique, clinical outcomes (case logs), and whether the ASC's facilities, equipment, staffing, and support services can safely support the technique.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "Privileges must be specific and competency-based. A general surgeon may be credentialed but not necessarily competent in a specific new laparoscopic technique. The credentials committee must evaluate training and experience, and the governing body must also determine whether the organization can safely support the new service.",
-        whyWrong: {
-          A: "Board certification establishes specialty competency generally — not competency in a specific technique.",
-          C: "Governing body approval of the service scope and credentials committee review of individual competency are both required.",
-          D: "New techniques always require specific review — there is no automatic approval for credentialed surgeons.",
-        },
-        operationalContext:
-          "Create a new privilege request form requiring: specific case volume logs (last 24 months), training documentation (fellowship, course completion, preceptorship), letters of reference attesting to the specific technique, and a clinical quality assessment. Present to credentials committee and governing body for approval.",
+          "Document role designations in your organizational policies or job descriptions. Even if one person fills both roles, the responsibilities of each role should be clearly described so the person knows what both functions require and can demonstrate those functions during a survey.",
       },
     },
   ],

@@ -3,607 +3,493 @@ import type { Level } from "./schema";
 export const ascCpvLevel: Level = {
   id: "asc_cpv",
   module: "asc",
-  name: "Clinical Privileges",
-  description: "AAAHC v44 CPV — delineation of clinical privileges, governing body approval, competency-based privileging, and scope of practice management.",
+  name: "Credentialing & Privileging",
+  description: "AAAHC v44 CPV — governing body accountability for credentialing and privileging, initial and reappointment applications, primary source verification, NPDB, and ongoing monitoring.",
   icon: "ClipboardCheck",
   color: "hsl(220, 60%, 45%)",
   requiredScore: 0,
   chapterSummary: {
-    chapterTitle: "CPV: Clinical Privileges",
+    chapterTitle: "CPV: Credentialing and Privileging",
     plainLanguageSummary:
-      "The CPV category establishes requirements for defining, granting, and managing the specific clinical activities that each health care professional is authorized to perform at the ASC. Privileges must be competency-based, individually tailored, and granted by the governing body. The scope of procedures a practitioner may perform is determined by their verified training, education, and demonstrated competence — not simply by their license or specialty designation.",
+      "The CPV category establishes requirements for how an ASC verifies the qualifications of its medical and dental staff and grants them specific clinical privileges. The governing body is ultimately responsible for credentialing and privileging. Every practitioner must complete a formal application, provide evidence of training and current competence, and submit to primary or secondary source verification before privileges are granted. Reappointment occurs at least every three years with the same rigor. Ongoing monitoring of licensure, DEA registration, and board certification keeps credentials current between formal reviews.",
     keyOperationalExpectations: [
-      "Each privileged practitioner has a delineation of privileges (DOP) specific to them and to this organization.",
-      "Privileges are granted by the governing body based on verified competency — not by license alone.",
-      "Privileges are procedure-specific and limited to what the organization can safely support.",
-      "Temporary or provisional privileges follow a defined policy.",
-      "Privileges are reviewed and renewed at the same interval as reappointment (typically every two years).",
-      "Privilege modifications (restriction, suspension, revocation) have defined processes and are reported to NPDB when required.",
+      "The governing body has defined, uniform criteria for initial appointment and reappointment of medical/dental staff.",
+      "Each application for privileges includes verified evidence of training, experience, current competence, current license, NPDB query, and DEA registration (if applicable).",
+      "Applicants provide written attestation on their application addressing liability history, licensure actions, adverse privilege history, federal sanctions, criminal history, and health status.",
+      "Primary or secondary source verification is conducted for each application before privileges are granted.",
+      "Reappointment occurs at least every three years, with peer review results incorporated into the decision.",
+      "Date-sensitive information — licensure, DEA, board certification — is monitored on an ongoing basis.",
     ],
     commonRiskPoints: [
-      "A practitioner performs a procedure not listed on their delineation of privileges.",
-      "Privileges were granted as a blanket 'specialty privileges' rather than procedure-specific privileges.",
-      "A practitioner performing a new technique has not been separately privileged for that technique.",
-      "Temporary privileges were granted without a documented governing body process.",
+      "Credentials were approved solely because a hospital granted the same privileges — no independent ASC verification.",
+      "NPDB was queried at initial appointment but not at reappointment.",
+      "Peer review results are maintained separately and not brought into the reappointment decision.",
+      "Licensure and DEA expiration dates are not tracked between formal reappointment cycles.",
     ],
-    aaahcStandards: ["CPV.100", "CPV.110", "CPV.120", "CPV.130", "CPV.140", "CPV.150"],
+    aaahcStandards: ["CPV.100", "CPV.130", "CPV.140", "CPV.150", "CPV.160", "CPV.170", "CPV.180", "CPV.190", "CPV.200", "CPV.210"],
   },
   studyMaterial: [
     {
-      title: "CPV.100 / CPV.110 — What Clinical Privileges Are and Who Grants Them",
+      title: "CPV.100 — Governing Body Accountability for Credentialing and Privileging",
       content:
-        "Clinical privileges define the specific health care services that each individual health care professional is authorized to provide at the organization. Privileges are separate from — and narrower than — a practitioner's professional license. The governing body grants privileges based on verified credentials, training, and demonstrated competence. CPV.100 requires that privileges are limited to those services the organization can safely support with its facilities, equipment, and staff. No practitioner may perform services beyond their granted privileges.",
+        "The medical and dental staff are accountable to the governing body through a credentialing, privileging, and reappointment process for which the governing body is ultimately responsible. CPV.100 requires that the governing body: (1) has defined specific criteria for initial appointment and reappointment, (2) applies those criteria uniformly to all applicants, (3) processes applications according to timeframes specified in bylaws or policies, and (4) maintains its own independent credentialing and privileging process. Privileges may not be approved solely because another organization — such as a hospital — has already approved them. That other organization's status may be considered, but it does not substitute for the ASC's own independent verification.",
       keyPoint:
-        "Privileges = what you may do HERE, with THIS organization's capabilities. A license says you CAN do something professionally; a privilege says you MAY do it at this specific facility.",
+        "The governing body is responsible for credentialing and privileging — not the administrator, medical director, or an outside organization. Hospital privileges do not automatically transfer. The ASC must have its own independent process.",
     },
     {
-      title: "CPV.120 — Competency-Based Delineation of Privileges",
+      title: "CPV.130 — Approved Processes for Credentialing, Privileging, and Reappointment",
       content:
-        "Each privileged practitioner must have a delineation of privileges (DOP) — a specific list of procedures they are authorized to perform at the organization. The DOP is based on documented evidence of training, education, and demonstrated competence for each listed procedure. Blanket 'specialty privileges' without specific procedure listing are not sufficient. For practitioners who perform a new procedure or technique not previously included in their privileges, a separate privilege request and competency verification is required before they perform that procedure.",
+        "CPV.130 requires the governing body to have formally approved written processes covering: (1) credentialing, (2) initial appointment, (3) reappointment, (4) granting of clinical privileges, (5) suspension or termination of clinical privileges, and (6) appeals of decisions to suspend or terminate privileges. All these processes must be consistent with applicable state law. These are not informal understandings — they must be documented in bylaws, policies, or procedures that the governing body has reviewed and approved.",
       keyPoint:
-        "A DOP must be procedure-specific. 'General surgery privileges' is not a compliant DOP — 'laparoscopic appendectomy,' 'open hernia repair,' 'laparoscopic cholecystectomy' are.",
+        "Every phase of the credentialing and privileging cycle must have a governing body-approved written process: initial credentialing, appointment, reappointment, granting privileges, suspending privileges, and the appeal process.",
     },
     {
-      title: "CPV.130 — Temporary Privileges",
+      title: "CPV.140 — Initial Application: Evidence of Competence, License, NPDB, and DEA",
       content:
-        "Organizations may grant temporary privileges in defined circumstances — for example, to a new practitioner while the full credentialing and privileging process is completed, or to cover a patient care emergency need. Temporary privileges must be granted through a defined, documented process with specific governing body authorization. They should have a defined duration and scope. The governing body or a designated authority (e.g., the governing body chair or medical director, per bylaws) must formally grant temporary privileges. A practitioner performing services with temporary privileges must still meet basic competency requirements for those privileges.",
+        "A formal application for initial staff privileges must require the applicant to provide sufficient evidence of: training, experience, and current documented competence for the procedures requested; peer references documenting current competence; a current state license; NPDB information; DEA registration information (if applicable); and proof of current medical liability coverage meeting governing body requirements (if applicable). 'Current documented competence' is key — training completed years ago without evidence of ongoing practice is not sufficient. Peer references confirm that individuals who have observed the applicant's practice can attest to their current ability.",
       keyPoint:
-        "Temporary privileges are not informal — they require a defined process, a defined scope, and documented governing body authorization. An informal 'you can start seeing patients while we finish your paperwork' is not compliant.",
+        "The initial application must capture five categories: (1) training/experience/competence, (2) peer references for current competence, (3) current state license, (4) NPDB, (5) DEA (if applicable). All five must be addressed.",
     },
     {
-      title: "CPV.140 — Privilege Restriction, Suspension, and Revocation",
+      title: "CPV.150 / CPV.160 — Written Attestation and Application Accuracy",
       content:
-        "When clinical performance concerns arise, the organization must have a defined process for modifying, restricting, suspending, or revoking a practitioner's clinical privileges. The process must include: due process protections (notice, opportunity to be heard), appropriate documentation, and — when required — reporting to the NPDB. Under NPDB reporting requirements, adverse privilege actions taken based on clinical performance (not resignation or administrative reasons) must be reported within 15 days. Failure to report required events to the NPDB is itself a compliance failure.",
+        "Beyond credentials, the initial application requires written attestation from the applicant addressing: professional liability claims history and any refusal or cancellation of coverage; any licensure revocation, suspension, voluntary relinquishment, probationary status, or limitations; complaints or adverse action reports with professional societies or licensure boards; any denial, suspension, limitation, termination, or nonrenewal of privileges at any healthcare entity; federal actions or sanctions including DEA and Medicare/Medicaid; conviction of any criminal offense (other than minor traffic violations); and any physical, behavioral health, or chemical dependency problems that would interfere with providing high-quality care. The application must also include a formal liability release, an attestation to accuracy and completeness, and a dated signature. An incomplete or unsigned application may not be processed.",
       keyPoint:
-        "Adverse privilege actions must follow due process AND — when clinical performance-based and meeting NPDB thresholds — be reported to the NPDB within 15 days. Voluntary resignation to avoid investigation must still be reported if the investigation was related to clinical competence.",
+        "The attestation section requires the applicant to self-disclose seven categories of adverse history. The application must have a liability release, an accuracy attestation, and a dated signature — all three must be present before processing begins.",
     },
     {
-      title: "CPV.150 — Privileges for Advanced Practice Providers",
+      title: "CPV.170 — Primary and Secondary Source Verification",
       content:
-        "Physician assistants, advanced practice registered nurses (APRNs), and other advanced practice providers must be individually privileged in the same manner as physicians. Their privileges must reflect both their scope of practice under state law AND the specific procedures/services the organization can safely support. Supervisory or collaborative agreement requirements (where state law requires them) must be documented, and the supervising physician's privileges must be sufficient to support the services the APP performs under their supervision.",
+        "Upon receipt of a completed and signed application, primary or secondary source verification of credentials must be conducted according to the organization's written procedures. 'Primary source verification' means confirming information directly with the source that issued the credential — for example, verifying licensure through the state licensing board's online portal, not by accepting a copy of the license from the applicant. Organizations may use a Credentials Verification Organization (CVO) that is accredited or certified by a nationally recognized accreditation body; if so, the CVO must perform primary source verification. The same items required on the initial application (license, training, competence, NPDB, DEA) are the items that must be verified through primary or secondary sources.",
       keyPoint:
-        "APPs are individually privileged — not just supervised. Their DOP must be procedure-specific, and the supervising physician's privileges must encompass the APP's privileged services.",
+        "Primary source verification means going to the issuing authority directly — state licensing board for licensure, NPDB for adverse actions, specialty board for board certification. Copies provided by the applicant are not primary source verification.",
+    },
+    {
+      title: "CPV.180 / CPV.190 — Reappointment Every Three Years",
+      content:
+        "Members of the medical and dental staff must apply for reappointment at least every three years (or more frequently if required by state law or organizational policy). The reappointment application must include at minimum: updated personal information, completed attestation questions (the same attestation categories as initial appointment — covering adverse actions, licensure changes, health status, etc.), and a dated signature. Upon receipt of the completed reappointment application, primary or secondary source verification must again be conducted — the same elements that were verified at initial appointment must be re-verified. Reappointment is not a rubber stamp — it is a full credentialing review of current status.",
+      keyPoint:
+        "Reappointment is required at least every three years and includes a formal application with attestation plus primary/secondary source re-verification. Everything verified at initial appointment must be re-verified at reappointment.",
+    },
+    {
+      title: "CPV.200 — Governing Body Decision-Making with Peer Review Integration",
+      content:
+        "The governing body makes final appointment and reappointment decisions following review of the applications or based on recommendations from an internal delegate (such as a Medical Director or Credentials Committee). If the governing body delegates initial review, documentation of the delegation must be present. Critically, peer references and/or peer review activities and results — completed in accordance with AAAHC quality standards — must be incorporated into the appointment and reappointment decision process. At initial appointment, peer references provide this function. At reappointment, the organization's own peer review data (case reviews, quality monitoring results) serve this role. All governing body appointment and reappointment decisions must be documented.",
+      keyPoint:
+        "The governing body makes the final appointment and reappointment decisions. Peer review data MUST be incorporated — at initial appointment through peer references, at reappointment through the organization's internal peer review results. This is the QUA-CPV linkage.",
+    },
+    {
+      title: "CPV.210 — Ongoing Monitoring of Date-Sensitive Credentialing Information",
+      content:
+        "Between formal reappointment cycles, the organization must monitor and document the currency of date-sensitive credentialing and privileging information on an ongoing basis — at minimum at expiration, appointment, and reappointment. This ongoing monitoring applies to: state licensure (which may expire before the three-year reappointment cycle), DEA registration (which has its own renewal cycle), and board certifications (which may require Maintenance of Certification activities or periodic renewal). If a licensure or DEA expiration passes without renewal and the practitioner continues to practice, both the practitioner and the organization are in violation. Organizations may use NPDB Continuous Query as an acceptable option for ongoing monitoring.",
+      keyPoint:
+        "Reappointment every three years is not enough — licensure, DEA, and board certifications must be tracked on an ongoing basis between cycles. An expired license that is not caught before the next reappointment is a failure of CPV.210.",
     },
   ],
   questions: [
     {
       id: "asc_cpv_01",
       question:
-        "An orthopedic surgeon's delineation of privileges lists 'orthopedic surgery.' The surgeon performs a total shoulder arthroplasty that is not explicitly listed. What is the compliance issue?",
+        "An ASC approves a new surgeon's clinical privileges solely because the surgeon is credentialed at a nearby hospital with the same procedures. What does CPV.100 require instead?",
       options: [
-        "No issue — 'orthopedic surgery' encompasses all orthopedic procedures",
-        "The procedure must be specifically listed on the delineation of privileges — blanket specialty descriptions are not sufficient",
-        "The surgeon is licensed to perform orthopedic procedures, so no privilege specificity is needed",
-        "Privileges are implicit for board-certified surgeons",
+        "Hospital credentials are sufficient — the ASC may rely on them without its own verification",
+        "The ASC must conduct its own independent credentialing and privileging process — hospital status may be considered but does not substitute for the ASC's review",
+        "The surgeon may begin practicing while the ASC completes its credentialing process",
+        "CPV.100 only applies to new graduates — experienced surgeons may use privilege reciprocity",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.120 requires procedure-specific delineation of privileges. A blanket 'orthopedic surgery' designation is not a specific privilege listing. Total shoulder arthroplasty must be listed as a specific procedure on the surgeon's DOP before it can be performed at the facility.",
+        "CPV.100 explicitly states that privileges may not be approved solely on the basis that another organization has approved them. The ASC must have its own independent credentialing and privileging process. Another institution's status may be included in the governing body's consideration, but it does not substitute for independent verification.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Procedure-specific privileges ensure that the organization has verified the surgeon's competence specifically for each procedure — not just for their specialty broadly. Total shoulder arthroplasty requires specific training and implant experience that a general orthopedic surgeon may not have.",
+          "Each accredited organization is independently responsible for verifying the credentials and competence of its medical staff. A hospital's approval reflects that hospital's capabilities, patient population, and review process — not necessarily appropriate for the ASC's services and setting.",
         whyWrong: {
-          A: "Blanket specialty descriptions do not satisfy CPV.120 specificity requirements.",
-          C: "Licensure authorizes practice at the professional level — privileges authorize specific procedures at a specific facility.",
-          D: "Board certification indicates specialty training, not specific procedure competency at this facility.",
+          A: "Relying solely on another organization's approval is explicitly prohibited by CPV.100.",
+          C: "The practitioner may not begin practicing until the ASC's own credentialing and privileging process is complete and the governing body approves privileges.",
+          D: "CPV.100 applies to all initial appointments regardless of the practitioner's experience level.",
         },
         operationalContext:
-          "Rebuild delineation of privileges forms to list specific procedures with CPT codes where possible. Require surgeons to request each procedure specifically, with supporting documentation of training and case volume.",
+          "When a practitioner holds hospital privileges, request a copy of their credentials file as a starting point — but conduct your own primary source verification for each required element. Document that you have done so independently.",
       },
     },
     {
       id: "asc_cpv_02",
       question:
-        "Under CPV.100, what limits the privileges the governing body may grant to a practitioner?",
+        "Which of the following is a required element on a formal initial application for staff privileges under CPV.140?",
       options: [
-        "Only the practitioner's professional license",
-        "Both the practitioner's verified competence AND what the organization can safely support with its facilities, equipment, and staff",
-        "Only what the practitioner requests on their privilege form",
-        "The privileges granted at the practitioner's hospital affiliation",
+        "A letter from the practitioner's specialty society endorsing their application",
+        "Information from the National Practitioner Data Bank (NPDB)",
+        "A copy of the practitioner's most recent federal tax return",
+        "A letter from the practitioner's malpractice insurer rating their risk category",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.100 requires that privileges are limited to services the organization can safely support. A surgeon may be competent to perform thoracic surgery, but if the ASC lacks the necessary intensive care support, the privilege should not be granted regardless of the surgeon's competence.",
+        "CPV.140 requires NPDB information on every initial application for staff privileges. The NPDB captures malpractice payment history, adverse licensure actions, and privilege actions reported by other organizations — information the applicant might not self-disclose.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Privilege granting is bidirectional: the practitioner must be competent AND the organization must be capable of supporting the service safely. Both conditions must be met before privileges are granted.",
+          "The NPDB query reveals adverse actions that the practitioner may omit from their application. Querying the NPDB at initial appointment is a non-negotiable CPV.140 requirement.",
         whyWrong: {
-          A: "License alone is not sufficient — competency verification and organizational capability are also required.",
-          C: "Practitioners may request more than the organization can support — the governing body must assess both dimensions.",
-          D: "Privileges at a hospital reflect that hospital's capabilities — they do not automatically transfer to the ASC.",
+          A: "Specialty society endorsement letters are not a required CPV.140 element.",
+          C: "Tax returns are not a credentialing requirement.",
+          D: "Current liability coverage and claims history are required, but a risk rating letter from the insurer is not the specified documentation.",
         },
         operationalContext:
-          "During privilege review, ask two questions: (1) Is the practitioner trained and competent for this procedure? (2) Can this facility safely support this procedure? Grant privileges only when both answers are yes.",
+          "Build the NPDB query into your initial credentialing checklist as a required, non-waivable step. File the query result — positive or negative — in the credentials file. Track the query date so you know when to query again at reappointment.",
       },
     },
     {
       id: "asc_cpv_03",
       question:
-        "A surgeon requests privileges for robotic-assisted laparoscopic surgery — a technique they recently completed training in but have limited independent case experience with. What should the credentials committee consider?",
+        "A surgeon's application for initial privileges discloses two malpractice claims settled in the past five years. Under CPV.150, what must the application address about these claims?",
       options: [
-        "Approve the privilege based on the training completion certificate alone",
-        "Evaluate case volume and competency documentation for robotic-assisted surgery specifically, and consider provisional privileges with mentored cases if experience is limited",
-        "Deny the privilege until the surgeon has five years of experience",
-        "Approve based on the surgeon's general laparoscopic surgery privileges",
+        "Claims history is not part of the formal application — only the NPDB covers this",
+        "The application must include the professional liability claims history as part of the written attestation",
+        "Only claims that resulted in judgments (not settlements) must be disclosed",
+        "Claims from more than three years ago are excluded from attestation requirements",
       ],
       correctIndex: 1,
       explanation:
-        "New techniques require specific competency evaluation. If experience is limited, provisional or conditional privileges — with proctored cases and a defined competency assessment pathway — protect patients while allowing the surgeon to develop the necessary experience.",
+        "CPV.150 requires the application to include professional liability claims history as part of the written attestation — specifically claims history and any refusal or cancellation of professional liability coverage. This is a self-disclosure requirement separate from and in addition to the NPDB query.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Competency-based privileging means evaluating actual demonstrated ability — not just training completion. Provisional privileges with proctoring are a legitimate mechanism for new procedures when training is complete but independent case volume is limited.",
+          "CPV.150 attestation and CPV.140 NPDB query work together — the attestation captures self-disclosed information while the NPDB captures externally reported adverse actions. Both are required. Settlements appear on NPDB reports if payments were made.",
         whyWrong: {
-          A: "Training certificates establish training but not independent competency — case volume and supervision records are needed.",
-          C: "A blanket five-year requirement is not a competency-based standard.",
-          D: "Robotic-assisted surgery requires specific training separate from open or conventional laparoscopic surgery.",
+          A: "Claims history attestation is explicitly required by CPV.150 as part of the application itself, not only through NPDB.",
+          C: "CPV.150 does not distinguish between settled and judged claims.",
+          D: "No time limitation on claims history disclosure is specified in CPV.150.",
         },
         operationalContext:
-          "Establish a new technique privilege pathway: (1) training documentation, (2) case log minimum (e.g., 10 proctored cases), (3) proctor assessment of competency, (4) credentials committee review, (5) governing body approval for independent privileges.",
+          "Design your application form to have a dedicated attestation section with a separate question for each CPV.150 disclosure category. A practitioner who leaves a section blank has submitted an incomplete application that cannot be processed.",
       },
     },
     {
       id: "asc_cpv_04",
       question:
-        "A new surgeon joins the ASC. The administrator grants immediate privileges so they can start seeing patients while the credentials committee meets next month. What CPV requirement is violated?",
+        "A completed and signed application for clinical privileges is received. Under CPV.170, what must happen before privileges may be granted?",
       options: [
-        "Nothing — the administrator has authority to grant temporary privileges",
-        "Temporary privileges must be granted through a defined process with governing body authorization — administrator discretion alone is not compliant",
-        "Temporary privileges may be granted by the administrator for up to 90 days",
-        "Only credentialing is required before practice — privileges may be granted later",
+        "The governing body may grant privileges based on the application alone if the practitioner is board certified",
+        "Primary or secondary source verification of credentials must be conducted",
+        "A 30-day waiting period is required before verification begins",
+        "Verification is only required if the NPDB query returns adverse reports",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.130 requires that temporary privileges are granted through a defined, documented process with specific governing body (or governing body-delegated authority) authorization. An administrator granting privileges unilaterally, without a governing body process, is not compliant.",
+        "CPV.170 requires primary or secondary source verification upon receipt of a completed and signed application. Verification is not optional — it must be conducted for every application regardless of the practitioner's board certification status or NPDB result.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Privilege granting — even temporary — is a governing body function. The bylaws may delegate emergency temporary privilege authority to the medical director or governing body chair, but this must be pre-established in writing.",
+          "Primary source verification is what distinguishes a credentialing process from a document collection process. The standard specifically requires verification to occur after the completed and signed application is received, before privileges are granted.",
         whyWrong: {
-          A: "The administrator has no authority to grant clinical privileges — that is a governing body function.",
-          C: "90-day administrator authority is not established in CPV standards.",
-          D: "Both credentialing AND privileging must be completed before the practitioner provides services.",
+          A: "Board certification is one credential that must itself be primary source verified — it does not eliminate the need for verification of other elements.",
+          C: "No waiting period is specified in CPV.170 — verification should begin promptly.",
+          D: "Verification is a universal requirement, not contingent on adverse NPDB findings.",
         },
         operationalContext:
-          "Establish a temporary privilege policy in the bylaws that authorizes a specific officer (e.g., the governing body chair or medical director) to grant defined temporary privileges when: (1) a minimum credential threshold is verified, (2) a clinical need exists, and (3) formal governing body ratification will occur at the next meeting.",
+          "Use state licensing board online portals, ABMS specialty board lookup (certificationmatters.org), and the NPDB to conduct and document verification. Print and date each verification result. File in the credentials record.",
       },
     },
     {
       id: "asc_cpv_05",
       question:
-        "A physician assistant (PA) at the ASC assists with surgical procedures. Under CPV.150, what must be in place?",
+        "A surgeon's reappointment is due. The credentials committee reviews the license and NPDB query but does not include any peer review data in its deliberations. What CPV standard is not satisfied?",
       options: [
-        "Only the supervising physician's privileges are required — the PA's privileges are covered by the supervisory agreement",
-        "The PA must have their own individually delineated privileges, and the supervising physician's privileges must encompass the services the PA provides",
-        "PAs are not required to be individually privileged if they work under direct supervision",
-        "PA privileges are determined solely by state law — the governing body has no role",
+        "Peer review data belongs only in the quality committee — it has no role in reappointment",
+        "CPV.200 requires peer references and/or peer review results to be incorporated into the appointment and reappointment decision process",
+        "Peer review data is only required for reappointment when the practitioner has had adverse quality events",
+        "CPV.200 only applies to initial appointment, not reappointment",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.150 requires APPs including PAs to be individually privileged. The supervising physician's privileges must also encompass the PA's privileged services — ensuring the supervisory relationship is clinically appropriate.",
+        "CPV.200 explicitly requires that peer references and/or peer review activities and results are incorporated into the appointment and reappointment decision process. At reappointment, the organization's internal peer review results serve this function. The credentials and quality processes must intersect — not remain in separate silos.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Individual privileging of APPs ensures that the ASC has verified the PA's specific competencies — not just assumed them from the supervisory relationship. The supervising physician alignment requirement prevents a situation where the PA performs procedures the supervising physician cannot legally or clinically supervise.",
+          "CPV.200 closes the loop between quality and credentialing. A surgeon who has performed 50 procedures with three documented quality concerns during the appointment period cannot be reappointed without the credentials committee knowing about those concerns.",
         whyWrong: {
-          A: "Supervisory agreement alone does not constitute individual privileging for the PA.",
-          C: "Direct supervision does not eliminate the individual privilege requirement.",
-          D: "State law establishes the scope of practice — the governing body still determines what specific services the PA may provide at this facility within that scope.",
+          A: "CPV.200 specifically requires peer review data to be incorporated into the reappointment decision — the quality committee's findings must reach the credentials and governing body.",
+          C: "Peer review data incorporation is a universal reappointment requirement, not contingent on known adverse events.",
+          D: "CPV.200 applies to both initial appointment (peer references) and reappointment (peer review results).",
         },
         operationalContext:
-          "Create a PA/APP-specific delineation of privileges form listing the procedures the APP may perform, assisted procedures, and any supervision requirements. Document the supervising physician's corresponding privileges for each APP privilege listed.",
+          "Create a reappointment packet template with a required section for peer review summary. The quality coordinator must complete this section before the credentials committee can finalize its reappointment recommendation.",
       },
     },
     {
       id: "asc_cpv_06",
       question:
-        "A surgeon's privileges are summarily suspended due to a patient safety concern. Under CPV.140, what two actions must occur?",
+        "Under CPV.180, how frequently must medical staff members apply for reappointment?",
       options: [
-        "The suspension is kept confidential and no reporting is required",
-        "The practitioner must receive notice and an opportunity to be heard (due process), and — if the suspension meets NPDB reporting thresholds — it must be reported to the NPDB within 15 days",
-        "The surgeon must be terminated immediately from all ASC relationships",
-        "The state medical board must be notified before any suspension takes effect",
+        "Every year",
+        "At least every three years",
+        "Every five years, consistent with hospital reappointment cycles",
+        "Only when there is a change in the practitioner's scope of practice",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.140 requires due process protections for adverse privilege actions (notice + opportunity to be heard) AND NPDB reporting when required thresholds are met. Summary suspension for immediate patient safety protection is permissible, but due process must still follow, and NPDB reporting obligations apply.",
+        "CPV.180 requires reappointment at least every three years, or more frequently if prevailing laws, regulations, or organizational policies require it. Some states require more frequent reappointment — the organization must follow whichever interval is more stringent.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Due process protects practitioners from arbitrary action. NPDB reporting protects future patients by ensuring the data bank has a complete record of clinical performance-based adverse actions. Both are independently required.",
+          "Three years is the maximum interval between formal reappointments under CPV.180. Organizations may require more frequent reappointment — but not less.",
         whyWrong: {
-          A: "NPDB reporting obligations cannot be waived by keeping the suspension confidential.",
-          C: "Termination may follow a suspension, but suspension and termination are separate actions with different due process and reporting requirements.",
-          D: "State board notification may be required in some jurisdictions, but CPV.140 does not require prior state board notification before a summary suspension.",
+          A: "Annual reappointment is more frequent than required but would satisfy CPV.180 if the organization chooses this interval.",
+          C: "Five-year intervals do not meet the three-year maximum required by CPV.180.",
+          D: "Reappointment is time-based, not event-triggered — it occurs at defined intervals regardless of scope changes.",
         },
         operationalContext:
-          "Maintain a privileging action policy that defines: grounds for summary suspension, immediate due process notification steps, the hearing process, the NPDB reporting review checklist (does this meet reporting thresholds?), and a 15-day reporting calendar from the date of action.",
+          "Maintain a reappointment calendar with all practitioners listed and their reappointment due dates. Send 90-day advance notices to practitioners and initiate the NPDB query at the same time. Never allow a practitioner to practice beyond their reappointment date without a formal temporary privilege authorization.",
       },
     },
     {
       id: "asc_cpv_07",
       question:
-        "At reappointment, a surgeon's delineation of privileges lists several procedures they have not performed at the ASC in the past two years. What should the credentials committee do?",
+        "A physician assistant's (PA) medical license expires during their current appointment period — six months before their scheduled reappointment. Under CPV.210, what should the organization do?",
       options: [
-        "Automatically renew all listed privileges — the surgeon's license is still valid",
-        "Review whether privileges for procedures not performed should be renewed or allowed to lapse — competency may be difficult to verify without recent case volume",
-        "Expand privileges to include additional procedures the surgeon has not performed",
-        "Renewal decisions are the medical director's responsibility, not the credentials committee's",
+        "The expired license will be addressed at the scheduled reappointment — no action needed now",
+        "The organization must monitor date-sensitive credentials like licensure on an ongoing basis and take action when the license expires — the practitioner may not practice on an expired license",
+        "The PA should self-notify the organization when the license is renewed",
+        "Only physicians require ongoing licensure monitoring between reappointments",
       ],
       correctIndex: 1,
       explanation:
-        "Competency-based privileging requires ongoing verification of current competency. Privileges for procedures not performed in two or more years may reflect lost or diminished competency. The credentials committee should review case volume and consider whether to renew, allow to lapse, or require re-demonstration of competency.",
+        "CPV.210 requires ongoing monitoring of date-sensitive credentialing information — at minimum at expiration, appointment, and reappointment. Licensure expiration must be tracked and addressed immediately — the organization cannot wait for the next scheduled reappointment to discover an expired license.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The phrase 'use it or lose it' applies to procedural privileges. A surgeon who has not performed a procedure in two years may not be as safe as one who performs it regularly. The credentials committee must use judgment about current competency — not just about credentials at the time of initial granting.",
+          "CPV.210 was designed precisely to address the gap between three-year reappointment cycles. Licenses expire annually in most states. The organization must have a tracking system that catches expirations as they occur — not at the next formal review.",
         whyWrong: {
-          A: "License validity does not establish current procedural competency for specific techniques.",
-          C: "Expanding privileges at reappointment without new competency documentation is the opposite of the required approach.",
-          D: "Credentials committee responsibility — not medical director discretion alone — applies to reappointment decisions.",
+          A: "Allowing a practitioner to practice on an expired license violates CPV.210 and most state practice acts.",
+          C: "Self-notification by the practitioner is not a compliant monitoring system — the organization must have its own tracking.",
+          D: "CPV.210 applies to all licensed practitioners including PAs, not only physicians.",
         },
         operationalContext:
-          "For each procedure on the DOP at reappointment, document the case volume during the appointment period. For privileges with zero or minimal utilization, request documentation of competency maintenance (continuing education, simulation, or cases at another facility). Allow privileges to lapse rather than renew them without evidence of current competency.",
+          "Build a master credentialing expiration tracker with automated alerts 90, 60, and 30 days before each practitioner's license, DEA, and board certification expiration. The credentialing coordinator should verify renewal documentation before the expiration date.",
       },
     },
     {
       id: "asc_cpv_08",
       question:
-        "An anesthesiologist at the ASC wants to use a new regional nerve block technique. Must a separate privilege be granted?",
+        "The governing body of an ASC wants to delegate the initial review of credentials applications to the Medical Director. Under CPV.200, what must be present if this delegation occurs?",
       options: [
-        "No — anesthesia privileges cover all anesthesia techniques",
-        "Yes — a new technique not previously included in the anesthesiologist's privileges requires a new privilege request with competency documentation",
-        "Only if the technique involves controlled substances",
-        "The governing body approves anesthesia techniques broadly — individual privilege requests are not needed",
+        "Delegation to the Medical Director is not permitted — the governing body must personally review each application",
+        "Documentation of the delegation must be present, and the governing body still makes the final appointment and reappointment decisions",
+        "Once delegated, the Medical Director has full governing body authority for credentialing decisions",
+        "Delegation is only permitted for reappointment applications, not initial appointments",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.120 requires privileges for specific techniques. A new regional nerve block technique not previously listed in the anesthesiologist's DOP requires a new privilege request, competency verification (training, case log, or supervised case), and governing body approval before clinical use.",
+        "CPV.200 permits the governing body to delegate initial review of applications to an internal delegate (such as the Medical Director or a Credentials Committee), provided the delegation is documented. However, the governing body retains final decision-making authority for appointment and reappointment — delegation of review, not of the final decision.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "'Anesthesia privileges' as a blanket term is not compliant with CPV.120 specificity requirements. Each technique — general anesthesia, spinal, epidural, specific nerve blocks — should be separately listed and individually verified.",
+          "The governing body remains responsible for credentialing decisions even when it delegates the review function. The Medical Director or committee provides recommendations; the governing body approves or denies.",
         whyWrong: {
-          A: "Blanket 'anesthesia privileges' do not satisfy the specificity requirement of CPV.120.",
-          C: "Controlled substance use is a DEA/regulatory matter — not the determinant of whether a technique privilege is needed.",
-          D: "GOV.270 requires the governing body to approve anesthesia techniques generally, but CPV.120 requires individual practitioner privilege specificity.",
+          A: "CPV.200 explicitly allows delegation of application review — only the final decision must remain with the governing body.",
+          C: "The governing body cannot fully transfer its credentialing decision authority — it may delegate review and recommendation only.",
+          D: "Delegation is equally applicable to both initial and reappointment reviews.",
         },
         operationalContext:
-          "Design the anesthesia DOP form to list specific techniques: general anesthesia (ETT, LMA), spinal anesthesia, epidural, specific nerve blocks (femoral, sciatic, brachial plexus, etc.), monitored anesthesia care, minimal sedation. Grant each individually with documented competency.",
+          "Document the delegation in the governing body bylaws or a formal resolution. The Medical Director or committee should present their recommendations to the governing body in writing; the governing body's vote to approve or deny should be documented in meeting minutes.",
       },
     },
     {
       id: "asc_cpv_09",
       question:
-        "A surgeon who was voluntarily resigned their privileges while under quality review. Must the organization report this to the NPDB?",
+        "An application for initial staff privileges is received. The application form is complete and signed, but the credentials coordinator cannot verify the applicant's medical school education through the school's records because the school closed 20 years ago. Under CPV.170, what is an acceptable approach?",
       options: [
-        "No — voluntary resignation is not a reportable event",
-        "Yes — if the resignation occurred while under investigation related to clinical competence or professional conduct, it must be reported to the NPDB",
-        "Reporting is optional if the resignation was amicable",
-        "Only involuntary suspension or revocation requires NPDB reporting",
+        "The education verification may be skipped since the school no longer exists",
+        "Secondary source verification (through a CVO or accredited verification service that has access to historical records) is acceptable when primary source verification is impossible",
+        "The applicant's self-attestation of their medical school education is sufficient in this case",
+        "A letter from the applicant's residency program confirming the medical degree is always sufficient for primary source verification",
       ],
       correctIndex: 1,
       explanation:
-        "NPDB regulations require reporting when a practitioner's clinical privileges are surrendered or allowed to lapse while under investigation, or in exchange for not conducting an investigation, when the investigation relates to professional competence or conduct. This prevents practitioners from evading the data bank by resigning.",
+        "CPV.170 and AAAHC guidance recognize that primary source verification may not be possible if a source no longer exists or is impossible to verify. In such cases, secondary source verification through an accredited CVO or equivalent verification service that has historical records is acceptable. The organization must document the reason primary source verification could not be obtained.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The NPDB reporting trigger for resignation during investigation was established specifically to close the 'surrender loophole.' Organizations that allow practitioners to resign without reporting escape a reporting obligation the law requires.",
+          "AAAHC standards acknowledge the practical reality that some original credentialing sources no longer exist. Secondary source verification through a reputable CVO that maintains historical records is the recognized alternative.",
         whyWrong: {
-          A: "Voluntary resignation during investigation is a reportable event — the key trigger is the investigation connection.",
-          C: "Amicability of the resignation does not determine NPDB reporting requirements.",
-          D: "Resignation under investigation is a separately enumerated reportable event — it is not limited to formal involuntary actions.",
+          A: "Simply skipping a required verification without documenting why and using an alternative is not compliant.",
+          C: "Applicant self-attestation is not a primary or secondary source — it is the information being verified, not the verification itself.",
+          D: "A residency program can verify the applicant completed their training there, but a residency letter is not primary source verification for the underlying medical degree.",
         },
         operationalContext:
-          "Before accepting a resignation from any practitioner who is under quality review, consult legal counsel to determine NPDB reporting obligations. Document the resignation circumstances and the reporting decision in the credentials file.",
+          "When a primary source is unavailable, document: (1) what source was sought, (2) why it could not be used, (3) what alternative secondary source was used, and (4) what that secondary source confirmed. This documentation protects the organization in a survey.",
       },
     },
     {
       id: "asc_cpv_10",
       question:
-        "A practitioner's privileges are being reviewed for potential restriction due to performance concerns. The practitioner requests a hearing. What must the organization provide under CPV.140?",
+        "A surgeon applies for reappointment. The reappointment application includes updated personal information and a dated signature but does not include the attestation questions addressing adverse actions, licensure changes, and health status. Under CPV.180, what is the status of this application?",
       options: [
-        "An apology and an opportunity to voluntarily resign",
-        "Notice of the concerns, an opportunity to present their case, and a defined appeals process",
-        "A hearing conducted by the state medical board on the organization's behalf",
-        "Due process requirements apply only to revocations — not restrictions",
+        "The application is complete — attestation is only required at initial appointment",
+        "The application is incomplete — attestation questions must be completed at reappointment as well as at initial appointment",
+        "The attestation section can be skipped if the NPDB query is clean",
+        "Only practitioners with prior adverse history must complete the attestation at reappointment",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.140 requires due process for adverse privilege actions. This means: notice of the specific concerns and proposed action, an opportunity for the practitioner to present information and their perspective, and a defined appeals process. The exact mechanism must be described in the organization's bylaws.",
+        "CPV.180 specifies that the reappointment application must include at minimum: updated personal information, completed attestation questions, and a dated signature. Attestation questions at reappointment cover the same categories as initial appointment — they must be completed regardless of the NPDB result or the practitioner's history.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Due process requirements exist to ensure adverse actions are fair, evidence-based, and free from arbitrary discrimination. They protect both practitioners and organizations from legal claims of procedural unfairness.",
+          "Reappointment attestation catches changes that occurred since the last appointment — new malpractice claims, licensure actions in other states, new health conditions. The NPDB captures reported actions, but the attestation may reveal unreported events.",
         whyWrong: {
-          A: "Apology and resignation offer are not due process.",
-          C: "State medical boards conduct separate investigations — due process at the facility level is an internal obligation.",
-          D: "Due process applies to all adverse privilege actions — restrictions, suspensions, and revocations.",
+          A: "Attestation is required at both initial appointment and reappointment under CPV.180.",
+          C: "NPDB results and attestation are complementary, not interchangeable. A clean NPDB does not waive the attestation requirement.",
+          D: "Attestation is a universal reappointment requirement — not limited to practitioners with prior adverse history.",
         },
         operationalContext:
-          "Include a fair hearing and appeal procedures section in the medical staff bylaws. It should specify: how notice is given, who conducts the hearing, what evidence may be presented, the timeline, and how appeals are handled. Consult legal counsel to ensure the process meets state law requirements.",
+          "Use a standardized reappointment application form that mirrors the initial application's attestation section. Date the form the day it is received and confirm all attestation fields are completed before routing to the credentials committee.",
       },
     },
     {
       id: "asc_cpv_11",
       question:
-        "How do clinical privileges differ from a practitioner's license?",
+        "A new anesthesiologist joins the ASC mid-year. Her DEA registration expires in two months. Under CPV.210, what must the organization track?",
       options: [
-        "Licenses are broader; privileges are narrower and specific to the organization's capabilities",
-        "Privileges are broader; licenses are limited to a single specialty",
-        "They are equivalent — both define what a practitioner may do",
-        "Licenses cover hospital settings; privileges cover ambulatory settings",
+        "DEA registration expiration is the anesthesiologist's personal responsibility — the organization has no tracking obligation",
+        "The organization must monitor DEA registration expiration on an ongoing basis and ensure renewal occurs before the registration expires",
+        "DEA registration only needs to be verified at initial appointment and reappointment",
+        "DEA tracking is only required for practitioners who prescribe Schedule II substances",
       ],
-      correctIndex: 0,
+      correctIndex: 1,
       explanation:
-        "A license grants the legal authority to practice a profession within the scope permitted by state law. Clinical privileges are narrower — they define what specific services a practitioner is authorized to provide at a specific organization, based on that organization's verified credentials review and capabilities.",
+        "CPV.210 requires ongoing monitoring of DEA registration (in addition to licensure and board certification) between reappointment cycles. An expired DEA registration means the anesthesiologist may not administer controlled substances — a patient safety and regulatory violation — that the organization must prevent through active tracking.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The scope relationship is: license ≥ privileges. A practitioner's license may allow them to perform a broad range of procedures, but the ASC grants privileges only for those procedures it can safely support and for which the practitioner's competency is verified.",
+          "DEA registrations renew on three-year cycles. An anesthesiologist who allows their DEA registration to lapse cannot legally administer controlled substances. CPV.210 places the monitoring responsibility on the organization, not only on the practitioner.",
         whyWrong: {
-          B: "Privileges are narrower than licenses — not broader.",
-          C: "They are not equivalent — the license is issued by the state; privileges are granted by the organization for specific services at that facility.",
-          D: "Licenses and privileges operate in all healthcare settings — the distinction is scope, not setting.",
+          A: "The organization bears joint responsibility for ensuring practitioners maintain current credentials. CPV.210 is the standard that formalizes this responsibility.",
+          C: "Time-limited credentials like DEA registration must be tracked at expiration, not only at formal reappointment.",
+          D: "DEA monitoring applies to all practitioners who prescribe or administer controlled substances, not only Schedule II.",
         },
         operationalContext:
-          "When explaining privileges to practitioners, use this analogy: 'Your license is your driver's license — it authorizes you to drive. Our privileges are the keys to specific vehicles in our lot — they authorize you to operate specific procedures with our equipment and team.'",
+          "Add DEA registration expiration dates to your credentialing expiration tracker alongside license expiration dates. Set alerts 90 days before expiration. Verify renewal documentation before the expiration date.",
       },
     },
     {
       id: "asc_cpv_12",
       question:
-        "An APRN at the ASC performs pre-anesthesia assessments within their scope of practice. What must the ASC's privilege system document?",
+        "The governing body of a small ASC consists of two physician-owners. One physician applies for reappointment. Under CPV, what must be considered to avoid a conflict-of-interest problem in the reappointment decision?",
       options: [
-        "Only the supervising anesthesiologist's privileges — the APRN's work is covered by supervision",
-        "The APRN's individually delineated privileges including pre-anesthesia assessment, and the supervising anesthesiologist's corresponding privileges",
-        "APRNs performing assessments are exempt from privilege requirements if they hold a DNP degree",
-        "State authorization for APRN practice is sufficient — no organizational privilege is needed",
+        "Physician-owners are exempt from formal reappointment requirements",
+        "When the governing body is too small or has conflicts of interest, AAAHC standards note that solo providers and small groups may require review by an outside provider to ensure objectivity",
+        "The other physician-owner may evaluate and approve the reappointment without any external review",
+        "Governing body members do not require credentialing because they are owners",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.150 requires individual privileges for APRNs performing clinical services. The supervising physician's or anesthesiologist's privileges must also cover the activities being supervised. Both conditions — individual APP privilege and supervisor privilege alignment — must be met.",
+        "AAAHC guidance under CPV.200 notes that for solo providers, because a separate physician cannot serve as an internal peer reviewer, review by an outside provider is required. The same principle applies when conflicts of interest prevent objective internal review. External review protects both the quality of the credentialing process and the organization.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Individual APRN privileges ensure competency verification at the organizational level. Supervisor alignment ensures the supervisory relationship is clinically appropriate — a CRNA cannot supervise an APRN for services outside the CRNA's own competence and privileges.",
+          "The objectivity of the credentialing and peer review process is fundamental to its purpose. When internal review cannot be objective due to conflict of interest or insufficient staff, external peer review is the recognized solution.",
         whyWrong: {
-          A: "Supervisory coverage does not substitute for individual APRN privileges.",
-          C: "Advanced degrees do not exempt practitioners from privilege requirements.",
-          D: "State authorization defines the legal scope — organizational privileges define the facility-specific scope.",
+          A: "Physician-owners are subject to the same credentialing and reappointment requirements as all medical staff members.",
+          C: "A single physician-owner reviewing their co-owner partner creates an obvious conflict of interest that does not satisfy the independence required for credentialing.",
+          D: "Ownership of the organization does not exempt individuals from the credentialing and reappointment process.",
         },
         operationalContext:
-          "Add all APRNs and PAs to the privileging system with their own DOP forms. At reappointment, confirm the supervising physician's DOP still covers each activity listed on the APP's DOP.",
+          "For small ASCs where all governing body members are also practitioners under review, establish a relationship with an external peer review organization or a hospital peer review committee that can provide objective outside review.",
       },
     },
     {
       id: "asc_cpv_13",
       question:
-        "What is the governing body's role in the clinical privileging process?",
+        "During an AAAHC survey, the surveyor asks to see the credentials file for a contracted CRNA who provides anesthesia services. The administrator says the CRNA is employed by an anesthesia group that handles their own credentialing. Under CPV, what is the compliance issue?",
       options: [
-        "The governing body monitors privileges but does not formally approve them",
-        "The governing body grants or denies clinical privileges based on the credentials committee's recommendation",
-        "Privileges are granted by the medical director on behalf of the governing body",
-        "The governing body only reviews adverse privilege actions — routine privilege granting is delegated to the credentials committee",
+        "No issue — contracted practitioners are credentialed by their employer, not the ASC",
+        "The ASC must have its own independent credentialing and privileging process for all practitioners providing services at the facility, including contracted CRNAs",
+        "CRNAs do not require the same credentialing as physicians — only physician credentials are reviewed at the ASC level",
+        "Contracted practitioners are credentialed at reappointment only, not at initial appointment",
       ],
       correctIndex: 1,
       explanation:
-        "The governing body formally grants or denies clinical privileges. The credentials committee evaluates applications and makes recommendations — but the authority to grant privileges rests with the governing body as a governance function (GOV.190.10, CPV.110).",
+        "CPV.100 requires the organization to have its own independent credentialing and privileging process. This applies to all practitioners — employed, contracted, locum tenens, or otherwise. The anesthesia group's credentialing is a separate process and does not satisfy the ASC's independent obligation.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The governing body bears ultimate accountability for who provides care at the organization. Privilege granting is a governance function that cannot be fully delegated — the credentials committee may recommend, but the governing body decides.",
+          "Patients receiving care at the ASC from contracted practitioners deserve the same credential verification as from employed practitioners. AAAHC holds the organization responsible for verifying the credentials of every provider who delivers care under its auspices.",
         whyWrong: {
-          A: "The governing body formally grants privileges — monitoring alone is not sufficient.",
-          C: "The medical director may recommend but does not have governing body authority for privilege granting.",
-          D: "Routine privilege granting at appointment and reappointment is a governing body action — not only adverse actions.",
+          A: "Contracted employment status does not transfer the ASC's credentialing obligation to the contractor.",
+          C: "CRNAs are licensed independent practitioners and must be credentialed and privileged at the ASC just as physicians are.",
+          D: "Initial credentialing must occur before the practitioner begins providing services — not at a future reappointment cycle.",
         },
         operationalContext:
-          "Document governing body privilege approvals (initial appointment and reappointment) in board meeting minutes. Include the practitioner's name, privileges approved, and the vote. This creates the governing body's formal record of privilege granting.",
+          "For contracted anesthesia providers, establish a process to request their credential documentation from the group, but conduct your own primary source verification and maintain separate ASC credentials files for each individual CRNA.",
       },
     },
     {
       id: "asc_cpv_14",
       question:
-        "Under CPV.130, what minimum elements must be verified before temporary privileges are granted to a new practitioner?",
+        "An application for initial staff privileges is received and all documentation appears complete. However, the application is not signed by the applicant. Under CPV.160, what is the status of this application?",
       options: [
-        "No verification is required for temporary privileges — that is why they are temporary",
-        "A minimum set of verified credentials (e.g., current license in good standing, basic NPDB query, malpractice insurance verification) must be confirmed before temporary privileges are granted",
-        "Only a phone call to the practitioner's previous employer is required",
-        "Temporary privileges may be granted based solely on the practitioner's signed self-attestation",
+        "The application can be processed — the signature can be obtained later",
+        "An unsigned application does not satisfy CPV.160 and may not be processed until it is properly signed and dated by the applicant",
+        "Only the governing body chairperson's signature is required on credentialing applications",
+        "Digital applications do not require signatures under CPV.160",
       ],
       correctIndex: 1,
       explanation:
-        "CPV.130 requires that even temporary privileges have a defined process with minimum credential verification. At minimum, the current license should be verified, a basic NPDB query completed, and malpractice insurance confirmed before a temporary privilege is granted.",
+        "CPV.160 specifically requires that the application includes the applicant's dated signature (in addition to a liability release and accuracy attestation). CPV.170 requires primary source verification 'upon receipt of a completed and signed application' — the signature is a prerequisite to processing the application.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Temporary privileges without any credential verification expose patients to unverified providers. The temporary privilege process must include a defined minimum verification threshold — even if it is expedited — to protect patients.",
+          "The dated signature serves two functions: (1) it commits the applicant to the accuracy of the information provided, and (2) it establishes the date from which the processing timeline begins. An unsigned application is not a completed application under CPV.160.",
         whyWrong: {
-          A: "The 'temporary' nature of privileges does not eliminate the need for credential verification.",
-          C: "An employer reference call is not the same as primary source verification of credentials.",
-          D: "Self-attestation alone is never sufficient for privilege granting — it is the starting point, not the verification itself.",
+          A: "Processing may not begin on an unsigned application — CPV.170 requires verification 'upon receipt of a completed and signed application.'",
+          C: "The applicant's own signature is required — not a governing body officer's signature.",
+          D: "The signature requirement applies regardless of whether the application is submitted in paper or digital form. Electronic signatures satisfy the requirement.",
         },
         operationalContext:
-          "Define 'temporary privilege minimum verification' in your bylaws or privileging policy: current license PSV, NPDB query, current malpractice insurance verification. These three can typically be completed within 24-48 hours. Full credentialing is then completed within the defined temporary privilege period.",
+          "Return unsigned or undated applications to the applicant immediately with a request to complete and return them. Track the date the completed, signed application is received — this is the date from which your processing timeline runs.",
       },
     },
     {
       id: "asc_cpv_15",
       question:
-        "A surgeon is granted privileges for 'knee arthroscopy, shoulder arthroscopy, and carpal tunnel release.' The surgeon then requests permission to perform a complex total knee arthroplasty at the ASC. What CPV process must occur?",
+        "A board-certified orthopedic surgeon's board certification expires because the surgeon did not complete Maintenance of Certification (MOC) requirements. Under CPV.210, what action is required?",
       options: [
-        "The existing privilege for 'knee arthroscopy' covers knee arthroplasty — no additional privilege is needed",
-        "A new privilege request must be submitted, competency documentation reviewed, and the governing body must approve the new privilege before the procedure is performed",
-        "The surgeon may perform the procedure once, then request the privilege retroactively",
-        "Total knee arthroplasty requires only the governing body chair's verbal approval",
+        "Board certification expiration has no effect on credentialing status — the original certification remains valid",
+        "The organization must monitor board certification on an ongoing basis and update the credentials file to reflect the lapsed certification, which may affect the surgeon's credentialing status",
+        "Board certification monitoring is only required when the surgeon requests new privileges",
+        "Lapsed board certification is only relevant at the next scheduled reappointment",
       ],
       correctIndex: 1,
       explanation:
-        "Total knee arthroplasty is a fundamentally different procedure from knee arthroscopy — it requires different training, implants, and post-operative support. It is not covered by the existing arthroscopy privilege. A new privilege request with competency documentation and governing body approval is required.",
+        "CPV.210 requires ongoing monitoring of board certifications as applicable. If a surgeon's board certification lapses because they did not complete MOC requirements, the credentials file must reflect this. Whether a lapsed certification affects the practitioner's appointment status depends on the organization's criteria — but CPV.210 ensures the lapse is detected when it occurs, not at the next formal reappointment.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Knee arthroscopy and total knee arthroplasty share an anatomical site but involve completely different technical skills, implant systems, and post-operative care requirements. Competency in one does not imply competency in the other.",
+          "Board certifications with ongoing MOC requirements are date-sensitive. An organization that only checks board certification at three-year reappointments may not detect a lapse for years. CPV.210 requires ongoing monitoring to catch this.",
         whyWrong: {
-          A: "Arthroscopy and arthroplasty are distinct procedures requiring separate privilege documentation.",
-          C: "Performing a procedure before the privilege is granted violates CPV — there is no retroactive privilege process.",
-          D: "Verbal approval does not constitute governing body action — formal written approval is required.",
+          A: "Modern board certifications require ongoing Maintenance of Certification — they are not permanent. A lapsed MOC means the certification has expired.",
+          C: "Board certification monitoring is time-based under CPV.210, not event-triggered.",
+          D: "CPV.210 requires monitoring at expiration, not only at formal reappointment cycles.",
         },
         operationalContext:
-          "When a practitioner wants to add a new procedure, provide them with a privilege request form that requires: procedure name, CPT code, training documentation, case log, and supporting letters. Submit to credentials committee and then governing body for approval before the first case.",
-      },
-    },
-    {
-      id: "asc_cpv_16",
-      question:
-        "An ASC's bylaws state that privileges expire and must be renewed every two years. A surgeon's privileges expired six months ago and they have been continuing to practice. What must happen?",
-      options: [
-        "The expired privileges are automatically renewed if no adverse events occurred",
-        "Practice with expired privileges is unauthorized — the practitioner must immediately cease performing procedures until privileges are formally renewed through the defined process",
-        "The practitioner may continue practicing for up to one year past expiration while renewal is pending",
-        "Expired privileges are only a documentation issue — they do not affect the practitioner's authority to practice",
-      ],
-      correctIndex: 1,
-      explanation:
-        "Privileges lapse when they expire. A practitioner whose privileges have expired has no organizational authorization to perform procedures, regardless of their competence or license status. This is a serious patient safety and organizational compliance issue requiring immediate action.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "Expired privileges mean the governing body has not reviewed and renewed its authorization for the practitioner's clinical activities. Allowing practice on expired privileges reflects a complete breakdown in the privilege management system.",
-        whyWrong: {
-          A: "Privileges do not auto-renew — they require a formal reappointment and privilege renewal process.",
-          C: "There is no grace period for expired privileges — the practitioner must cease procedures immediately.",
-          D: "Expired privileges are a substantive clinical governance failure — not merely a documentation gap.",
-        },
-        operationalContext:
-          "Implement a privilege expiration tracking system. Generate alerts 90, 60, and 30 days before expiration. If renewal is not completed before the expiration date, immediately notify the practitioner and the medical director that the practitioner must stop performing procedures until renewal is complete.",
-      },
-    },
-    {
-      id: "asc_cpv_17",
-      question:
-        "What is the key distinction between 'focused professional practice evaluation' (FPPE) and 'ongoing professional practice evaluation' (OPPE) in the context of CPV?",
-      options: [
-        "FPPE and OPPE are the same process with different names",
-        "FPPE is triggered for specific concerns or for new privileges; OPPE is the ongoing periodic review of all privileged practitioners",
-        "OPPE is triggered by adverse events; FPPE is the routine annual review",
-        "FPPE applies only to new practitioners; OPPE applies only to established practitioners",
-      ],
-      correctIndex: 1,
-      explanation:
-        "FPPE is triggered-based: it occurs for new privileges, new practitioners, or when specific performance concerns arise and requires focused monitoring of a defined set of cases. OPPE is the routine, ongoing performance data collection and review for all privileged practitioners — it is continuous and leads into reappointment decisions.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "FPPE and OPPE are complementary privilege oversight mechanisms. OPPE provides the baseline — if OPPE reveals concerns, FPPE is initiated for a more intense focused assessment. AAAHC's ongoing monitoring standards (QUA.120, QUA.130) reflect OPPE-type requirements.",
-        whyWrong: {
-          A: "They are distinct processes with different triggers and purposes.",
-          C: "OPPE is routine and continuous — not triggered by adverse events. FPPE is triggered by concerns or new privileges.",
-          D: "OPPE applies to all privileged practitioners, not just established ones.",
-        },
-        operationalContext:
-          "Implement OPPE as a standing monthly/quarterly data collection: case volumes, complication rates, peer review outcomes, and patient satisfaction for each privileged provider. When OPPE data triggers concern, initiate FPPE: defined case review criteria, proctoring, and a defined timeline for assessment.",
-      },
-    },
-    {
-      id: "asc_cpv_18",
-      question:
-        "A practitioner's clinical privileges are restricted pending investigation of a patient safety event. The restriction is not reported to the NPDB because 'the investigation is still open.' Is this acceptable?",
-      options: [
-        "Yes — NPDB reporting is required only after a final decision is made",
-        "It depends on the nature of the restriction — a restriction that limits or changes the practitioner's privileges while an investigation is ongoing may trigger reporting requirements",
-        "Yes — restrictions pending investigation are always exempt from NPDB reporting",
-        "All restrictions must be reported within 30 days regardless of investigation status",
-      ],
-      correctIndex: 1,
-      explanation:
-        "NPDB reporting requirements for restrictions depend on the nature and basis of the restriction. Summary restrictions or suspensions taken for immediate patient safety protection may trigger reporting even while an investigation is ongoing. Legal counsel review of each adverse action's reporting requirements is strongly recommended.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "NPDB regulations are nuanced — the reporting trigger is based on the type of action and its basis, not simply the procedural status of an investigation. Organizations that defer reporting during all investigations may violate NPDB timing requirements for specific action types.",
-        whyWrong: {
-          A: "Some NPDB reports are triggered by actions taken before final investigation decisions — legal review of each situation is required.",
-          C: "There is no blanket exemption for restrictions pending investigation.",
-          D: "30 days is not the universal timeframe — the NPDB requires reporting within 15 days for many adverse actions.",
-        },
-        operationalContext:
-          "Engage legal counsel immediately whenever a privilege restriction, suspension, or revocation occurs. Have a standard NPDB reporting review checklist that legal counsel completes for each adverse action to determine: reportability, appropriate timeframe, and correct report format.",
-      },
-    },
-    {
-      id: "asc_cpv_19",
-      question:
-        "An ASC's credentialing committee approves a gastroenterologist's privileges for upper and lower endoscopy. The governing body later refuses to formally vote on the privilege recommendation. What is the effect on the practitioner's ability to practice?",
-      options: [
-        "Credentials committee approval is sufficient — governing body vote is a formality",
-        "Without governing body approval, the practitioner does not have formally granted privileges and may not practice",
-        "The practitioner may practice provisionally until the governing body votes",
-        "The administrator may authorize practice while the governing body considers the matter",
-      ],
-      correctIndex: 1,
-      explanation:
-        "The credentials committee recommends — the governing body grants. Without governing body approval, no formal privilege exists. A credentials committee recommendation alone is not equivalent to granted privileges, and the practitioner may not perform procedures based solely on committee recommendation.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "The governance structure is hierarchical: credentials committee → recommendation → governing body → formal grant. Bypassing the governing body vote eliminates the governance control the system is designed to provide.",
-        whyWrong: {
-          A: "Credentials committee approval is the recommendation step — governing body approval is the grant step. Both are required.",
-          C: "Provisional practice based on committee recommendation alone is not established in CPV standards — formal approval or a defined temporary privilege process is required.",
-          D: "The administrator does not have privilege-granting authority.",
-        },
-        operationalContext:
-          "If the governing body has concerns about a credentials committee recommendation, those concerns should be raised and resolved before the practitioner begins practice — not left unresolved while the practitioner works without formal privilege authorization.",
-      },
-    },
-    {
-      id: "asc_cpv_20",
-      question:
-        "A dentist applies for privileges at an oral and maxillofacial surgery ASC. Which documents are most critical to verify for procedure-specific competency?",
-      options: [
-        "Dental license and state DEA registration",
-        "Residency or fellowship training completion certificates and case logs showing specific oral surgery volumes",
-        "Professional society memberships and conference attendance records",
-        "The dentist's malpractice insurance premium amounts",
-      ],
-      correctIndex: 1,
-      explanation:
-        "Competency-based privileging requires evidence of specific training (residency/fellowship certificates) and demonstrated experience (case logs showing volume in the specific procedures requested). These directly establish procedure-specific competency.",
-      xpReward: 15,
-      isSwipe: false,
-      tutor: {
-        whyCorrect:
-          "For a dentist requesting oral surgery privileges, the credentials committee needs to see: where and when they trained in oral surgery, the scope of their training, and what volume of the specific procedures they have performed. Case logs with procedure types and volumes are the most direct competency evidence.",
-        whyWrong: {
-          A: "License and DEA verify legal authorization — not competency for specific procedures.",
-          C: "Professional memberships and conference attendance indicate engagement with the field but are not direct competency evidence.",
-          D: "Insurance premiums reflect claims history — not procedure-specific competency.",
-        },
-        operationalContext:
-          "For oral surgery privileges, require: oral and maxillofacial surgery residency certificate, case log showing cases in the last two years for each requested procedure type, and peer reference from a supervising or peer oral surgeon who can attest to procedure-specific competency.",
+          "Add board certification expiration dates to your credentialing tracker. Note which certifications require MOC and when MOC deadlines fall. Contact the practitioner before board certification expiration to confirm MOC is on track.",
       },
     },
   ],

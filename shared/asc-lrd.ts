@@ -26,43 +26,43 @@ export const ascLrdLevel: Level = {
       "Imaging studies are interpreted by providers without documented imaging interpretation privileges.",
       "Critical lab or radiology results are not communicated promptly to the ordering provider.",
     ],
-    aaahcStandards: ["LRD.100", "LRD.120", "LRD.130", "LRD.140", "LRD.150", "LRD.160"],
+    aaahcStandards: ["LRD.130", "LRD.140", "LRD.150", "LRD.160", "LRD.170", "LRD.180", "LRD.190", "LRD.200"],
   },
   studyMaterial: [
     {
-      title: "LRD.100 — Laboratory Services: Oversight and CLIA Compliance",
+      title: "LRD.130 / LRD.140 — CLIA Certificate and State Laboratory License",
       content:
-        "All laboratory testing performed at an ASC must comply with the Clinical Laboratory Improvement Amendments (CLIA). This includes point-of-care testing (POCT) such as blood glucose monitoring, urine dipstick testing, and rapid antigen tests. The CLIA certificate appropriate to the complexity of tests performed (CLIA waiver for waived tests; moderate/high complexity certificate for higher-complexity tests) must be current and on site. The certificate must be posted in the laboratory area.",
+        "LRD.130 requires that a current, appropriate CLIA certificate is present for the laboratory services performed: a CLIA Certificate of Waiver for waived tests (blood glucose, urine dipstick, rapid strep, etc.), a Certificate for Provider Performed Microscopy (PPMP) for those specific tests, or a Certificate of Registration, Compliance, or Accreditation for higher-complexity testing. LRD.140 additionally requires a current state medical laboratory license or certificate appropriate for the level of testing performed (where state licensure programs are separate from CLIA). Both certificates must be current — an expired CLIA waiver means the laboratory is operating outside its authorized complexity level. Note: if the state is exempt from CLIA program requirements, NA may apply.",
       keyPoint:
-        "CLIA applies to ALL laboratory testing — including POCT. A glucose meter used without a CLIA waiver is a compliance deficiency. The CLIA certificate must be current, on site, and posted.",
+        "CLIA applies to ALL laboratory testing including point-of-care testing. The CLIA certificate type must match the complexity of tests performed. State lab licensure (LRD.140) is a separate requirement. Both must be current.",
     },
     {
-      title: "LRD.120 — Laboratory Director Requirements",
+      title: "LRD.150 — Qualified Laboratory Personnel",
       content:
-        "Laboratory services must be directed by a qualified laboratory director whose credentials meet CLIA requirements for the complexity category of tests performed. For CLIA-waived testing, the director qualification requirements are minimal. For moderate and high complexity testing, CLIA specifies detailed educational and experience requirements. The director is responsible for: overall laboratory operations quality, establishing quality control procedures, reviewing quality control data, and ensuring personnel qualifications.",
+        "LRD.150 requires that laboratory services are conducted by qualified personnel. Staff with laboratory responsibilities must be appropriately trained for their roles, as demonstrated by documented competency tests. Additionally, interviews and observation must confirm that a sufficient number of trained and experienced personnel are available to supervise and conduct the work of the laboratory. This applies to all testing personnel — including nurses and medical assistants who perform point-of-care testing. The competency documentation must be task-specific: a nurse documented as competent for blood glucose POCT needs separate competency documentation if they also perform urine dipstick testing.",
       keyPoint:
-        "The laboratory director's qualifications must meet CLIA requirements for the complexity category of tests performed. This is not a self-designated role — CLIA specifies what qualifications are required.",
+        "LRD.150 requires two things for laboratory personnel: (1) documented competency for each specific test performed, and (2) sufficient numbers of trained staff confirmed through observation and interviews. Competency is test-specific — not a blanket laboratory credential.",
     },
     {
-      title: "LRD.130 — Quality Control in the Laboratory",
+      title: "LRD.160 / LRD.170 — Pathology Services Support Clinical Capabilities; Provider Review of Results",
       content:
-        "Quality control (QC) is required for all laboratory testing. For CLIA-waived tests, QC must be performed per manufacturer instructions — typically with control materials at each new kit/reagent lot and when results appear incorrect. For non-waived tests, CLIA specifies minimum QC frequency and the number and type of controls required. QC documentation must include: the date performed, test/device, control lot number, control result, acceptable range, and whether the result passed or failed. QC failures must be investigated and resolved before patient testing resumes.",
+        "LRD.160 requires that pathology and medical laboratory services adequately support the organization's clinical capabilities: tests are performed in a timely manner per organizational policy, results are made available to the ordering provider, and results are documented in the patient's medical record per policy. LRD.170 is a separate, distinct requirement: laboratory test results must be reviewed and acknowledged in writing (manually or electronically) by the ordering provider or a qualified designee. This acknowledgment requirement is frequently missed — an EHR result that was 'received' but not actively reviewed and signed/initialed by the ordering provider does not satisfy LRD.170.",
       keyPoint:
-        "QC must be performed and documented — it cannot be assumed. QC failures require investigation and resolution before patient testing resumes. A log of QC results with dates, control values, and pass/fail determinations is required.",
+        "LRD.160: timely results, reported to ordering provider, documented in record. LRD.170: each lab result must be reviewed AND acknowledged in writing by the ordering provider or qualified designee. 'Received' is not the same as 'reviewed and acknowledged.'",
     },
     {
-      title: "LRD.140 — Radiology Services: Qualified Personnel",
+      title: "LRD.180 — Laboratory Quality Control Procedures",
       content:
-        "Radiologic procedures must be performed by personnel who are licensed or certified as required by applicable state law. In most states, radiologic technologists must be licensed through the state and/or credentialed by the American Registry of Radiologic Technologists (ARRT). Fluoroscopy, mammography, and radiation therapy have specific additional qualification requirements. Radiology services must be directed by a qualified physician with appropriate training in radiology — who must be privileged at the organization for the specific imaging modalities used.",
+        "LRD.180 requires that laboratory quality control (QC) procedures are performed and documented. Four elements must be satisfied: (1) quality controls are performed in accordance with manufacturer instructions; (2) the results of quality control procedures are documented; (3) equipment is calibrated in accordance with manufacturer instructions (NA may apply for moderate/high complexity testing performed under different calibration standards); and (4) validation tests for new equipment are performed in accordance with manufacturer instructions. QC documentation must include dates, control values, acceptable ranges, and pass/fail determinations. New laboratory equipment may not be placed into patient service until validation testing is completed and documented.",
       keyPoint:
-        "All radiologic procedures must be performed by state-licensed/certified personnel. The interpreting physician must have radiology interpretation privileges at the organization. Both personnel qualifications AND interpretation privileges must be documented.",
+        "LRD.180 requires four things: QC performed per manufacturer instructions, QC results documented, equipment calibrated per manufacturer, and new equipment validated before patient use. QC logs must have dates, results, and pass/fail — not just 'QC done.'",
     },
     {
-      title: "LRD.160 — Timely Reporting of Diagnostic Results",
+      title: "LRD.190 / LRD.200 — Established Procedures and Written Test Descriptions",
       content:
-        "Both laboratory and radiology results must be communicated to the ordering provider in a timely manner. The organization must have a written policy defining the expected reporting timeframes for different result categories — routine, urgent/stat, and critical/panic values. Critical values (severely abnormal results requiring immediate clinical action) must have a defined policy for immediate notification of the ordering provider, with documentation of who was notified, when, and what action was taken. Communication timeliness must be monitored as part of the QI program.",
+        "LRD.190 requires that established laboratory procedures are followed. At minimum, written procedures must address: obtaining, identifying, storing, and transporting specimens; and staff must be able to demonstrate understanding of the established procedures through interview. Additionally, procedures must be in place to obtain routine and emergency laboratory services outside the organization's capabilities from a hospital or licensed laboratory. LRD.200 requires that complete written descriptions of each test procedure performed are available to staff with laboratory responsibilities. These procedure descriptions should include (as applicable): patient preparation, specimen requirements and rejection criteria, reagents, calibration, QC, step-by-step test performance, result reporting, critical value reporting, and reference ranges.",
       keyPoint:
-        "Critical/panic values require an immediate notification protocol — with documentation of who was notified, when, and the result of the notification. Timeliness monitoring is a QI requirement.",
+        "LRD.190: written specimen handling procedures, staff can demonstrate knowledge, and backup laboratory arrangements are documented. LRD.200: written procedure for each specific test performed — covering specimen handling through result reporting including critical values.",
     },
   ],
   questions: [
@@ -159,7 +159,7 @@ export const ascLrdLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "CLIA regulations require that the certificate be prominently posted in the laboratory area where testing is performed so that it is readily visible. LRD.100 incorporates this requirement. A surveyor should be able to see the certificate without asking for it.",
+        "CLIA regulations require that the certificate be prominently posted in the laboratory area where testing is performed so that it is readily visible. LRD.130 incorporates this requirement. A surveyor should be able to see the certificate without asking for it.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -258,7 +258,7 @@ export const ascLrdLevel: Level = {
     {
       id: "asc_lrd_08",
       question:
-        "An ASC purchases a new rapid SARS-CoV-2 antigen test. Before using it for patient testing, what must be confirmed under LRD.100 and CLIA?",
+        "An ASC purchases a new rapid SARS-CoV-2 antigen test. Before using it for patient testing, what must be confirmed under LRD.130 and CLIA?",
       options: [
         "No verification is needed if it is FDA-approved for over-the-counter use",
         "The test must be listed under the ASC's CLIA waiver or appropriate CLIA certificate, and QC procedures per manufacturer instructions must be established before patient use",
@@ -321,12 +321,12 @@ export const ascLrdLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "LRD.120 requires that the qualified laboratory director is responsible for overall laboratory quality — including establishing quality control procedures. The director may delegate day-to-day QC performance to clinical staff, but the director is accountable for the QC design and oversight.",
+        "LRD.150 requires that the qualified laboratory director is responsible for overall laboratory quality — including establishing quality control procedures. The director may delegate day-to-day QC performance to clinical staff, but the director is accountable for the QC design and oversight.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "The laboratory director's accountability under CLIA and LRD.120 includes establishing and overseeing QC. Directors who are not engaged with QC data — only in name — create a real QC oversight gap.",
+          "The laboratory director's accountability under CLIA and LRD.150 includes establishing and overseeing QC. Directors who are not engaged with QC data — only in name — create a real QC oversight gap.",
         whyWrong: {
           A: "The administrator manages operations but does not have clinical laboratory qualifications to establish QC procedures.",
           C: "Clinical staff perform QC per established procedures — they do not establish the procedures themselves.",
@@ -348,7 +348,7 @@ export const ascLrdLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "A CLIA certificate must be current and valid to authorize laboratory testing. Testing with an expired certificate is unauthorized — it is a violation of both CLIA regulations and LRD.100. There is no grace period for expired CLIA certificates.",
+        "A CLIA certificate must be current and valid to authorize laboratory testing. Testing with an expired certificate is unauthorized — it is a violation of both CLIA regulations and LRD.130. There is no grace period for expired CLIA certificates.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -402,7 +402,7 @@ export const ascLrdLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "A CLIA Certificate of Waiver only authorizes waived tests. Moderate complexity testing requires a CLIA Certificate of Compliance or Certificate of Accreditation. Adding moderate complexity tests without upgrading the CLIA certificate violates CLIA and LRD.100.",
+        "A CLIA Certificate of Waiver only authorizes waived tests. Moderate complexity testing requires a CLIA Certificate of Compliance or Certificate of Accreditation. Adding moderate complexity tests without upgrading the CLIA certificate violates CLIA and LRD.130.",
       xpReward: 15,
       isSwipe: false,
       tutor: {

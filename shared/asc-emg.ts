@@ -26,43 +26,43 @@ export const ascEmgLevel: Level = {
       "Hazard vulnerability analysis was completed once and never updated.",
       "Community coordination agreements are not documented or are with organizations that no longer exist.",
     ],
-    aaahcStandards: ["EMG.100", "EMG.110", "EMG.120", "EMG.130", "EMG.140"],
+    aaahcStandards: ["EMG.100", "EMG.140", "EMG.160", "EMG.170", "EMG.180"],
   },
   studyMaterial: [
     {
-      title: "EMG.100 — The Written Emergency and Disaster Preparedness Plan",
+      title: "EMG.100 — Medical Emergency and Unplanned Transfer Procedures",
       content:
-        "The organization must have a written emergency and disaster preparedness plan approved by the governing body. The plan must be based on a hazard vulnerability analysis (HVA) that identifies emergencies most likely to affect the organization — considering geographic location, facility type, patient population, and historical events. The plan must address: internal emergencies (fire, medical emergency, utility failure); external disasters (natural disasters, mass casualty events, community infrastructure failures); continuity of operations; communication protocols; resource management; evacuation procedures; and patient care during emergencies.",
+        "EMG.100 requires written procedures for managing medical emergencies and unplanned outcomes that require transfer to a higher level of care. The procedures must specifically address four elements: (1) decision-making authority for transferring a patient — who has the authority to order a transfer; (2) the process for transferring a patient — including which hospital, how transport is arranged, and who accompanies the patient; (3) provisions for caring for the patient until the transfer occurs — maintaining safety and stability during the transfer preparation period; and (4) documentation that must accompany the patient — which records, consent forms, and clinical summaries go with the patient. Importantly, staff must be trained on these procedures, and documentation of that training must be present.",
       keyPoint:
-        "The plan starts with an HVA — identifying likely risks drives the plan content. Without an HVA, the plan is generic rather than tailored to the organization's actual risk profile.",
+        "EMG.100 is the medical emergency response standard. It requires procedures covering four elements: transfer decision authority, transfer process, care during transfer preparation, and accompanying documentation. Staff training on these procedures must be documented.",
     },
     {
-      title: "EMG.110 — Staff Training on the Emergency Plan",
+      title: "EMG.140 — BLS-Trained Personnel and Emergency Equipment",
       content:
-        "All personnel must receive training on the emergency and disaster preparedness plan appropriate to their role. Training must occur at orientation for new employees and at defined intervals (at minimum annually) thereafter. Staff must be able to demonstrate knowledge of: their specific emergency roles, how to initiate emergency responses (what to call, who to notify), locations of emergency equipment and supplies, evacuation routes and assembly points, and how to communicate during emergencies. Training records must be maintained.",
+        "EMG.140 requires that personnel trained in basic life support (BLS) and in the use of cardiac and all other emergency equipment and supplies are present in the facility whenever patients are present. Three documentation requirements apply: (1) personnel files must include documentation of current BLS certification; (2) documentation of training in the use of cardiac and all other emergency equipment and supplies must be present; and (3) a written policy must require the presence of trained and currently certified personnel whenever patients are present. This standard ensures that when a cardiac or medical emergency occurs, someone qualified to respond is always in the building.",
       keyPoint:
-        "Training must produce demonstrated knowledge — not just attendance documentation. Surveyors interview staff: 'Where is the nearest fire extinguisher?' 'What is the emergency code for cardiac arrest?' Staff must answer correctly.",
+        "EMG.140 has three requirements: current BLS certifications in personnel files, documented training on emergency equipment, and a written policy requiring trained personnel on-site whenever patients are present. All three must be satisfied.",
     },
     {
-      title: "EMG.120 — Emergency Drills: Frequency, Documentation, and Improvement",
+      title: "EMG.160 — Comprehensive Written Emergency and Disaster Preparedness Plan",
       content:
-        "Emergency drills must be conducted at defined intervals and must cover the types of emergencies identified in the HVA. At minimum, fire drills are typically required in each occupied facility on each shift annually (per NFPA 101). Drills must be followed by a debrief that identifies: what went well, what needs improvement, and specific action items with owners and completion timelines. The actions from drills must be implemented and tracked. Drill records must document: date, type of drill, participants, scenario, observations, debriefing findings, and corrective actions.",
+        "EMG.160 requires a comprehensive written emergency and disaster preparedness plan addressing both internal and external emergencies. The plan must include: (1) a provision for safe evacuation of individuals during an emergency — with specific attention to individuals at greater risk (patients under anesthesia, patients with limited mobility, pediatric patients); and (2) participation in community health emergency or disaster preparedness, if applicable. The plan must address internal emergencies (fires, medical crises, utility failures, security incidents) and external disasters (natural disasters, mass casualty events, community infrastructure failures). The 'at-risk populations' requirement is particularly important for surgery centers where patients may be sedated or in recovery and unable to self-evacuate.",
       keyPoint:
-        "Drills without debriefs are incomplete. The debrief and its resulting action items are the mechanism by which drills produce system improvement. Action items must be tracked to completion.",
+        "EMG.160's plan must address both internal and external emergencies and must specifically include evacuation provisions for individuals at greater risk — sedated surgical patients, patients with mobility limitations, and others who cannot self-evacuate.",
     },
     {
-      title: "EMG.130 — Resource Management During Emergencies",
+      title: "EMG.170 — Scenario-Based Drills: Quarterly Frequency and Written Evaluation",
       content:
-        "The emergency plan must address resource management — ensuring the organization can identify, obtain, and manage resources needed during an emergency. This includes: identification of critical supply inventories and minimum stock levels; sources for emergency resupply; agreements with community organizations (mutual aid agreements); communication systems that function during power outages; and protocols for managing patients and personnel during extended emergencies. Plans for sheltering in place and patient evacuation must address patients who cannot be immediately transported.",
+        "EMG.170 requires scenario-based drills of the emergency and disaster preparedness plan, with specific frequency and documentation requirements. All drills must be scenario-based (not just walkthroughs). Specific frequencies are required: (1) at least one drill each calendar quarter — four drills per year minimum; (2) at least one CPR technique drill annually; and (3) at least one drill based on the full emergency/disaster plan annually. Documentation requirements include: documentation of drill participants, a written evaluation of each drill, and prompt implementation of any needed corrections or modifications to the emergency plan identified during the drill evaluation.",
       keyPoint:
-        "Resource management is the 'can we sustain operations?' component of emergency preparedness. Plans must address supplies, communications, personnel, and patient care continuity for a realistic sustained emergency scenario.",
+        "EMG.170 minimum frequency: one drill per quarter (4/year), plus a CPR drill annually, plus a full disaster plan drill annually. Each drill requires a written evaluation. Corrections identified in the evaluation must be implemented promptly.",
     },
     {
-      title: "EMG.140 — Community Coordination",
+      title: "EMG.180 — Emergency Equipment and Supplies: Maintained and Accessible",
       content:
-        "The emergency plan must address coordination with community emergency management organizations — including local emergency management agencies, hospitals, public health agencies, and other healthcare organizations. This may include participation in community emergency preparedness planning exercises, mutual aid agreements with other healthcare facilities, and protocols for communicating with emergency management during a disaster. The plan must reflect actual relationships — agreements that exist on paper but have never been tested or communicated are insufficient.",
+        "EMG.180 requires that appropriate emergency equipment and supplies are maintained and readily accessible to all areas of each patient care service site. 'Readily accessible' means staff can reach emergency equipment quickly without having to search — equipment must be in defined, known locations. 'Maintained' means equipment is checked regularly to confirm it is functional, supplies are not expired, and any deficiencies are corrected promptly. Documentation of equipment checks must be present. Crash carts, AEDs, oxygen, emergency medications, and other emergency supplies are typical items covered by this standard.",
       keyPoint:
-        "Community coordination means actual documented relationships — signed mutual aid agreements, participation in community emergency planning meetings, and contact information that is current and verified.",
+        "EMG.180 requires emergency equipment to be both maintained (functional, checked, stocked, not expired) and readily accessible (in defined locations known to all staff). Inaccessible or unmaintained emergency equipment is a direct patient safety failure.",
     },
   ],
   questions: [
@@ -78,7 +78,7 @@ export const ascEmgLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "EMG.120 requires that emergency drills are conducted at defined intervals with documentation. A plan without drills is a theoretical construct — drills test whether the plan actually works when personnel act it out. Absence of drill documentation is a direct EMG finding.",
+        "EMG.170 requires that emergency drills are conducted at defined intervals with documentation. A plan without drills is a theoretical construct — drills test whether the plan actually works when personnel act it out. Absence of drill documentation is a direct EMG finding.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -150,7 +150,7 @@ export const ascEmgLevel: Level = {
     {
       id: "asc_emg_04",
       question:
-        "After a fire drill, staff debrief and identify that the designated assembly point in the parking lot is in the path of normal emergency vehicle access. What must happen next under EMG.120?",
+        "After a fire drill, staff debrief and identify that the designated assembly point in the parking lot is in the path of normal emergency vehicle access. What must happen next under EMG.170?",
       options: [
         "The debrief observation is noted but no action is required since no real emergency occurred",
         "A corrective action must be developed to relocate the assembly point — debrief findings must result in documented improvements",
@@ -159,12 +159,12 @@ export const ascEmgLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "EMG.120 requires that drill debriefs identify areas for improvement and that corrective actions are implemented and tracked. An assembly point in the path of emergency vehicle access is a genuine safety problem that must be corrected — not left for the next drill to expose again.",
+        "EMG.170 requires that drill debriefs identify areas for improvement and that corrective actions are implemented and tracked. An assembly point in the path of emergency vehicle access is a genuine safety problem that must be corrected — not left for the next drill to expose again.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Drills are only valuable if they lead to improvement. EMG.120 makes debrief-driven corrective action a requirement — the loop must close from observation to action to verification.",
+          "Drills are only valuable if they lead to improvement. EMG.170 makes debrief-driven corrective action a requirement — the loop must close from observation to action to verification.",
         whyWrong: {
           A: "Debrief findings from drills require action regardless of whether the drill involved a real emergency.",
           C: "The observation — even if possibly wrong — must be investigated and resolved, not assumed away.",
@@ -177,7 +177,7 @@ export const ascEmgLevel: Level = {
     {
       id: "asc_emg_05",
       question:
-        "EMG.130 requires the emergency plan to address resource management. Which scenario represents a resource management gap?",
+        "EMG.160 requires the emergency plan to address resource management. Which scenario represents a resource management gap?",
       options: [
         "The ASC has a 7-day supply of critical medications on hand at all times",
         "The ASC's emergency plan identifies a backup generator but the generator has only enough fuel for four hours of operation",
@@ -191,7 +191,7 @@ export const ascEmgLevel: Level = {
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "Resource adequacy — not just resource presence — is the EMG.130 requirement. Four hours of generator fuel may be sufficient for a brief power outage but is clearly insufficient for extended disaster scenarios. The HVA should identify realistic emergency durations for the geographic risks identified.",
+          "Resource adequacy — not just resource presence — is the EMG.160 requirement. Four hours of generator fuel may be sufficient for a brief power outage but is clearly insufficient for extended disaster scenarios. The HVA should identify realistic emergency durations for the geographic risks identified.",
         whyWrong: {
           A: "A 7-day critical medication supply is an example of good resource management practice.",
           C: "Mutual aid agreements are a positive resource management element.",
@@ -213,7 +213,7 @@ export const ascEmgLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "EMG.140 requires that community coordination relationships are current and functional. A five-year-old agreement may reference personnel who have left, contact numbers that have changed, or operational capacities that have been modified. Agreements must be periodically reviewed, updated, and confirmed as still operative.",
+        "EMG.160 requires that community coordination relationships are current and functional. A five-year-old agreement may reference personnel who have left, contact numbers that have changed, or operational capacities that have been modified. Agreements must be periodically reviewed, updated, and confirmed as still operative.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -234,18 +234,18 @@ export const ascEmgLevel: Level = {
         "During an AAAHC survey, a staff nurse is asked: 'What is the emergency code for a medical emergency in this facility?' She responds: 'I'm not sure — I think we use Code Blue but I'd have to check.' What EMG standard is this response most directly affecting?",
       options: [
         "Only a physician needs to know emergency codes — nursing knowledge is not assessed",
-        "EMG.110 requires that staff receive training and be able to demonstrate knowledge of emergency procedures, including response codes",
+        "EMG.160 requires that staff receive training and be able to demonstrate knowledge of emergency procedures, including response codes",
         "Emergency code knowledge is the responsibility of the emergency response team only",
         "Not knowing an emergency code is acceptable if the staff member knows where to find the information",
       ],
       correctIndex: 1,
       explanation:
-        "EMG.110 requires all staff to be trained on the emergency plan appropriate to their role and to be able to demonstrate knowledge of emergency procedures. Not knowing the basic emergency code for a medical emergency is a direct EMG.110 training deficiency.",
+        "EMG.160 requires all staff to be trained on the emergency plan appropriate to their role and to be able to demonstrate knowledge of emergency procedures. Not knowing the basic emergency code for a medical emergency is a direct EMG.160 training deficiency.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
         whyCorrect:
-          "In a real medical emergency, there is no time to look up the code. Clinical staff must have immediate recall of response codes, their specific role in the emergency, and who to notify. EMG.110 requires demonstrated knowledge — not just documentation of training attendance.",
+          "In a real medical emergency, there is no time to look up the code. Clinical staff must have immediate recall of response codes, their specific role in the emergency, and who to notify. EMG.160 requires demonstrated knowledge — not just documentation of training attendance.",
         whyWrong: {
           A: "All clinical staff — not just physicians — must know emergency codes and their specific emergency roles.",
           C: "The emergency response team cannot respond if they are not notified — the nurse who discovers the emergency must know how to initiate the response.",
@@ -312,7 +312,7 @@ export const ascEmgLevel: Level = {
     {
       id: "asc_emg_10",
       question:
-        "Under EMG.140, what type of documentation satisfies the community coordination requirement?",
+        "Under EMG.160, what documentation satisfies the community health emergency preparedness coordination requirement?",
       options: [
         "A list of local emergency services phone numbers posted at the front desk",
         "Documented relationships with community emergency management organizations — including signed mutual aid agreements, participation in community planning, and verified current contact information",
@@ -321,7 +321,7 @@ export const ascEmgLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "EMG.140 requires documented coordination with community emergency management organizations — not just awareness of their contact information. Signed mutual aid agreements, participation in community exercises, and verified current relationships are the types of documentation that demonstrate actual coordination.",
+        "EMG.160 requires documented coordination with community emergency management organizations — not just awareness of their contact information. Signed mutual aid agreements, participation in community exercises, and verified current relationships are the types of documentation that demonstrate actual coordination.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -366,7 +366,7 @@ export const ascEmgLevel: Level = {
     {
       id: "asc_emg_12",
       question:
-        "A new ASC employee starts working in the sterile processing department. Under EMG.110, when must they receive emergency preparedness training?",
+        "A new ASC employee starts working in the sterile processing department. Under EMG.160, when must they receive emergency preparedness training?",
       options: [
         "Within 90 days of hire",
         "At orientation — before or immediately upon starting their role",
@@ -375,7 +375,7 @@ export const ascEmgLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "EMG.110 requires that all personnel receive emergency plan training as part of their orientation to the organization. Training must occur before the employee begins working independently so they know what to do from day one.",
+        "EMG.160 requires that all personnel receive emergency plan training as part of their orientation to the organization. Training must occur before the employee begins working independently so they know what to do from day one.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -429,7 +429,7 @@ export const ascEmgLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "EMG.120 requires comprehensive drill documentation that supports the entire drill improvement cycle: what was tested (date, type, scenario), who participated, what was observed, what the debrief identified, and what corrective actions were assigned with owners and timelines.",
+        "EMG.170 requires comprehensive drill documentation that supports the entire drill improvement cycle: what was tested (date, type, scenario), who participated, what was observed, what the debrief identified, and what corrective actions were assigned with owners and timelines.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -474,7 +474,7 @@ export const ascEmgLevel: Level = {
     {
       id: "asc_emg_16",
       question:
-        "Under EMG.130, what does the term 'continuity of operations' mean in the emergency plan context?",
+        "Under EMG.160, what does the term 'continuity of operations' mean in the emergency plan context?",
       options: [
         "Maintaining the same surgical schedule regardless of the emergency",
         "Ensuring the organization can continue essential functions and patient care during and after an emergency",

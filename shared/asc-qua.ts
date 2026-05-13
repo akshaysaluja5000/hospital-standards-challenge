@@ -26,7 +26,7 @@ export const ascQuaLevel: Level = {
       "QI committee minutes do not document trending data or specific corrective actions triggered by data.",
       "Peer review results are never formally presented to the governing body.",
     ],
-    aaahcStandards: ["QUA.100", "QUA.110", "QUA.120", "QUA.130", "QUA.140", "QUA.150", "QUA.160", "QUA.170", "QUA.220"],
+    aaahcStandards: ["QUA.100", "QUA.110", "QUA.120", "QUA.130", "QUA.140", "QUA.150", "QUA.160", "QUA.210", "QUA.220"],
   },
   studyMaterial: [
     {

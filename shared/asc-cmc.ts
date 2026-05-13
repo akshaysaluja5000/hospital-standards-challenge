@@ -26,7 +26,7 @@ export const ascCmcLevel: Level = {
       "Follow-up appointment is not arranged before the patient leaves the facility.",
       "Abnormal pre-operative lab results are not reviewed before the procedure proceeds.",
     ],
-    aaahcStandards: ["CMC.100", "CMC.110", "CMC.120", "CMC.130", "CMC.140", "CMC.150", "CMC.160"],
+    aaahcStandards: ["CMC.100", "CMC.110", "CMC.120", "CMC.130", "CMC.140", "CMC.190"],
   },
   studyMaterial: [
     {
@@ -59,7 +59,7 @@ export const ascCmcLevel: Level = {
         "Written discharge instructions — not verbal — are required and must be documented in the clinical record. Generic instructions that don't reflect the specific procedure and patient needs fail CMC.130.",
     },
     {
-      title: "CMC.160 — Coordination of Care",
+      title: "CMC.140 / CMC.190 — Coordination of Care",
       content:
         "When a patient's care involves multiple health care providers (referring physician, specialist, primary care provider), coordination must be documented. This includes: communication of relevant clinical findings to the referring or primary care provider; documentation of referrals sent and received; follow-up arrangements confirmed before the patient leaves; and — when the patient requires transfer to a higher level of care — documentation of the clinical status, receiving facility, and communication with the accepting provider. Coordination of care is particularly important for patients with complex comorbidities or when post-operative complications occur.",
       keyPoint:
@@ -151,7 +151,7 @@ export const ascCmcLevel: Level = {
     {
       id: "asc_cmc_04",
       question:
-        "Under CMC.160, when a patient is transferred from the ASC to a hospital due to a post-operative complication, what must be documented?",
+        "Under CMC.140, when a patient is transferred from the ASC to a hospital due to a post-operative complication, what must be documented?",
       options: [
         "Only the patient's name and the receiving hospital's name",
         "The patient's clinical status at transfer, the receiving facility, and documentation of communication with the accepting provider",
@@ -160,7 +160,7 @@ export const ascCmcLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "CMC.160 requires documentation of coordination of care including transfers. This includes: the patient's clinical status at the time of transfer, the receiving facility, and evidence of communication with the accepting provider. A transfer summary or note must accompany the patient.",
+        "CMC.140 requires documentation of coordination of care including transfers. This includes: the patient's clinical status at the time of transfer, the receiving facility, and evidence of communication with the accepting provider. A transfer summary or note must accompany the patient.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
@@ -529,7 +529,7 @@ export const ascCmcLevel: Level = {
     {
       id: "asc_cmc_18",
       question:
-        "CMC.150 requires documentation of a patient's condition and clinical status at the time of discharge. Why is this documentation important?",
+        "CMC.130 requires documentation of a patient's condition and clinical status at the time of discharge. Why is this documentation important?",
       options: [
         "It is required for billing verification purposes only",
         "It establishes the baseline for post-operative monitoring, provides a reference if complications arise after discharge, and supports coordination with follow-up providers",
@@ -538,7 +538,7 @@ export const ascCmcLevel: Level = {
       ],
       correctIndex: 1,
       explanation:
-        "CMC.150 requires documentation of the patient's condition at discharge. This clinical snapshot establishes the baseline for post-discharge care: if a complication arises after discharge, the documented condition at discharge helps determine when the problem began and guides subsequent management.",
+        "CMC.130 requires documentation of the patient's condition at discharge. This clinical snapshot establishes the baseline for post-discharge care: if a complication arises after discharge, the documented condition at discharge helps determine when the problem began and guides subsequent management.",
       xpReward: 15,
       isSwipe: false,
       tutor: {
