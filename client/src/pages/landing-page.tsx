@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck, Moon, Sun, Radar, FileSearch2, Zap } from "lucide-react";
+import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck, Moon, Sun, Radar, FileSearch2, Zap, GraduationCap, ClipboardList } from "lucide-react";
 import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
@@ -295,6 +295,62 @@ export default function LandingPage() {
                     <div className="mt-auto pt-2 border-t border-border">
                       <p className="text-xs text-muted-foreground leading-relaxed">
                         <span className="font-semibold text-foreground">Your clearest differentiator</span> — no other compliance platform does this automatically.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Staff Learning Agent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: 0.15 }}
+                  data-testid="card-agent-staff-learning"
+                >
+                  <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center flex-shrink-0">
+                        <GraduationCap size={22} className="text-emerald-600" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Agent 3</p>
+                        <h3 className="font-bold text-base text-foreground leading-tight" data-testid="text-agent-3-title">Staff Learning Agent</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Instead of static assigned modules, this agent tracks each staff member's diagnostic scores, completion gaps, and quiz performance — then dynamically re-routes their learning plan. It knows who is weakest on sterile field standards and pushes those questions. It sends escalating nudges without a manager having to chase anyone.
+                    </p>
+                    <div className="mt-auto pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">Replaces:</span> manually assigned training plans and manager follow-up emails.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Incident Intelligence Agent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: 0.2 }}
+                  data-testid="card-agent-incident-intelligence"
+                >
+                  <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-rose-500/10 border border-rose-400/20 flex items-center justify-center flex-shrink-0">
+                        <ClipboardList size={22} className="text-rose-500" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Agent 4</p>
+                        <h3 className="font-bold text-base text-foreground leading-tight" data-testid="text-agent-4-title">Incident Intelligence Agent</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      When an incident is reported, instead of a blank form, the agent conducts a structured interview, drafts the formal report, routes it to the right people based on severity and type, and cross-references past incidents to flag emerging patterns. It then suggests corrective actions tied to specific standards.
+                    </p>
+                    <div className="mt-auto pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">Replaces:</span> blank incident forms, manual routing, and disconnected corrective action tracking.
                       </p>
                     </div>
                   </div>
