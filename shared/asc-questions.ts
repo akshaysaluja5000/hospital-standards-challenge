@@ -1,36 +1,38 @@
 import type { Level } from "./schema";
-import { ascPatientRightsLevel } from "./asc-patient-rights";
-import { ascGovernanceLevel } from "./asc-governance";
-import { ascCredentialingLevel } from "./asc-credentialing";
-import { ascAdministrationLevel } from "./asc-administration";
-import { ascQualityOfCareLevel } from "./asc-quality-of-care";
-import { ascQualityManagementLevel } from "./asc-quality-management";
-import { ascClinicalRecordsLevel } from "./asc-clinical-records";
-import { ascInfectionPreventionLevel } from "./asc-infection-prevention";
-import { ascFacilitiesEnvironmentLevel } from "./asc-facilities-environment";
-import { ascAnesthesiaSurgeryLevel } from "./asc-anesthesia-surgery";
-import { ascPharmaceuticalLevel } from "./asc-pharmaceutical";
-import { ascPathologyLevel } from "./asc-pathology";
-import { ascImagingLevel } from "./asc-imaging";
-import { ascTeachingLevel } from "./asc-teaching";
-import { ascResearchLevel } from "./asc-research";
-import { ascOvernightLevel } from "./asc-overnight";
+import { ascPrrLevel } from "./asc-prr";
+import { ascGovLevel } from "./asc-gov";
+import { ascAdmLevel } from "./asc-adm";
+import { ascAsgLevel } from "./asc-asg";
+import { ascBehLevel } from "./asc-beh";
+import { ascCmcLevel } from "./asc-cmc";
+import { ascCpvLevel } from "./asc-cpv";
+import { ascCrdLevel } from "./asc-crd";
+import { ascEmgLevel } from "./asc-emg";
+import { ascFacLevel } from "./asc-fac";
+import { ascIpcLevel } from "./asc-ipc";
+import { ascLrdLevel } from "./asc-lrd";
+import { ascMedLevel } from "./asc-med";
+import { ascOcsLevel } from "./asc-ocs";
+import { ascQuaLevel } from "./asc-qua";
+import { ascSafLevel } from "./asc-saf";
+import { ascValLevel } from "./asc-val";
 
 export const ascLevels: Level[] = [
-  ascPatientRightsLevel,
-  ascGovernanceLevel,
-  ascCredentialingLevel,
-  ascAdministrationLevel,
-  ascQualityOfCareLevel,
-  ascQualityManagementLevel,
-  ascClinicalRecordsLevel,
-  ascInfectionPreventionLevel,
-  ascFacilitiesEnvironmentLevel,
-  ascAnesthesiaSurgeryLevel,
-  ascPharmaceuticalLevel,
-  ascPathologyLevel,
-  ascImagingLevel,
-  ascTeachingLevel,
-  ascResearchLevel,
-  ascOvernightLevel,
+  ascAdmLevel,
+  ascAsgLevel,
+  ascBehLevel,
+  ascCmcLevel,
+  ascCpvLevel,
+  ascCrdLevel,
+  ascEmgLevel,
+  ascFacLevel,
+  ascGovLevel,
+  ascIpcLevel,
+  ascLrdLevel,
+  ascMedLevel,
+  ascOcsLevel,
+  ascPrrLevel,
+  ascQuaLevel,
+  ascSafLevel,
+  ascValLevel,
 ];

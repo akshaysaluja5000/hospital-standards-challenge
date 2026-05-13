@@ -228,7 +228,7 @@ export const REMEDIATION_LIBRARY: Record<string, [LibraryStep, LibraryStep, Libr
     },
   ],
 
-  // ── ASC Categories (AAAHC/CMS) ─────────────────────────────────────────────
+  // ── ASC Categories (AAAHC v44) ──────────────────────────────────────────────
   // Pattern per chapter: Review + Retest | Guided Review + Teach-Back | Checklist/Workflow + Verification
 
   "ASC: Patient Rights and Responsibilities": [
@@ -465,6 +465,168 @@ export const REMEDIATION_LIBRARY: Record<string, [LibraryStep, LibraryStep, Libr
     },
   ],
 
+  "ASC: Behavioral Health Services": [
+    {
+      title: "Behavioral Health Standards Review + Retest",
+      description:
+        "Review the Behavioral Health Services study cards. Focus on therapeutic setting requirements, individualized treatment planning, 42 CFR Part 2 confidentiality rules for SUD records, and staff qualification requirements for licensed counselors and clinical social workers.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Behavioral Health Compliance",
+      description:
+        "Walk through your behavioral health program's compliance elements with your clinical director or compliance contact. Explain the key requirements for treatment planning, patient privacy, and staff supervision in your own words, then ask for feedback.",
+    },
+    {
+      title: "Behavioral Health Workflow Verification",
+      description:
+        "Review sample treatment plans, staff credential files, and privacy policies with your supervisor. Identify what an AAAHC surveyor would examine in each area and confirm that documentation reflects current practice.",
+    },
+  ],
+
+  "ASC: Care Management and Coordination": [
+    {
+      title: "Care Management Standards Review + Retest",
+      description:
+        "Review the Care Management and Coordination study cards. Focus on clinical record completeness requirements, pre-operative diagnostic testing standards, written discharge instruction elements, and provider-to-provider communication documentation.",
+    },
+    {
+      title: "Guided Documentation Review",
+      description:
+        "Walk through a sample patient record with your charge nurse or clinical supervisor. Together identify whether all required CMC elements are present — from the pre-op assessment through the discharge instructions — and note any gaps.",
+    },
+    {
+      title: "Clinical Record Audit Verification",
+      description:
+        "Using your facility's record completeness audit tool, review several recent charts for CMC compliance. With your supervisor, discuss what a surveyor would cite and how to strengthen documentation practices across your team.",
+    },
+  ],
+
+  "ASC: Credentialing and Privileging": [
+    {
+      title: "Privileging Concepts Review + Retest",
+      description:
+        "Review the Credentialing and Privileging study cards. Focus on the difference between a license and a clinical privilege, the delineation of privileges (DOP) requirements, how temporary privileges must be granted, and NPDB reporting thresholds.",
+    },
+    {
+      title: "Guided Review + Teach-Back on the Privileging Process",
+      description:
+        "Walk through your ASC's credentialing and privileging process with your medical staff coordinator or administrator. Explain the DOP requirements and the difference between blanket specialty privileges and procedure-specific privilege lists.",
+    },
+    {
+      title: "Privilege File Verification",
+      description:
+        "Review several practitioner privilege files with your credentialing contact. Confirm that each file contains a procedure-specific DOP, current credential documentation, and evidence of competency assessment. Discuss any gaps with your supervisor.",
+    },
+  ],
+
+  "ASC: Emergency Management": [
+    {
+      title: "Emergency Management Review + Retest",
+      description:
+        "Review the Emergency Management study cards. Focus on the hazard vulnerability analysis (HVA) process, required emergency plan elements, drill documentation requirements, ACLS and malignant hyperthermia protocol requirements, and community coordination responsibilities.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Emergency Readiness",
+      description:
+        "Walk through your ASC's emergency and disaster preparedness plan with your safety officer or administrator. Explain your role during each type of emergency covered by the plan. Ask your contact to clarify any scenarios that were unclear in the study cards.",
+    },
+    {
+      title: "Drill Documentation Review",
+      description:
+        "Review your last three emergency drill records with your safety officer. Confirm each drill has documented debriefing findings and corrective actions. Discuss what AAAHC would evaluate and identify any gaps in your current drill program.",
+    },
+  ],
+
+  "ASC: Laboratory and Radiology": [
+    {
+      title: "Lab and Radiology Standards Review + Retest",
+      description:
+        "Review the Laboratory and Radiology study cards. Focus on CLIA certification requirements for all testing including point-of-care tests, quality control documentation requirements, radiology personnel qualifications, and critical value notification protocols.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Diagnostic Service Compliance",
+      description:
+        "Walk through your ASC's laboratory and imaging arrangements with your lab director, radiology contact, or administrator. Explain what CLIA compliance requires in your own words and discuss how critical values are communicated and documented.",
+    },
+    {
+      title: "Lab and Imaging Compliance Verification",
+      description:
+        "Review your CLIA certificate, QC logs, and radiology personnel credential files with your supervisor. Confirm that QC documentation includes all required elements and that imaging interpretation is performed only by appropriately privileged physicians.",
+    },
+  ],
+
+  "ASC: Medication Management": [
+    {
+      title: "Medication Management Review + Retest",
+      description:
+        "Review the Medication Management study cards. Focus on high-alert medication requirements (including antidote co-stocking), LASA medication lists, five required labeling elements for medications removed from their original container, and vaccine storage protocols.",
+    },
+    {
+      title: "Guided Medication Safety Review",
+      description:
+        "Walk through your ASC's medication management policies with your pharmacist, pharmacy consultant, or clinical supervisor. Focus on high-alert and LASA medication protocols, controlled substance security, and how expired medications are removed and documented.",
+    },
+    {
+      title: "Medication Storage Verification",
+      description:
+        "Review your medication storage areas, controlled substance logs, and current high-alert and LASA medication lists with your supervisor. Confirm antidotes are co-stocked with corresponding high-alert medications and that labeling practices meet the five-element standard.",
+    },
+  ],
+
+  "ASC: Other Clinical Services": [
+    {
+      title: "Specialty Clinical Services Review + Retest",
+      description:
+        "Review the Other Clinical Services study cards for the specialty services your ASC provides. Focus on the specific safety requirements for chemotherapy (BSC, PPE, spill kit), dental record requirements, IVF embryo identification systems, or reproductive health non-directive counseling as applicable.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Specialty Compliance",
+      description:
+        "Walk through your specialty clinical service's compliance requirements with the relevant department lead or clinical director. Explain the specific safety protocols, personnel qualifications, and quality monitoring expectations in your own words.",
+    },
+    {
+      title: "Specialty Service Compliance Verification",
+      description:
+        "Review your specialty service's written protocols, staff credential files, and quality monitoring data with your supervisor. Identify what an AAAHC surveyor would evaluate in your specialty area and confirm that documentation supports full compliance.",
+    },
+  ],
+
+  "ASC: Safety": [
+    {
+      title: "Safety Program Review + Retest",
+      description:
+        "Review the Safety study cards. Focus on the five required elements of the written safety program, the formal definitions of 'incident' and 'adverse event,' the product recall policy requirements, expiration date monitoring, and the bloodborne pathogen program including hepatitis B vaccination documentation.",
+    },
+    {
+      title: "Guided Review + Teach-Back on Risk and Safety Management",
+      description:
+        "Walk through your ASC's safety and risk management programs with your safety officer or administrator. Explain the incident reporting process, how adverse events are defined and reviewed, and how product recalls are handled — then ask for feedback on your understanding.",
+    },
+    {
+      title: "Safety Program Documentation Review",
+      description:
+        "Review your incident log, safety drill records, product recall policy, and employee hepatitis B documentation with your supervisor. Confirm that all five safety program elements are represented in written policies and that incident and adverse event definitions are formally documented.",
+    },
+  ],
+
+  "ASC: Validation": [
+    {
+      title: "Validation Standards Review + Retest",
+      description:
+        "Review the Validation study cards. Focus on the AAAHC profile accuracy requirement, California-specific adverse event and death reporting timelines (5 days, 15 days), New York Public Health Law 230-d requirements, and the consequences of material profile inaccuracies discovered during survey.",
+    },
+    {
+      title: "Guided Review + Teach-Back on State-Specific Reporting",
+      description:
+        "Walk through your state's specific reporting obligations with your administrator or compliance contact. For California: explain which events trigger Medical Board reporting and within what timeframe. For New York: explain the profile accuracy requirements under PHL 230-d.",
+    },
+    {
+      title: "Profile and Reporting Compliance Verification",
+      description:
+        "Review your current AAAHC profile with your administrator and confirm it accurately reflects your current services, anesthesia levels, billing structure, and physical location. Identify any recent operational changes that may need to be reflected in a profile update.",
+    },
+  ],
+
 }; // end REMEDIATION_LIBRARY
 
 // ── Level ID → Category mapping ────────────────────────────────────────────
@@ -486,21 +648,24 @@ export const LEVEL_TO_CATEGORY: Record<string, string> = {
   patient_care_docs:  "Patient Care & Documentation",
   eoc_safety:         "EOC & Safety Compliance",
 
-  // ── ASC (AAAHC/CMS) ───────────────────────────────────────────────────────
-  asc_patient_rights:              "ASC: Patient Rights and Responsibilities",
-  asc_governance:                  "ASC: Governance",
-  asc_credentialing:               "ASC: Governance",
-  asc_administration:              "ASC: Administration",
-  asc_quality_of_care:             "ASC: Quality of Care Provided",
-  asc_quality_management:          "ASC: Quality Management and Improvement",
-  asc_clinical_records:            "ASC: Clinical Records and Health Information",
-  asc_infection_prevention_safety: "ASC: Infection Prevention and Control and Safety",
-  asc_facilities_environment:      "ASC: Facilities and Environment",
-  asc_anesthesia_surgery_services: "ASC: Anesthesia and Surgical Services",
-  asc_surgical_related_services:   "ASC: Surgical and Related Services",
-  asc_pharmaceutical_services:     "ASC: Pharmaceutical Services",
-  asc_pathology_lab:               "ASC: Pathology and Medical Laboratory Services",
-  asc_imaging_services:            "ASC: Diagnostic and Other Imaging Services",
+  // ── ASC (AAAHC v44) ───────────────────────────────────────────────────────
+  asc_adm: "ASC: Administration",
+  asc_asg: "ASC: Anesthesia and Surgical Services",
+  asc_beh: "ASC: Behavioral Health Services",
+  asc_cmc: "ASC: Care Management and Coordination",
+  asc_cpv: "ASC: Credentialing and Privileging",
+  asc_crd: "ASC: Clinical Records and Health Information",
+  asc_emg: "ASC: Emergency Management",
+  asc_fac: "ASC: Facilities and Environment",
+  asc_gov: "ASC: Governance",
+  asc_ipc: "ASC: Infection Prevention and Control and Safety",
+  asc_lrd: "ASC: Laboratory and Radiology",
+  asc_med: "ASC: Medication Management",
+  asc_ocs: "ASC: Other Clinical Services",
+  asc_prr: "ASC: Patient Rights and Responsibilities",
+  asc_qua: "ASC: Quality Management and Improvement",
+  asc_saf: "ASC: Safety",
+  asc_val: "ASC: Validation",
 };
 
 // ── Assignment function ────────────────────────────────────────────────────
