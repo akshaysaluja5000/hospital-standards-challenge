@@ -1774,7 +1774,16 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
       const { query } = parsed.data;
 
       const { handbook } = await import("@shared/handbook");
+      const { ascHandbook } = await import("@shared/asc-handbook");
       const { getVisibleLevelsForModule } = await import("@shared/all-levels");
+
+      const userRecord = await storage.getUser(userId);
+      const userModule = (userRecord?.organizationType as string) || "hospital";
+      const isAsc = userModule === "asc";
+
+      const activeHandbook = isAsc ? ascHandbook : handbook;
+      const standardBody = isAsc ? "AAAHC" : "Joint Commission";
+
       const queryLower = query.toLowerCase();
       const words = queryLower.split(/\s+/).filter(Boolean);
       const relevantSections: string[] = [];
@@ -1783,35 +1792,38 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
       let sourceTitle: string | null = null;
       let sourceType: "handbook" | "module" = "handbook";
 
-      // Search the SPD/infection-control handbook chapters
-      for (const chapter of handbook) {
+      // Search the user's module handbook chapters
+      for (const chapter of activeHandbook) {
         for (const section of chapter.sections) {
           if (
             section.heading.toLowerCase().includes(queryLower) ||
             section.content.toLowerCase().includes(queryLower) ||
             chapter.title.toLowerCase().includes(queryLower) ||
-            section.criticalValues?.some(cv => cv.label.toLowerCase().includes(queryLower) || cv.value.toLowerCase().includes(queryLower))
+            words.some(w => section.heading.toLowerCase().includes(w) || section.content.toLowerCase().includes(w)) ||
+            (section as any).criticalValues?.some((cv: any) => cv.label.toLowerCase().includes(queryLower) || cv.value.toLowerCase().includes(queryLower))
           ) {
             let sectionText = `[${chapter.title} > ${section.heading}]\n${section.content}`;
-            if (section.criticalValues) {
-              sectionText += "\nCritical Values: " + section.criticalValues.map(cv => `${cv.label}: ${cv.value}`).join("; ");
+            if ((section as any).criticalValues) {
+              sectionText += "\nCritical Values: " + (section as any).criticalValues.map((cv: any) => `${cv.label}: ${cv.value}`).join("; ");
             }
             relevantSections.push(sectionText);
             if (!sourceLevelId) { sourceLevelId = chapter.levelId; sourceTitle = chapter.title; sourceType = "handbook"; }
           }
         }
         for (const qr of chapter.quickReference) {
-          if (qr.fact.toLowerCase().includes(queryLower) || qr.detail.toLowerCase().includes(queryLower)) {
+          if (qr.fact.toLowerCase().includes(queryLower) || qr.detail.toLowerCase().includes(queryLower) ||
+              words.some(w => qr.fact.toLowerCase().includes(w) || qr.detail.toLowerCase().includes(w))) {
             relevantSections.push(`[${chapter.title} > Quick Reference]\n${qr.fact}: ${qr.detail}`);
             if (!sourceLevelId) { sourceLevelId = chapter.levelId; sourceTitle = chapter.title; sourceType = "handbook"; }
           }
         }
+        if (relevantSections.length >= 8) break;
       }
 
-      // If handbook didn't have enough context, also search hospital quiz module study material
+      // If handbook didn't have enough context, also search the module's quiz study material
       if (relevantSections.length < 4) {
-        const hospLevels = getVisibleLevelsForModule("hospital");
-        for (const lvl of hospLevels) {
+        const moduleLevels = getVisibleLevelsForModule(userModule as any);
+        for (const lvl of moduleLevels) {
           const matchingConcepts = (lvl.studyMaterial ?? []).filter(c => {
             const hay = `${c.title} ${c.content} ${c.keyPoint} ${c.extraInfo ?? ""}`.toLowerCase();
             return words.some(w => hay.includes(w));
@@ -1826,7 +1838,7 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
 
       const contextText = relevantSections.length > 0
         ? relevantSections.slice(0, 8).join("\n\n---\n\n")
-        : "No directly matching sections found. Answer based on general Joint Commission compliance knowledge relevant to the question.";
+        : `No directly matching sections found. Answer based on general ${standardBody} compliance knowledge relevant to the question.`;
 
       const message = await callAnthropicWithRetry({
         model: "claude-haiku-4-5",
@@ -1834,7 +1846,7 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
         messages: [
           {
             role: "user",
-            content: `Answer this hospital compliance question in 2-3 sentences. No headers, no bullets, no markdown. Plain text only.
+            content: `Answer this ${standardBody} compliance question in 2-3 sentences. No headers, no bullets, no markdown. Plain text only.
 
 Question: "${query}"
 
