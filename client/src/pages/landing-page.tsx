@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck, Moon, Sun, Radar, FileSearch2, Zap, GraduationCap, ClipboardList } from "lucide-react";
+import { CalendarCheck, BarChart3, FileText, BookOpen, ArrowRight, BrainCircuit, CheckCircle2, Users, TrendingUp, Search, Stethoscope, Crown, Lock, Sparkles, AlertTriangle, Target, ShieldCheck, Moon, Sun, Radar, FileSearch2, Zap, GraduationCap, ClipboardList, Telescope, BriefcaseBusiness } from "lucide-react";
 import { AppLogoMark } from "@/components/app-logo-mark";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
@@ -351,6 +351,62 @@ export default function LandingPage() {
                     <div className="mt-auto pt-2 border-t border-border">
                       <p className="text-xs text-muted-foreground leading-relaxed">
                         <span className="font-semibold text-foreground">Replaces:</span> blank incident forms, manual routing, and disconnected corrective action tracking.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Regulatory Watch Agent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: 0.25 }}
+                  data-testid="card-agent-regulatory-watch"
+                >
+                  <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-400/20 flex items-center justify-center flex-shrink-0">
+                        <Telescope size={22} className="text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Agent 5</p>
+                        <h3 className="font-bold text-base text-foreground leading-tight" data-testid="text-agent-5-title">Regulatory Watch Agent</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Monitors Joint Commission, AAAHC, and CMS public channels for standard updates, new chapters, and survey focus shifts. When the NPG chapter launched January 2026, this agent would have flagged it automatically and initiated a content build task — rather than discovering the gap months later.
+                    </p>
+                    <div className="mt-auto pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">Replaces:</span> manual monitoring of accreditation body bulletins, field communications, and update emails.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Executive Readiness Agent */}
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, delay: 0.3 }}
+                  data-testid="card-agent-executive-readiness"
+                >
+                  <div className="rounded-2xl border border-border bg-card p-6 h-full flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center flex-shrink-0">
+                        <BriefcaseBusiness size={22} className="text-sky-600" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground">Agent 6</p>
+                        <h3 className="font-bold text-base text-foreground leading-tight" data-testid="text-agent-6-title">Executive Readiness Agent</h3>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      For the CEO/CNO level, this agent prepares the facility's readiness narrative — not just a dashboard, but a drafted summary of where you stand, what's at risk, and what actions are due this week. It's the difference between data and a briefing.
+                    </p>
+                    <div className="mt-auto pt-2 border-t border-border">
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        <span className="font-semibold text-foreground">Replaces:</span> manually assembled board reports and pre-survey executive prep sessions.
                       </p>
                     </div>
                   </div>
