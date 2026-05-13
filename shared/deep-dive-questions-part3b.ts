@@ -399,7 +399,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "The facility uses a standardized process including unique temporary identifiers"
         ],
         correctIndex: 3,
-          explanation: "Joint Commission NPSG.01.01.01 requires reliable patient identification even for unknown patients. Best practice includes multiple safeguards: unique temporary names following a standardized naming convention (avoiding similar-sounding names), unique MRNs, color-coded or distinctly labeled wristbands, dedicated care teams, and rigorous verification at every handoff and before every procedure. The facility must have a written policy addressing simultaneous unidentified patients.",
+          explanation: "JC NPG 1 / formerly NPSG.01.01.01 requires reliable patient identification even for unknown patients. Best practice includes multiple safeguards: unique temporary names following a standardized naming convention (avoiding similar-sounding names), unique MRNs, color-coded or distinctly labeled wristbands, dedicated care teams, and rigorous verification at every handoff and before every procedure. The facility must have a written policy addressing simultaneous unidentified patients.",
           expertXp: 30
         },
         {
@@ -411,14 +411,14 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "Both are compliance gaps: sequential numbering creates confusion risk among multiple unknowns"
         ],
         correctIndex: 3,
-          explanation: "Both findings represent compliance gaps under NPSG.01.01.01. Sequential numbering (1, 2, 3) increases confusion risk among multiple unidentified patients and should use more distinct conventions. Additionally, when a patient's true identity is established, the facility must have a defined reconciliation process: replace the temporary wristband, merge medical records, notify all active care teams, and re-verify identity with two permanent identifiers. Failure to reconcile identifiers creates ongoing patient safety risk.",
+          explanation: "Both findings represent compliance gaps under NPG 1 / formerly NPSG.01.01.01. Sequential numbering (1, 2, 3) increases confusion risk among multiple unidentified patients and should use more distinct conventions. Additionally, when a patient's true identity is established, the facility must have a defined reconciliation process: replace the temporary wristband, merge medical records, notify all active care teams, and re-verify identity with two permanent identifiers. Failure to reconcile identifiers creates ongoing patient safety risk.",
           expertXp: 35
         }
       ]
     },
     {
       id: "dd-ssc9",
-      baseQuestion: "According to Joint Commission National Patient Safety Goals, when must surgical specimens be labeled?",
+      baseQuestion: "According to Joint Commission National Performance Goals (NPG 1 — correct patient, correct care, correct time), when must surgical specimens be labeled?",
       baseOptions: [
         "When the circulating nurse has a free moment",
         "At the point of collection",
@@ -450,7 +450,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "Non-compliant — each specimen must be labeled immediately at the point of"
         ],
         correctIndex: 3,
-          explanation: "NPSG.01.03.01 requires labeling at the point of collection, in the presence of the patient. Collecting multiple specimens and labeling them later creates significant risk of mislabeling because the nurse must rely on memory or position to identify which specimen is which. Each specimen must be labeled immediately upon collection with read-back verification before the next specimen is passed off the field.",
+          explanation: "NPG 1 / formerly NPSG.01.03.01 requires labeling at the point of collection, in the presence of the patient. Collecting multiple specimens and labeling them later creates significant risk of mislabeling because the nurse must rely on memory or position to identify which specimen is which. Each specimen must be labeled immediately upon collection with read-back verification before the next specimen is passed off the field.",
           expertXp: 30
         },
         {
@@ -717,7 +717,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "Compliant — the surgical technologist is a member of the operative team and is qualified by proximity"
         ],
         correctIndex: 2,
-          explanation: "Joint Commission NPSG.01.03.01 requires that blood product verification be performed by individuals qualified per the facility's own policy. If the facility's policy defines qualified verifiers as 'RN or physician,' then using a surgical technologist — regardless of competency — violates the facility's own standard. The surveyor would cite this as non-compliance with the facility's implementation of the NPSG. The facility must either change its policy to include surgical technologists (with competency validation) or ensure only defined qualified individuals perform verification.",
+          explanation: "JC NPG 1 / formerly NPSG.01.03.01 requires that blood product verification be performed by individuals qualified per the facility's own policy. If the facility's policy defines qualified verifiers as 'RN or physician,' then using a surgical technologist — regardless of competency — violates the facility's own standard. The surveyor would cite this as non-compliance with the facility's implementation of NPG 1. The facility must either change its policy to include surgical technologists (with competency validation) or ensure only defined qualified individuals perform verification.",
           expertXp: 35
         }
       ]
@@ -858,7 +858,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "The handoff is adequate as long as it is documented in the chart"
         ],
         correctIndex: 1,
-          explanation: "Joint Commission NPSG.02.03.01 requires standardized handoff communication with an opportunity for questions and concerns. A handoff where the receiver is distracted by simultaneous tasks and does not ask questions fails to meet the interactive requirement of the standard. Best practice includes a standardized format (I-PASS, SBAR), a dedicated moment where competing tasks are paused, read-back of critical information, and documentation of the handoff.",
+          explanation: "JC NPG 1 / formerly NPSG.02.03.01 requires standardized handoff communication with an opportunity for questions and concerns. A handoff where the receiver is distracted by simultaneous tasks and does not ask questions fails to meet the interactive requirement of the standard. Best practice includes a standardized format (I-PASS, SBAR), a dedicated moment where competing tasks are paused, read-back of critical information, and documentation of the handoff.",
           expertXp: 30
         },
         {
@@ -1011,7 +1011,7 @@ export const ddSurgicalSafetyLevel: DeepDiveLevel = {
           "Implement a system-level fix requiring two-identifier matching (name AND MRN or DOB)"
         ],
         correctIndex: 3,
-          explanation: "Joint Commission sentinel event policy and NPSG.01.01.01 expect system-level corrective actions that address root causes rather than individual blame. The fix must address the systemic vulnerability: the PACS system allowing single-identifier retrieval. Implementing mandatory two-identifier matching in the retrieval workflow creates a hard stop that prevents this failure mode. Additionally, the facility should conduct a proactive risk assessment (FMEA) to identify similar single-identifier vulnerabilities in other systems (lab results, medication dispensing, etc.).",
+          explanation: "JC sentinel event policy and NPG 1 / formerly NPSG.01.01.01 expect system-level corrective actions that address root causes rather than individual blame. The fix must address the systemic vulnerability: the PACS system allowing single-identifier retrieval. Implementing mandatory two-identifier matching in the retrieval workflow creates a hard stop that prevents this failure mode. Additionally, the facility should conduct a proactive risk assessment (FMEA) to identify similar single-identifier vulnerabilities in other systems (lab results, medication dispensing, etc.).",
           expertXp: 30
         },
         {

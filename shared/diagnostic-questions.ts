@@ -571,7 +571,7 @@ export const diagnosticQuestions: DiagnosticQuestion[] = [
     options: ["Yes — emergency clinical need justifies floor stocking of concentrated saline", "Yes — hypertonic saline above 3% is permitted on units with documented emergency protocols", "No — concentrated hypertonic saline above 0.9% must be restricted to pharmacy storage", "No — only if the unit does not have a dedicated medication room for separate secure storage"],
     correctIndex: 2 },
 
-  // National Patient Safety Goals (15)
+  // National Performance Goals / formerly National Patient Safety Goals (15)
   { id: "dq-npsg1", sectionId: "npsg", question: "Before administering a medication, a nurse confirms the patient by reading the room number and name on the door. Is this two-identifier verification compliant?",
     options: ["Yes — room number plus name satisfies the two-identifier requirement", "No — room number is not an acceptable patient identifier; the second identifier must be patient-specific (DOB or MRN)", "Yes — name plus location is sufficient when the patient is known to the nurse", "No — the nurse must also verbally confirm the patient's medical record number"],
     correctIndex: 1 },

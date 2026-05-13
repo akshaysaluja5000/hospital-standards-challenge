@@ -93,7 +93,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "Contact the patient's primary care provider and community pharmacy to verify the correct dose"
         ],
         correctIndex: 3,
-          explanation: "When discrepancies are identified between patient report, discharge records, and other sources, NPSG.03.06.01 requires active investigation using multiple reliable sources (PCP, pharmacy records, medication bottles). The discrepancy must be resolved with the prescriber and documented. Relying solely on the patient's report or prior discharge records without verification risks perpetuating an error.",
+          explanation: "When discrepancies are identified between patient report, discharge records, and other sources, NPG 14 / formerly NPSG.03.06.01 requires active investigation using multiple reliable sources (PCP, pharmacy records, medication bottles). The discrepancy must be resolved with the prescriber and documented. Relying solely on the patient's report or prior discharge records without verification risks perpetuating an error.",
           expertXp: 30
         },
         {
@@ -105,7 +105,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "The pharmacy technician's credential and signature are sufficient documentation of source reliability"
         ],
         correctIndex: 2,
-          explanation: "NPSG.03.06.01 requires that the medication reconciliation process includes obtaining and documenting a complete and accurate medication list. Documenting the sources used to compile the BPMH (patient, family, pharmacy, PCP records) is essential for establishing reliability, enabling discrepancy resolution, and demonstrating a systematic process during survey. Without source documentation, the accuracy of the list cannot be verified.",
+          explanation: "NPG 14 / formerly NPSG.03.06.01 requires that the medication reconciliation process includes obtaining and documenting a complete and accurate medication list. Documenting the sources used to compile the BPMH (patient, family, pharmacy, PCP records) is essential for establishing reliability, enabling discrepancy resolution, and demonstrating a systematic process during survey. Without source documentation, the accuracy of the list cannot be verified.",
           expertXp: 35
         }
       ]
@@ -144,7 +144,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "After any change in patient condition that could affect fall risk"
         ],
         correctIndex: 3,
-          explanation: "NPSG.09.02.01 requires ongoing reassessment of fall risk. Beyond routine reassessment intervals, fall risk must be reevaluated whenever there is a significant change in the patient's condition that could alter risk, such as administration of sedating medications, post-procedural status changes, new mobility limitations, or change in cognitive status. A static assessment schedule fails to capture dynamic risk changes.",
+          explanation: "NPG 1 / formerly NPSG.09.02.01 requires ongoing reassessment of fall risk. Beyond routine reassessment intervals, fall risk must be reevaluated whenever there is a significant change in the patient's condition that could alter risk, such as administration of sedating medications, post-procedural status changes, new mobility limitations, or change in cognitive status. A static assessment schedule fails to capture dynamic risk changes.",
           expertXp: 30
         },
         {
@@ -156,7 +156,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "Document the fall in the medical record, complete an incident report, notify the physician, and perform a focused neurological and musculoskeletal assessment"
         ],
         correctIndex: 1,
-          explanation: "Joint Commission expects a comprehensive post-fall response that includes immediate clinical assessment (neurological, musculoskeletal, skin integrity, vitals), appropriate diagnostic workup, a systematic analysis of contributing factors (post-fall huddle or RCA), care plan modification with enhanced individualized interventions, interdisciplinary communication, and patient/family engagement. Simply documenting and reporting without systematic analysis and care plan revision fails to meet performance improvement expectations under PI.01.01.01 and NPSG.09.02.01.",
+          explanation: "Joint Commission expects a comprehensive post-fall response that includes immediate clinical assessment (neurological, musculoskeletal, skin integrity, vitals), appropriate diagnostic workup, a systematic analysis of contributing factors (post-fall huddle or RCA), care plan modification with enhanced individualized interventions, interdisciplinary communication, and patient/family engagement. Simply documenting and reporting without systematic analysis and care plan revision fails to meet performance improvement expectations under PI.01.01.01 and NPG 1 / formerly NPSG.09.02.01.",
           expertXp: 35
         }
       ]
@@ -360,7 +360,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "The pharmacy and therapeutics committee must pre-approve a list of acceptable allergy overrides, and any override not on the list requires a peer review"
         ],
         correctIndex: 2,
-          explanation: "Joint Commission medication management standards (MM.01.01.03) and NPSG.03.06.01 require that organizations have robust processes for medication safety, including management of clinical decision support alerts. Override of allergy alerts without documented clinical rationale creates a significant safety gap. The organization must track override rates, require documented justification, integrate findings into performance improvement (PI.01.01.01), and ensure that alert fatigue is addressed through optimization of the alert system.",
+          explanation: "JC medication management standards (MM.01.01.03) and NPG 14 / formerly NPSG.03.06.01 require that organizations have robust processes for medication safety, including management of clinical decision support alerts. Override of allergy alerts without documented clinical rationale creates a significant safety gap. The organization must track override rates, require documented justification, integrate findings into performance improvement (PI.01.01.01), and ensure that alert fatigue is addressed through optimization of the alert system.",
           expertXp: 35
         }
       ]
@@ -501,7 +501,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "Hand hygiene, sterile gloves, and antibiotic ointment at the insertion site"
         ],
         correctIndex: 2,
-          explanation: "The evidence-based central line bundle (aligned with CDC/SHEA/IDSA guidelines and Joint Commission NPSG.07.04.01) includes: hand hygiene before insertion and access, maximal sterile barrier precautions (cap, mask, sterile gown, sterile gloves, full-body drape), chlorhexidine greater than 0.5% skin antisepsis, optimal site selection (avoiding femoral when possible, subclavian preferred for infection risk reduction), and daily assessment of line necessity with removal when no longer clinically indicated. Staff must be able to articulate all bundle elements.",
+          explanation: "The evidence-based central line bundle (aligned with CDC/SHEA/IDSA guidelines and JC NPG 5 / formerly NPSG.07.04.01) includes: hand hygiene before insertion and access, maximal sterile barrier precautions (cap, mask, sterile gown, sterile gloves, full-body drape), chlorhexidine greater than 0.5% skin antisepsis, optimal site selection (avoiding femoral when possible, subclavian preferred for infection risk reduction), and daily assessment of line necessity with removal when no longer clinically indicated. Staff must be able to articulate all bundle elements.",
           expertXp: 30
         },
         {
@@ -705,7 +705,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "This is a physician ordering error, not a medication reconciliation failure"
         ],
         correctIndex: 0,
-          explanation: "The transition from IV insulin to subcutaneous insulin is a critical medication reconciliation event. NPSG.03.06.01 requires that all medication changes at transitions are identified, reconciled, and communicated. Best practice requires that subcutaneous basal insulin be administered 1-2 hours before discontinuing the infusion to prevent rebound hyperglycemia. The failure to address this conversion during the transfer represents a gap in the reconciliation process, prescriber communication, and potentially in the organization's ICU transfer protocols.",
+          explanation: "The transition from IV insulin to subcutaneous insulin is a critical medication reconciliation event. NPG 14 / formerly NPSG.03.06.01 requires that all medication changes at transitions are identified, reconciled, and communicated. Best practice requires that subcutaneous basal insulin be administered 1-2 hours before discontinuing the infusion to prevent rebound hyperglycemia. The failure to address this conversion during the transfer represents a gap in the reconciliation process, prescriber communication, and potentially in the organization's ICU transfer protocols.",
           expertXp: 30
         },
         {
@@ -717,7 +717,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "Pharmacist review is only required at admission and discharge per NPSG.03.06.01, not at intra-facility transfers"
         ],
         correctIndex: 1,
-          explanation: "Joint Commission expects system-level safeguards, not reliance on individual memory. MM.02.01.01 requires that the medication management system includes safeguards at high-risk points, and NPSG.03.06.01 applies to ALL transitions including intra-facility transfers. A robust ICU transfer process should hardwire medication reconciliation into the order set, include standardized conversion protocols for high-alert medications, leverage pharmacist expertise for complex regimens, and build in verification checkpoints. The absence of these system-level safeguards creates predictable, preventable medication errors.",
+          explanation: "Joint Commission expects system-level safeguards, not reliance on individual memory. MM.02.01.01 requires that the medication management system includes safeguards at high-risk points, and NPG 14 / formerly NPSG.03.06.01 applies to ALL transitions including intra-facility transfers. A robust ICU transfer process should hardwire medication reconciliation into the order set, include standardized conversion protocols for high-alert medications, leverage pharmacist expertise for complex regimens, and build in verification checkpoints. The absence of these system-level safeguards creates predictable, preventable medication errors.",
           expertXp: 35
         }
       ]
@@ -807,7 +807,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "The patient and family are responsible for keeping their room tidy and reporting hazards"
         ],
         correctIndex: 2,
-          explanation: "Fall prevention is a shared responsibility. Under EC.02.06.01 (environment of care) and NPSG.09.02.01 (fall prevention), every staff member entering the room should assess for and correct hazards. Nursing has specific accountability for clinical environmental safety: bed in lowest locked position, call light within reach, non-skid footwear accessible, clear pathways, adequate lighting, and personal items within reach. These elements should be verified during hourly rounding and at every patient encounter.",
+          explanation: "Fall prevention is a shared responsibility. Every staff member entering the room should assess for and correct hazards under NPG 1 / formerly NPSG.09.02.01. Nursing has specific accountability for clinical environmental safety: bed in lowest locked position, call light within reach, non-skid footwear accessible, clear pathways, adequate lighting, and personal items within reach. These elements should be verified during hourly rounding and at every patient encounter.",
           expertXp: 30
         },
         {
@@ -819,7 +819,7 @@ export const ddPatientCareLevel: DeepDiveLevel = {
           "Restricting all high-risk patients from ambulating during nighttime hours addresses the safety concern"
         ],
         correctIndex: 2,
-          explanation: "A clear pattern of nighttime falls requires systematic analysis and targeted intervention under PI.01.01.01 and NPSG.09.02.01. The fall committee must analyze contributing factors specific to the nighttime period (staffing patterns, timing of sedating medications relative to fall events, lighting adequacy, toileting needs assessment). Evidence-based interventions should be implemented, such as proactive scheduled toileting rounds, review of medication administration timing to avoid peak sedation during high-risk ambulation hours, enhanced purposeful rounding, and environmental modifications. Blanket restrictions on ambulation violate patient rights and are not evidence-based. Bed alarms alone without addressing root causes are insufficient.",
+          explanation: "A clear pattern of nighttime falls requires systematic analysis and targeted intervention under PI.01.01.01 and NPG 1 / formerly NPSG.09.02.01. The fall committee must analyze contributing factors specific to the nighttime period (staffing patterns, timing of sedating medications relative to fall events, lighting adequacy, toileting needs assessment). Evidence-based interventions should be implemented, such as proactive scheduled toileting rounds, review of medication administration timing to avoid peak sedation during high-risk ambulation hours, enhanced purposeful rounding, and environmental modifications. Blanket restrictions on ambulation violate patient rights and are not evidence-based. Bed alarms alone without addressing root causes are insufficient.",
           expertXp: 35
         }
       ]

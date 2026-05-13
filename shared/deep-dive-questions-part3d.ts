@@ -18,7 +18,7 @@ export const ddEocLevel: DeepDiveLevel = {
         "Close the storage room and prohibit access until facilities management responds"
       ],
       baseCorrectIndex: 1,
-      baseExplanation: "NFPA 25 and Joint Commission EC.02.03.05 require a minimum 18-inch clearance below sprinkler deflectors to ensure proper spray pattern. Items encroaching on this clearance must be corrected immediately as this is a direct life safety hazard that could impair sprinkler function during a fire.",
+      baseExplanation: "NFPA 25 and Joint Commission PE.03 (formerly EC.02.03.05) require a minimum 18-inch clearance below sprinkler deflectors to ensure proper spray pattern. Items encroaching on this clearance must be corrected immediately as this is a direct life safety hazard that could impair sprinkler function during a fire.",
       baseXp: 15,
       followUps: [{
         question: "During your follow-up review, you find that this same storage room has had repeated sprinkler clearance violations documented on 3 of the last 4 quarterly EOC rounds. What systemic action should the EOC Committee take?",
@@ -41,7 +41,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Request a waiver from the Joint Commission for the 18-inch clearance requirement during the construction period"
         ],
         correctIndex: 1,
-        explanation: "Joint Commission does not grant waivers for NFPA requirements. The organization must maintain compliance at all times, even while awaiting a capital solution. A multi-pronged interim strategy including par-level optimization, visual cues, regular audits, and clear accountability demonstrates the organization's commitment to sustained compliance and meets the expectations of EC.02.03.05 and LD.03.02.01.",
+        explanation: "Joint Commission does not grant waivers for NFPA requirements. The organization must maintain compliance at all times, even while awaiting a capital solution. A multi-pronged interim strategy including par-level optimization, visual cues, regular audits, and clear accountability demonstrates the organization's commitment to sustained compliance and meets the expectations of PE.03 / LD.03.02.01. (Note: Effective January 1, 2026, the old EC and LS chapters were merged into the Physical Environment (PE) chapter. EC.02.03.05 is now covered under PE.03.)",
         expertXp: 30
       },
       {
@@ -53,7 +53,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "A deficiency in staff education and competency under HR.01.05.03, since the nurse could not articulate the safety requirement"
         ],
         correctIndex: 2,
-        explanation: "Joint Commission tracers evaluate both the physical environment and staff knowledge. When a recurring life safety deficiency is found alongside a frontline staff member who cannot describe the relevant safety requirement, it indicates failures in both the EOC management program (EC.02.03.05) and the staff education/competency program (HR.01.05.03). Surveyors expect that corrective actions for recurring findings include staff education with demonstrated competency, not just physical fixes.",
+        explanation: "Joint Commission tracers evaluate both the physical environment and staff knowledge. When a recurring life safety deficiency is found alongside a frontline staff member who cannot describe the relevant safety requirement, it indicates failures in both the Physical Environment management program (PE.03, formerly EC.02.03.05) and the staff education/competency program (HR.01.05.03). Surveyors expect that corrective actions for recurring findings include staff education with demonstrated competency, not just physical fixes.",
         expertXp: 35
       }]
     },
@@ -127,7 +127,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Place a temporary battery-powered exit sign and submit a work order for repair within 72 hours"
         ],
         correctIndex: 0,
-        explanation: "Per Joint Commission standard EC.02.03.05, when a life safety code deficiency is identified, the organization must implement interim life safety measures (ILSM) until the condition is corrected. The sign must be repaired or replaced promptly, and the interim measures must be documented. Simply posting staff or closing a required exit does not meet the regulatory requirement for maintaining means of egress.",
+        explanation: "Per Joint Commission PE.03 (formerly EC.02.03.05), when a life safety code deficiency is identified, the organization must implement interim life safety measures (ILSM) until the condition is corrected. The sign must be repaired or replaced promptly, and the interim measures must be documented. Simply posting staff or closing a required exit does not meet the regulatory requirement for maintaining means of egress.",
         expertXp: 30
       },
       {
@@ -139,7 +139,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Implement a comprehensive exit sign preventive maintenance program with scheduled battery testing"
         ],
         correctIndex: 3,
-        explanation: "An 18% failure rate indicates a systemic maintenance gap rather than isolated failures. NFPA 101 Section 7.9 requires emergency lighting (including exit signs with battery backup) to be tested for 30 seconds monthly and 90 minutes annually. Establishing a comprehensive PM program with scheduled testing, replacement cycles, and integration into regular life safety rounds addresses the root cause and prevents recurrence, which aligns with Joint Commission EC.02.03.05 expectations for proactive management.",
+        explanation: "An 18% failure rate indicates a systemic maintenance gap rather than isolated failures. NFPA 101 Section 7.9 requires emergency lighting (including exit signs with battery backup) to be tested for 30 seconds monthly and 90 minutes annually. Establishing a comprehensive PM program with scheduled testing, replacement cycles, and integration into regular life safety rounds addresses the root cause and prevents recurrence, which aligns with Joint Commission PE.03 (formerly EC.02.03.05) expectations for proactive management.",
         expertXp: 30
       },
       {
@@ -151,7 +151,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Since the sign is illuminated and the banner is temporary"
         ],
         correctIndex: 0,
-        explanation: "Joint Commission surveyors evaluate systems, not just individual findings. An obscured exit sign violates NFPA 101 Section 7.10 (EC.02.03.05), but the nurse's inability to describe a process for maintaining egress visibility suggests the organization lacks an effective monitoring system (EC.04.01.01) and has not ensured staff understand their life safety responsibilities (HR.01.05.03). Surveyors expect that all staff can articulate basic life safety principles relevant to their work area, including keeping exit signage visible.",
+        explanation: "Joint Commission surveyors evaluate systems, not just individual findings. An obscured exit sign violates NFPA 101 Section 7.10 (PE.03, formerly EC.02.03.05), but the nurse's inability to describe a process for maintaining egress visibility suggests the organization lacks an effective monitoring system and has not ensured staff understand their life safety responsibilities (HR.01.05.03). Surveyors expect that all staff can articulate basic life safety principles relevant to their work area, including keeping exit signage visible.",
         expertXp: 35
       }]
     },
@@ -165,7 +165,7 @@ export const ddEocLevel: DeepDiveLevel = {
         "SDS information is available electronically through our hospital intranet and can be"
       ],
       baseCorrectIndex: 3,
-      baseExplanation: "OSHA's Hazard Communication Standard (29 CFR 1910.1200) and Joint Commission standard EC.02.02.01 require that SDS be readily accessible to employees during their work shifts. Electronic access is acceptable as long as there are no barriers to immediate access, backup systems are available, and employees are trained on how to retrieve them. Locking SDS away or claiming no chemicals are used would be non-compliant.",
+      baseExplanation: "OSHA's Hazard Communication Standard (29 CFR 1910.1200) and JC PE.02 (formerly EC.02.02.01) require that SDS be readily accessible to employees during their work shifts. Electronic access is acceptable as long as there are no barriers to immediate access, backup systems are available, and employees are trained on how to retrieve them. Locking SDS away or claiming no chemicals are used would be non-compliant.",
       baseXp: 15,
       followUps: [{
         question: "The surveyor then asks what would happen if the computer system went down and staff needed to access SDS information during a chemical spill emergency. How should your facility address this?",
@@ -200,7 +200,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "A finding under LD.03.02.01 for leadership failure to ensure a safe work environment"
         ],
         correctIndex: 0,
-        explanation: "Joint Commission distinguishes between training completion and demonstrated competency. Staff who have completed HazCom training but cannot identify chemicals in their work area or describe required PPE demonstrate that training was not effective. The surveyor will cite both the hazardous materials management standard (EC.02.02.01) for program effectiveness and staff competency standards (HR.01.05.03) for failure to verify that training translated into actual knowledge. Documentation of training alone does not satisfy the competency requirement.",
+        explanation: "Joint Commission distinguishes between training completion and demonstrated competency. Staff who have completed HazCom training but cannot identify chemicals in their work area or describe required PPE demonstrate that training was not effective. The surveyor will cite both the hazardous materials management standard (PE.02, formerly EC.02.02.01) for program effectiveness and staff competency standards (HR.01.05.03) for failure to verify that training translated into actual knowledge. Documentation of training alone does not satisfy the competency requirement.",
         expertXp: 35
       }]
     },
@@ -298,7 +298,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Since the RACE procedures were correctly demonstrated"
         ],
         correctIndex: 1,
-        explanation: "Healthcare occupancies rely on a defend-in-place strategy where horizontal evacuation to an adjacent smoke compartment is the primary evacuation method. NFPA 101 Section 18.7.1 and Joint Commission EC.02.03.05 require that fire drills evaluate all aspects of fire response including evacuation. Staff inability to identify smoke compartment boundaries indicates both a drill program gap (drills not exercising evacuation procedures) and a staff knowledge gap. Joint Commission expects all clinical staff to know their evacuation routes and smoke compartment layout.",
+        explanation: "Healthcare occupancies rely on a defend-in-place strategy where horizontal evacuation to an adjacent smoke compartment is the primary evacuation method. NFPA 101 Section 18.7.1 and JC PE.03 (formerly EC.02.03.05) require that fire drills evaluate all aspects of fire response including evacuation. Staff inability to identify smoke compartment boundaries indicates both a drill program gap (drills not exercising evacuation procedures) and a staff knowledge gap. Joint Commission expects all clinical staff to know their evacuation routes and smoke compartment layout.",
         expertXp: 35
       }]
     },
@@ -410,7 +410,7 @@ export const ddEocLevel: DeepDiveLevel = {
         "This is acceptable as long as the door is closed during fire drills"
       ],
       baseCorrectIndex: 2,
-      baseExplanation: "Per NFPA 101 Section 18.2.2.2.2 and Joint Commission EC.02.03.05, fire-rated doors in healthcare occupancies must be self-closing and latching. They may only be held open by devices connected to the fire alarm system that automatically release the door upon alarm activation. Propping fire doors open with doorstops, wedges, or other unapproved devices is a serious life safety code violation that compromises smoke compartmentalization.",
+      baseExplanation: "Per NFPA 101 Section 18.2.2.2.2 and JC PE.03.01.01 (formerly EC.02.03.05 / LS.02.01.10), fire-rated doors in healthcare occupancies must be self-closing and latching. They may only be held open by devices connected to the fire alarm system that automatically release the door upon alarm activation. Propping fire doors open with doorstops, wedges, or other unapproved devices is a serious life safety code violation that compromises smoke compartmentalization.",
       baseXp: 15,
       followUps: [{
         question: "The surveyor asks the facility to demonstrate that all corridor fire doors close and latch properly. During testing, three doors are found that close but do not fully latch. What interim life safety measure (ILSM) is appropriate?",
@@ -421,7 +421,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Disable the fire alarm connections to those doors until the latches are repaired"
         ],
         correctIndex: 2,
-        explanation: "When a life safety feature is impaired, Joint Commission standard EC.02.03.05 requires implementation of interim life safety measures. For non-latching fire doors, this includes assigning staff to monitor and manually close the doors during any fire alarm, implementing fire watch patrols in affected smoke compartments, expediting repair, and maintaining documentation of all interim measures. The ILSM must remain in effect until the deficiency is fully corrected.",
+        explanation: "When a life safety feature is impaired, JC PE.03 (formerly EC.02.03.05) requires implementation of interim life safety measures. For non-latching fire doors, this includes assigning staff to monitor and manually close the doors during any fire alarm, implementing fire watch patrols in affected smoke compartments, expediting repair, and maintaining documentation of all interim measures. The ILSM must remain in effect until the deficiency is fully corrected.",
         expertXp: 30
       },
       {
@@ -459,7 +459,7 @@ export const ddEocLevel: DeepDiveLevel = {
         "Equipment is included based on a risk assessment considering function"
       ],
       baseCorrectIndex: 3,
-      baseExplanation: "Joint Commission standard EC.02.04.01 requires organizations to manage medical equipment risks by maintaining a written inventory based on criteria that include equipment function (therapeutic, diagnostic, monitoring), physical risk including patient and staff safety, maintenance requirements, and equipment incident history. This risk-based approach ensures that high-risk, high-priority equipment receives appropriate attention without requiring identical management of all devices.",
+      baseExplanation: "JC PE.04 (formerly EC.02.04.01) requires organizations to manage medical equipment risks by maintaining a written inventory based on criteria that include equipment function (therapeutic, diagnostic, monitoring), physical risk including patient and staff safety, maintenance requirements, and equipment incident history. This risk-based approach ensures that high-risk, high-priority equipment receives appropriate attention without requiring identical management of all devices.",
       baseXp: 15,
       followUps: [{
         question: "Your clinical engineering department reports that 15% of high-risk medical equipment has overdue preventive maintenance (PM). The Joint Commission surveyor asks how you will address this. What is the expected response?",
@@ -482,7 +482,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "Immediately add all untracked infusion pumps to the equipment inventory, conduct initial safety inspections on each"
         ],
         correctIndex: 3,
-        explanation: "Joint Commission EC.02.04.01 requires that ALL medical equipment meeting the organization's inclusion criteria be in the inventory and managed appropriately. Equipment acquired through clinical trials, donations, or loans is not exempt. The untracked pumps must be immediately inventoried and inspected. The systemic fix requires centralized tracking with automated scheduling to prevent reliance on individual knowledge. A new acquisition process ensures future equipment enters the management program before patient use.",
+        explanation: "JC PE.04 (formerly EC.02.04.01) requires that ALL medical equipment meeting the organization's inclusion criteria be in the inventory and managed appropriately. Equipment acquired through clinical trials, donations, or loans is not exempt. The untracked pumps must be immediately inventoried and inspected. The systemic fix requires centralized tracking with automated scheduling to prevent reliance on individual knowledge. A new acquisition process ensures future equipment enters the management program before patient use.",
         expertXp: 30
       },
       {
@@ -494,7 +494,7 @@ export const ddEocLevel: DeepDiveLevel = {
           "EC.02.04.01 for inadequate medical equipment management program that does not"
         ],
         correctIndex: 3,
-        explanation: "Joint Commission EC.02.04.01 requires a comprehensive medical equipment management program that includes monitoring for and responding to equipment recalls, hazard notifications, and safety alerts. The inability to demonstrate a systematic process for tracking FDA communications and evidence that alerts were acted upon represents a significant program deficiency. A functioning device with current PM does not mitigate the risk of an unaddressed safety alert. The organization must show that it receives, evaluates, and responds to manufacturer and FDA notifications for all managed equipment.",
+        explanation: "JC PE.04 (formerly EC.02.04.01) requires a comprehensive medical equipment management program that includes monitoring for and responding to equipment recalls, hazard notifications, and safety alerts. The inability to demonstrate a systematic process for tracking FDA communications and evidence that alerts were acted upon represents a significant program deficiency. A functioning device with current PM does not mitigate the risk of an unaddressed safety alert. The organization must show that it receives, evaluates, and responds to manufacturer and FDA notifications for all managed equipment.",
         expertXp: 35
       }]
     },
@@ -508,7 +508,7 @@ export const ddEocLevel: DeepDiveLevel = {
         "State fire code requirements for combustible material storage"
       ],
       baseCorrectIndex: 2,
-      baseExplanation: "OSHA's Bloodborne Pathogen Standard (29 CFR 1910.1030) and Joint Commission standard EC.02.02.01 require that regulated medical waste (biohazardous waste) be segregated from regular waste using color-coded containers (red bags or containers with the biohazard symbol). Placing biohazard waste in regular trash creates exposure risks for housekeeping, waste handlers, and the public, and represents a serious regulatory violation.",
+      baseExplanation: "OSHA's Bloodborne Pathogen Standard (29 CFR 1910.1030) and JC PE.02 (formerly EC.02.02.01) require that regulated medical waste (biohazardous waste) be segregated from regular waste using color-coded containers (red bags or containers with the biohazard symbol). Placing biohazard waste in regular trash creates exposure risks for housekeeping, waste handlers, and the public, and represents a serious regulatory violation.",
       baseXp: 15,
       followUps: [{
         question: "Further investigation reveals that housekeeping staff in three departments have not received annual refresher training on regulated medical waste segregation. What corrective action is required?",

@@ -564,7 +564,7 @@ export const ddOrLevel: DeepDiveLevel = {
           "All medications and solutions on the sterile field must be labeled with the drug name, concentration"
         ],
         correctIndex: 3,
-          explanation: "Joint Commission National Patient Safety Goal (NPSG) 03.04.01 requires that all medications and solutions on and off the sterile field be labeled with the drug name, strength/concentration, and expiration time when preparation and administration are not immediately concurrent. On the sterile field, labeling must occur at the time the solution is transferred to the sterile container, and the circulator and scrub person must perform a verbal verification (read-back). Any unlabeled container must be discarded. This is one of the most commonly cited NPSGs during OR tracers.",
+          explanation: "JC National Performance Goal 14 (formerly NPSG 03.04.01) requires that all medications and solutions on and off the sterile field be labeled with the drug name, strength/concentration, and expiration time when preparation and administration are not immediately concurrent. On the sterile field, labeling must occur at the time the solution is transferred to the sterile container, and the circulator and scrub person must perform a verbal verification (read-back). Any unlabeled container must be discarded. This is one of the most frequently cited areas during OR tracers. Note: Effective January 1, 2026, NPSGs were replaced by National Performance Goals (NPGs) — the same requirements apply under the new NPG 14 medication management goal.",
           expertXp: 35
         }
       ]

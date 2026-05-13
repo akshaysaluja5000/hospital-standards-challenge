@@ -144,7 +144,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           "But only if the sidewall sprinkler is within 5 feet of sterile supplies"
         ],
         correctIndex: 0,
-          explanation: "NFPA 13 and Joint Commission EC.02.03.05 require clearance from ALL sprinkler types to ensure unobstructed spray patterns. Sidewall sprinklers have specific lateral clearance requirements, and storing items too close obstructs the designed spray pattern, reducing fire suppression effectiveness. Clearance requirements are based on sprinkler type and must be verified against NFPA 13 specifications for each head type in the space.",
+          explanation: "NFPA 13 and JC PE.03 (formerly EC.02.03.05) require clearance from ALL sprinkler types to ensure unobstructed spray patterns. Sidewall sprinklers have specific lateral clearance requirements, and storing items too close obstructs the designed spray pattern, reducing fire suppression effectiveness. Clearance requirements are based on sprinkler type and must be verified against NFPA 13 specifications for each head type in the space.",
           expertXp: 30
         },
         {
@@ -156,7 +156,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           "The contractor's statement is sufficient documentation — contractors are considered subject matter experts on fire suppression systems"
         ],
         correctIndex: 0,
-          explanation: "Sprinkler clearance requirements are determined by NFPA 13 based on sprinkler type, listing, and installation configuration — not by contractor opinion. The facility must obtain manufacturer specifications for the specific recessed head model and verify requirements with the Authority Having Jurisdiction (AHJ). Per Joint Commission EC.02.03.05, facilities are responsible for maintaining life safety features per applicable codes. A contractor's informal statement is not an acceptable compliance document. Until verified, the standard 18-inch clearance should be maintained.",
+          explanation: "Sprinkler clearance requirements are determined by NFPA 13 based on sprinkler type, listing, and installation configuration — not by contractor opinion. The facility must obtain manufacturer specifications for the specific recessed head model and verify requirements with the Authority Having Jurisdiction (AHJ). Per JC PE.03 (formerly EC.02.03.05), facilities are responsible for maintaining life safety features per applicable codes. A contractor's informal statement is not an acceptable compliance document. Until verified, the standard 18-inch clearance should be maintained.",
           expertXp: 35
         }
       ]
@@ -818,7 +818,7 @@ export const ddSterileStorageLevel: DeepDiveLevel = {
           "The surveyor cannot recommend equipment replacement — that falls outside the scope of a Joint Commission survey"
         ],
         correctIndex: 2,
-          explanation: "Joint Commission EC.02.04.01 requires facilities to manage medical equipment throughout its lifecycle, including defining criteria for when equipment should be replaced. A sterilizer with recurring failures — even from different proximate causes — may have underlying reliability issues (aging components, cumulative wear) that make continued use a patient safety risk. The facility must have documented criteria defining when sterilizer performance indicates the need for major overhaul or replacement. Three positive BIs in 12 months on a single unit, while the other units have zero, is a significant data point that should trigger an engineering assessment of the sterilizer's continued fitness for service.",
+          explanation: "JC PE.04 (formerly EC.02.04.01) requires facilities to manage medical equipment throughout its lifecycle, including defining criteria for when equipment should be replaced. A sterilizer with recurring failures — even from different proximate causes — may have underlying reliability issues (aging components, cumulative wear) that make continued use a patient safety risk. The facility must have documented criteria defining when sterilizer performance indicates the need for major overhaul or replacement. Three positive BIs in 12 months on a single unit, while the other units have zero, is a significant data point that should trigger an engineering assessment of the sterilizer's continued fitness for service.",
           expertXp: 35
         }
       ]

@@ -2,8 +2,8 @@ import type { DeepDiveLevel } from "./schema";
 
 export const ddNpsgLevel: DeepDiveLevel = {
   id: "dd-npsg",
-  name: "National Patient Safety Goals Deep Dive",
-  description: "Expert-level scenarios on patient identification failures, alarm fatigue, anticoagulant safety, suicide risk screening, and systemic handoff failures.",
+  name: "National Performance Goals (NPGs) Deep Dive",
+  description: "Expert-level scenarios on patient identification failures, alarm fatigue, anticoagulant safety, suicide risk screening, and systemic handoff failures. Effective Jan 1, 2026, NPSGs are now National Performance Goals (NPGs).",
   icon: "Microscope",
   color: "hsl(271, 76%, 53%)",
   baseLevelId: "npsg",
@@ -37,7 +37,7 @@ export const ddNpsgLevel: DeepDiveLevel = {
     },
     {
       id: "dd-npsg2",
-      baseQuestion: "A cardiac unit's alarm management audit reveals 387 monitor alarms per patient per day, with nursing response occurring for fewer than 12% of alarms. Staff have developed a pattern of silencing alarms without patient assessment. Three weeks later, a patient dies after a fatal arrhythmia went undetected for 6 minutes while the alarm was silenced. What does NPSG.06.01.01 require the facility to do after this event?",
+      baseQuestion: "A cardiac unit's alarm management audit reveals 387 monitor alarms per patient per day, with nursing response occurring for fewer than 12% of alarms. Staff have developed a pattern of silencing alarms without patient assessment. Three weeks later, a patient dies after a fatal arrhythmia went undetected for 6 minutes while the alarm was silenced. What does NPG 1 / formerly NPSG.06.01.01 require the facility to do after this event?",
       baseOptions: [
         "Discipline the staff members who silenced the alarm without assessing the patient",
         "Conduct a sentinel event review, analyze the alarm management system as a root cause, implement individualized alarm parameter policies, and establish ongoing alarm response metrics with leadership reporting",
@@ -45,7 +45,7 @@ export const ddNpsgLevel: DeepDiveLevel = {
         "Implement a policy requiring two-nurse cosign to silence any cardiac monitor alarm"
       ],
       baseCorrectIndex: 1,
-      baseExplanation: "A patient death potentially related to alarm fatigue is a sentinel event. NPSG.06.01.01 requires not just individual accountability but systemic response: root cause analysis of the alarm environment, individualized parameter setting, improved alarm response protocols, and ongoing monitoring of alarm response metrics. 387 alarms per patient per day is a system-level problem requiring a system-level solution.",
+      baseExplanation: "A patient death potentially related to alarm fatigue is a sentinel event. NPG 1 / formerly NPSG.06.01.01 requires not just individual accountability but systemic response: root cause analysis of the alarm environment, individualized parameter setting, improved alarm response protocols, and ongoing monitoring of alarm response metrics. 387 alarms per patient per day is a system-level problem requiring a system-level solution.",
       baseXp: 20,
       followUps: [
         {
@@ -64,7 +64,7 @@ export const ddNpsgLevel: DeepDiveLevel = {
     },
     {
       id: "dd-npsg3",
-      baseQuestion: "A hospital screens all inpatients for suicide risk using the Columbia Suicide Severity Rating Scale. A medical-surgical patient screens positive with recent ideation and a prior attempt. The nurse notifies the physician, who orders a one-to-one sitter. No environmental modifications are made to the room. Three days later, the patient uses a ligature point in the bathroom. What NPSG.15.01.01 requirement was not fully implemented?",
+      baseQuestion: "A hospital screens all inpatients for suicide risk using the Columbia Suicide Severity Rating Scale. A medical-surgical patient screens positive with recent ideation and a prior attempt. The nurse notifies the physician, who orders a one-to-one sitter. No environmental modifications are made to the room. Three days later, the patient uses a ligature point in the bathroom. What NPG 8 / formerly NPSG.15.01.01 requirement was not fully implemented?",
       baseOptions: [
         "The sitter should have been positioned inside the bathroom during all bathroom use",
         "Environmental safety modifications — removing ligature risks from the patient's room and bathroom — are a required component of the NPSG suicide risk response, not just a one-to-one sitter",
@@ -72,19 +72,19 @@ export const ddNpsgLevel: DeepDiveLevel = {
         "The screening tool was administered incorrectly — a positive screen in a medical-surgical patient should be repeated before safety measures are initiated"
       ],
       baseCorrectIndex: 1,
-      baseExplanation: "NPSG.15.01.01 requires three responses to a positive suicide screen: safety assessment, care plan, and environmental modifications. Environmental modifications include removing or securing potential ligature points — shower curtain rods, IV pole hooks, door handles, call light cords. A sitter without environmental modifications leaves available means in the patient's immediate environment.",
+      baseExplanation: "NPG 8 / formerly NPSG.15.01.01 requires three responses to a positive suicide screen: safety assessment, care plan, and environmental modifications. Environmental modifications include removing or securing potential ligature points — shower curtain rods, IV pole hooks, door handles, call light cords. A sitter without environmental modifications leaves available means in the patient's immediate environment.",
       baseXp: 20,
       followUps: [
         {
           question: "After the event, the quality team learns that the medical-surgical unit has never performed a formal environmental risk assessment for ligature points. The unit director argues that a full ligature-risk environmental mitigation is only required in behavioral health units, not in medical-surgical rooms. Is this reasoning correct, and what does JC require?",
           options: [
-            "Correct — ligature-risk assessments and mitigations are explicitly limited to behavioral health environments under NPSG.15.01.01",
-            "Incorrect — NPSG.15.01.01 applies to all hospital patients who screen positive for suicide risk, regardless of unit type. Medical-surgical units must be able to perform environmental modifications for high-risk patients, even if they cannot achieve the full mitigation standard of a dedicated behavioral health unit. A formal environmental assessment of all patient care areas for mitigation options is required",
+            "Correct — ligature-risk assessments and mitigations are explicitly limited to behavioral health environments under NPG 8",
+            "Incorrect — NPG 8 / formerly NPSG.15.01.01 applies to all hospital patients who screen positive for suicide risk, regardless of unit type. Medical-surgical units must be able to perform environmental modifications for high-risk patients, even if they cannot achieve the full mitigation standard of a dedicated behavioral health unit. A formal environmental assessment of all patient care areas for mitigation options is required",
             "Partially correct — medical-surgical units only need to address ligature risks in bathrooms, not in the main patient room",
             "Incorrect — but ligature risk remediation in medical-surgical rooms is only required during active psychiatric holds, not for voluntary patients who screen positive on a screening tool"
           ],
           correctIndex: 1,
-          explanation: "NPSG.15.01.01 does not limit its scope to psychiatric units. All hospital patients who screen positive for suicide risk must receive appropriate safety measures, including feasible environmental modifications. JC recognizes that medical-surgical units cannot achieve the full environmental safety standard of a locked behavioral health unit, but they must conduct a formal environmental risk assessment and implement all feasible modifications — removing unnecessary hooks, securing IV poles, replacing breakaway shower rods — for patients identified as high risk.",
+          explanation: "NPG 8 / formerly NPSG.15.01.01 does not limit its scope to psychiatric units. All hospital patients who screen positive for suicide risk must receive appropriate safety measures, including feasible environmental modifications. JC recognizes that medical-surgical units cannot achieve the full environmental safety standard of a locked behavioral health unit, but they must conduct a formal environmental risk assessment and implement all feasible modifications — removing unnecessary hooks, securing IV poles, replacing breakaway shower rods — for patients identified as high risk.",
           expertXp: 25
         }
       ]

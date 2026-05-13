@@ -635,7 +635,7 @@ export const handbook: HandbookChapter[] = [
   {
     levelId: "patient_care_docs",
     title: "Patient Care & Documentation",
-    overview: "Comprehensive patient care documentation ensures continuity, safety, and regulatory compliance. This chapter covers post-anesthesia care, pain assessment protocols, medication safety, fall risk management, suicide screening, tissue tracking, and clinical record requirements. Proper documentation is both a patient safety tool and a legal record — if it wasn't documented, it didn't happen.",
+    overview: "Comprehensive patient care documentation ensures continuity, safety, and regulatory compliance. This chapter covers post-anesthesia care, pain assessment protocols, medication safety, fall risk management, suicide screening, tissue tracking, clinical record requirements, and the January 2026 obstetrical services updates. Proper documentation is both a patient safety tool and a legal record — if it wasn't documented, it didn't happen.",
     sections: [
       {
         heading: "Post-Anesthesia & Post-Op Documentation",
@@ -688,6 +688,17 @@ export const handbook: HandbookChapter[] = [
           { label: "I&O documentation", value: "Per patient order and facility policy — frequency is clinically determined" },
           { label: "Restraints", value: "Last resort — document alternatives tried first; monitor ≥ every 2 hours" }
         ]
+      },
+      {
+        heading: "Obstetrical Services — January 2026 Updates (PC.06 / CMS Final Rule)",
+        content: "Effective January 1, 2026, the Joint Commission replaced its maternal safety standards (PC.06.01.01 and PC.06.03.01) with new Elements of Performance that align with the CMS final rule on obstetrical services published November 27, 2024. Key Phase 2 requirements: (1) Labor and delivery rooms/suites — including labor rooms, delivery rooms (including operative delivery rooms), and postpartum/recovery rooms whether combined or separate — must be supervised at all times by a qualified experienced registered nurse, certified nurse midwife (CNM), nurse practitioner (NP), physician assistant (PA), or a doctor of medicine or osteopathy. (2) OB policies and standards of practice must be consistent with the needs and resources of the hospital and designed to assure high standards of medical practice, patient care, and safety. (3) Credentials and privileges for those providing obstetric services must be defined, granted, and reviewed per medical staff standards. Phase 3 requirements (effective January 1, 2027) will cover staff training and QAPI program requirements — JC will release Phase 3 details separately.",
+        criticalValues: [
+          { label: "Effective date", value: "January 1, 2026 (Phase 2 of CMS final rule)" },
+          { label: "Replaced standards", value: "PC.06.01.01 and PC.06.03.01 — now CMS-aligned EPs" },
+          { label: "L&D supervision", value: "Qualified RN, CNM, NP, PA, or physician AT ALL TIMES" },
+          { label: "Phase 3 (Jan 2027)", value: "Staff training & QAPI requirements — details pending" },
+          { label: "Driver", value: "CMS final rule Nov. 27, 2024 — first-ever federal maternal health baseline standards" }
+        ]
       }
     ],
     quickReference: [
@@ -702,7 +713,8 @@ export const handbook: HandbookChapter[] = [
       { fact: "PRN orders", detail: "Must include indication" },
       { fact: "Suicide screening", detail: "C-SSRS screen → SAFE-T if positive → 988 info" },
       { fact: "Tissue tracking", detail: "FDA suppliers, 10-year records, 24/7 alarms" },
-      { fact: "I&O records", detail: "Per patient order and facility policy — frequency is clinically determined, not JC-mandated" }
+      { fact: "I&O records", detail: "Per patient order and facility policy — frequency is clinically determined, not JC-mandated" },
+      { fact: "OB services (PC.06, Jan 2026)", detail: "L&D must be supervised by qualified RN, CNM, NP, PA, or physician at all times. PC.06.01.01/PC.06.03.01 replaced by CMS-aligned EPs." }
     ]
   },
   {
@@ -753,13 +765,13 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Specialized Equipment & Supplies",
-        content: "All clinical supplies must be within their expiration dates. Expired supplies — even if unopened — must be removed from service. This includes medications, sterile supplies, test strips, reagents, and any item with an expiration date. Pill cutters used for splitting medications must be cleaned between patients to prevent cross-contamination of medication residue. Glucose testing supplies must be dated when opened and used within the manufacturer's specified timeframe. Equipment must be in good repair — cracked housings, frayed cords, damaged connectors, and non-functional alarms all constitute compliance findings. Biomedical equipment must have documented preventive maintenance (PM) completed per the organization's schedule under EC.02.04.03. PM stickers are a common method to show compliance at the point of care, but the underlying requirement is that PM activities are performed and documented — not that a sticker is physically present on the device.",
+        content: "All clinical supplies must be within their expiration dates. Expired supplies — even if unopened — must be removed from service. This includes medications, sterile supplies, test strips, reagents, and any item with an expiration date. Pill cutters used for splitting medications must be cleaned between patients to prevent cross-contamination of medication residue. Glucose testing supplies must be dated when opened and used within the manufacturer's specified timeframe. Equipment must be in good repair — cracked housings, frayed cords, damaged connectors, and non-functional alarms all constitute compliance findings. Biomedical equipment must have documented preventive maintenance (PM) completed per the organization's schedule under PE.04 (formerly EC.02.04.03). PM stickers are a common method to show compliance at the point of care, but the underlying requirement is that PM activities are performed and documented — not that a sticker is physically present on the device.",
         criticalValues: [
           { label: "Expired supplies", value: "Remove from service — no exceptions" },
           { label: "Pill cutters", value: "Clean between patients" },
           { label: "Glucose supplies", value: "Dated when opened, within manufacturer timeframe" },
           { label: "Equipment condition", value: "Good repair — no cracks, frays, or damage" },
-          { label: "Biomed PM", value: "Documented per EC.02.04.03 schedule — stickers are evidence, not the requirement itself" }
+          { label: "Biomed PM", value: "Documented per PE.04 (formerly EC.02.04.03) — stickers are evidence, not the requirement itself" }
         ],
         thinkAboutIt: "During a supply check, you find a box of sterile gloves with an expiration date of last month. The gloves look fine and the box is sealed. Can they still be used?"
       },
@@ -878,15 +890,15 @@ export const handbook: HandbookChapter[] = [
     ]
   },
 
-  // ── NATIONAL PATIENT SAFETY GOALS ─────────────────────────────────────────
+  // ── NATIONAL PERFORMANCE GOALS (formerly National Patient Safety Goals) ────
   {
     levelId: "npsg",
-    title: "National Patient Safety Goals",
-    overview: "The Joint Commission's National Patient Safety Goals (NPSGs) are specific, evidence-based requirements updated each year to target the most common causes of serious patient harm. Every hospital staff member must know the NPSGs relevant to their role. Core goals address patient identification, verbal order read-back, anticoagulant safety, clinical alarm management, hand hygiene compliance, pressure injury prevention, suicide risk screening, and fall prevention. NPSGs are not aspirational guidelines — they are requirements enforced during every JC survey, and surveyors test staff knowledge directly.",
+    title: "National Performance Goals (NPGs)",
+    overview: "Effective January 1, 2026, the Joint Commission replaced its National Patient Safety Goals (NPSGs) with National Performance Goals (NPGs) — a core part of the Accreditation 360 overhaul. The NPG chapter organizes requirements that rise above CMS Conditions of Participation into 14 measurable, actionable goals. No new requirements were added; existing standards were reorganized and renamed. The 14 Hospital NPGs are: (1) Correct patient, correct care, correct time; (2) Culture of safety; (3) Emergency management program; (4) Health equity; (5) Infection prevention and control; (6) Pain management and safe prescribing; (7) Safe, informed care / patient rights; (8) Suicide risk reduction; (9) Safe transplant practices; (10) Waived testing; (11) Workplace and patient safety; (12) Staffing adequacy; (13) Safe imaging services; (14) Medication management program. The underlying clinical requirements — two-patient identifiers, hand hygiene, anticoagulant safety, alarm management, suicide screening, fall prevention — are unchanged. Surveyors continue to test staff knowledge on all of these topics.",
     sections: [
       {
-        heading: "NPSG 1: Patient Identification — The Two-Identifier Rule",
-        content: "NPSG.01.01.01 requires using at least two patient-specific identifiers before administering medications, blood or blood components, collecting specimens, or performing procedures. Acceptable identifiers include: patient name, date of birth, medical record number, and assigned identification number. Unacceptable identifiers include: room number, bed number, and diagnosis. The two identifiers must match both the patient's identification band and the order or label. Both identifiers must be independently verified — asking 'What's your name?' and confirming DOB is the standard. Passive identification (nurse reads the wristband without asking the patient to confirm) is insufficient. A patient without an ID band must have one applied before any clinical task proceeds.",
+        heading: "NPG 1 — Correct Patient, Correct Care, Correct Time (Patient Identification)",
+        content: "NPG 1 / formerly NPSG.01.01.01 requires using at least two patient-specific identifiers before administering medications, blood or blood components, collecting specimens, or performing procedures. Acceptable identifiers include: patient name, date of birth, medical record number, and assigned identification number. Unacceptable identifiers include: room number, bed number, and diagnosis. The two identifiers must match both the patient's identification band and the order or label. Both identifiers must be independently verified — asking 'What's your name?' and confirming DOB is the standard. Passive identification (nurse reads the wristband without asking the patient to confirm) is insufficient. A patient without an ID band must have one applied before any clinical task proceeds.",
         criticalValues: [
           { label: "Acceptable identifiers", value: "Name, date of birth, MRN, assigned ID number" },
           { label: "Never acceptable", value: "Room number, bed number, diagnosis" },
@@ -895,8 +907,8 @@ export const handbook: HandbookChapter[] = [
         thinkAboutIt: "A nurse is about to administer medication and the patient's ID band has fallen off. The nurse knows this patient from prior shifts. What must happen before the medication is given?"
       },
       {
-        heading: "NPSG 2: Verbal Order Read-Back and Critical Value Reporting",
-        content: "NPSG.02.03.01 requires that all verbal and telephone orders be verified using a read-back process. The receiver (nurse or pharmacist) writes down the order and reads it back to the prescriber completely before acting. The prescriber must confirm the order is correct. This same read-back applies to critical laboratory values — when a critical lab result is reported verbally, the clinician receiving the result must read back the value to confirm accuracy. Documentation must indicate the read-back was completed. Simply writing the order without reading it back does not satisfy the requirement.",
+        heading: "NPG 1 (continued) — Communication & Critical Value Reporting",
+        content: "NPG 1 / formerly NPSG.02.03.01 requires that all verbal and telephone orders be verified using a read-back process. The receiver (nurse or pharmacist) writes down the order and reads it back to the prescriber completely before acting. The prescriber must confirm the order is correct. This same read-back applies to critical laboratory values — when a critical lab result is reported verbally, the clinician receiving the result must read back the value to confirm accuracy. Documentation must indicate the read-back was completed. Simply writing the order without reading it back does not satisfy the requirement.",
         criticalValues: [
           { label: "Process", value: "Write it → Read it back completely → Get prescriber confirmation → Act" },
           { label: "Applies to", value: "Verbal orders, telephone orders, AND critical lab value reporting" },
@@ -904,8 +916,8 @@ export const handbook: HandbookChapter[] = [
         ]
       },
       {
-        heading: "NPSG 3: Anticoagulant Safety",
-        content: "NPSG.03.05.01 requires hospitals to implement specific practices to reduce anticoagulant-related harm. Anticoagulants are consistently among the top drug classes involved in serious adverse events. Requirements include: weight-based dosing protocols for heparin infusions (deviation from protocol must be physician-documented); baseline and ongoing INR/PTT monitoring; patient and family education on anticoagulant risks at admission and discharge; defined reversal agent availability (protamine for heparin, vitamin K and FFP for warfarin); and pharmacy notification before dispensing. At discharge, warfarin patients must receive education covering drug purpose, INR monitoring schedule, signs of bleeding, and food and drug interactions.",
+        heading: "NPG 14 — Medication Management: Anticoagulant Safety",
+        content: "NPG 14 / formerly NPSG.03.05.01 requires hospitals to implement specific practices to reduce anticoagulant-related harm. Anticoagulants are consistently among the top drug classes involved in serious adverse events. Requirements include: weight-based dosing protocols for heparin infusions (deviation from protocol must be physician-documented); baseline and ongoing INR/PTT monitoring; patient and family education on anticoagulant risks at admission and discharge; defined reversal agent availability (protamine for heparin, vitamin K and FFP for warfarin); and pharmacy notification before dispensing. At discharge, warfarin patients must receive education covering drug purpose, INR monitoring schedule, signs of bleeding, and food and drug interactions.",
         criticalValues: [
           { label: "Heparin dosing", value: "Weight-based protocol required — verbal rate without protocol verification is a bypass" },
           { label: "Monitoring", value: "INR/PTT baselines and ongoing monitoring documented" },
@@ -913,8 +925,8 @@ export const handbook: HandbookChapter[] = [
         ]
       },
       {
-        heading: "NPSG 6: Clinical Alarm Safety",
-        content: "NPSG.06.01.01 addresses alarm fatigue — a condition where excessive non-actionable clinical alarms lead staff to silence, disable, or ignore alarms, missing true critical events. JC requires hospitals to establish an alarm management policy, identify the most important alarms requiring clinical staff response, set individualized alarm parameters based on each patient's clinical values rather than relying on universal defaults, and monitor alarm frequency and response. If a patient's baseline heart rate consistently triggers a non-actionable alarm, the threshold should be individualized to that patient's clinical baseline. Default settings applied to every patient create preventable false alarms.",
+        heading: "NPG 1 (continued) — Clinical Alarm Safety",
+        content: "NPG 1 / formerly NPSG.06.01.01 addresses alarm fatigue — a condition where excessive non-actionable clinical alarms lead staff to silence, disable, or ignore alarms, missing true critical events. JC requires hospitals to establish an alarm management policy, identify the most important alarms requiring clinical staff response, set individualized alarm parameters based on each patient's clinical values rather than relying on universal defaults, and monitor alarm frequency and response. If a patient's baseline heart rate consistently triggers a non-actionable alarm, the threshold should be individualized to that patient's clinical baseline. Default settings applied to every patient create preventable false alarms.",
         criticalValues: [
           { label: "Root problem", value: "Alarm fatigue from excess false alarms → ignored alarms → missed emergencies" },
           { label: "Required action", value: "Individualize alarm parameters to patient's clinical baseline" },
@@ -923,8 +935,8 @@ export const handbook: HandbookChapter[] = [
         thinkAboutIt: "A COPD patient on 2L O2 has a baseline SpO2 of 90-92%. The pulse ox alarm is set at <88% and fires constantly. Staff silence it repeatedly. What should be changed and what risk does the current approach create?"
       },
       {
-        heading: "NPSG 7: Hand Hygiene",
-        content: "NPSG.07.01.01 requires hospitals to comply with WHO or CDC hand hygiene guidelines. The five moments for hand hygiene (WHO): (1) Before patient contact, (2) Before aseptic/clean procedures, (3) After body fluid exposure, (4) After patient contact, (5) After contact with patient surroundings. Alcohol-based hand rub (ABHR) is the preferred method for most situations — it kills more pathogens faster than soap and water. Soap and water is specifically required when hands are visibly soiled or after contact with Clostridioides difficile (C. diff). ABHR does not kill C. diff spores — this is a critical distinction tested on surveys.",
+        heading: "NPG 5 — Infection Prevention & Hand Hygiene",
+        content: "NPG 5 / formerly NPSG.07.01.01 requires hospitals to comply with WHO or CDC hand hygiene guidelines. The five moments for hand hygiene (WHO): (1) Before patient contact, (2) Before aseptic/clean procedures, (3) After body fluid exposure, (4) After patient contact, (5) After contact with patient surroundings. Alcohol-based hand rub (ABHR) is the preferred method for most situations — it kills more pathogens faster than soap and water. Soap and water is specifically required when hands are visibly soiled or after contact with Clostridioides difficile (C. diff). ABHR does not kill C. diff spores — this is a critical distinction tested on surveys.",
         criticalValues: [
           { label: "5 WHO moments", value: "Before patient contact, before procedure, after fluid, after patient, after surroundings" },
           { label: "ABHR preferred", value: "For most situations — faster, kills more pathogens" },
@@ -932,8 +944,8 @@ export const handbook: HandbookChapter[] = [
         ]
       },
       {
-        heading: "NPSG 15: Suicide Risk Screening",
-        content: "NPSG.15.01.01 requires that all hospital patients — not just psychiatric patients — be screened for suicide risk using a validated tool such as the Columbia Suicide Severity Rating Scale (C-SSRS) or Ask Suicide-Screening Questions (ASQ). Informal questions like 'Are you feeling safe?' are not validated instruments and do not satisfy this requirement. Patients who screen positive — including passive ideation (wishing they were dead without an active plan) — must receive a formal safety assessment, care planning addressing the identified risk, and environmental safety modifications (removing ligature risks, locking down means access). Medical-surgical patients are among those who die from inpatient suicide.",
+        heading: "NPG 8 — Suicide Risk Reduction",
+        content: "NPG 8 / formerly NPSG.15.01.01 requires that all hospital patients — not just psychiatric patients — be screened for suicide risk using a validated tool such as the Columbia Suicide Severity Rating Scale (C-SSRS) or Ask Suicide-Screening Questions (ASQ). Informal questions like 'Are you feeling safe?' are not validated instruments and do not satisfy this requirement. Patients who screen positive — including passive ideation (wishing they were dead without an active plan) — must receive a formal safety assessment, care planning addressing the identified risk, and environmental safety modifications (removing ligature risks, locking down means access). Medical-surgical patients are among those who die from inpatient suicide.",
         criticalValues: [
           { label: "Who is screened", value: "ALL hospital patients — not just psychiatric admissions" },
           { label: "Validated tools", value: "C-SSRS, ASQ — informal questions don't qualify" },
@@ -941,7 +953,7 @@ export const handbook: HandbookChapter[] = [
         ]
       },
       {
-        heading: "Fall Prevention Program Requirements",
+        heading: "NPG 1 (continued) — Fall Prevention",
         content: "JC requires a systematic, individualized fall prevention approach. Required elements: (1) a validated fall risk assessment tool (Morse Fall Scale or similar) at admission, each shift, and after any fall; (2) individualized care planning with documented fall prevention interventions tailored to the specific risk factors identified — generic 'standard fall precautions' documentation is insufficient for high-risk patients; (3) patient and family education about fall risk and prevention; (4) post-fall analysis to identify contributing factors and system improvements. Universal fall precautions apply to all patients; high-risk patients require enhanced individualized interventions.",
         criticalValues: [
           { label: "Assessment timing", value: "Admission, each shift, and after every fall" },
@@ -951,14 +963,14 @@ export const handbook: HandbookChapter[] = [
       }
     ],
     quickReference: [
-      { fact: "Two patient identifiers", detail: "Name + DOB or MRN — never room number" },
-      { fact: "No ID band", detail: "Apply replacement before any treatment or specimen collection" },
-      { fact: "Verbal order read-back", detail: "Write → Read back → Confirm → Document → Act" },
-      { fact: "Anticoagulant protocol", detail: "Weight-based heparin, INR/PTT monitoring, patient education at discharge" },
-      { fact: "Alarm fatigue", detail: "Individualize parameters to patient baseline — no universal defaults" },
-      { fact: "C. diff hand hygiene", detail: "Soap and water required — ABHR does not kill spores" },
-      { fact: "Suicide screening", detail: "All patients, validated tool (C-SSRS/ASQ) — positive = assess + plan + environment" },
-      { fact: "Fall risk", detail: "Assessed every shift; individualized interventions documented for high-risk" }
+      { fact: "NPG framework (Jan 2026)", detail: "Replaced NPSGs — 14 goals, no new requirements, same clinical standards" },
+      { fact: "NPG 1 — Patient ID", detail: "Name + DOB or MRN — never room number. No ID band = apply replacement first." },
+      { fact: "NPG 1 — Verbal order read-back", detail: "Write → Read back → Confirm → Document → Act" },
+      { fact: "NPG 14 — Anticoagulant protocol", detail: "Weight-based heparin, INR/PTT monitoring, patient education at discharge" },
+      { fact: "NPG 1 — Alarm fatigue", detail: "Individualize parameters to patient baseline — no universal defaults" },
+      { fact: "NPG 5 — C. diff hand hygiene", detail: "Soap and water required — ABHR does not kill spores" },
+      { fact: "NPG 8 — Suicide screening", detail: "All patients, validated tool (C-SSRS/ASQ) — positive = assess + plan + environment" },
+      { fact: "NPG 1 — Fall risk", detail: "Assessed every shift; individualized interventions documented for high-risk" }
     ]
   },
 
@@ -1119,8 +1131,8 @@ export const handbook: HandbookChapter[] = [
   // ── LIFE SAFETY ────────────────────────────────────────────────────────────
   {
     levelId: "life_safety",
-    title: "Life Safety",
-    overview: "The Joint Commission's Life Safety (LS) chapter aligns with NFPA 101 Life Safety Code and requires hospitals to maintain a physical environment that protects patients and staff from fire, smoke, and structural hazards. Every staff member must know and be able to demonstrate the RACE fire response protocol and PASS fire extinguisher technique — surveyors ask staff directly. Fire doors must remain closed, egress routes must be kept clear, and fire drills must occur quarterly on every shift including nights. When construction or renovation compromises any fire safety system, Interim Life Safety Measures must be implemented immediately.",
+    title: "Life Safety / Physical Environment (PE)",
+    overview: "Effective January 1, 2026, the Joint Commission merged its Environment of Care (EC) and Life Safety (LS) chapters into a single new chapter called Physical Environment (PE), as part of the Accreditation 360 overhaul. The 464 EPs across EC and LS were consolidated into 63 EPs in the new PE chapter — a 86% reduction in EP count. Standard codes changed: old LS.02.01.xx and EC.02.03.xx references now live under PE.03.xx. No substantive requirements were removed; the consolidation eliminated duplication and better aligned JC standards with CMS Conditions of Participation. Core requirements remain: hospitals must maintain a physical environment that protects patients and staff from fire, smoke, and structural hazards per NFPA 101. Every staff member must know and be able to demonstrate the RACE fire response protocol and PASS fire extinguisher technique — surveyors ask staff directly. Fire doors must remain closed, egress routes must be kept clear, and fire drills must occur quarterly on every shift including nights. When construction or renovation compromises any fire safety system, Interim Life Safety Measures (ILSM) must be implemented immediately.",
     sections: [
       {
         heading: "RACE: The Four-Step Fire Response Protocol",
@@ -1155,7 +1167,7 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Fire Compartmentalization and Fire Door Rules",
-        content: "Hospitals are built in fire compartments — sections separated by fire-rated walls and doors that contain fire and smoke to prevent spread throughout the building. This compartmentalization is the primary life safety design for hospitals where full patient evacuation is difficult. Fire doors must: remain closed at all times or be held open only by an approved automatic closing device that releases when the fire alarm activates (magnetically-held doors on alarm release are compliant); never be propped open with doorstops, furniture, equipment, or wedges; have functioning latches that allow them to close and latch completely. Propping a fire door open with an unapproved object is a frequently cited JC finding under LS.02.01.10 because it defeats the compartmentalization design — it applies to stairwell doors, corridor fire doors, and all other fire-rated doors.",
+        content: "Hospitals are built in fire compartments — sections separated by fire-rated walls and doors that contain fire and smoke to prevent spread throughout the building. This compartmentalization is the primary life safety design for hospitals where full patient evacuation is difficult. Fire doors must: remain closed at all times or be held open only by an approved automatic closing device that releases when the fire alarm activates (magnetically-held doors on alarm release are compliant); never be propped open with doorstops, furniture, equipment, or wedges; have functioning latches that allow them to close and latch completely. Propping a fire door open with an unapproved object is a frequently cited JC finding under PE.03.01.01 (formerly LS.02.01.10) because it defeats the compartmentalization design — it applies to stairwell doors, corridor fire doors, and all other fire-rated doors.",
         criticalValues: [
           { label: "Fire doors", value: "Must remain closed — or use approved auto-close/hold-open devices only" },
           { label: "Never prop", value: "No doorstops, furniture, wedges — unapproved propping is a JC citation" },
@@ -1186,7 +1198,7 @@ export const handbook: HandbookChapter[] = [
       { fact: "RACE order", detail: "Rescue → Alarm → Contain (close doors) → Extinguish or Evacuate" },
       { fact: "PASS aim point", detail: "Base of the fire — not the flames" },
       { fact: "Fire drills", detail: "Quarterly per shift — unannounced, unexpected times, varying conditions, all shifts. March 2026: 1-hour spacing and ±10-day window rules removed." },
-      { fact: "Fire doors", detail: "Closed or on approved auto-release hold-open. Propping with unapproved objects = JC citation under LS.02.01.10" },
+      { fact: "Fire doors", detail: "Closed or on approved auto-release hold-open. Propping = citation under PE.03.01.01 (formerly LS.02.01.10)" },
       { fact: "Horizontal evacuation", detail: "First approach — through fire doors to next compartment, same floor" },
       { fact: "Vertical evacuation", detail: "Stairs only when horizontal is not possible" },
       { fact: "Egress routes", detail: "Always clear, illuminated signs, no locks — stored items are a citation" },
