@@ -2,7 +2,7 @@ import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Radar, FileSearch2, GraduationCap, ClipboardList,
-  Telescope, BriefcaseBusiness, Zap, CheckCircle2, Clock, ChevronRight,
+  Telescope, BriefcaseBusiness, Zap, CheckCircle2, Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -16,7 +16,6 @@ interface Agent {
   iconBg: string;
   iconColor: string;
   status: "active" | "coming-soon";
-  href?: string;
 }
 
 const AGENTS: Agent[] = [
@@ -24,19 +23,18 @@ const AGENTS: Agent[] = [
     number: 1,
     title: "Survey Readiness Agent",
     description:
-      "Continuously monitors every standard across all facilities — which ones have evidence attached, which staff haven't completed training, which policies are expiring. Surfaces a live readiness score that is always current.",
+      "Continuously monitors every standard across all facilities — which ones have evidence attached, which staff haven't completed training, which policies are expiring. Surfaces a live readiness score that is always current. Not a report you run — a score that never stops updating.",
     replaces: "The manual binder audit facilities run in the weeks before a survey.",
     icon: Radar,
     iconBg: "bg-primary/10",
     iconColor: "text-primary",
     status: "active",
-    href: "/executive-report",
   },
   {
     number: 2,
     title: "Content Intelligence Agent",
     description:
-      "When a new policy or procedure is uploaded, this agent reads it, auto-tags it to the relevant JC/AAAHC standards, generates quiz questions from it, and flags if the policy contradicts a standard.",
+      "When a new policy or procedure is uploaded, this agent reads it, auto-tags it to the relevant JC/AAAHC standards, generates quiz questions from it, and flags if the policy contradicts a standard. Your clearest differentiator — no other compliance platform does this automatically.",
     replaces: "Manual policy reviews and the months of lag before new content reaches staff training.",
     icon: FileSearch2,
     iconBg: "bg-violet-500/10",
@@ -53,7 +51,6 @@ const AGENTS: Agent[] = [
     iconBg: "bg-emerald-500/10",
     iconColor: "text-emerald-600",
     status: "active",
-    href: "/admin",
   },
   {
     number: 4,
@@ -81,13 +78,12 @@ const AGENTS: Agent[] = [
     number: 6,
     title: "Executive Readiness Agent",
     description:
-      "For the CEO/CNO level, this agent prepares the facility's readiness narrative — not just a dashboard, but a drafted summary of where you stand, what's at risk, and what actions are due this week. The difference between data and a briefing.",
+      "Prepares the facility's readiness narrative for the CEO/CNO level — not just a dashboard, but a drafted summary of where you stand, what's at risk, and what actions are due this week. The difference between data and a briefing.",
     replaces: "Manually assembled board reports and pre-survey executive prep sessions.",
     icon: BriefcaseBusiness,
     iconBg: "bg-sky-500/10",
     iconColor: "text-sky-600",
-    status: "active",
-    href: "/executive-report",
+    status: "coming-soon",
   },
 ];
 
@@ -122,7 +118,7 @@ export default function ExecutiveComplianceConsolePage() {
                 </h1>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5" data-testid="text-console-subtitle">
-                Agent-driven compliance operations · {user?.username}
+                Agent network status · {user?.username}
               </p>
             </div>
           </div>
@@ -143,7 +139,6 @@ export default function ExecutiveComplianceConsolePage() {
       {/* Body */}
       <div className="max-w-5xl mx-auto px-6 py-10 flex flex-col gap-8">
 
-        {/* Intro */}
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
@@ -167,14 +162,7 @@ export default function ExecutiveComplianceConsolePage() {
                 transition={{ duration: 0.18, delay: i * 0.07 }}
                 data-testid={`card-agent-${agent.number}`}
               >
-                <div
-                  className={`rounded-2xl border bg-card p-6 h-full flex flex-col gap-4 transition-all ${
-                    isActive && agent.href
-                      ? "border-border hover:border-primary/40 hover:shadow-md cursor-pointer"
-                      : "border-border/70 opacity-80"
-                  }`}
-                  onClick={() => isActive && agent.href && setLocation(agent.href)}
-                >
+                <div className={`rounded-2xl border bg-card p-6 h-full flex flex-col gap-4 ${!isActive ? "opacity-75" : ""}`}>
                   {/* Agent header */}
                   <div className="flex items-start gap-3">
                     <div className={`w-11 h-11 rounded-xl ${agent.iconBg} border border-border/50 flex items-center justify-center flex-shrink-0`}>
@@ -207,20 +195,15 @@ export default function ExecutiveComplianceConsolePage() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
                     {agent.description}
                   </p>
 
                   {/* Footer */}
-                  <div className="mt-auto pt-3 border-t border-border/60 flex items-center justify-between gap-3">
+                  <div className="pt-3 border-t border-border/60">
                     <p className="text-xs text-muted-foreground leading-relaxed">
                       <span className="font-semibold text-foreground">Replaces:</span> {agent.replaces}
                     </p>
-                    {isActive && agent.href && (
-                      <span className={`flex-shrink-0 inline-flex items-center gap-1 text-xs font-semibold ${agent.iconColor}`}>
-                        Open <ChevronRight size={12} />
-                      </span>
-                    )}
                   </div>
                 </div>
               </motion.div>
