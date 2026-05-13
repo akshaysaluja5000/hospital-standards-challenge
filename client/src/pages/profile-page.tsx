@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { ArrowLeft, Flame, Zap, Trophy, Target, Bell, BellOff, User as UserIcon, Pencil, Lock, Eye, EyeOff, Check, X, Loader2, Briefcase, Moon } from "lucide-react";
+import { ArrowLeft, Flame, Zap, Trophy, Target, User as UserIcon, Pencil, Lock, Eye, EyeOff, Check, X, Loader2, Briefcase, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -398,27 +398,6 @@ export default function ProfilePage() {
                   <SelectItem value="20">20</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                {user?.reminderEnabled ? (
-                  <Bell size={18} className="text-muted-foreground" />
-                ) : (
-                  <BellOff size={18} className="text-muted-foreground" />
-                )}
-                <div>
-                  <p className="text-sm font-bold">Daily Reminders</p>
-                  <p className="text-xs text-muted-foreground">Get notified to complete your goal</p>
-                </div>
-              </div>
-              <Switch
-                checked={user?.reminderEnabled ?? true}
-                onCheckedChange={(checked) =>
-                  updateSettingsMutation.mutate({ reminderEnabled: checked })
-                }
-                data-testid="switch-reminders"
-              />
             </div>
 
             <div className="flex items-center justify-between gap-4">
