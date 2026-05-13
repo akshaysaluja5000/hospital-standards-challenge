@@ -266,8 +266,26 @@ function deriveQuestion(topic: string): string {
 }
 
 function getQuestionPrompt(category?: string, title?: string): string {
+  const topic = title ? getTopicLabel(title) : null;
+  if (category && topic) {
+    switch (category) {
+      case "definition":
+        if (topic.trim().endsWith("?")) return topic;
+        return `How is the ${topic} defined?`;
+      case "rule":
+        return deriveQuestion(topic);
+      case "scenario":
+        return `How would you handle this situation: ${topic}?`;
+      case "mistake":
+        return `What is the common mistake to avoid with: ${topic}?`;
+      case "number":
+        return `What is the key number or threshold for: ${topic}?`;
+      case "tip":
+        return `What would a surveyor look for regarding: ${topic}?`;
+    }
+  }
   if (category && CATEGORY_PROMPTS[category]) return CATEGORY_PROMPTS[category];
-  if (title) return deriveQuestion(getTopicLabel(title));
+  if (topic) return deriveQuestion(topic);
   return "What does this standard require?";
 }
 
@@ -515,11 +533,7 @@ export default function FlashcardReviewPage() {
                       <p className="text-xl font-black leading-snug" data-testid="text-concept-question">
                         {getQuestionPrompt(currentConcept.category, currentConcept.title)}
                       </p>
-                      {currentConcept.category ? (
-                        <p className="text-sm font-semibold text-muted-foreground leading-snug" data-testid="text-concept-title">
-                          Topic: {getTopicLabel(currentConcept.title)}
-                        </p>
-                      ) : getCodeLabel(currentConcept.title) ? (
+                      {getCodeLabel(currentConcept.title) ? (
                         <p className="text-xs font-bold text-muted-foreground/60 uppercase tracking-widest" data-testid="text-concept-title">
                           {getCodeLabel(currentConcept.title)}
                         </p>
