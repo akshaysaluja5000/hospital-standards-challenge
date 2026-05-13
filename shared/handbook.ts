@@ -762,6 +762,17 @@ export const handbook: HandbookChapter[] = [
           { label: "Biomed PM", value: "Documented per EC.02.04.03 schedule — stickers are evidence, not the requirement itself" }
         ],
         thinkAboutIt: "During a supply check, you find a box of sterile gloves with an expiration date of last month. The gloves look fine and the box is sealed. Can they still be used?"
+      },
+      {
+        heading: "Point-of-Care / Waived Testing — WT.01.01.01 (March 2026 Update)",
+        content: "Waived testing (WT) covers point-of-care laboratory tests performed at or near the patient — blood glucose monitoring, urine dipstick testing, rapid antigen tests, and similar CLIA-waived tests. All waived testing must comply with the manufacturer's instructions for use (IFU). As of March 1, 2026, JC surveys to IFU requirements only — not to IFU recommendations (WT.01.01.01, EP 6). This change aligns with CLIA regulations, which require adherence to mandatory instructions rather than advisory guidance. Prior to this update, surveyors could cite failure to follow any manufacturer guidance including discretionary recommendations. Now, surveyors will only cite non-compliance with mandatory IFU requirements. Important: if your organization's own policies or procedures incorporate IFU recommendations as if they were requirements, JC will hold you to your own policy standard — which may be stricter than the IFU mandate alone.",
+        criticalValues: [
+          { label: "Standard", value: "WT.01.01.01, EP 6 — effective March 1, 2026" },
+          { label: "Applies to", value: "Laboratories and home care organizations" },
+          { label: "New rule", value: "JC surveys to IFU requirements ONLY — not recommendations" },
+          { label: "Caution", value: "If your policy includes IFU recommendations as requirements, JC holds you to that higher standard" },
+          { label: "Unchanged", value: "CLIA certificate required, QC per manufacturer, training documented" }
+        ]
       }
     ],
     quickReference: [
@@ -777,7 +788,8 @@ export const handbook: HandbookChapter[] = [
       { fact: "Electrical panels", detail: "Locked + 3-ft clearance" },
       { fact: "Expired supplies", detail: "Remove from service — even if sealed" },
       { fact: "Pill cutters", detail: "Clean between patients" },
-      { fact: "Fire response", detail: "RACE (Rescue, Alarm, Contain, Extinguish) + PASS" }
+      { fact: "Fire response", detail: "RACE (Rescue, Alarm, Contain, Extinguish) + PASS" },
+      { fact: "Waived testing (WT.01.01.01)", detail: "IFU requirements only — not recommendations. Effective March 2026." }
     ]
   },
 
@@ -1132,11 +1144,13 @@ export const handbook: HandbookChapter[] = [
       },
       {
         heading: "Fire Drill Requirements",
-        content: "JC requires hospitals to conduct fire drills at least quarterly on each shift — this means at least four drills per shift per year. Drills must be: unannounced to test actual staff response; inclusive of all shifts (day, evening, night, and weekend — night shift cannot be omitted because patient census is lower); documented with date, time, shift, location, participating staff, and a performance critique; followed by corrective action when deficiencies are identified. Conducting drills only on day and evening shifts is a compliance deficiency. Drills can be structured to minimize patient disruption while still testing staff response knowledge — the alarm does not always need to be audibly activated throughout the facility.",
+        content: "JC requires hospitals to conduct fire drills at least quarterly on each shift — this means at least four drills per shift per year (EC.02.03.03, EP 3 for ambulatory; PE.03.01.01, EP 3 for hospitals). All drills must be: unannounced; held at unexpected times; conducted under varying conditions; inclusive of all shifts (day, evening, night, and weekend — night shift cannot be omitted because patient census is lower); documented with date, time, shift, location, participating staff, and a performance critique; followed by corrective action when deficiencies are identified. Conducting drills only on day and evening shifts is a compliance deficiency. Drills can be structured to minimize patient disruption while still testing staff response knowledge — the alarm does not always need to be audibly activated throughout the facility. March 2026 update: JC removed two formerly required drill-timing restrictions — the rule that drills must be spaced at least one hour apart within the same quarter, and the rule that each quarterly drill must fall within plus or minus ten days of the last. These scheduling constraints no longer apply. The core requirements — unannounced, unexpected times, varying conditions, quarterly per shift — remain in force.",
         criticalValues: [
-          { label: "Frequency", value: "At least quarterly on EACH shift — 4+ per shift per year" },
+          { label: "Frequency", value: "Quarterly on EACH shift — 4+ per shift per year" },
           { label: "All shifts required", value: "Night, weekend — cannot be omitted for any reason" },
-          { label: "Must be", value: "Unannounced, documented, with corrective action for deficiencies" }
+          { label: "Must be", value: "Unannounced + unexpected times + varying conditions (all three)" },
+          { label: "Removed (March 2026)", value: "1-hour spacing rule and ±10-day window rule — no longer required" },
+          { label: "Still required", value: "Documented, post-drill critique, corrective action for deficiencies" }
         ]
       },
       {
@@ -1171,7 +1185,7 @@ export const handbook: HandbookChapter[] = [
     quickReference: [
       { fact: "RACE order", detail: "Rescue → Alarm → Contain (close doors) → Extinguish or Evacuate" },
       { fact: "PASS aim point", detail: "Base of the fire — not the flames" },
-      { fact: "Fire drills", detail: "Quarterly per shift, unannounced, all shifts including nights" },
+      { fact: "Fire drills", detail: "Quarterly per shift — unannounced, unexpected times, varying conditions, all shifts. March 2026: 1-hour spacing and ±10-day window rules removed." },
       { fact: "Fire doors", detail: "Closed or on approved auto-release hold-open. Propping with unapproved objects = JC citation under LS.02.01.10" },
       { fact: "Horizontal evacuation", detail: "First approach — through fire doors to next compartment, same floor" },
       { fact: "Vertical evacuation", detail: "Stairs only when horizontal is not possible" },
