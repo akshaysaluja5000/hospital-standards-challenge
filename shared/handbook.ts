@@ -1180,5 +1180,93 @@ export const handbook: HandbookChapter[] = [
       { fact: "Gas cylinders", detail: "Secured (chained), full/empty segregated, labeled" },
       { fact: "Extension cords", detail: "Temporary only — hospital-grade power strips, no daisy-chaining" }
     ]
+  },
+  {
+    levelId: "emergency_management",
+    title: "Emergency Management",
+    overview: "Emergency Management is one of the most commonly cited Joint Commission chapters — especially for multi-site health systems like Surgery Partners. Every hospital must maintain a written Emergency Operations Plan (EOP) built on a facility-specific Hazard Vulnerability Analysis, address six critical functional areas, practice the plan through two documented exercises per year, and continuously improve it through structured after-action reviews. Surveyors will ask frontline staff directly about their emergency role — not knowing is a finding.",
+    sections: [
+      {
+        heading: "Emergency Operations Plan — EM.01.01.01",
+        content: "The Emergency Operations Plan is the facility's comprehensive, written response framework for managing emergencies — both internal (fire, utility failure, workplace violence) and external (mass casualty event, community disaster, pandemic). The EOP must be facility-specific, not a generic template. It must describe how leadership activates the plan, what triggers escalation, and how the facility transitions from normal operations to emergency mode. Typically, the CEO or a defined designee declares the emergency and activates the EOP. Once activated, every department operates under the plan's structure. Joint Commission surveyors will review the EOP for completeness, relevance to local conditions, and evidence that it has been tested and improved over time.",
+        criticalValues: [
+          { label: "Standard", value: "EM.01.01.01" },
+          { label: "Who activates", value: "CEO or designated leadership chain as defined in the EOP" },
+          { label: "Must cover", value: "Both internal emergencies (fire, utility) and external disasters (MCI, community events)" },
+          { label: "Critical failure", value: "Generic template not tailored to the facility's actual hazard profile" }
+        ],
+        thinkAboutIt: "A surveyor hands a copy of your facility's EOP to a frontline nurse and asks her to find the section that describes her specific role during a mass casualty event. What should she be able to find, and what would a gap look like?"
+      },
+      {
+        heading: "Hazard Vulnerability Analysis — EM.02.01.01",
+        content: "The Hazard Vulnerability Analysis is an annual structured risk assessment that identifies which natural, technological, and human-caused hazards pose the greatest threat to a specific facility. Each hazard is scored on probability of occurrence, potential impact on people, property, and operations. The resulting risk profile determines what the EOP must address — a facility near a chemical plant needs chemical spill response; a coastal hospital needs hurricane protocols. The HVA must be updated at least annually because local risk conditions change: new industry, infrastructure shifts, climate patterns. A single-state or regional template that is not customized to the facility is a significant citation. The HVA is typically led by the Safety Officer or Emergency Management Coordinator with input from leadership, Facilities, and clinical departments.",
+        criticalValues: [
+          { label: "Standard", value: "EM.02.01.01" },
+          { label: "Update frequency", value: "At least annually" },
+          { label: "Hazard categories", value: "Natural (weather, seismic), technological (utility, hazmat), human-caused (MCI, violence)" },
+          { label: "Common citation", value: "HVA is generic or not facility-specific — lists hazards irrelevant to the local area" }
+        ],
+        thinkAboutIt: "Your hospital's HVA rates 'earthquake' as a top-tier threat, but your facility is located in central Illinois. A surveyor asks how this rating was determined. What does this scenario tell you about how the HVA was created?"
+      },
+      {
+        heading: "The Six Critical Areas of the EOP — EM.02.02.01",
+        content: "Standard EM.02.02.01 requires the EOP to address six specific functional areas: (1) Communications — how internal and external communication will be maintained when primary systems fail, including backup technologies and communication trees; (2) Resources and assets — how the facility will obtain, track, and manage supplies, equipment, and staffing during a prolonged emergency; (3) Safety and security — how the facility will secure itself, manage access control, and protect patients and staff; (4) Staff responsibilities — what every role does during an emergency, including alternate assignments when normal supervisors are unavailable; (5) Utilities management — how the facility will maintain critical utilities or implement clinical workarounds during utility failure; (6) Patient clinical and support activities — how the facility will continue care, handle patient surge, manage evacuations, and coordinate with receiving facilities. All six must be documented in the EOP. Missing or underdeveloped sections in any of the six areas are findings.",
+        criticalValues: [
+          { label: "Standard", value: "EM.02.02.01" },
+          { label: "Area 1", value: "Communications — backup systems when phones/internet fail" },
+          { label: "Area 2", value: "Resources and assets — supply, equipment, and staff sourcing" },
+          { label: "Area 3", value: "Safety and security — facility lockdown, access control" },
+          { label: "Area 4", value: "Staff responsibilities — every role has defined duties including backup chains" },
+          { label: "Area 5", value: "Utilities management — generator, medical gas, water, HVAC contingencies" },
+          { label: "Area 6", value: "Patient clinical activities — surge capacity, care continuation, evacuation" }
+        ]
+      },
+      {
+        heading: "Drills and Exercises — EM.03.01.01",
+        content: "Testing the EOP through exercises is required — having a plan that has never been practiced is insufficient. Standard EM.03.01.01 requires hospitals to conduct a minimum of two emergency exercises per year. At least one must be a community-based exercise involving external agencies such as EMS, fire departments, public health offices, or neighboring hospitals. The second may be an internal drill — tabletop (discussion-based), functional, or full-scale. All exercises must be documented with: the date and type of exercise, a participant list, a written critique or evaluation of what worked and what failed, and corrective actions identified for follow-up. Drills conducted without documentation or critique do not satisfy the standard. Multi-site health systems must ensure each facility meets the requirement independently.",
+        criticalValues: [
+          { label: "Standard", value: "EM.03.01.01" },
+          { label: "Minimum frequency", value: "2 exercises per year" },
+          { label: "Community requirement", value: "At least 1 must involve external agencies (EMS, fire, public health, neighboring hospitals)" },
+          { label: "Required documentation", value: "Date, type, participants, critique/evaluation, corrective actions" },
+          { label: "Common citation", value: "Drill conducted but no critique form or corrective actions documented" }
+        ],
+        thinkAboutIt: "Your facility conducted its two required exercises but the compliance officer can only find attendance logs — no critique forms, no corrective action list. A surveyor asks to review the exercise records. What is the finding, and what would compliant documentation look like?"
+      },
+      {
+        heading: "After-Action Reviews — EM.04.01.01",
+        content: "Every emergency exercise and every actual emergency event must be followed by a structured after-action review (AAR). The AAR is a formal debrief that examines: what was supposed to happen (per the EOP), what actually happened, why any gaps occurred, and what specific improvements are needed. Standard EM.04.01.01 requires the AAR to be documented and corrective actions to be tracked through to completion. Identifying a problem in the AAR and never fixing it is as much a compliance failure as not having the AAR at all — the improvement loop must close. Effective AARs involve participants from all levels: frontline staff who were in the drill, charge nurses, department directors, and leadership. Frontline participants often have the most operationally relevant observations.",
+        criticalValues: [
+          { label: "Standard", value: "EM.04.01.01" },
+          { label: "Triggers", value: "Required after every exercise AND after every actual emergency event" },
+          { label: "Required elements", value: "What happened, gaps identified, corrective actions assigned with owners and due dates" },
+          { label: "Tracking requirement", value: "Corrective actions must be followed to verified completion — not just identified" },
+          { label: "Who participates", value: "Cross-functional — frontline staff, charge nurses, department leads, leadership" }
+        ]
+      },
+      {
+        heading: "Shelter-in-Place vs. Evacuation, and Surge Capacity",
+        content: "Two concepts frontline staff must understand and be able to act on: protective action decisions and patient surge. For protective actions, shelter-in-place means keeping everyone inside the facility — typically used for external hazmat, chemical releases, or severe weather where leaving creates greater risk. Evacuation means moving patients and staff out — used when the building is the hazard (fire, structural failure, internal chemical event). Leadership makes this call based on incident command input; frontline staff execute for their unit. For patient surge, hospitals must have a plan to expand care capacity beyond normal licensed beds — accelerating discharges, converting conference rooms, canceling electives, and requesting mutual aid from neighboring facilities. The EOP must address both protective actions and surge response in the patient clinical activities critical area.",
+        criticalValues: [
+          { label: "Shelter-in-place", value: "Stay inside — external threat (hazmat, weather). Shut HVAC to prevent outside air ingress." },
+          { label: "Evacuation", value: "Move out — internal threat (fire, structural). Follow staged evacuation routes." },
+          { label: "Who decides", value: "Incident command / leadership — not frontline staff" },
+          { label: "Surge capacity", value: "Discharge stable patients, cancel electives, open alternate care spaces, request mutual aid" }
+        ],
+        thinkAboutIt: "A nurse asks: 'If we get a shelter-in-place order during a hazmat event outside, do I still send my patient to their scheduled procedure?' What does the EOP's staff responsibilities section need to answer about this kind of operational question?"
+      }
+    ],
+    quickReference: [
+      { fact: "EOP standard", detail: "EM.01.01.01 — must be written, facility-specific, and tested" },
+      { fact: "HVA frequency", detail: "Updated at least annually — must reflect local hazard conditions" },
+      { fact: "Six critical areas", detail: "Communications, Resources/Assets, Safety/Security, Staff Responsibilities, Utilities, Patient Clinical Activities" },
+      { fact: "Drill requirement", detail: "Minimum 2 per year — at least 1 community-based (involves external agencies)" },
+      { fact: "Drill documentation", detail: "Date, participants, critique, and corrective actions — all required" },
+      { fact: "After-action review", detail: "Required after every drill AND every actual emergency event" },
+      { fact: "AAR follow-up", detail: "Corrective actions must be tracked to verified completion" },
+      { fact: "Shelter-in-place", detail: "External threat — stay inside, shut HVAC" },
+      { fact: "Evacuation", detail: "Internal threat — move out, follow staged routes" },
+      { fact: "Common citation", detail: "Staff cannot describe their emergency role when asked by a surveyor" }
+    ]
   }
 ];

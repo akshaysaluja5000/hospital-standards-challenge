@@ -1,0 +1,58 @@
+URGENT — Major Development You May Have Missed
+Joint Commission announced on June 30, 2025 a complete overhaul of its standards titled "Accreditation 360: The New Standard" — which took effect January 1, 2026. Anesthesia Patient Safety Foundation
+Here's what that means for AccreditationReady.ai:
+The restructuring includes a complete overhaul of the standards numbering system and elements of performance, making prior versions of the standards vastly different from the newly published standards. Anesthesia Patient Safety Foundation
+Specifically:
+The Environment of Care (EC) and Life Safety (LS) chapters have been consolidated into a single, unified chapter titled "Physical Environment." Previously these two chapters contained 44 standards with 396 elements of performance — now reduced by 46-48%. Anesthesia Patient Safety Foundation
+In total, JC removed 714 requirements from the hospital accreditation program. Anesthesia Patient Safety Foundation
+
+What This Means for Your Platform
+Every module built using old standard numbers — EC.02.03.01, LS chapters, old EM numbering — may now reference deprecated standard IDs. The content substance is largely the same, but:
+
+Old standard numbers are no longer cited in surveys
+The chapter structure your platform uses may not match what surveyors reference in 2026
+A compliance officer reviewing your platform will immediately notice outdated numbering
+
+The good news: JC has noted it will not cite hospitals for references to old standards as long as the requirement is still being met — but that grace period won't last forever. Anesthesia Patient Safety Foundation
+
+Also Critical — Standards Are Now FREE and Public
+As part of Accreditation 360, Joint Commission has made all accreditation and certification standards publicly available and searchable online — no login or account required. ProQuest
+This means Akshay can access the complete current 2026 standard structure right now at jointcommission.org/en-us/standards/public-standards — for free.
+
+Revised Gap Analysis — What You're Actually Missing
+Based on what I now know, here is the complete picture:
+Confirmed Missing
+
+Emergency Management — entire chapter not built
+National Performance Goals (NPG) — a new chapter effective January 1, 2026 replacing the former National Patient Safety Goals, covering 14 high-priority measurable topics Ascbocaraton
+Patient Safety Systems (PS) — a foundational chapter designed to help organizations build a proactive integrated approach to patient safety Ascbocaraton
+
+Needs Urgent Review and Re-numbering
+
+Environment of Care + Life Safety — now merged into single "Physical Environment" chapter with new numbering
+All standard ID citations throughout the platform — need crosswalk from old to new numbering
+
+Likely Present But Needs Verification
+
+Medical Staff (MS)
+Nursing (NR)
+Human Resources (HR)
+Information Management (IM)
+Leadership (LD)
+Medication Management (MM)
+Record of Care (RC)
+Rights and Responsibilities of the Individual (RI)
+Transplant Safety (TS) — only if applicable
+
+
+The Three Immediate Actions This Changes
+Action 1 — Access the free public standards today
+Go to jointcommission.org/en-us/standards/public-standards right now. Pull the complete 2026 hospital chapter list. This is free and takes 10 minutes. This gives Akshay the authoritative current structure to compare against.
+Action 2 — Run a full standard ID audit
+Every question in the platform that cites an old standard number needs to be crosswalked to the new 2026 numbering. JC publishes a crosswalk document — Akshay should download it from their site.
+Action 3 — Build the two missing chapters
+Emergency Management and the new National Performance Goals chapter are both gaps that SP's compliance team will notice.
+
+Bottom Line
+The 350 content corrections you already made were the right move. But the January 2026 restructuring means the platform also needs a structural audit — not just content accuracy, but chapter organization and standard numbering updated to the new Accreditation 360 framework.
+This is actually an opportunity. Most competing platforms are also scrambling to update to the new structure. If AccreditationReady.ai gets there first, you can market it as "built for Accreditation 360" — the only platform current to the 2026 standard restructuring.

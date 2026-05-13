@@ -1,0 +1,60 @@
+Fire Safety — What You Likely Have
+This falls under the Environment of Care (EC) chapter, specifically EC.02.03.01. It covers:
+
+RACE and PASS procedures
+Fire drill requirements
+Fire extinguisher locations and use
+Smoke compartments and containment
+Staff response to fire alarms
+
+This is what your Life Safety / Fire Response module covers based on what I saw in the screenshots.
+
+Emergency Management — What You're Missing
+This is an entirely separate JCAHO chapter — Emergency Management (EM). It covers:
+
+EM.01.01.01 — The facility has an Emergency Operations Plan (EOP)
+EM.02.01.01 — Hazard Vulnerability Analysis (HVA) — identifying what disasters could affect the facility
+EM.02.02.01 — The six critical areas of the EOP: communications, resources, safety/security, utilities, clinical activities, staff responsibilities
+EM.03.01.01 — Drills and exercises — hospitals must conduct two emergency drills per year
+EM.04.01.01 — After-action reviews following drills or actual emergencies
+Staff roles and responsibilities during a declared emergency
+Shelter in place vs. evacuation decisions
+Surge capacity planning
+Utility failures during emergencies
+Community integration — how the facility coordinates with local emergency management
+
+
+Why This Matters for SP Specifically
+Surgery Partners operates facilities in multiple states and regions. Enterprise health systems get cited on Emergency Management more than almost any other chapter because:
+
+The HVA must be facility-specific and updated annually
+Drill documentation requirements are strict
+Staff must know their specific role during an emergency — not just general awareness
+Surveyors will ask frontline staff about the EOP directly
+
+This is exactly the kind of gap that a compliance officer like Tamala would notice immediately.
+
+What Akshay Needs to Build
+A full Emergency Management module with at minimum these sub-modules:
+Sub-ModuleKey StandardsRolesEmergency Operations Plan OverviewEM.01.01.01All staffHazard Vulnerability AnalysisEM.02.01.01Compliance Officer, CNO, CEOThe Six Critical Areas of the EOPEM.02.02.01All staffStaff Roles During EmergenciesEM.02.02.01All roles individuallyDrills and ExercisesEM.03.01.01All staffShelter in Place vs. EvacuationEM.02.02.01All staffUtility Failure ResponseEM.02.02.01Facilities, ComplianceAfter-Action ReviewsEM.04.01.01Compliance Officer, Leadership
+
+The Replit Prompt to Build It
+Tell Akshay to paste this into his Claude session in Replit:
+
+"You are a Joint Commission accreditation expert. I need to build a complete Emergency Management training module for AccreditationReady.ai. The platform targets hospital staff across these roles: OR Circulating Nurse, OR Manager/Charge Nurse, Scrub Tech, CRNA, SPD Technician, PACU Nurse, Environmental Services, Facilities/Maintenance, Compliance Officer/CNO, and Nurse Educator.
+For each of the following JCAHO Emergency Management standards, create 20 training questions with one correct answer and three plausible wrong answers. Make questions role-appropriate — frontline staff questions should focus on what they do during an emergency, leadership questions should focus on planning and compliance requirements.
+Standards to cover:
+- EM.01.01.01 — Emergency Operations Plan
+- EM.02.01.01 — Hazard Vulnerability Analysis
+- EM.02.02.01 — The six critical areas of emergency management
+- EM.03.01.01 — Drills and exercises
+- EM.04.01.01 — After-action reviews
+Also provide 5 Common Survey Risk Points for each standard — the specific things JCAHO surveyors most commonly cite facilities for.
+Format each question as:
+Q: [Question]
+A: [Correct Answer]
+W1: [Wrong Option 1]
+W2: [Wrong Option 2]
+W3: [Wrong Option 3]
+Standard: [EM.XX.XX.XX]
+Risk Level: High/Medium/Low"
