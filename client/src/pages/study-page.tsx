@@ -82,6 +82,12 @@ function getTopicLabel(title: string): string {
   return title;
 }
 
+function getCodeLabel(title: string): string | null {
+  const dashIdx = title.indexOf(" — ");
+  if (dashIdx !== -1) return title.slice(0, dashIdx);
+  return null;
+}
+
 const CATEGORY_PROMPTS: Record<string, string> = {
   rule:       "What does this standard require?",
   definition: "How is this term defined?",
@@ -91,8 +97,10 @@ const CATEGORY_PROMPTS: Record<string, string> = {
   tip:        "What would a surveyor check here?",
 };
 
-function getQuestionPrompt(category?: string): string {
-  return CATEGORY_PROMPTS[category ?? ""] ?? "What do you need to know about this?";
+function getQuestionPrompt(category?: string, title?: string): string {
+  if (category && CATEGORY_PROMPTS[category]) return CATEGORY_PROMPTS[category];
+  if (title) return `What are the key requirements for: ${getTopicLabel(title)}?`;
+  return "What does this standard require?";
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -528,11 +536,17 @@ export default function StudyPage() {
 
                     <div className="flex-1 flex flex-col justify-center gap-4">
                       <p className="text-xl font-black leading-snug" data-testid="text-concept-question">
-                        {getQuestionPrompt(currentConcept.category)}
+                        {getQuestionPrompt(currentConcept.category, currentConcept.title)}
                       </p>
-                      <p className="text-sm font-semibold text-muted-foreground leading-snug" data-testid="text-concept-title">
-                        Topic: {getTopicLabel(currentConcept.title)}
-                      </p>
+                      {currentConcept.category ? (
+                        <p className="text-sm font-semibold text-muted-foreground leading-snug" data-testid="text-concept-title">
+                          Topic: {getTopicLabel(currentConcept.title)}
+                        </p>
+                      ) : getCodeLabel(currentConcept.title) ? (
+                        <p className="text-xs font-bold text-muted-foreground/60 uppercase tracking-widest" data-testid="text-concept-title">
+                          {getCodeLabel(currentConcept.title)}
+                        </p>
+                      ) : null}
                     </div>
 
                     <div className="flex items-center justify-center gap-2 pt-2 border-t border-border/40">
