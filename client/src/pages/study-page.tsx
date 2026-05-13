@@ -579,9 +579,20 @@ export default function StudyPage() {
                           Concept
                         </span>
                       )}
-                      <span className="text-[10px] text-muted-foreground font-semibold">
-                        {currentCardIndex + 1} of {concepts.length}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setFlipped(false)}
+                          className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                          data-testid="button-flip-to-question"
+                        >
+                          <RotateCcw size={11} />
+                          See question
+                        </button>
+                        <span className="text-[10px] text-muted-foreground/40">·</span>
+                        <span className="text-[10px] text-muted-foreground font-semibold">
+                          {currentCardIndex + 1} of {concepts.length}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Answer — keyPoint is the direct answer shown first and prominently */}

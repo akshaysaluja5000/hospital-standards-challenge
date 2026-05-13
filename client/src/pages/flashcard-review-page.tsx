@@ -3,7 +3,7 @@ import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Brain, CheckCircle2, Timer, Clock,
-  Trophy, RefreshCw, ChevronRight,
+  Trophy, RefreshCw, ChevronRight, RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -378,6 +378,14 @@ export default function FlashcardReviewPage() {
                           Concept
                         </span>
                       )}
+                      <button
+                        onClick={() => setFlipped(false)}
+                        className="flex items-center gap-1 text-[10px] font-semibold text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+                        data-testid="button-flip-to-question"
+                      >
+                        <RotateCcw size={11} />
+                        See question
+                      </button>
                     </div>
 
                     {/* Answer — keyPoint is the direct answer */}
