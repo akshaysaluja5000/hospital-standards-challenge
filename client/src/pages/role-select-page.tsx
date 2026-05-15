@@ -358,14 +358,17 @@ export default function RoleSelectPage() {
   const FACILITY_ACCREDITOR: Record<FacilityType, string> = {
     hospital: "The Joint Commission",
     asc: "AAAHC",
+    dnv: "DNV Healthcare",
   };
   const FACILITY_DESCRIPTIONS: Record<FacilityType, string> = {
     hospital: "Inpatient hospital training aligned with The Joint Commission standards. Choose a department role to focus your chapters.",
     asc: "Ambulatory Surgery Center training aligned with the AAAHC Accreditation Handbook. Pick the chapter tracks that match your responsibilities.",
+    dnv: "Hospital training aligned with DNV Healthcare DIAS (International Accreditation Standards). Complete all 11 standard domains for DNV survey readiness.",
   };
   const FACILITY_ICONS: Record<FacilityType, LucideIcon> = {
     hospital: Building2,
     asc: HeartPulse,
+    dnv: Building2,
   };
 
   if (isLoading) {

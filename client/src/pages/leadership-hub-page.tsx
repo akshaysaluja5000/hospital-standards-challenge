@@ -323,7 +323,8 @@ export default function LeadershipHubPage() {
   const effectiveRank = LEADERSHIP_RANK[effectiveRole] ?? 0;
 
   const isAsc = user?.organizationType === "asc";
-  const moduleLabel = isAsc ? "ASC" : "Hospital";
+  const isDnv = user?.organizationType === "dnv";
+  const moduleLabel = isAsc ? "ASC" : isDnv ? "DNV" : "Hospital";
   const ModuleIcon = isAsc ? Stethoscope : Building2;
 
   const leadershipLabel = user
@@ -530,7 +531,7 @@ export default function LeadershipHubPage() {
         </div>
 
         {/* Team Risk Summary */}
-        <TeamRiskSummary module={isAsc ? "asc" : "hospital"} />
+        <TeamRiskSummary module={isAsc ? "asc" : isDnv ? "dnv" : "hospital"} />
 
         {/* Permission summary */}
         <motion.div
@@ -549,7 +550,7 @@ export default function LeadershipHubPage() {
               { label: "Your Role", value: leadershipLabel, testid: "text-summary-role" },
               { label: "Module", value: moduleLabel, testid: "text-summary-module" },
               { label: "Scope", value: effectiveRank >= 3 ? "All Facilities" : "Own Facility", testid: "text-summary-scope" },
-              { label: "Data Access", value: isAsc ? "ASC Only" : "Hospital Only", testid: "text-summary-data" },
+              { label: "Data Access", value: isAsc ? "ASC Only" : isDnv ? "DNV Only" : "Hospital Only", testid: "text-summary-data" },
             ].map(item => (
               <div key={item.label} className="flex flex-col gap-0.5">
                 <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{item.label}</span>

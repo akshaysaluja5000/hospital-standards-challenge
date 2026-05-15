@@ -158,9 +158,10 @@ export default function RegulatoryWatchPage() {
   const { user } = useAuth();
 
   const isAsc = user?.organizationType === "asc";
-  const defaultSource: FilterSource = isAsc ? "aaahc" : "jcaho";
-  const moduleLabel = isAsc ? "ASC" : "Hospital";
-  const primarySourceLabel = isAsc ? "AAAHC" : "Joint Commission";
+  const isDnv = user?.organizationType === "dnv";
+  const defaultSource: FilterSource = isAsc ? "aaahc" : isDnv ? "dnv" : "jcaho";
+  const moduleLabel = isAsc ? "ASC" : isDnv ? "DNV" : "Hospital";
+  const primarySourceLabel = isAsc ? "AAAHC" : isDnv ? "DNV Healthcare" : "Joint Commission";
 
   const [agentResult, setAgentResult] = useState<AgentRunResult | null>(null);
   const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");

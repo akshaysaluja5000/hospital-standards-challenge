@@ -33,14 +33,30 @@ const upload = multer({
 
 // Staff Learning Agent — chapter-slug to compliance-category mapping
 const CATEGORY_LEVEL_PREFIXES: Record<string, string[]> = {
-  "Infection Control":      ["asc_ipc", "infection_control"],
-  "Emergency Preparedness": ["asc_emg", "emergency_management"],
-  "Fire Safety":            ["asc_saf", "life_safety"],
-  "Building & Life Safety": ["asc_fac", "eoc_safety"],
-  "Utility Systems":        ["asc_fac", "facilities"],
+  "Infection Control":      ["asc_ipc", "infection_control", "dnv_ic"],
+  "Emergency Preparedness": ["asc_emg", "emergency_management", "dnv_pe"],
+  "Fire Safety":            ["asc_saf", "life_safety", "dnv_pe"],
+  "Building & Life Safety": ["asc_fac", "eoc_safety", "dnv_pe"],
+  "Utility Systems":        ["asc_fac", "facilities", "dnv_pe"],
   "Hazardous Materials":    ["asc_saf", "environment", "segregation"],
   "Medical Equipment":      ["asc_med"],
-  "Quality Management":     ["asc_qua", "asc_gov", "asc_adm"],
+  "Quality Management":     ["asc_qua", "asc_gov", "asc_adm", "dnv_qm", "dnv_gb"],
+  "Medication Management":  ["dnv_mm"],
+  "Medical Records":        ["dnv_mr"],
+  "Nursing Services":       ["dnv_ns"],
+  "Surgical Services":      ["dnv_ot"],
+  "Anesthesia Services":    ["dnv_ot"],
+  "Patient Rights":         ["dnv_pc"],
+  "Patient Care":           ["dnv_pc"],
+  "Risk Management":        ["dnv_pe"],
+  "Governance":             ["dnv_gb"],
+  "Medical Staff":          ["dnv_ms"],
+  "Restraint & Seclusion":  ["dnv_sp"],
+  "Laboratory Services":    ["dnv_sp"],
+  "Blood Management":       ["dnv_sp"],
+  "Emergency Services":     ["dnv_sp"],
+  "Dietary Services":       ["dnv_sp"],
+  "Nuclear Medicine":       ["dnv_sp"],
 };
 const FREQUENCY_DAYS: Record<string, number> = {
   Daily: 1, Weekly: 7, Monthly: 30, Quarterly: 90, Annually: 365, Biennially: 730,
@@ -354,7 +370,7 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Password must be at least 6 characters" });
       }
 
-      const allowedOrgTypes = ["hospital", "asc"] as const;
+      const allowedOrgTypes = ["hospital", "asc", "dnv"] as const;
       type OrgType = typeof allowedOrgTypes[number];
       const normalizedOrgType: OrgType = (allowedOrgTypes as readonly string[]).includes(organizationType)
         ? (organizationType as OrgType)
@@ -1155,6 +1171,7 @@ export async function registerRoutes(
       const moduleLevelIdsByModule = new Map<ModuleId, Set<string>>([
         ["hospital", new Set(getVisibleLevelsForModule("hospital", { includeDraft: true }).map((l) => l.id))],
         ["asc", new Set(getVisibleLevelsForModule("asc", { includeDraft: true }).map((l) => l.id))],
+        ["dnv", new Set(getVisibleLevelsForModule("dnv", { includeDraft: true }).map((l) => l.id))],
       ]);
 
       const allUsersRaw = await storage.getAllUsers();
@@ -1568,7 +1585,7 @@ export async function registerRoutes(
       depth: z.number().int().min(1).max(3).default(1),
       previousExplanations: z.array(z.string().max(3000)).max(2).optional(),
       allOptions: z.array(z.string().max(1500)).max(6).optional(),
-      module: z.enum(["hospital", "asc"]).default("hospital"),
+      module: z.enum(["hospital", "asc", "dnv"]).default("hospital"),
     });
     const parsed = aiTutorSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -1591,9 +1608,10 @@ export async function registerRoutes(
       const wrongList = wrongOptions.map((o, i) => `"${o}"`).join(", ");
 
       const isAsc = tutorModule === "asc";
-      const tutorLabel = isAsc ? "ASC (ambulatory surgery center) AAAHC compliance tutor" : "Hospital Joint Commission compliance tutor";
+      const isDnv = tutorModule === "dnv";
+      const tutorLabel = isAsc ? "ASC (ambulatory surgery center) AAAHC compliance tutor" : isDnv ? "DNV Healthcare DIAS (hospital accreditation) compliance tutor" : "Hospital Joint Commission compliance tutor";
       const orgLabel = isAsc ? "ASC" : "hospital";
-      const standardsBody = isAsc ? "AAAHC" : "Joint Commission";
+      const standardsBody = isAsc ? "AAAHC" : isDnv ? "DNV Healthcare DIAS" : "Joint Commission";
 
       const depthPrompts: Record<number, string> = {
         1: `${tutorLabel}. Staff answered a question wrong. Explain why the correct answer matters in 2 sentences. No headers, no bullet points, no markdown. Plain conversational text only.
@@ -1838,9 +1856,11 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
       const userRecord = await storage.getUser(userId);
       const userModule = (userRecord?.organizationType as string) || "hospital";
       const isAsc = userModule === "asc";
+      const isDnv = userModule === "dnv";
 
-      const activeHandbook = isAsc ? ascHandbook : handbook;
-      const standardBody = isAsc ? "AAAHC" : "Joint Commission";
+      const { dnvHandbook } = await import("@shared/dnv-handbook");
+      const activeHandbook = isAsc ? ascHandbook : isDnv ? dnvHandbook : handbook;
+      const standardBody = isAsc ? "AAAHC" : isDnv ? "DNV Healthcare DIAS" : "Joint Commission";
 
       const queryLower = query.toLowerCase();
       const words = queryLower.split(/\s+/).filter(Boolean);
@@ -3053,7 +3073,7 @@ Return ONLY valid JSON (no markdown, no explanation):
     const schema = z.object({
       topic: z.string().min(1).max(200),
       context: z.string().max(4000).optional(),
-      module: z.enum(["hospital", "asc"]).default("hospital"),
+      module: z.enum(["hospital", "asc", "dnv"]).default("hospital"),
     });
     const parsed = schema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: "Invalid request." });
@@ -3068,7 +3088,7 @@ Return ONLY valid JSON (no markdown, no explanation):
     topicQuizRateLimit.set(userId, calls);
 
     const { topic, context, module: mod } = parsed.data;
-    const standard = mod === "asc" ? "AAAHC accreditation" : "Joint Commission (TJC) hospital accreditation";
+    const standard = mod === "asc" ? "AAAHC accreditation" : mod === "dnv" ? "DNV Healthcare DIAS hospital accreditation" : "Joint Commission (TJC) hospital accreditation";
 
     const prompt = `You are a ${standard} compliance educator. Generate exactly 5 multiple-choice quiz questions about "${topic}" for healthcare staff preparing for a survey.
 

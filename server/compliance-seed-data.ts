@@ -151,3 +151,103 @@ export const ASC_COMPLIANCE_ITEMS: {
   { volume: "V6", standardCode: "IPC.230", itemName: "Surgical Environment Safeguards Against Cross-Infection", frequency: "Annually", tier: 2, category: "Infection Control", surveyorPriority: 1 },
   { volume: "V6", standardCode: "IPC.330.70", itemName: "Temperature and Humidity Monitoring Documentation", frequency: "Annually", tier: 1, category: "Infection Control", surveyorPriority: 1 },
 ];
+
+export const DNV_COMPLIANCE_ITEMS: {
+  volume: string;
+  standardCode: string;
+  itemName: string;
+  frequency: string;
+  tier: number;
+  category: string;
+  surveyorPriority: number;
+}[] = [
+  // Quality Management (QM)
+  { volume: "QM", standardCode: "QM.1", itemName: "Organization-Wide Quality Management Plan", frequency: "Annually", tier: 2, category: "Quality Management", surveyorPriority: 1 },
+  { volume: "QM", standardCode: "QM.1", itemName: "Governing Body Approval of QM Plan", frequency: "Annually", tier: 2, category: "Quality Management", surveyorPriority: 1 },
+  { volume: "QM", standardCode: "QM.2", itemName: "Quality Indicators — Measurable, Trended, Benchmarked", frequency: "Quarterly", tier: 2, category: "Quality Management", surveyorPriority: 1 },
+  { volume: "QM", standardCode: "QM.3", itemName: "Root Cause Analysis Documentation for Sentinel Events", frequency: "Ongoing", tier: 1, category: "Quality Management", surveyorPriority: 1 },
+  { volume: "QM", standardCode: "QM.3", itemName: "CAPA Tracking to Verified Effectiveness", frequency: "Ongoing", tier: 1, category: "Quality Management", surveyorPriority: 1 },
+  { volume: "QM", standardCode: "QM.4", itemName: "Quality Data Reported to Governing Body with Documented Discussion", frequency: "Quarterly", tier: 2, category: "Quality Management", surveyorPriority: 1 },
+  { volume: "QM", standardCode: "QM.4", itemName: "Quality Data Reported to Medical Staff", frequency: "Quarterly", tier: 2, category: "Quality Management", surveyorPriority: 2 },
+  { volume: "QM", standardCode: "QM.5", itemName: "Active QAPI Performance Improvement Projects with All Phases Documented", frequency: "Ongoing", tier: 2, category: "Quality Management", surveyorPriority: 1 },
+  { volume: "QM", standardCode: "QM.5", itemName: "Physician Participation in QAPI Program", frequency: "Quarterly", tier: 2, category: "Quality Management", surveyorPriority: 2 },
+  // Governance (GB)
+  { volume: "GB", standardCode: "GB.2", itemName: "Governing Body Mission Statement and Strategic Plan Approval", frequency: "Annually", tier: 2, category: "Governance", surveyorPriority: 1 },
+  { volume: "GB", standardCode: "GB.3", itemName: "CEO Performance Evaluation — Formal and Documented", frequency: "Annually", tier: 2, category: "Governance", surveyorPriority: 1 },
+  { volume: "GB", standardCode: "GB.4", itemName: "Medical Staff Bylaws Review and Governing Body Approval", frequency: "Biennially", tier: 2, category: "Governance", surveyorPriority: 1 },
+  { volume: "GB", standardCode: "GB.5", itemName: "Governing Body Meeting Minutes Reflecting Quality Discussion and Actions", frequency: "Quarterly", tier: 2, category: "Governance", surveyorPriority: 1 },
+  { volume: "GB", standardCode: "GB.1", itemName: "Conflict of Interest Policy — Documented and Enforced for Board Members", frequency: "Annually", tier: 2, category: "Governance", surveyorPriority: 2 },
+  // Medical Staff (MS)
+  { volume: "MS", standardCode: "MS.2", itemName: "Primary Source Verification for All Credentials (License, Education, Training, NPDB)", frequency: "Biennially", tier: 1, category: "Medical Staff", surveyorPriority: 1 },
+  { volume: "MS", standardCode: "MS.3", itemName: "Specific Clinical Privilege Delineation Based on Demonstrated Competence", frequency: "Biennially", tier: 1, category: "Medical Staff", surveyorPriority: 1 },
+  { volume: "MS", standardCode: "MS.4", itemName: "OPPE Data Collection and Use in Privilege Renewal", frequency: "Ongoing", tier: 1, category: "Medical Staff", surveyorPriority: 1 },
+  { volume: "MS", standardCode: "MS.4", itemName: "FPPE for All New Privileges and Performance Concerns", frequency: "Ongoing", tier: 1, category: "Medical Staff", surveyorPriority: 1 },
+  { volume: "MS", standardCode: "MS.5", itemName: "Peer Review by Similarly Privileged Peers — All Providers Annually", frequency: "Annually", tier: 2, category: "Medical Staff", surveyorPriority: 1 },
+  { volume: "MS", standardCode: "MS.5", itemName: "Peer Review Results Reported to Governing Body", frequency: "Annually", tier: 2, category: "Medical Staff", surveyorPriority: 2 },
+  // Nursing Services (NS/SM)
+  { volume: "NS", standardCode: "NS.1", itemName: "Nursing Executive RN Qualification and Organization-Wide Authority Documentation", frequency: "Annually", tier: 2, category: "Nursing Services", surveyorPriority: 1 },
+  { volume: "NS", standardCode: "NS.2", itemName: "Patient Acuity Measurement System with Documented Staffing Adjustments", frequency: "Daily", tier: 1, category: "Nursing Services", surveyorPriority: 1 },
+  { volume: "NS", standardCode: "NS.3", itemName: "Nursing Competency Assessments — Unit-Specific at Orientation and Annually", frequency: "Annually", tier: 1, category: "Nursing Services", surveyorPriority: 1 },
+  { volume: "NS", standardCode: "NS.4", itemName: "Float and Agency Staff Unit-Specific Competency Verification", frequency: "Ongoing", tier: 1, category: "Nursing Services", surveyorPriority: 1 },
+  { volume: "SM", standardCode: "SM.1", itemName: "Written Staffing Plans by Unit — Ratios, Skill Mix, Charge Nurse Coverage", frequency: "Annually", tier: 2, category: "Nursing Services", surveyorPriority: 1 },
+  { volume: "SM", standardCode: "SM.2", itemName: "Staffing Variance Documentation and Pattern Analysis", frequency: "Monthly", tier: 2, category: "Nursing Services", surveyorPriority: 1 },
+  // Patient-Centered Care (PC)
+  { volume: "PC", standardCode: "PC.1", itemName: "Patient Rights Communication — Written at Admission in Preferred Language", frequency: "Ongoing", tier: 1, category: "Patient Rights", surveyorPriority: 1 },
+  { volume: "PC", standardCode: "PC.2", itemName: "Informed Consent — All 5 Elements, Before Pre-Op Sedation", frequency: "Ongoing", tier: 1, category: "Patient Rights", surveyorPriority: 1 },
+  { volume: "PC", standardCode: "PC.3", itemName: "Advance Directive Inquiry at Every Admission and Accessibility in Medical Record", frequency: "Ongoing", tier: 1, category: "Patient Rights", surveyorPriority: 1 },
+  { volume: "PC", standardCode: "PC.4", itemName: "Individualized Patient Assessment and Care Plan with Patient Participation", frequency: "Ongoing", tier: 2, category: "Patient Care", surveyorPriority: 1 },
+  { volume: "PC", standardCode: "PC.5", itemName: "Patient Education in Preferred Language at Appropriate Health Literacy Level", frequency: "Ongoing", tier: 2, category: "Patient Care", surveyorPriority: 1 },
+  { volume: "PC", standardCode: "PC.5", itemName: "Discharge Planning Initiated at or Near Admission", frequency: "Ongoing", tier: 2, category: "Patient Care", surveyorPriority: 2 },
+  // Medication Management (MM)
+  { volume: "MM", standardCode: "MM.1", itemName: "Pharmacy Policies and Procedures Reviewed Annually", frequency: "Annually", tier: 2, category: "Medication Management", surveyorPriority: 1 },
+  { volume: "MM", standardCode: "MM.4", itemName: "High-Alert Medication List — Written, Labeled, Stored Separately", frequency: "Annually", tier: 1, category: "Medication Management", surveyorPriority: 1 },
+  { volume: "MM", standardCode: "MM.4", itemName: "High-Alert Medication Double-Check/Independent Verification Process", frequency: "Ongoing", tier: 1, category: "Medication Management", surveyorPriority: 1 },
+  { volume: "MM", standardCode: "MM.5", itemName: "After-Hours Pharmacy Access Control with Type and Quantity Documentation", frequency: "Ongoing", tier: 1, category: "Medication Management", surveyorPriority: 1 },
+  { volume: "MM", standardCode: "MM.5", itemName: "Pharmacist Review of After-Hours Removal Activity", frequency: "Monthly", tier: 1, category: "Medication Management", surveyorPriority: 1 },
+  { volume: "MM", standardCode: "MM.6", itemName: "ADR and Medication Error Immediate Reporting to Attending Physician", frequency: "Ongoing", tier: 1, category: "Medication Management", surveyorPriority: 1 },
+  { volume: "MM", standardCode: "MM.6", itemName: "ADR/Error Aggregate Data Reported to Quality Management", frequency: "Quarterly", tier: 2, category: "Medication Management", surveyorPriority: 1 },
+  // Surgical & Anesthesia Services (OT/AS)
+  { volume: "OT", standardCode: "OT.3", itemName: "OR Emergency Equipment — All 6 Items Present, Maintained, and Tested", frequency: "Monthly", tier: 1, category: "Surgical Services", surveyorPriority: 1 },
+  { volume: "OT", standardCode: "OT.3", itemName: "Tracheotomy Set Available (Not Substituted with Cricothyroidotomy Set)", frequency: "Monthly", tier: 1, category: "Surgical Services", surveyorPriority: 1 },
+  { volume: "OT", standardCode: "OT.4", itemName: "OR Register Complete and Current — All 10 Required Elements", frequency: "Daily", tier: 1, category: "Surgical Services", surveyorPriority: 1 },
+  { volume: "OT", standardCode: "OT.6", itemName: "Wrong-Site/Wrong-Patient/Wrong-Procedure Prevention Process (WHO Checklist)", frequency: "Ongoing", tier: 1, category: "Surgical Services", surveyorPriority: 1 },
+  { volume: "AS", standardCode: "AS.3", itemName: "Pre-Anesthesia Evaluation Within 48 Hours Before First Anesthesia Dose", frequency: "Ongoing", tier: 1, category: "Anesthesia Services", surveyorPriority: 1 },
+  { volume: "AS", standardCode: "AS.3", itemName: "Post-Anesthesia Evaluation Within 48 Hours — All 7 Required Elements", frequency: "Ongoing", tier: 1, category: "Anesthesia Services", surveyorPriority: 1 },
+  // Infection Control (IC)
+  { volume: "IC", standardCode: "IC.1", itemName: "Infection Control Officer Designation with Written Scope of Responsibilities", frequency: "Annually", tier: 2, category: "Infection Control", surveyorPriority: 1 },
+  { volume: "IC", standardCode: "IC.1", itemName: "Organization-Wide IPC Program Covering All Departments and Personnel", frequency: "Annually", tier: 2, category: "Infection Control", surveyorPriority: 1 },
+  { volume: "IC", standardCode: "IC.2", itemName: "CLABSI Prevention Bundle — Aseptic Insertion, Line Care, Prompt Removal", frequency: "Ongoing", tier: 1, category: "Infection Control", surveyorPriority: 1 },
+  { volume: "IC", standardCode: "IC.2", itemName: "SSI Prevention — Antibiotic Prophylaxis Protocol with Appropriate Discontinuation", frequency: "Ongoing", tier: 1, category: "Infection Control", surveyorPriority: 1 },
+  { volume: "IC", standardCode: "IC.2", itemName: "MDRO Control — MRSA, C. diff, VRE Protocols Including Isolation", frequency: "Ongoing", tier: 1, category: "Infection Control", surveyorPriority: 1 },
+  { volume: "IC", standardCode: "IC.2", itemName: "Hand Hygiene Compliance Monitoring and Improvement Action", frequency: "Monthly", tier: 1, category: "Infection Control", surveyorPriority: 1 },
+  { volume: "IC", standardCode: "IC.4", itemName: "Infection Log — Secure, Current, Covering Patients and All Staff Categories", frequency: "Ongoing", tier: 2, category: "Infection Control", surveyorPriority: 1 },
+  { volume: "IC", standardCode: "IC.4", itemName: "IPC Data Reported to Infection Control Committee — Minimum Quarterly", frequency: "Quarterly", tier: 2, category: "Infection Control", surveyorPriority: 1 },
+  // Medical Records (MR)
+  { volume: "MR", standardCode: "MR.3", itemName: "Medical Record Retention — Minimum 5 Years", frequency: "Annually", tier: 2, category: "Medical Records", surveyorPriority: 1 },
+  { volume: "MR", standardCode: "MR.4", itemName: "Medical Record Confidentiality — Access Controls and Authorization for Release", frequency: "Ongoing", tier: 1, category: "Medical Records", surveyorPriority: 1 },
+  { volume: "MR", standardCode: "MR.5", itemName: "All Medical Record Entries Legible, Dated, Timed, and Authenticated", frequency: "Ongoing", tier: 1, category: "Medical Records", surveyorPriority: 1 },
+  { volume: "MR", standardCode: "MR.5", itemName: "Verbal Orders — Urgent Use Only, Authenticated Within 48 Hours", frequency: "Ongoing", tier: 1, category: "Medical Records", surveyorPriority: 1 },
+  { volume: "MR", standardCode: "MR.3", itemName: "Coding and Indexing System — Retrieval by Diagnosis and Procedure", frequency: "Annually", tier: 2, category: "Medical Records", surveyorPriority: 2 },
+  // Physical Environment and Risk Management (PE/RM)
+  { volume: "PE", standardCode: "PE.1", itemName: "Physical Environment Inspections — Regular, Proactive, Hazards Corrected Promptly", frequency: "Monthly", tier: 2, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "PE", standardCode: "PE.2", itemName: "Emergency Power System Testing — Documented at Defined Intervals", frequency: "Monthly", tier: 1, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "PE", standardCode: "PE.2", itemName: "Medical Gas System — Installer, Verification, and Routine Maintenance Documentation", frequency: "Annually", tier: 1, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "PE", standardCode: "PE.2", itemName: "OR HVAC — Air Pressure, Temperature, and Humidity Testing Documentation", frequency: "Monthly", tier: 1, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "PE", standardCode: "PE.3", itemName: "Fire Drills — Required Frequency with Documented Post-Drill Critiques", frequency: "Quarterly", tier: 1, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "PE", standardCode: "PE.3", itemName: "Fire Detection and Suppression System Maintenance, Testing, and Inspection", frequency: "Annually", tier: 1, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "PE", standardCode: "PE.4", itemName: "Emergency Operations Plan — Hazard Vulnerability Analysis (HVA) Based", frequency: "Annually", tier: 2, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "PE", standardCode: "PE.4", itemName: "EOP Exercises — Conducted at Defined Intervals with After-Action Reviews", frequency: "Annually", tier: 2, category: "Physical Environment", surveyorPriority: 1 },
+  { volume: "RM", standardCode: "RM.1", itemName: "Non-Punitive Incident Reporting System — All Departments Contributing", frequency: "Ongoing", tier: 2, category: "Risk Management", surveyorPriority: 1 },
+  { volume: "RM", standardCode: "RM.2", itemName: "Risk Data Pattern Analysis and CAPA to Verified Effectiveness", frequency: "Quarterly", tier: 2, category: "Risk Management", surveyorPriority: 1 },
+  // Specialty Services
+  { volume: "LS", standardCode: "LS.1", itemName: "Laboratory Services — CLIA Certified, 24-Hour Availability, Scope Documented", frequency: "Annually", tier: 1, category: "Laboratory Services", surveyorPriority: 1 },
+  { volume: "BM", standardCode: "BM.1", itemName: "Blood Product Screening — HIV, Hep B, Hep C, Syphilis and Other Required", frequency: "Ongoing", tier: 1, category: "Blood Management", surveyorPriority: 1 },
+  { volume: "BM", standardCode: "BM.1", itemName: "Blood and Blood Component Source/Disposition Records — 10-Year Retention", frequency: "Ongoing", tier: 1, category: "Blood Management", surveyorPriority: 1 },
+  { volume: "ED", standardCode: "ED.2", itemName: "Emergency Department — 24-Hour Qualified Medical Staff Supervision On Premises", frequency: "Ongoing", tier: 1, category: "Emergency Services", surveyorPriority: 1 },
+  { volume: "DS", standardCode: "DS.1", itemName: "Qualified Dietitian for Nutritional Oversight", frequency: "Ongoing", tier: 2, category: "Dietary Services", surveyorPriority: 2 },
+  { volume: "DS", standardCode: "DS.1", itemName: "Nutritional Assessments for At-Risk Patients (Artificial Nutrition, etc.)", frequency: "Ongoing", tier: 2, category: "Dietary Services", surveyorPriority: 1 },
+  { volume: "RT", standardCode: "RT.4", itemName: "Restraint/Seclusion — 1-Hour Face-to-Face Evaluation for Violent Behavior", frequency: "Ongoing", tier: 1, category: "Restraint & Seclusion", surveyorPriority: 1 },
+  { volume: "RT", standardCode: "RT.2", itemName: "Restraint Orders — Time-Limited, Not for Convenience, Physician Ordered", frequency: "Ongoing", tier: 1, category: "Restraint & Seclusion", surveyorPriority: 1 },
+  { volume: "RT", standardCode: "RT.6", itemName: "Staff Restraint Training — Qualified Trainer, Completed Before Application", frequency: "Annually", tier: 2, category: "Restraint & Seclusion", surveyorPriority: 1 },
+  { volume: "NM", standardCode: "NM.3", itemName: "Nuclear Medicine Equipment Calibration — At Least Annually by Qualified Personnel", frequency: "Annually", tier: 2, category: "Nuclear Medicine", surveyorPriority: 2 },
+];
