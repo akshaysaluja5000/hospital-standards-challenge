@@ -41,13 +41,13 @@ export default function AuthPage() {
   const intendedFacility = (() => {
     try {
       const v = sessionStorage.getItem("mosh_intended_facility");
-      return v === "hospital" || v === "asc" ? v : "hospital";
+      return v === "hospital" || v === "asc" || v === "dnv" ? v : "hospital";
     } catch { return "hospital"; }
   })();
 
   const registerForm = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
-    defaultValues: { username: "", firstName: "", lastName: "", facilityCode: "", organizationType: intendedFacility as "hospital" | "asc", password: "", confirmPassword: "" },
+    defaultValues: { username: "", firstName: "", lastName: "", facilityCode: "", organizationType: intendedFacility as "hospital" | "asc" | "dnv", password: "", confirmPassword: "" },
   });
 
   const resetForm = useForm<z.infer<typeof resetPasswordSchema>>({
@@ -373,6 +373,7 @@ export default function AuthPage() {
                               <SelectContent>
                                 <SelectItem value="hospital" data-testid="option-org-hospital">Hospital (Joint Commission)</SelectItem>
                                 <SelectItem value="asc" data-testid="option-org-asc">Ambulatory Surgery Center (AAAHC)</SelectItem>
+                                <SelectItem value="dnv" data-testid="option-org-dnv">Hospital (DNV NIAHO)</SelectItem>
                               </SelectContent>
                             </Select>
                           </FormControl>

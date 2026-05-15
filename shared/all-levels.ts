@@ -1,10 +1,12 @@
 import type { Level, ModuleId } from "./schema";
 import { hospitalLevels } from "./questions";
 import { ascLevels } from "./asc-questions";
+import { dnvLevels } from "./dnv-niaho-questions";
 
 export const levelsByModule: Record<ModuleId, Level[]> = {
   hospital: hospitalLevels,
   asc: ascLevels,
+  dnv: dnvLevels,
 };
 
 export function getLevelsForModule(module: ModuleId): Level[] {
@@ -26,7 +28,7 @@ export function getVisibleLevelsForModule(
 }
 
 export function getAllLevels(): Level[] {
-  return [...hospitalLevels, ...ascLevels];
+  return [...hospitalLevels, ...ascLevels, ...dnvLevels];
 }
 
 export function findLevelById(levelId: string): Level | undefined {

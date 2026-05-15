@@ -549,7 +549,7 @@ export default function PlayPage() {
                 onAnswer={handleAnswer}
                 disabled={hasAnswered}
                 previousAnswer={currentQuestionAnswered ? { selectedIndex: currentQuestionAnswered.selectedIndex, correct: currentQuestionAnswered.correct } : null}
-                module={user?.organizationType === "asc" ? "asc" : "hospital"}
+                module={(user?.organizationType === "asc" || user?.organizationType === "dnv") ? user.organizationType : "hospital"}
               />
             ) : (
               <QuizCard
@@ -557,7 +557,7 @@ export default function PlayPage() {
                 onAnswer={handleAnswer}
                 disabled={hasAnswered}
                 previousAnswer={currentQuestionAnswered ? { selectedIndex: currentQuestionAnswered.selectedIndex, correct: currentQuestionAnswered.correct } : null}
-                module={user?.organizationType === "asc" ? "asc" : "hospital"}
+                module={(user?.organizationType === "asc" || user?.organizationType === "dnv") ? user.organizationType : "hospital"}
               />
             )}
           </motion.div>

@@ -301,10 +301,11 @@ export default function DashboardPage() {
 
   const userModule: ModuleId = (user?.organizationType as ModuleId) || "hospital";
   const isAsc = userModule === "asc";
+  const isDnv = userModule === "dnv";
   const moduleLevels = getVisibleLevelsForModule(userModule);
 
-  // Hospital users still respect role-based assigned chapters. ASC users always see every chapter.
-  const assignedFilteredLevels = isAsc
+  // Hospital users still respect role-based assigned chapters. ASC/DNV users always see every chapter.
+  const assignedFilteredLevels = (isAsc || isDnv)
     ? moduleLevels
     : (assignedData?.chapters && assignedData.chapters.length > 0)
       ? moduleLevels.filter(l => assignedData.chapters.includes(l.id))

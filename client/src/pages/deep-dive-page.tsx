@@ -804,7 +804,7 @@ export default function DeepDivePage() {
                           correctAnswer={displayOptions[displayCorrectIdx] || ""}
                           explanation={displayExplanation}
                           allOptions={displayOptions}
-                          module={user?.organizationType === "asc" ? "asc" : "hospital"}
+                          module={(user?.organizationType === "asc" || user?.organizationType === "dnv") ? user.organizationType : "hospital"}
                         />
                       </div>
                     </div>

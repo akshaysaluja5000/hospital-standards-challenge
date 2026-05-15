@@ -354,7 +354,7 @@ export async function registerRoutes(
         return res.status(400).json({ message: "Password must be at least 6 characters" });
       }
 
-      const allowedOrgTypes = ["hospital", "asc"] as const;
+      const allowedOrgTypes = ["hospital", "asc", "dnv"] as const;
       type OrgType = typeof allowedOrgTypes[number];
       const normalizedOrgType: OrgType = (allowedOrgTypes as readonly string[]).includes(organizationType)
         ? (organizationType as OrgType)
@@ -1155,6 +1155,7 @@ export async function registerRoutes(
       const moduleLevelIdsByModule = new Map<ModuleId, Set<string>>([
         ["hospital", new Set(getVisibleLevelsForModule("hospital", { includeDraft: true }).map((l) => l.id))],
         ["asc", new Set(getVisibleLevelsForModule("asc", { includeDraft: true }).map((l) => l.id))],
+        ["dnv", new Set(getVisibleLevelsForModule("dnv", { includeDraft: true }).map((l) => l.id))],
       ]);
 
       const allUsersRaw = await storage.getAllUsers();
@@ -1591,9 +1592,10 @@ export async function registerRoutes(
       const wrongList = wrongOptions.map((o, i) => `"${o}"`).join(", ");
 
       const isAsc = tutorModule === "asc";
-      const tutorLabel = isAsc ? "ASC (ambulatory surgery center) AAAHC compliance tutor" : "Hospital Joint Commission compliance tutor";
+      const isDnv = tutorModule === "dnv";
+      const tutorLabel = isAsc ? "ASC (ambulatory surgery center) AAAHC compliance tutor" : isDnv ? "Hospital DNV NIAHO compliance tutor" : "Hospital Joint Commission compliance tutor";
       const orgLabel = isAsc ? "ASC" : "hospital";
-      const standardsBody = isAsc ? "AAAHC" : "Joint Commission";
+      const standardsBody = isAsc ? "AAAHC" : isDnv ? "DNV NIAHO" : "Joint Commission";
 
       const depthPrompts: Record<number, string> = {
         1: `${tutorLabel}. Staff answered a question wrong. Explain why the correct answer matters in 2 sentences. No headers, no bullet points, no markdown. Plain conversational text only.
@@ -1833,14 +1835,16 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
 
       const { handbook } = await import("@shared/handbook");
       const { ascHandbook } = await import("@shared/asc-handbook");
+      const { dnvHandbook } = await import("@shared/dnv-niaho-handbook");
       const { getVisibleLevelsForModule } = await import("@shared/all-levels");
 
       const userRecord = await storage.getUser(userId);
       const userModule = (userRecord?.organizationType as string) || "hospital";
       const isAsc = userModule === "asc";
+      const isDnv = userModule === "dnv";
 
-      const activeHandbook = isAsc ? ascHandbook : handbook;
-      const standardBody = isAsc ? "AAAHC" : "Joint Commission";
+      const activeHandbook = isAsc ? ascHandbook : isDnv ? dnvHandbook : handbook;
+      const standardBody = isAsc ? "AAAHC" : isDnv ? "DNV NIAHO" : "Joint Commission";
 
       const queryLower = query.toLowerCase();
       const words = queryLower.split(/\s+/).filter(Boolean);
@@ -3178,7 +3182,7 @@ Return ONLY valid JSON (no markdown, no explanation):
     topicQuizRateLimit.set(userId, calls);
 
     const { topic, context, module: mod } = parsed.data;
-    const standard = mod === "asc" ? "AAAHC accreditation" : "Joint Commission (TJC) hospital accreditation";
+    const standard = mod === "asc" ? "AAAHC accreditation" : mod === "dnv" ? "DNV NIAHO hospital accreditation" : "Joint Commission (TJC) hospital accreditation";
 
     const prompt = `You are a ${standard} compliance educator. Generate exactly 5 multiple-choice quiz questions about "${topic}" for healthcare staff preparing for a survey.
 

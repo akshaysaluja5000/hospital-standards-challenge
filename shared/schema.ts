@@ -26,7 +26,7 @@ export const roleChapterMappings = pgTable("role_chapter_mappings", {
   displayOrder: integer("display_order").notNull().default(0),
 });
 
-export const MODULE_IDS = ["hospital", "asc"] as const;
+export const MODULE_IDS = ["hospital", "asc", "dnv"] as const;
 export type ModuleId = (typeof MODULE_IDS)[number];
 
 export const LEADERSHIP_ROLES = ["learner", "educator", "director", "ceo", "admin", "super_admin"] as const;
@@ -53,6 +53,7 @@ export const LEADERSHIP_LABELS: Record<LeadershipRole, string> = {
 export const MODULE_LABELS: Record<ModuleId, string> = {
   hospital: "Hospital",
   asc: "Ambulatory Surgery Center (ASC)",
+  dnv: "Hospital (DNV NIAHO)",
 };
 
 export const users = pgTable("users", {

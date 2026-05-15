@@ -43,6 +43,7 @@ import {
   Briefcase,
   DoorOpen,
   Lock,
+  Zap,
   type LucideIcon,
 } from "lucide-react";
 
@@ -100,6 +101,18 @@ const ROLE_ICONS: Record<string, LucideIcon> = {
   // ASC — Environmental & Facilities
   asc_evs: Sparkles,
   asc_facilities: Wrench,
+  // DNV NIAHO
+  dnv_qm_track: ClipboardCheck,
+  dnv_gov_track: Building2,
+  dnv_ms_track: Stethoscope,
+  dnv_ns_track: HeartPulse,
+  dnv_mm_track: ClipboardList,
+  dnv_ss_track: Scissors,
+  dnv_pc_track: HeartPulse,
+  dnv_es_track: Zap,
+  dnv_pr_track: ShieldCheck,
+  dnv_ic_track: FileText,
+  dnv_pe_track: Wrench,
 };
 
 const DEPT_ICONS: Record<string, LucideIcon> = {
@@ -113,6 +126,7 @@ const DEPT_ICONS: Record<string, LucideIcon> = {
   "Leadership & Compliance": Building2,
   "Front Office & Patient Access": DoorOpen,
   "Business Office & Credentialing": Briefcase,
+  "DNV NIAHO Standards": ShieldCheck,
 };
 
 const SCOPE_BADGE_CLASSES: Record<RoleConfig["scope"], string> = {
