@@ -1,0 +1,68 @@
+Step 3: Restructure the Database
+The current DNV module needs two layers:
+
+Layer A — A pathway selector at the top:
+
+DNV NIAHO (Default for US hospitals)
+DNV DIAS (International / Optional)
+Layer B — Separate standards content for each: The compliance_items database table needs a new field called "accreditation_body" that distinguishes between NIAHO and DIAS items. Every NIAHO chapter and standard gets tagged accreditation_body = "NIAHO". DIAS items stay tagged "DIAS".
+
+This way both exist in the system but only the relevant one shows based on the user's selection.
+
+Step 4: Build Out the NIAHO Chapter Structure
+Based on what NIAHO covers (which Akshay needs to verify against the actual manual), the chapters typically include:
+
+Quality Management System
+Governing Body
+Chief Executive Officer
+Medical Staff
+Nursing Services
+Staffing Management
+Medical Records Service
+Pharmaceutical Services
+Dietary Services
+Quality Management and Performance Improvement
+Infection Prevention and Control
+Patient Rights
+Surgical Services
+Anesthesia Services
+Nuclear Medicine Services
+Outpatient Services
+Laboratory Services
+Radiologic Services
+Rehabilitation Services
+Respiratory Care Services
+Emergency Services
+Discharge Planning
+Organ, Tissue, and Eye Procurement
+Physical Environment
+This list is approximate. The actual NIAHO 25-1 manual is the only authoritative source. Akshay must confirm chapter list against the real manual before building.
+
+Step 5: Content Migration Process Per Chapter
+For each NIAHO chapter, Akshay follows this workflow in Replit:
+
+Read the NIAHO chapter in the manual
+Identify the standard codes (NIAHO uses different codes than DIAS)
+Build the chapter card structure mirroring the existing module pattern (Chapter Overview, Flashcards, Practice Quiz, Deep Dive Tracer, Common Survey Risk Points)
+Generate quiz questions from the standard text using a Claude prompt
+Human review by either Akshay or a clinical advisor before going live
+Suggested Claude prompt for content generation per chapter:
+
+"Read this NIAHO Revision 25-1 chapter on [Chapter Name]. Generate 20 multiple-choice quiz questions that test understanding of the standards. Include 8 study concepts. List the 5 most common survey risk points that DNV surveyors cite during NIAHO surveys. Format as JSON for direct upload."
+
+Step 6: Update the Dropdown Label
+The current dropdown says "DNV-Accredited Hospitals." This should be changed to be specific about which standard the user is selecting. Options:
+
+"DNV NIAHO Hospitals (US / CMS-deemed)"
+"DNV DIAS Hospitals (International)"
+Clarity here matters because a hospital administrator clicking the wrong one wastes their time.
+
+Step 7: Verify Agent Wiring
+Once NIAHO content is built, every agent that previously referenced DIAS or generically said "DNV" needs to dynamically pull the correct standards body. Apply the same dynamic variable approach we discussed earlier:
+
+
+activeStandardsBody = 
+  Hospital JCAHO mode → "Joint Commission"
+  ASC AAAHC mode → "AAAHC"
+  DNV NIAHO mode → "DNV NIAHO"
+  DNV DIAS mode → "DNV DIAS"

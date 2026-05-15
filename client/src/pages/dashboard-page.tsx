@@ -18,7 +18,6 @@ import { useMutation } from "@tanstack/react-query";
 import type { UserStreak, UserProgress, DailyActivity, QuizSession, DiagnosticResult } from "@shared/schema";
 import { getVisibleLevelsForModule, findLevelById } from "@shared/all-levels";
 import { ascHandbook, ASC_HANDBOOK_CATEGORY_ORDER, type AscHandbookChapter } from "@shared/asc-handbook";
-import { dnvHandbook } from "@shared/dnv-handbook";
 import { MODULE_LABELS, type ModuleId } from "@shared/schema";
 import { getRoleConfig } from "@shared/roles";
 import { TopicQuizModal, type SearchEntry } from "@/components/topic-quiz-modal";
@@ -26,13 +25,11 @@ import { TopicQuizModal, type SearchEntry } from "@/components/topic-quiz-modal"
 const PATHWAY_HEADERS: Record<ModuleId, string> = {
   hospital: "Hospital Standards",
   asc: "ASC Domains",
-  dnv: "DNV DIAS Standards",
 };
 
 const PATHWAY_DISCLAIMERS: Record<ModuleId, string> = {
   hospital: "Not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. For educational purposes only.",
   asc: "Not affiliated with, endorsed by, or sponsored by AAAHC, The Joint Commission, or CMS. For educational purposes only.",
-  dnv: "Not affiliated with, endorsed by, or sponsored by DNV Healthcare, The Joint Commission, or CMS. For educational purposes only.",
 };
 
 function AscChapterCard({
@@ -304,11 +301,10 @@ export default function DashboardPage() {
 
   const userModule: ModuleId = (user?.organizationType as ModuleId) || "hospital";
   const isAsc = userModule === "asc";
-  const isDnv = userModule === "dnv";
   const moduleLevels = getVisibleLevelsForModule(userModule);
 
-  // Hospital users still respect role-based assigned chapters. ASC/DNV users always see every chapter.
-  const assignedFilteredLevels = (isAsc || isDnv)
+  // Hospital users still respect role-based assigned chapters. ASC users always see every chapter.
+  const assignedFilteredLevels = isAsc
     ? moduleLevels
     : (assignedData?.chapters && assignedData.chapters.length > 0)
       ? moduleLevels.filter(l => assignedData.chapters.includes(l.id))
@@ -404,39 +400,6 @@ export default function DashboardPage() {
           ch.overview ?? "",
           (ch.riskPoints ?? []).join(". "),
           sectionText,
-          conceptText,
-          questionText,
-        ].filter(Boolean).join(" "),
-      });
-    }
-
-    // DNV handbook chapters — index title, overview, section content, study material, and questions
-    const dnvLevelsAll = getVisibleLevelsForModule("dnv");
-    for (const ch of dnvHandbook) {
-      const dnvLvl = dnvLevelsAll.find((l) => l.id === ch.levelId);
-      const sectionText = (ch.sections ?? [])
-        .map((s) => `${s.heading ?? ""} ${s.content ?? ""}`.trim())
-        .filter(Boolean)
-        .join(" ");
-      const conceptText = (dnvLvl?.studyMaterial ?? [])
-        .map((c) => `${c.title} ${c.content} ${c.keyPoint} ${c.extraInfo ?? ""}`)
-        .join(" ");
-      const questionText = (dnvLvl?.questions ?? [])
-        .map((q) => `${q.text} ${(q.options ?? []).join(" ")} ${q.explanation ?? ""}`)
-        .join(" ");
-      const qrText = (ch.quickReference ?? [])
-        .map((r) => `${r.fact} ${r.detail}`)
-        .join(" ");
-      entries.push({
-        id: `dnv-${ch.levelId}`,
-        title: ch.title,
-        subtitle: ch.overview?.slice(0, 120) ?? "",
-        module: "dnv",
-        levelId: ch.levelId,
-        aiContext: [
-          ch.overview ?? "",
-          sectionText,
-          qrText,
           conceptText,
           questionText,
         ].filter(Boolean).join(" "),
@@ -729,7 +692,7 @@ export default function DashboardPage() {
                             onClick={() => {
                               setSearchOpen(false);
                               setSearchQuery("");
-                              setLocation((entry.module === "asc" || entry.module === "dnv") ? `/handbook/${entry.levelId}` : `/study/${entry.levelId}`);
+                              setLocation(entry.module === "asc" ? `/handbook/${entry.levelId}` : `/study/${entry.levelId}`);
                             }}
                             data-testid={`button-explore-${entry.id}`}
                           >
@@ -737,11 +700,9 @@ export default function DashboardPage() {
                               <span className={`flex-shrink-0 px-1.5 py-0.5 rounded text-xs font-black uppercase tracking-wider ${
                                 entry.module === "asc"
                                   ? "bg-teal-500/15 text-teal-700 dark:text-teal-400"
-                                  : entry.module === "dnv"
-                                  ? "bg-blue-500/15 text-blue-700 dark:text-blue-400"
                                   : "bg-primary/10 text-primary"
                               }`}>
-                                {entry.module === "asc" ? "ASC" : entry.module === "dnv" ? "DNV" : "Hospital"}
+                                {entry.module === "asc" ? "ASC" : "Hospital"}
                               </span>
                               <p className="text-sm font-bold truncate" data-testid={`search-result-title-${entry.id}`}>
                                 {entry.title}
@@ -1044,7 +1005,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Final Assessment — hospital only */}
-            {masteryEligibility?.eligible && userModule !== "asc" && userModule !== "dnv" && (
+            {masteryEligibility?.eligible && userModule !== "asc" && (
               <motion.div
                 className="w-full rounded-2xl border-2 p-5 text-left bg-primary/5 border-primary/30"
                 initial={{ opacity: 0, y: 10 }}

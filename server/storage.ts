@@ -406,7 +406,7 @@ const LEADERSHIP_CODES_BY_FACILITY: Record<string, string[]> = {
 };
 
 async function seedComplianceItems(client: pg.PoolClient) {
-  const { ASC_COMPLIANCE_ITEMS, DNV_COMPLIANCE_ITEMS } = await import("./compliance-seed-data.js");
+  const { ASC_COMPLIANCE_ITEMS } = await import("./compliance-seed-data.js");
   const { rows } = await client.query("SELECT COUNT(*) FROM compliance_items WHERE module = 'asc'");
   if (parseInt(rows[0].count) === 0) {
     for (const item of ASC_COMPLIANCE_ITEMS) {
@@ -417,17 +417,6 @@ async function seedComplianceItems(client: pg.PoolClient) {
       );
     }
     console.log(`Seeded ${ASC_COMPLIANCE_ITEMS.length} ASC compliance items`);
-  }
-  const { rows: dnvRows } = await client.query("SELECT COUNT(*) FROM compliance_items WHERE module = 'dnv'");
-  if (parseInt(dnvRows[0].count) === 0) {
-    for (const item of DNV_COMPLIANCE_ITEMS) {
-      await client.query(
-        `INSERT INTO compliance_items (module, volume, standard_code, item_name, frequency, tier, category, surveyor_priority, agent_watch)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-        ["dnv", item.volume, item.standardCode, item.itemName, item.frequency, item.tier, item.category, item.surveyorPriority, true]
-      );
-    }
-    console.log(`Seeded ${DNV_COMPLIANCE_ITEMS.length} DNV compliance items`);
   }
 }
 

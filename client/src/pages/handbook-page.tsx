@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { AiHandbookSearch } from "@/components/ai-handbook-search";
 import { handbook } from "@shared/handbook";
 import { ascHandbook, ASC_HANDBOOK_CATEGORY_ORDER, type AscHandbookCategory, type AscHandbookChapter } from "@shared/asc-handbook";
-import { dnvHandbook } from "@shared/dnv-handbook";
 import { findLevelById } from "@shared/all-levels";
 import { useAuth } from "@/lib/auth";
 import type { HandbookChapter, HandbookSection } from "@shared/schema";
@@ -214,8 +213,7 @@ export default function HandbookPage() {
   const { user } = useAuth();
 
   const isAsc = user?.organizationType === "asc";
-  const isDnv = user?.organizationType === "dnv";
-  const allChapters: HandbookChapter[] = isAsc ? ascHandbook : isDnv ? dnvHandbook : handbook;
+  const allChapters: HandbookChapter[] = isAsc ? ascHandbook : handbook;
 
   const selectedLevelId = params?.levelId;
   const selectedChapter = selectedLevelId
@@ -250,8 +248,6 @@ export default function HandbookPage() {
 
   const introCopy = isAsc
     ? "The full AAAHC Accreditation Handbook for Medicare Deemed Status (v42), organized by chapter exactly as published. Universal Standards apply to every accredited ASC; Selective Standards apply when the listed service is provided."
-    : isDnv
-    ? "DNV Healthcare DIAS (International Accreditation Standards) reference guide, organized by the 11 standard domains. Each chapter covers key requirements, critical values, and practical survey readiness guidance based on Revision 26-0, January 29, 2026."
     : "Everything you need to know for Joint Commission compliance — organized by topic with detailed explanations, critical values, and real-world scenarios. Use this alongside the quizzes to build deep understanding.";
 
   const renderChapterCard = (chapter: HandbookChapter) => {
@@ -302,7 +298,7 @@ export default function HandbookPage() {
           <div className="flex items-center gap-2 flex-1">
             <BookOpen size={20} className="text-primary" />
             <h1 className="font-black text-lg text-foreground" data-testid="text-handbook-title">
-              {isAsc ? "AAAHC Accreditation Handbook" : isDnv ? "DNV DIAS Handbook" : "Compliance Handbook"}
+              {isAsc ? "AAAHC Accreditation Handbook" : "Compliance Handbook"}
             </h1>
           </div>
         </div>
@@ -311,7 +307,7 @@ export default function HandbookPage() {
       <div className="max-w-2xl mx-auto w-full px-4 py-6 flex flex-col gap-5">
         <div className="rounded-xl bg-primary/5 border border-primary/20 p-5">
           <h2 className="font-bold text-base mb-1.5" data-testid="text-handbook-subtitle">
-            {isAsc ? "AAAHC Medicare Deemed Status, v42" : isDnv ? "DNV DIAS Rev. 26-0, January 2026" : "Your Complete Reference Guide"}
+            {isAsc ? "AAAHC Medicare Deemed Status, v42" : "Your Complete Reference Guide"}
           </h2>
           <p className="text-sm text-foreground/70 leading-relaxed">
             {introCopy}

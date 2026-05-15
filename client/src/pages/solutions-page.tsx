@@ -100,43 +100,11 @@ const SOLUTIONS: Record<string, SolutionConfig> = {
     bottomLine:
       "ASC-specific content tied to the standards your surveyors actually use. Built by people who know what a 7am first-case start looks like.",
   },
-  dnv: {
-    slug: "dnv",
-    pageTitle: "DNV Healthcare — Accreditation Ready",
-    audience: "For DNV-Accredited Hospitals",
-    heroIcon: Building2,
-    headline: "DNV DIAS Survey Readiness Training.",
-    subhead:
-      "Train your hospital staff on all 11 DNV International Accreditation Standards (DIAS Rev 26-0) — Quality Management, Medical Staff, Nursing Services, Patient Care, and more. Gamified daily learning keeps your team survey-ready year-round.",
-    features: [
-      {
-        icon: ShieldCheck,
-        title: "All 11 DIAS standard domains",
-        description:
-          "Comprehensive coverage of QM, GB, MS, NS, PC, MM, OT, IC, MR, PE, and SP — mapped to DNV DIAS Revision 26-0 (January 2026).",
-      },
-      {
-        icon: Zap,
-        title: "Gamified daily practice",
-        description:
-          "Short, focused sessions with streaks, XP, and AI-powered explanations help staff internalize DNV standards between annual surveys.",
-      },
-      {
-        icon: BarChart3,
-        title: "Leadership readiness reporting",
-        description:
-          "Directors and compliance officers get department-level gap reports and risk summaries to prioritize corrective action before surveyors arrive.",
-      },
-    ],
-    bottomLine:
-      "Built on actual DNV DIAS standards. Ready to deploy the same day your DNV survey is scheduled.",
-  },
 };
 
 const SLUG_TO_MODULE: Record<string, string> = {
   hospitals: "hospital",
   asc: "asc",
-  dnv: "dnv",
 };
 
 export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
@@ -343,15 +311,6 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
               ASC
             </button>
             <span className="text-muted-foreground">·</span>
-            <button
-              type="button"
-              onClick={() => setLocation("/dnv")}
-              className="font-medium hover:underline"
-              data-testid="link-footer-dnv"
-            >
-              DNV
-            </button>
-            <span className="text-muted-foreground">·</span>
             <a href="/terms" className="font-medium hover:underline" data-testid="link-footer-terms">
               Terms & Privacy
             </a>
@@ -375,6 +334,3 @@ export function AscPage() {
   return <SolutionsPage slug="asc" />;
 }
 
-export function DnvPage() {
-  return <SolutionsPage slug="dnv" />;
-}

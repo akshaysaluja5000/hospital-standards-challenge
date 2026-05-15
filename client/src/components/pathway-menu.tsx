@@ -46,14 +46,6 @@ const PATHWAYS: Pathway[] = [
     description: "AAAHC, Joint Commission & CMS pathways",
     testId: "link-pathway-asc",
   },
-  {
-    href: "/dnv",
-    module: "dnv",
-    icon: Hospital,
-    title: "DNV-Accredited Hospitals",
-    description: "DNV Healthcare DIAS standards",
-    testId: "link-pathway-dnv",
-  },
 ];
 
 export function PathwayMenu({

@@ -150,10 +150,10 @@ export default function RoleSelectPage() {
   // - New users with no context: no pre-selection (they must actively choose).
   const initialFacility = (() => {
     if (user?.roleId) return facilityType;
-    if (facilityType === "asc" || facilityType === "dnv") return facilityType;
+    if (facilityType === "asc") return facilityType;
     try {
       const v = sessionStorage.getItem("mosh_intended_facility");
-      if (v === "hospital" || v === "asc" || v === "dnv") return v as FacilityType;
+      if (v === "hospital" || v === "asc") return v as FacilityType;
     } catch {}
     return null;
   })();
@@ -346,8 +346,8 @@ export default function RoleSelectPage() {
         return;
       }
     }
-    // ASC and DNV users skip role selection — chapters are universal by accreditor, not by role.
-    if (pendingFacility === "asc" || pendingFacility === "dnv") {
+    // ASC users skip role selection — chapters are universal by accreditor, not by role.
+    if (pendingFacility === "asc") {
       try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
       try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
       try { sessionStorage.removeItem("mosh_intended_facility"); } catch {}
@@ -360,17 +360,14 @@ export default function RoleSelectPage() {
   const FACILITY_ACCREDITOR: Record<FacilityType, string> = {
     hospital: "The Joint Commission",
     asc: "AAAHC",
-    dnv: "DNV Healthcare",
   };
   const FACILITY_DESCRIPTIONS: Record<FacilityType, string> = {
     hospital: "Inpatient hospital training aligned with The Joint Commission standards. Choose a department role to focus your chapters.",
     asc: "Ambulatory Surgery Center training aligned with the AAAHC Accreditation Handbook. Pick the chapter tracks that match your responsibilities.",
-    dnv: "Hospital training aligned with DNV Healthcare DIAS (International Accreditation Standards). Complete all 11 standard domains for DNV survey readiness.",
   };
   const FACILITY_ICONS: Record<FacilityType, LucideIcon> = {
     hospital: Building2,
     asc: HeartPulse,
-    dnv: Building2,
   };
 
   if (isLoading) {
