@@ -55,7 +55,7 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     icon: Bot,
     iconBg: "bg-violet-500/10",
     iconColor: "text-violet-600",
-    href: "/survey-readiness",
+    href: "/content-intelligence",
     minRole: "director",
     badge: "AI",
   },
