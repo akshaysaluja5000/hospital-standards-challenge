@@ -151,7 +151,7 @@ export default function RoleSelectPage() {
     if (user?.roleId) return facilityType;
     try {
       const v = sessionStorage.getItem("mosh_intended_facility");
-      if (v === "hospital" || v === "asc") return v as FacilityType;
+      if (v === "hospital" || v === "asc" || v === "dnv") return v as FacilityType;
     } catch {}
     return null;
   })();
