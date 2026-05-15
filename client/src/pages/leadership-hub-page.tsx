@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BarChart3, TrendingUp, GraduationCap, BrainCircuit,
   Users, Building2, Stethoscope, ChevronRight, ShieldCheck,
-  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Bot, Globe,
+  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Bot, Globe, Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -58,6 +58,17 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     href: "/survey-readiness",
     minRole: "director",
     badge: "AI",
+  },
+  {
+    id: "executive-brief",
+    title: "Executive Readiness Agent",
+    description: "Generates a weekly plain-English compliance brief for CEOs and CNOs. Combines readiness scores, overdue items, expiring documents, and staff training gaps into a one-page summary with trend direction. Delivers via email.",
+    icon: Briefcase,
+    iconBg: "bg-emerald-500/10",
+    iconColor: "text-emerald-600",
+    href: "/executive-brief",
+    minRole: "ceo",
+    badge: "Agent",
   },
   {
     id: "regulatory-watch",

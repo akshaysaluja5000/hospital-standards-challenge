@@ -39,6 +39,7 @@ import ExecutiveComplianceConsolePage from "@/pages/executive-compliance-console
 import SurveyReadinessPage from "@/pages/survey-readiness-page";
 import StaffLearningPage from "@/pages/staff-learning-page";
 import RegulatoryWatchPage from "@/pages/regulatory-watch-page";
+import ExecutiveBriefPage from "@/pages/executive-brief-page";
 import { Loader2 } from "lucide-react";
 
 function ScrollToTop() {
@@ -334,6 +335,9 @@ function Router() {
       </Route>
       <Route path="/regulatory-watch">
         {() => <LeadershipRoute component={RegulatoryWatchPage} minRole="director" />}
+      </Route>
+      <Route path="/executive-brief">
+        {() => <LeadershipRoute component={ExecutiveBriefPage} minRole="ceo" />}
       </Route>
       <Route path="/survey-readiness">
         {() => <LeadershipRoute component={SurveyReadinessPage} minRole="director" />}

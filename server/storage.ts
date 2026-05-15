@@ -7,13 +7,13 @@ import {
   ascPretestResults, ascPosttestResults,
   roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback, leadershipRoleCodes,
   complianceItems, complianceLogs, complianceDocuments, complianceTrainingModules,
-  complianceTasks, staffTrainingAlerts, regulatoryWatchFindings,
+  complianceTasks, staffTrainingAlerts, regulatoryWatchFindings, executiveBriefs,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
   type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment, type Feedback,
   type ComplianceItem, type ComplianceLog, type ComplianceDocument, type ComplianceTrainingModule,
-  type ComplianceTask, type StaffTrainingAlert, type RegulatoryWatchFinding,
+  type ComplianceTask, type StaffTrainingAlert, type RegulatoryWatchFinding, type ExecutiveBrief,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -293,6 +293,24 @@ export async function ensureTablesExist() {
         is_read BOOLEAN NOT NULL DEFAULT false,
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS executive_briefs (
+        id SERIAL PRIMARY KEY,
+        facility_id INTEGER NOT NULL,
+        week_of DATE NOT NULL,
+        readiness_score INTEGER NOT NULL DEFAULT 0,
+        previous_score INTEGER,
+        trend_direction TEXT NOT NULL DEFAULT 'stable',
+        top_risks TEXT NOT NULL DEFAULT '[]',
+        overdue_tasks_count INTEGER NOT NULL DEFAULT 0,
+        expiring_docs_count INTEGER NOT NULL DEFAULT 0,
+        training_alerts_count INTEGER NOT NULL DEFAULT 0,
+        regulatory_findings_count INTEGER NOT NULL DEFAULT 0,
+        days_to_next_event INTEGER,
+        narrative_summary TEXT NOT NULL DEFAULT '',
+        email_sent_at TIMESTAMP,
+        email_sent_to TEXT NOT NULL DEFAULT '[]',
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
       CREATE TABLE IF NOT EXISTS regulatory_watch_findings (
         id SERIAL PRIMARY KEY,
         facility_id INTEGER NOT NULL,
@@ -544,6 +562,12 @@ export interface IStorage {
   clearStaffTrainingAlerts(facilityId: number): Promise<void>;
   markAllStaffTrainingAlertsRead(facilityId: number): Promise<void>;
   createComplianceTask(data: { facilityId: number; itemId: number; assignedTo: string; dueDate: string; createdBy: string; createdByAgent: boolean }): Promise<ComplianceTask>;
+  getComplianceTasks(facilityId: number): Promise<ComplianceTask[]>;
+  getExecutiveBriefs(facilityId: number): Promise<ExecutiveBrief[]>;
+  getExecutiveBrief(id: number): Promise<ExecutiveBrief | undefined>;
+  getLatestExecutiveBrief(facilityId: number): Promise<ExecutiveBrief | undefined>;
+  createExecutiveBrief(data: { facilityId: number; weekOf: string; readinessScore: number; previousScore?: number | null; trendDirection: string; topRisks: string; overdueTasksCount: number; expiringDocsCount: number; trainingAlertsCount: number; regulatoryFindingsCount: number; daysToNextEvent?: number | null; narrativeSummary: string }): Promise<ExecutiveBrief>;
+  updateExecutiveBriefEmailStatus(id: number, emailSentTo: string, emailSentAt: Date): Promise<ExecutiveBrief>;
   getRegulatoryWatchFindings(facilityId: number): Promise<RegulatoryWatchFinding[]>;
   createRegulatoryWatchFinding(data: { facilityId: number; source: string; standardCode: string; title: string; summary: string; sourceUrl?: string; affectedItemIds: string; affectedItemCount: number; affectedDocumentCount: number; taskId?: number }): Promise<RegulatoryWatchFinding>;
   updateRegulatoryWatchFindingStatus(id: number, status: string, reviewedBy?: string): Promise<RegulatoryWatchFinding>;
@@ -1271,6 +1295,62 @@ export class DatabaseStorage implements IStorage {
       createdByAgent: data.createdByAgent,
       status: "pending",
     }).returning();
+    return row;
+  }
+
+  async getComplianceTasks(facilityId: number): Promise<ComplianceTask[]> {
+    return db.select().from(complianceTasks)
+      .where(eq(complianceTasks.facilityId, facilityId))
+      .orderBy(desc(complianceTasks.createdAt));
+  }
+
+  async getExecutiveBriefs(facilityId: number): Promise<ExecutiveBrief[]> {
+    return db.select().from(executiveBriefs)
+      .where(eq(executiveBriefs.facilityId, facilityId))
+      .orderBy(desc(executiveBriefs.weekOf));
+  }
+
+  async getExecutiveBrief(id: number): Promise<ExecutiveBrief | undefined> {
+    const [row] = await db.select().from(executiveBriefs).where(eq(executiveBriefs.id, id));
+    return row;
+  }
+
+  async getLatestExecutiveBrief(facilityId: number): Promise<ExecutiveBrief | undefined> {
+    const [row] = await db.select().from(executiveBriefs)
+      .where(eq(executiveBriefs.facilityId, facilityId))
+      .orderBy(desc(executiveBriefs.weekOf))
+      .limit(1);
+    return row;
+  }
+
+  async createExecutiveBrief(data: {
+    facilityId: number; weekOf: string; readinessScore: number; previousScore?: number | null;
+    trendDirection: string; topRisks: string; overdueTasksCount: number; expiringDocsCount: number;
+    trainingAlertsCount: number; regulatoryFindingsCount: number; daysToNextEvent?: number | null;
+    narrativeSummary: string;
+  }): Promise<ExecutiveBrief> {
+    const [row] = await db.insert(executiveBriefs).values({
+      facilityId: data.facilityId,
+      weekOf: data.weekOf,
+      readinessScore: data.readinessScore,
+      previousScore: data.previousScore ?? null,
+      trendDirection: data.trendDirection,
+      topRisks: data.topRisks,
+      overdueTasksCount: data.overdueTasksCount,
+      expiringDocsCount: data.expiringDocsCount,
+      trainingAlertsCount: data.trainingAlertsCount,
+      regulatoryFindingsCount: data.regulatoryFindingsCount,
+      daysToNextEvent: data.daysToNextEvent ?? null,
+      narrativeSummary: data.narrativeSummary,
+    }).returning();
+    return row;
+  }
+
+  async updateExecutiveBriefEmailStatus(id: number, emailSentTo: string, emailSentAt: Date): Promise<ExecutiveBrief> {
+    const [row] = await db.update(executiveBriefs)
+      .set({ emailSentTo, emailSentAt })
+      .where(eq(executiveBriefs.id, id))
+      .returning();
     return row;
   }
 
