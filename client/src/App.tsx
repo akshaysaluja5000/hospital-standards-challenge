@@ -280,7 +280,7 @@ function Router() {
       <Route path="/role-error" component={RoleErrorRoute} />
       <Route path="/" component={HomeRoute} />
       <Route path="/dashboard">
-        {() => <ProtectedRoute component={() => <AppShell><DashboardPage /></AppShell>} />}
+        {() => <ProtectedRoute component={DashboardPage} />}
       </Route>
       <Route path="/play/:levelId">
         {() => <ProtectedRoute component={PlayPage} />}
