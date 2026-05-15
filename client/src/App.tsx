@@ -210,6 +210,13 @@ function HomeRoute() {
       return <Redirect to="/role-select" />;
     }
     try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
+
+    // Role-based landing: CEO/CNO → Executive Brief · Director → Survey Readiness · Others → Dashboard
+    const effective = getEffectiveRole(user);
+    const rank = LEADERSHIP_RANK[effective] ?? 0;
+    if (rank >= LEADERSHIP_RANK["ceo"]) return <Redirect to="/executive-brief" />;
+    if (rank >= LEADERSHIP_RANK["director"]) return <Redirect to="/survey-readiness" />;
+
     return <AppShell><DashboardPage /></AppShell>;
   }
 

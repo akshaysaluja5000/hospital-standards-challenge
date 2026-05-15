@@ -2,7 +2,7 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
-import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle, MessageSquare, MoreHorizontal, Moon, Sun } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { Flame, Zap, Target, TrendingUp, ChevronRight, ChevronDown, ChevronUp, LogOut, BarChart3, Calendar as CalendarIcon, Settings, BookOpen, Trophy, Shuffle, Microscope, BrainCircuit, Stethoscope, Crown, Briefcase, Play, FileText, ClipboardCheck, ShieldAlert, Brain, Layers, GraduationCap, Search, X as XIcon, HelpCircle, MessageSquare, MoreHorizontal, Moon, Sun, AlertCircle } from "lucide-react"; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -181,6 +181,59 @@ function AscChapterCard({
             </div>
           )}
         </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function ComplianceReminderBanner() {
+  const [, setLocation] = useLocation();
+  const [dismissed, setDismissed] = useState(false);
+  const { data: alerts = [] } = useQuery<{ id: number; category: string; message: string; daysOverdue: number; alertType: string }[]>({
+    queryKey: ["/api/compliance/my-training-alerts"],
+    staleTime: 5 * 60 * 1000,
+  });
+
+  if (dismissed || alerts.length === 0) return null;
+
+  const categories = [...new Set(alerts.map(a => a.category))].slice(0, 3);
+  const maxOverdue = Math.max(...alerts.map(a => a.daysOverdue ?? 0));
+  const isEscalation = alerts.some(a => a.alertType === "escalation");
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      className={`max-w-6xl mx-auto px-6 pt-4`}
+      data-testid="banner-compliance-reminder"
+    >
+      <div className={`rounded-xl border px-4 py-3 flex items-center gap-3 ${isEscalation ? "border-red-200 bg-red-50" : "border-amber-200 bg-amber-50"}`}>
+        <AlertCircle className={`w-4 h-4 shrink-0 ${isEscalation ? "text-red-500" : "text-amber-500"}`} />
+        <div className="flex-1 min-w-0">
+          <span className="text-sm font-semibold text-foreground">
+            You have {alerts.length} required compliance training item{alerts.length !== 1 ? "s" : ""} due
+          </span>
+          <span className="text-xs text-muted-foreground ml-2">
+            {categories.join(" · ")}
+            {maxOverdue > 0 && ` · ${maxOverdue} day${maxOverdue !== 1 ? "s" : ""} overdue`}
+          </span>
+        </div>
+        <button
+          onClick={() => setLocation("/handbook")}
+          data-testid="link-compliance-banner-review"
+          className={`text-xs font-semibold shrink-0 hover:underline ${isEscalation ? "text-red-700" : "text-amber-700"}`}
+        >
+          Review Training →
+        </button>
+        <button
+          onClick={() => setDismissed(true)}
+          data-testid="button-compliance-banner-dismiss"
+          className="text-muted-foreground hover:text-foreground transition-colors ml-1 shrink-0"
+          aria-label="Dismiss"
+        >
+          <XIcon size={14} />
+        </button>
       </div>
     </motion.div>
   );
@@ -582,6 +635,9 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* Compliance reminder panel — only visible to clinical staff with active alerts */}
+      <ComplianceReminderBanner />
 
       {/* Two-column layout */}
       <div className="max-w-6xl mx-auto px-6 pt-6 pb-8">

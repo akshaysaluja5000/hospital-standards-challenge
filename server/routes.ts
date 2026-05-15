@@ -3707,6 +3707,18 @@ Rules:
     }
   });
 
+  // ── My Training Alerts (per-user compliance reminders for clinical staff) ──
+  app.get("/api/compliance/my-training-alerts", requireAuth, async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const all = await storage.getStaffTrainingAlerts(user.facilityId ?? 0);
+      res.json(all.filter(a => a.userId === user.id && !a.isRead));
+    } catch (err) {
+      console.error("Get my-training-alerts error:", err);
+      res.status(500).json({ error: "Failed to fetch alerts." });
+    }
+  });
+
   // ── Executive Readiness Agent (Agent 5) ────────────────────────────────────
   function buildEmailHtml(brief: {
     weekOf: string; readinessScore: number; previousScore: number | null; trendDirection: string;
