@@ -13,6 +13,23 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { User, DailyActivity } from "@shared/schema";
 import { generateSecret as totpGenerateSecret, verifyToken as totpVerify, totpUri } from "./totp";
 import QRCode from "qrcode";
+import multer from "multer";
+import mammoth from "mammoth";
+import { createRequire } from "module";
+const _require = createRequire(import.meta.url);
+const pdfParse = _require("pdf-parse") as (buf: Buffer) => Promise<{ text: string }>;
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const ok = /\.(pdf|doc|docx|txt)$/i.test(file.originalname) ||
+      ["application/pdf", "application/msword",
+       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+       "text/plain"].includes(file.mimetype);
+    cb(null, ok);
+  },
+});
 
 declare module "express-session" {
   interface SessionData {
@@ -3269,6 +3286,190 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
     } catch (err) {
       console.error("Compliance document error:", err);
       res.status(500).json({ error: "Failed to mark document." });
+    }
+  });
+
+  // ── Content Intelligence Agent (Agent 2) ───────────────────────────────────
+  app.post("/api/compliance/document/upload",
+    requireAuth,
+    requireLeadershipRole("director"),
+    upload.single("file"),
+    async (req: Request, res: Response) => {
+      try {
+        const user = req.user as any;
+        const facilityId: number = user.facilityId ?? 0;
+        const itemId = parseInt(req.body.itemId ?? "0");
+        const documentName = (req.body.documentName ?? "").trim();
+        const expirationDate: string | undefined = req.body.expirationDate || undefined;
+
+        if (!itemId || !documentName) {
+          return res.status(400).json({ error: "itemId and documentName are required." });
+        }
+
+        const items = await storage.getComplianceItems("asc");
+        const item = items.find(i => i.id === itemId);
+        if (!item) return res.status(404).json({ error: "Compliance item not found." });
+
+        // Create the compliance document record
+        const doc = await storage.createComplianceDocument({
+          facilityId,
+          itemId,
+          documentName,
+          uploadedBy: user.username ?? "unknown",
+          expirationDate,
+        });
+
+        // If no file uploaded, return document only (no AI processing)
+        if (!req.file) {
+          return res.json({ document: doc, module: null, summary: null });
+        }
+
+        // Extract text from uploaded file
+        let documentText = "";
+        try {
+          const mime = req.file.mimetype;
+          if (mime === "application/pdf" || req.file.originalname.toLowerCase().endsWith(".pdf")) {
+            const pdfData = await pdfParse(req.file.buffer);
+            documentText = pdfData.text;
+          } else if (mime.includes("word") || /\.(docx?)$/i.test(req.file.originalname)) {
+            const result = await mammoth.extractRawText({ buffer: req.file.buffer });
+            documentText = result.value;
+          } else {
+            documentText = req.file.buffer.toString("utf-8");
+          }
+        } catch (textErr) {
+          console.error("Content Intelligence Agent — text extraction error:", textErr);
+          return res.json({ document: doc, module: null, summary: null, textError: true });
+        }
+
+        const truncatedText = documentText.slice(0, 8000);
+
+        // Build Content Intelligence Agent prompt
+        const prompt = `You are the Content Intelligence Agent for an ASC (Ambulatory Surgery Center) compliance system based on AAAHC standards.
+
+A compliance document has been uploaded:
+- Document Name: "${documentName}"
+- Filed Under Standard: ${item.standardCode} — ${item.itemName}
+- AAAHC Volume: ${item.volume} | Category: ${item.category}
+
+Document Content:
+"""
+${truncatedText}
+"""
+
+Analyze this document carefully. Return ONLY a valid JSON object — no markdown, no code fences, no commentary:
+
+{
+  "taggedStandards": [],
+  "questions": [],
+  "conflictFlags": [],
+  "suggestedRoles": [],
+  "moduleTitle": ""
+}
+
+Rules:
+- taggedStandards: Up to 5 AAAHC standard codes (e.g. "FAC.100", "SAF.170", "IPC.190", "EMG.140", "QUA.210") this document directly addresses or fulfills.
+- questions: Exactly 3-5 training quiz questions based on document content. Each must have: "question" (string), "options" (array of exactly 4 strings), "correctIndex" (integer 0-3), "explanation" (string). Make them practical and survey-ready.
+- conflictFlags: Specific phrases or sections that may conflict with AAAHC requirements. Be precise with citations. Empty array if none found.
+- suggestedRoles: Relevant department names from this list only: "Operating Room", "Sterile Processing", "PACU & Floor", "Environmental Services", "Facilities & Maintenance", "Leadership & Compliance"
+- moduleTitle: Concise 4-8 word training module title`;
+
+        let parsed: {
+          taggedStandards: string[];
+          questions: { question: string; options: string[]; correctIndex: number; explanation: string }[];
+          conflictFlags: string[];
+          suggestedRoles: string[];
+          moduleTitle: string;
+        } = { taggedStandards: [], questions: [], conflictFlags: [], suggestedRoles: [], moduleTitle: documentName };
+
+        try {
+          const message = await callAnthropicWithRetry({
+            model: "claude-haiku-4-5",
+            max_tokens: 2500,
+            messages: [{ role: "user", content: prompt }],
+          });
+          const raw = message.content[0]?.type === "text" ? message.content[0].text.trim() : "";
+          const jStart = raw.indexOf("{");
+          const jEnd = raw.lastIndexOf("}");
+          if (jStart !== -1 && jEnd !== -1) {
+            parsed = JSON.parse(raw.slice(jStart, jEnd + 1));
+          }
+        } catch (aiErr) {
+          console.error("Content Intelligence Agent — Claude error:", aiErr);
+        }
+
+        // Count users in this facility with matching roles
+        let memberCount = 0;
+        try {
+          const facilityUsers = await storage.getUsersByFacility(facilityId);
+          memberCount = facilityUsers.length;
+        } catch { memberCount = 0; }
+
+        // Create the training module (pending approval)
+        const trainingModule = await storage.createComplianceTrainingModule({
+          facilityId,
+          documentId: doc.id,
+          itemId,
+          title: parsed.moduleTitle || documentName,
+          taggedStandards: JSON.stringify(parsed.taggedStandards ?? []),
+          questions: JSON.stringify(parsed.questions ?? []),
+          conflictFlags: JSON.stringify(parsed.conflictFlags ?? []),
+          assignedRoles: JSON.stringify(parsed.suggestedRoles ?? []),
+          assignedMemberCount: memberCount,
+        });
+
+        res.json({
+          document: doc,
+          module: trainingModule,
+          summary: {
+            standardsTagged: (parsed.taggedStandards ?? []).length,
+            questionsGenerated: (parsed.questions ?? []).length,
+            conflictFlagsCount: (parsed.conflictFlags ?? []).length,
+            assignedRoles: parsed.suggestedRoles ?? [],
+            assignedMemberCount: memberCount,
+          },
+        });
+      } catch (err) {
+        console.error("Content Intelligence Agent error:", err);
+        res.status(500).json({ error: "Agent processing failed." });
+      }
+    }
+  );
+
+  app.get("/api/compliance/training-modules", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+      const status = typeof req.query.status === "string" ? req.query.status : undefined;
+      const modules = await storage.getComplianceTrainingModules(facilityId, status);
+      res.json(modules);
+    } catch (err) {
+      console.error("Get training modules error:", err);
+      res.status(500).json({ error: "Failed to fetch training modules." });
+    }
+  });
+
+  app.post("/api/compliance/training-modules/:id/approve", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const id = parseInt(req.params.id);
+      const updated = await storage.updateComplianceTrainingModuleStatus(id, "approved", user.username);
+      res.json(updated);
+    } catch (err) {
+      console.error("Approve training module error:", err);
+      res.status(500).json({ error: "Failed to approve module." });
+    }
+  });
+
+  app.post("/api/compliance/training-modules/:id/reject", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const id = parseInt(req.params.id);
+      const updated = await storage.updateComplianceTrainingModuleStatus(id, "rejected", user.username);
+      res.json(updated);
+    } catch (err) {
+      console.error("Reject training module error:", err);
+      res.status(500).json({ error: "Failed to reject module." });
     }
   });
 

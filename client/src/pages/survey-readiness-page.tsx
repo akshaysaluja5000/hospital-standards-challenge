@@ -1,11 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useLocation } from "wouter";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, ShieldCheck, RefreshCw, CheckCircle2, AlertTriangle,
   Clock, FileText, ClipboardList, BarChart3, FlameKindling,
   Zap, Stethoscope, Shield, Biohazard, AlertCircle, Building2,
+  Upload, Bot, CheckCircle, XCircle, Users, BookOpen, Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -57,6 +58,36 @@ interface ReadinessReport {
   byCategory: Record<string, CategoryData>;
   actionItems: ActionItem[];
   lastCalculated: string;
+}
+
+interface TrainingModule {
+  id: number;
+  facilityId: number;
+  documentId: number;
+  itemId: number;
+  title: string;
+  taggedStandards: string;
+  questions: string;
+  conflictFlags: string;
+  assignedRoles: string;
+  assignedMemberCount: number;
+  status: string;
+  createdAt: string;
+  approvedAt: string | null;
+  approvedBy: string | null;
+}
+
+interface UploadResult {
+  document: { id: number; documentName: string };
+  module: TrainingModule | null;
+  summary: {
+    standardsTagged: number;
+    questionsGenerated: number;
+    conflictFlagsCount: number;
+    assignedRoles: string[];
+    assignedMemberCount: number;
+  } | null;
+  textError?: boolean;
 }
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
@@ -181,6 +212,122 @@ function ActionItemRow({ item, onAction }: { item: ActionItem; onAction: (item: 
   );
 }
 
+function PendingModuleCard({
+  mod,
+  onApprove,
+  onReject,
+  isActing,
+}: {
+  mod: TrainingModule;
+  onApprove: (id: number) => void;
+  onReject: (id: number) => void;
+  isActing: boolean;
+}) {
+  const standards: string[] = (() => { try { return JSON.parse(mod.taggedStandards); } catch { return []; } })();
+  const questions: unknown[] = (() => { try { return JSON.parse(mod.questions); } catch { return []; } })();
+  const conflicts: string[] = (() => { try { return JSON.parse(mod.conflictFlags); } catch { return []; } })();
+  const roles: string[] = (() => { try { return JSON.parse(mod.assignedRoles); } catch { return []; } })();
+  const isApproved = mod.status === "approved";
+  const isRejected = mod.status === "rejected";
+
+  return (
+    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+      className={`bg-card rounded-xl border p-5 space-y-4 ${isApproved ? "border-emerald-200" : isRejected ? "border-red-200 opacity-60" : "border-amber-200"}`}>
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-2.5 min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+            <Bot className="w-4 h-4 text-primary" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="font-bold text-foreground leading-snug">{mod.title}</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Content Intelligence Agent · {new Date(mod.createdAt).toLocaleDateString()}</p>
+          </div>
+        </div>
+        {isApproved ? (
+          <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-200 shrink-0 text-xs">
+            <CheckCircle className="w-3 h-3 mr-1" />Live
+          </Badge>
+        ) : isRejected ? (
+          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 shrink-0 text-xs">
+            <XCircle className="w-3 h-3 mr-1" />Rejected
+          </Badge>
+        ) : (
+          <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 shrink-0 text-xs">
+            <Clock className="w-3 h-3 mr-1" />Pending Approval
+          </Badge>
+        )}
+      </div>
+
+      <div className="grid grid-cols-3 gap-2.5">
+        <div className="text-center p-3 bg-blue-50 rounded-lg border border-blue-100">
+          <div className="text-2xl font-black text-blue-700">{standards.length}</div>
+          <div className="text-xs text-blue-600 font-medium">Standards Tagged</div>
+        </div>
+        <div className="text-center p-3 bg-violet-50 rounded-lg border border-violet-100">
+          <div className="text-2xl font-black text-violet-700">{questions.length}</div>
+          <div className="text-xs text-violet-600 font-medium">Questions Created</div>
+        </div>
+        <div className="text-center p-3 bg-emerald-50 rounded-lg border border-emerald-100">
+          <div className="text-2xl font-black text-emerald-700">{mod.assignedMemberCount}</div>
+          <div className="text-xs text-emerald-600 font-medium">Staff Members</div>
+        </div>
+      </div>
+
+      {standards.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {standards.map((s, i) => (
+            <Badge key={i} variant="outline" className="text-xs bg-blue-50 border-blue-200 text-blue-700 font-mono">{s}</Badge>
+          ))}
+        </div>
+      )}
+
+      {roles.length > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <Users className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          {roles.map((r, i) => (
+            <span key={i} className="text-xs text-muted-foreground">{r}{i < roles.length - 1 ? "," : ""}</span>
+          ))}
+        </div>
+      )}
+
+      {conflicts.length > 0 && (
+        <div className="space-y-1.5 p-3 bg-amber-50 rounded-lg border border-amber-100">
+          <p className="text-xs font-semibold text-amber-700 flex items-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5" />
+            {conflicts.length} Potential Conflict{conflicts.length !== 1 ? "s" : ""} Flagged
+          </p>
+          {conflicts.map((c, i) => (
+            <p key={i} className="text-xs text-amber-800 pl-5 leading-relaxed">{c}</p>
+          ))}
+        </div>
+      )}
+
+      {!isApproved && !isRejected && (
+        <div className="flex justify-end gap-2 pt-1 border-t">
+          <Button variant="outline" size="sm" disabled={isActing}
+            onClick={() => onReject(mod.id)}
+            data-testid={`btn-reject-module-${mod.id}`}
+            className="text-red-600 border-red-200 hover:bg-red-50 text-xs">
+            <XCircle className="w-3.5 h-3.5 mr-1.5" />Reject
+          </Button>
+          <Button size="sm" disabled={isActing}
+            onClick={() => onApprove(mod.id)}
+            data-testid={`btn-approve-module-${mod.id}`}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs">
+            <CheckCircle className="w-3.5 h-3.5 mr-1.5" />Approve & Go Live
+          </Button>
+        </div>
+      )}
+
+      {isApproved && mod.approvedBy && (
+        <p className="text-xs text-muted-foreground text-right pt-1 border-t">
+          Approved by {mod.approvedBy} · {mod.approvedAt ? new Date(mod.approvedAt).toLocaleDateString() : ""}
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
 export default function SurveyReadinessPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
@@ -192,9 +339,16 @@ export default function SurveyReadinessPage() {
   const [logNotes, setLogNotes] = useState("");
   const [docName, setDocName] = useState("");
   const [docExpiry, setDocExpiry] = useState("");
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { data: report, isLoading, isFetching, refetch } = useQuery<ReadinessReport>({
     queryKey: ["/api/compliance/readiness"],
+  });
+
+  const { data: trainingModules = [] } = useQuery<TrainingModule[]>({
+    queryKey: ["/api/compliance/training-modules"],
   });
 
   const logMutation = useMutation({
@@ -218,8 +372,55 @@ export default function SurveyReadinessPage() {
       setLogItem(null);
       setDocName("");
       setDocExpiry("");
+      setDocFile(null);
     },
     onError: () => toast({ title: "Error", description: "Failed to save.", variant: "destructive" }),
+  });
+
+  const uploadMutation = useMutation({
+    mutationFn: async (formData: FormData): Promise<UploadResult> => {
+      const res = await fetch("/api/compliance/document/upload", {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: "Upload failed." }));
+        throw new Error(err.error ?? "Upload failed.");
+      }
+      return res.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/compliance/readiness"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/compliance/training-modules"] });
+      setUploadResult(data);
+      if (!data.module) {
+        toast({ title: "Document Saved", description: "Marked on file (no AI analysis — file could not be read)." });
+        setLogItem(null);
+        setDocName("");
+        setDocExpiry("");
+        setDocFile(null);
+      }
+    },
+    onError: (err: Error) => toast({ title: "Upload Failed", description: err.message, variant: "destructive" }),
+  });
+
+  const approveMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("POST", `/api/compliance/training-modules/${id}/approve`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/compliance/training-modules"] });
+      toast({ title: "Training Module Approved", description: "Module is now live and assigned to staff." });
+    },
+    onError: () => toast({ title: "Error", description: "Failed to approve.", variant: "destructive" }),
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: (id: number) => apiRequest("POST", `/api/compliance/training-modules/${id}/reject`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/compliance/training-modules"] });
+      toast({ title: "Module Rejected", description: "Training module has been rejected." });
+    },
+    onError: () => toast({ title: "Error", description: "Failed to reject.", variant: "destructive" }),
   });
 
   const filteredItems = useMemo(() => {
@@ -253,6 +454,8 @@ export default function SurveyReadinessPage() {
     setLogNotes("");
     setDocName(item.itemName);
     setDocExpiry("");
+    setDocFile(null);
+    setUploadResult(null);
   };
 
   const handleSubmit = () => {
@@ -264,11 +467,35 @@ export default function SurveyReadinessPage() {
         toast({ title: "Required", description: "Document name is required.", variant: "destructive" });
         return;
       }
-      docMutation.mutate({ itemId: logItem.itemId, documentName: docName.trim(), expirationDate: docExpiry || undefined });
+      if (docFile) {
+        const fd = new FormData();
+        fd.append("file", docFile);
+        fd.append("itemId", String(logItem.itemId));
+        fd.append("documentName", docName.trim());
+        if (docExpiry) fd.append("expirationDate", docExpiry);
+        uploadMutation.mutate(fd);
+      } else {
+        docMutation.mutate({
+          itemId: logItem.itemId,
+          documentName: docName.trim(),
+          expirationDate: docExpiry || undefined,
+        });
+      }
     }
   };
 
-  const isMutating = logMutation.isPending || docMutation.isPending;
+  const isMutating = logMutation.isPending || docMutation.isPending || uploadMutation.isPending;
+  const pendingModules = trainingModules.filter(m => m.status === "pending");
+  const recentModules = trainingModules.filter(m => m.status !== "pending").slice(0, 3);
+  const isActingOnModule = approveMutation.isPending || rejectMutation.isPending;
+
+  const handleCloseDialog = () => {
+    if (!isMutating) {
+      setLogItem(null);
+      setUploadResult(null);
+      setDocFile(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -406,12 +633,55 @@ export default function SurveyReadinessPage() {
                 </div>
               )}
             </section>
+
+            {/* Training Modules Section */}
+            {trainingModules.length > 0 && (
+              <section>
+                <div className="flex items-center gap-2 mb-4">
+                  <Bot className="w-4 h-4 text-primary" />
+                  <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                    Content Intelligence Agent — Training Modules
+                  </h2>
+                  {pendingModules.length > 0 && (
+                    <Badge className="text-xs bg-amber-500 text-white border-0 ml-1">
+                      {pendingModules.length} pending
+                    </Badge>
+                  )}
+                </div>
+
+                {pendingModules.length > 0 && (
+                  <div className="space-y-4 mb-4">
+                    <p className="text-xs text-muted-foreground">
+                      The Content Intelligence Agent generated these mini-training modules from your uploaded policy documents. Review and approve before they go live.
+                    </p>
+                    {pendingModules.map(mod => (
+                      <PendingModuleCard key={mod.id} mod={mod}
+                        onApprove={(id) => approveMutation.mutate(id)}
+                        onReject={(id) => rejectMutation.mutate(id)}
+                        isActing={isActingOnModule} />
+                    ))}
+                  </div>
+                )}
+
+                {recentModules.length > 0 && (
+                  <div className="space-y-3">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Recently Processed</p>
+                    {recentModules.map(mod => (
+                      <PendingModuleCard key={mod.id} mod={mod}
+                        onApprove={(id) => approveMutation.mutate(id)}
+                        onReject={(id) => rejectMutation.mutate(id)}
+                        isActing={isActingOnModule} />
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
           </>
         )}
       </div>
 
       {/* Log / Mark Dialog */}
-      <Dialog open={!!logItem} onOpenChange={open => { if (!open) setLogItem(null); }}>
+      <Dialog open={!!logItem} onOpenChange={open => { if (!open) handleCloseDialog(); }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-base">
@@ -420,53 +690,159 @@ export default function SurveyReadinessPage() {
                 : <><FileText className="w-4 h-4 text-blue-600" /> Mark Document On File</>}
             </DialogTitle>
           </DialogHeader>
-          {logItem && (
-            <div className="space-y-4">
-              <div className="bg-muted/40 rounded-lg p-3 space-y-1">
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-xs font-bold px-1.5 py-0 bg-primary/5 border-primary/20 text-primary">
-                    {logItem.volume}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground font-mono">{logItem.standardCode}</span>
-                </div>
-                <p className="text-sm font-medium text-foreground leading-snug">{logItem.itemName}</p>
-                <p className="text-xs text-muted-foreground">{logItem.frequency}</p>
-              </div>
 
-              {logItem.tier === 1 ? (
-                <div className="space-y-2">
-                  <Label htmlFor="log-notes">Notes (optional)</Label>
-                  <Textarea id="log-notes" placeholder="Add notes about this completion..."
-                    value={logNotes} onChange={e => setLogNotes(e.target.value)}
-                    className="resize-none h-20" data-testid="input-log-notes" />
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  <div className="space-y-2">
-                    <Label htmlFor="doc-name">Document Name <span className="text-red-500">*</span></Label>
-                    <Input id="doc-name" placeholder="e.g. Fire Drill Policy 2026"
-                      value={docName} onChange={e => setDocName(e.target.value)}
-                      data-testid="input-doc-name" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="doc-expiry">Expiration Date <span className="text-muted-foreground">(optional)</span></Label>
-                    <Input id="doc-expiry" type="date"
-                      value={docExpiry} onChange={e => setDocExpiry(e.target.value)}
-                      data-testid="input-doc-expiry" />
-                    <p className="text-xs text-muted-foreground">Leave blank for documents that do not expire.</p>
+          <AnimatePresence mode="wait">
+            {uploadResult?.module ? (
+              /* Agent result summary */
+              <motion.div key="result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
+                className="space-y-4">
+                <div className="flex items-start gap-2.5 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                  <Sparkles className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-sm font-semibold text-emerald-800">Content Intelligence Agent Complete</p>
+                    <p className="text-xs text-emerald-700 mt-0.5">New policy uploaded and analyzed. Training module created.</p>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setLogItem(null)} disabled={isMutating}>
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} disabled={isMutating} data-testid="btn-submit-action">
-              {isMutating ? "Saving…" : logItem?.tier === 1 ? "Confirm Completion" : "Mark On File"}
-            </Button>
-          </DialogFooter>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <div className="p-3 bg-blue-50 rounded-lg text-center border border-blue-100">
+                    <div className="text-2xl font-black text-blue-700">{uploadResult.summary?.standardsTagged ?? 0}</div>
+                    <div className="text-xs text-blue-600 font-medium">Standards Tagged</div>
+                  </div>
+                  <div className="p-3 bg-violet-50 rounded-lg text-center border border-violet-100">
+                    <div className="text-2xl font-black text-violet-700">{uploadResult.summary?.questionsGenerated ?? 0}</div>
+                    <div className="text-xs text-violet-600 font-medium">Questions Created</div>
+                  </div>
+                  {(uploadResult.summary?.conflictFlagsCount ?? 0) > 0 && (
+                    <div className="p-3 bg-amber-50 rounded-lg text-center border border-amber-100 col-span-1">
+                      <div className="text-2xl font-black text-amber-700">{uploadResult.summary?.conflictFlagsCount}</div>
+                      <div className="text-xs text-amber-600 font-medium">Conflicts Flagged</div>
+                    </div>
+                  )}
+                  <div className="p-3 bg-emerald-50 rounded-lg text-center border border-emerald-100 col-span-1">
+                    <div className="text-2xl font-black text-emerald-700">{uploadResult.summary?.assignedMemberCount ?? 0}</div>
+                    <div className="text-xs text-emerald-600 font-medium">Staff Members</div>
+                  </div>
+                </div>
+                {(uploadResult.summary?.assignedRoles ?? []).length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {uploadResult.summary!.assignedRoles.map((r, i) => (
+                      <Badge key={i} variant="outline" className="text-xs">{r}</Badge>
+                    ))}
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground text-center">
+                  Scroll down to review and approve the training module before it goes live.
+                </p>
+                <DialogFooter>
+                  <Button onClick={() => { setLogItem(null); setUploadResult(null); setDocFile(null); }}
+                    data-testid="btn-close-result">
+                    Done
+                  </Button>
+                </DialogFooter>
+              </motion.div>
+            ) : (
+              <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                {logItem && (
+                  <div className="space-y-4">
+                    <div className="bg-muted/40 rounded-lg p-3 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs font-bold px-1.5 py-0 bg-primary/5 border-primary/20 text-primary">
+                          {logItem.volume}
+                        </Badge>
+                        <span className="text-xs text-muted-foreground font-mono">{logItem.standardCode}</span>
+                      </div>
+                      <p className="text-sm font-medium text-foreground leading-snug">{logItem.itemName}</p>
+                      <p className="text-xs text-muted-foreground">{logItem.frequency}</p>
+                    </div>
+
+                    {logItem.tier === 1 ? (
+                      <div className="space-y-2">
+                        <Label htmlFor="log-notes">Notes (optional)</Label>
+                        <Textarea id="log-notes" placeholder="Add notes about this completion..."
+                          value={logNotes} onChange={e => setLogNotes(e.target.value)}
+                          className="resize-none h-20" data-testid="input-log-notes" />
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="space-y-2">
+                          <Label htmlFor="doc-name">Document Name <span className="text-red-500">*</span></Label>
+                          <Input id="doc-name" placeholder="e.g. Fire Drill Policy 2026"
+                            value={docName} onChange={e => setDocName(e.target.value)}
+                            data-testid="input-doc-name" />
+                        </div>
+
+                        {/* File Upload — triggers Content Intelligence Agent */}
+                        <div className="space-y-2">
+                          <Label className="flex items-center gap-1.5">
+                            <Bot className="w-3.5 h-3.5 text-primary" />
+                            Upload Document <span className="text-muted-foreground font-normal">(optional — enables AI analysis)</span>
+                          </Label>
+                          <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept=".pdf,.doc,.docx,.txt"
+                            className="hidden"
+                            data-testid="input-doc-file"
+                            onChange={e => setDocFile(e.target.files?.[0] ?? null)}
+                          />
+                          {docFile ? (
+                            <div className="flex items-center gap-2 p-2.5 bg-primary/5 border border-primary/20 rounded-lg">
+                              <FileText className="w-4 h-4 text-primary shrink-0" />
+                              <span className="text-xs font-medium text-foreground flex-1 truncate">{docFile.name}</span>
+                              <button onClick={() => { setDocFile(null); if (fileInputRef.current) fileInputRef.current.value = ""; }}
+                                className="text-muted-foreground hover:text-foreground transition-colors text-xs">
+                                ✕
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              onClick={() => fileInputRef.current?.click()}
+                              data-testid="btn-choose-file"
+                              className="w-full flex flex-col items-center gap-2 p-4 border-2 border-dashed border-border rounded-lg hover:border-primary/40 hover:bg-primary/5 transition-colors text-muted-foreground">
+                              <Upload className="w-5 h-5" />
+                              <span className="text-xs font-medium">Choose PDF, Word, or text file</span>
+                              <span className="text-xs opacity-70">The Content Intelligence Agent will read the document, tag standards, and generate training questions automatically.</span>
+                            </button>
+                          )}
+                          {docFile && (
+                            <div className="flex items-center gap-1.5 text-xs text-primary bg-primary/5 border border-primary/20 rounded-md px-2.5 py-1.5">
+                              <Sparkles className="w-3 h-3" />
+                              Content Intelligence Agent will analyze this document on submit
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="doc-expiry">Expiration Date <span className="text-muted-foreground">(optional)</span></Label>
+                          <Input id="doc-expiry" type="date"
+                            value={docExpiry} onChange={e => setDocExpiry(e.target.value)}
+                            data-testid="input-doc-expiry" />
+                          <p className="text-xs text-muted-foreground">Leave blank for documents that do not expire.</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+                <DialogFooter className="mt-4">
+                  <Button variant="outline" onClick={handleCloseDialog} disabled={isMutating}>
+                    Cancel
+                  </Button>
+                  <Button onClick={handleSubmit} disabled={isMutating} data-testid="btn-submit-action"
+                    className={docFile ? "bg-primary gap-1.5" : ""}>
+                    {isMutating ? (
+                      <><RefreshCw className="w-3.5 h-3.5 animate-spin" />{docFile ? "Analyzing…" : "Saving…"}</>
+                    ) : logItem?.tier === 1 ? (
+                      "Confirm Completion"
+                    ) : docFile ? (
+                      <><Sparkles className="w-3.5 h-3.5" />Analyze & Save</>
+                    ) : (
+                      "Mark On File"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </DialogContent>
       </Dialog>
     </div>

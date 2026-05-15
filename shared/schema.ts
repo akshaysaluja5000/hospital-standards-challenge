@@ -483,6 +483,25 @@ export const complianceTasks = pgTable("compliance_tasks", {
 
 export type ComplianceTask = typeof complianceTasks.$inferSelect;
 
+export const complianceTrainingModules = pgTable("compliance_training_modules", {
+  id: serial("id").primaryKey(),
+  facilityId: integer("facility_id").notNull(),
+  documentId: integer("document_id").notNull().references(() => complianceDocuments.id),
+  itemId: integer("item_id").notNull().references(() => complianceItems.id),
+  title: text("title").notNull(),
+  taggedStandards: text("tagged_standards").notNull().default("[]"),
+  questions: text("questions").notNull().default("[]"),
+  conflictFlags: text("conflict_flags").notNull().default("[]"),
+  assignedRoles: text("assigned_roles").notNull().default("[]"),
+  assignedMemberCount: integer("assigned_member_count").notNull().default(0),
+  status: text("status").notNull().default("pending"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  approvedAt: timestamp("approved_at"),
+  approvedBy: text("approved_by"),
+});
+
+export type ComplianceTrainingModule = typeof complianceTrainingModules.$inferSelect;
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;

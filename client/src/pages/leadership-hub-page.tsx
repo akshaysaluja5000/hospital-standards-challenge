@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BarChart3, TrendingUp, GraduationCap, BrainCircuit,
   Users, Building2, Stethoscope, ChevronRight, ShieldCheck,
-  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert,
+  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Bot,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -47,6 +47,17 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     href: "/survey-readiness",
     minRole: "director",
     badge: "Live",
+  },
+  {
+    id: "content-intelligence",
+    title: "Content Intelligence Agent",
+    description: "Upload a policy document and AI reads it, tags AAAHC standards, generates quiz questions, flags conflicts, and creates a mini-training module ready for one-click approval.",
+    icon: Bot,
+    iconBg: "bg-violet-500/10",
+    iconColor: "text-violet-600",
+    href: "/survey-readiness",
+    minRole: "director",
+    badge: "AI",
   },
   {
     id: "executive-report",
