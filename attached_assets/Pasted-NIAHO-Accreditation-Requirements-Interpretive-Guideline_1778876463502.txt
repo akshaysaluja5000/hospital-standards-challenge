@@ -1,0 +1,1296 @@
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+o Ask to see a copy of the entire integrated and unified emergency preparedness
+program and all required components (emergency plan, policies and procedures,
+communication plan, training and testing program).
+o Ask organization leadership to describe how the unified and integrated emergency
+preparedness program is updated based on changes within the healthcare system
+such as when facilities enter or leave the system.
+Transplant Programs
+o If the organization has a transplant program, verify the transplant program has
+emergency preparedness policies and procedures
+ Verify that the transplant program’s emergency preparedness policies and
+procedures are included in the hospital’s emergency preparedness program.
+o Verify the hospital has written documentation to demonstrate that a representative of
+each transplant program participated in the development of the emergency program.
+o Ask to see documentation of emergency protocols that address transplant protocols
+that include the hospital, the transplant program, and the associated OPOs.
+PE.7 MEDICAL EQUIPMENT MANAGEMENT SYSTEM
+SR.1 The organization shall establish a Medical Equipment Management System that
+provides processes for the acquisition, safe use, and the appropriate selection of
+equipment.
+SR.2 The Medical Equipment Management System shall address issues related to the
+organization’s initial service inspection, the orientation, and the demonstration of use for
+organization owned, rental or physician owned equipment.
+SR.3 The Medical Equipment Management System shall address criteria for the selection of
+equipment.
+SR.4 The Medical Equipment Management System shall address incidents related to serious
+injury or illness or death (See SMDA 1990).
+SR.5 The Medical Equipment Management System shall have a process for reporting and
+investigating equipment management problems, failures, and user errors.
+SR.6 The Medical Equipment Management System shall address a process for determining
+timing and complexity of medical equipment maintenance.
+SR.7 The Medical Equipment Management System shall address the process of receiving
+and responding to recalls and alerts.
+Interpretive Guidelines:
+Page 366 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+Medical Equipment shall be maintained to ensure an acceptable level of safety and quality. This
+shall include provisions for cybersecurity of medical equipment. For additional guidance on
+cybersecurity issues see:
+- HHS 405(d) Aligning Health Care Industry Security Approaches -
+https://405d.hhs.gov/
+- NIST Cybersecurity Framework - https://www.nist.gov/cyberframework
+The Medical Equipment Management System shall apply to all medical equipment, regardless
+of ownership or hospital department responsible for the medical equipment.
+In order to ensure an acceptable level of safety and quality, the organization shall identify the
+equipment required to meet its patients’ needs for both day-to-day operations and in a likely
+emergency/disaster situation, such as mass casualty events resulting from natural disasters,
+mass trauma, disease outbreaks, internal disasters, etc. In addition, the organization shall make
+adequate provisions to ensure the availability and reliability of equipment needed for its
+operations and services. Equipment includes medical equipment, which are devices intended to
+be used for diagnostic, therapeutic or monitoring care provided to a patient by the hospital (e.g.,
+IV infusion equipment, ventilators, laboratory equipment, surgical devices, etc.).
+All medical equipment shall be inspected and tested for performance and safety before initial
+use and after major repairs or upgrades.
+All medical equipment shall be inspected, tested, and maintained to ensure their safety,
+availability, and reliability. Medical equipment maintenance activities may be conducted using
+hospital personnel, contracted services, or through a combination of hospital personnel and
+contracted services. Individual(s) responsible for overseeing the development, implementation,
+and management of medical equipment maintenance programs and activities shall be qualified.
+The organization shall maintain records of hospital personnel qualifications and is able to
+demonstrate how it assures all personnel, including contracted personnel, are qualified.
+All medical equipment maintenance policies, procedures and programs, as well as specific
+medical equipment maintenance inventories, activities, and schedules fall under the purview of
+the hospital’s clinical maintenance personnel, safety department personnel or other personnel
+who have been assigned responsibility for medical equipment maintenance by organization
+leadership.
+Organizations comply with this regulation when they follow the manufacturer-recommended
+maintenance activities and schedule. Organizations may choose to perform maintenance more
+frequently than the manufacturer recommends but shall use the manufacturer-recommended
+maintenance activities in such cases. When medical equipment is maintained in accordance
+with the manufacturer’s recommendations, the organization shall maintain documentation of
+those recommendations and the hospital’s associated maintenance activity for the affected
+equipment.
+Alternate Equipment Management (AEM) Program
+A hospital may, under certain conditions, use equipment maintenance activities and frequencies
+that differ from those recommended by the manufacturer. Organizations that choose to employ
+alternate maintenance activities and/or schedules shall develop, implement, and maintain a
+documented AEM program to minimize risks to patients and others in the hospital associated
+Page 367 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+with the use of medical equipment. The AEM program shall be based on nationally recognized
+standards of practice and guidelines for medical equipment maintenance.
+An example of guidelines for a medical equipment maintenance program may be found in the
+American National Standards Institute/ Association for the Advancement of Medical
+Instrumentation document: ANSI/AAMI EQ 56:1999/(R)2013, Recommended Practice for a
+Medical Equipment Management Program. There may be similar documents issued by other
+nationally recognized organizations which hospitals might choose to reference.
+Decision to Place Equipment in an AEM Program
+The determination of whether it is safe to perform medical equipment maintenance without
+following the equipment manufacturer recommendations shall be made by qualified personnel,
+regardless of whether they are hospital employees or contractors.
+In the case of medical equipment, a clinical or biomedical technician or engineer would be
+considered qualified. Highly specialized or complex equipment may require specialized
+knowledge or training in order for personnel to be considered qualified to make a decision to
+place such equipment in an AEM program.
+The organization shall maintain records of the qualifications of hospital personnel who make
+decisions on placing equipment in an AEM program and shall be able to demonstrate how they
+assure contracted personnel making such decisions are qualified.
+In determining whether or not to include equipment in an AEM program, and which maintenance
+strategies to use in developing maintenance activities and frequencies for particular equipment,
+the organization shall take into account the typical health and safety risks associated with the
+equipment’s use. Note that the risk may vary for the same type of equipment, depending on the
+patient care setting within the hospital where it is used.
+An organization is expected to identify any equipment in its AEM program which is “critical
+equipment,” e.g., biomedical equipment for which there is a risk of serious injury or death to a
+patient or staff person should the equipment fail. Surveyors shall focus their review of an
+organization’s AEM program on critical equipment in that program and the organization’s
+documentation of the factors and evidence it considered in developing an AEM strategy for that
+equipment.
+Factors for an organization to consider when evaluating the risks associated with a particular
+type of equipment include, but are not limited to:
+• How the equipment is used and the likely consequences of equipment failure or
+malfunction - would failure or malfunction of the equipment hospital-wide or in a
+particular setting be likely to cause harm to a patient or a staff person?
+o How serious is the harm likely to be? For example, a slightly mis-calibrated
+scale in an adult internal medicine outpatient clinic might not present significant
+risk of harm. However, a mis-calibrated scale in a neonatal intensive care unit
+could have very serious consequences for patient care.
+o How widespread is the harm likely to be? For example, are many patients
+exposed to the equipment, resulting in harm due to failure impacting more
+Page 368 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+patients or staff? If harm would be widespread, even if the harm to each
+affected individual is not serious, this would be a cause for concern.
+• Information, if available, on the manufacturer’s equipment maintenance
+recommendations, including the rationale for the manufacturer’s recommendations;
+• Maintenance requirements of the equipment:
+o Are they simple or complex?
+o Are the manufacturer’s instructions and procedures available in the hospital,
+and if so can the hospital explain how and why it is modifying the
+manufacturer’s instructions?
+o If the manufacturer’s instructions are not available in the hospital, how does the
+hospital assess whether the AEM uses appropriate maintenance strategies?
+o How readily can the hospital validate the effectiveness of AEM methods for
+particular equipment? For example, can the hospital explain how it ensures
+there is no reduction in the quality of the performance of biomedical equipment
+subjected to alternate maintenance methods?
+• The timely availability of alternate devices or backup systems in the event of
+equipment failure or malfunction; and
+• Incident history of identical or very similar equipment – is there documented evidence,
+based on the experience of the hospital (or its third-party contractor), or on evidence
+publicly reported by credible sources outside the hospital, which:
+o Provides the number, frequency and nature of previous failures and service
+requests?
+o Indicates use of an AEM strategy does not result in degraded performance of
+the equipment?
+Generally multiple factors shall be considered, since different types of equipment present
+different combinations of severity of potential harm and likelihood of failure. The organization is
+expected to be able to demonstrate to a surveyor the factors it considered in its risk assessment
+for equipment placed in its AEM program.
+Equipment not Eligible for Placement in the AEM Program:
+Some equipment may not be eligible for placement in the AEM program, for one or more of the
+following reasons:
+• Other Federal law (for example, regulations promulgated by another Federal agency)
+or State law may require that medical equipment maintenance, inspection and testing
+be performed strictly in accordance with the manufacturer’s recommendations, or may
+establish other, more stringent maintenance requirements. In these instances, the
+organization shall comply with these other federal or state requirements.
+Page 369 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+• Other CoP require adherence to manufacturer’s recommendations and/or set specific
+standards which preclude their inclusion in an AEM program. For example:
+o The National Fire Protection Association Life Safety Code (LSC) requirements
+incorporated by reference at 42 CFR 482.41(b) has some provisions that are
+pertinent to equipment maintenance, and compliance with these requirements
+are assessed on Federal surveys.
+o Imaging/radiologic equipment, whether used for diagnostic or therapeutic
+purposes, is governed by 42 CFR 482.26(b)(2) and shall be maintained per
+manufacturer’s recommendations.
+o The equipment is a medical laser device. It should be noted that for medical
+lasers the U.S. Food and Drug Administration requires manufacturers to
+provide a schedule of maintenance and adequate instructions for service
+adjustments and service procedures to purchasers and, at cost, to any other
+parties requesting them.
+• New equipment for which sufficient maintenance history, either based on the
+organization’s own or its contractor’s records, or available publicly from nationally
+recognized sources, is not available to support a risk-based determination shall not be
+immediately included in the AEM program. New equipment shall be maintained in
+accordance with manufacturer recommendations until a sufficient amount of
+maintenance history has been acquired to determine whether the alteration of
+maintenance activities or frequencies would be safe. If a hospital later transitions the
+equipment to a risk-based maintenance regimen different than the manufacturer’s
+recommendations, the organization shall maintain evidence that it has first evaluated
+the maintenance track record, risks, and tested the alternate regimen.
+Alternative Maintenance Frequencies or Activities
+Maintenance strategies are various methodologies used for determining the most efficient and
+effective maintenance activities and frequencies. Manufacturers’ recommendations may be
+based on one or more such strategies. An organization may also use one or more maintenance
+strategies for its AEM program in order to determine the appropriate maintenance, inspection,
+and testing activities and frequencies, based upon the nature of the equipment and the level of
+risk it presents to patient or staff health and safety. The risk to patient health and safety that is
+considered in developing alternative maintenance strategies shall be explained and
+documented in the AEM program.
+In developing AEM maintenance strategies organizations may rely upon information from a
+variety of sources, including, but not limited to manufacturer recommendations and other
+materials, nationally recognized expert associations, and/or the hospital’s (or its third-party
+contractor’s) own experience. Maintenance strategies may be applied to groups or to individual
+pieces of equipment.
+The organization is expected to adhere strictly to the AEM activities or strategies it has
+developed.
+Background Information on Types of Maintenance Strategies
+Page 370 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+• Preventive Maintenance (Time-based Maintenance) – a maintenance strategy where
+maintenance activities are performed at scheduled time intervals to minimize
+equipment degradation and reduce instances where there is a loss of performance.
+Most preventive maintenance is “interval-based maintenance” performed at fixed time
+intervals (e.g., annual or semi-annual), but may also be “metered maintenance”
+performed according to metered usage of the equipment (e.g., hours of operation). In
+either case, the primary focus of preventive maintenance is reliability, not optimization
+of cost-effectiveness. Maintenance is performed systematically, regardless of whether
+or not it is needed at the time. Example: Replacing a battery every year, after a set
+number of uses or after running for a set number of hours, regardless.
+• Predictive Maintenance (Condition-based Maintenance) – a maintenance strategy that
+involves periodic or continuous equipment condition monitoring to detect the onset of
+equipment degradation. This information is used to predict future maintenance
+requirements and to schedule maintenance at a time just before equipment
+experiences a loss of performance. Example: Replacing a battery one year after the
+manufacturer’s recommended replacement interval, based on historical monitoring that
+has determined the battery capacity does not tend to fall below the required
+performance threshold before this extended time.
+• Reactive Maintenance (Corrective, Breakdown or Run-to-Failure Maintenance) – a
+maintenance strategy based upon a “run it until it breaks” philosophy, where
+maintenance or replacement is performed only after equipment fails or experiences a
+problem. This strategy may be acceptable for equipment that is disposable or low cost
+and presents little or no risk to health and safety if it fails. Example: Replacing a battery
+after equipment failure when the equipment has little negative health and safety
+consequences associated with a failure and there is a replacement readily available in
+supply.
+• Reliability-Centered Maintenance – a maintenance strategy that not only considers
+equipment condition, but also considers other factors unique to individual pieces of
+equipment, such as equipment function, consequences of equipment failure, and the
+operational environment. Maintenance is performed to optimize reliability and cost
+effectiveness. Example: Replacing a battery in an ambulance defibrillator more
+frequently than the same model used at a nursing station, since the one in the
+ambulance is used more frequently and is charged by an unstable power supply.
+Maintenance Tools
+Tools (e.g., hand tools, test equipment, software, etc.) necessary for performing equipment
+maintenance shall be available and maintained to ensure that measurements are reliable. Tools
+used for maintenance are not required to be those specifically recommended by the
+manufacturer, but tools utilized shall be capable of providing results equivalent to those required
+by the equipment manufacturer.
+AEM Program Documentation
+For each type of equipment subject to the AEM program, there shall be documentation
+indicating:
+• The pertinent types and level of risks to patient or staff health and safety;
+Page 371 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+• Alternate maintenance activities, and the maintenance strategy and any other rationale
+used to determine those activities; the differences from the manufacturer’s
+recommended maintenance activities are made explicit, unless the organization is
+unable to obtain the manufacturer’s maintenance recommendations, due to the age of
+the equipment or the manufacturer’s restricting the availability of its recommendations;
+• Alternate maintenance frequencies to be used, if any, and the maintenance strategy
+and any other rationale used to determine those frequencies. For equipment identified
+as presenting a very low risk to patient or staff safety, it could be acceptable to not set
+a particular frequency but instead indicate a less specific approach, for example, an
+interval range, such as “every 12 – 24 months.” It could also be acceptable to employ
+periodic “departmental sweeps” for such very low risk equipment, where equipment
+functioning is sampled, and operators are polled about its functionality.
+• The date when AEM program maintenance activities were performed and, if
+applicable, further actions required/taken; and
+• Documentation of any equipment failures (not including failures due to operator error),
+including whether there was resulting harm to an individual.) (Note: equipment failure
+that is due to operator error and which results in an adverse event or near miss shall
+be documented in accordance with QM.8, as part of the organization’s required
+tracking of patient safety-related incidents. However, there is no requirement to include
+operator failures in equipment maintenance documentation.)
+When the organization has multiple identical equipment items, the documentation may be
+generic to that type of equipment, except that documentation of maintenance activities
+performed shall be specific to each item of equipment.
+Evaluating Safety and Effectiveness of the AEM Program
+The organization shall have policies and procedures which address the effectiveness of its AEM
+program. In evaluating the effectiveness of the AEM program the organization is expected to
+address factors including, but not limited to:
+• How equipment is evaluated to ensure there is no degradation of performance,
+particularly for equipment where such degradation may not be readily apparent to staff
+using the equipment, e.g., miscalibration.
+• How incidents of equipment malfunction are investigated, including:
+o Whether or not the malfunction could have been prevented, and what steps will
+be taken to prevent future malfunctions; and
+o How a determination is made whether or not the malfunction resulted from the
+use of an AEM strategy;
+• The process for the removal from service of equipment determined to be unsafe or no
+longer suitable for its intended application; and
+• The use of performance data to determine if modifications in the AEM program
+procedures are required.
+Page 372 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+Equipment Inventory
+All hospital medical equipment, regardless of whether it is leased or owned, and regardless of
+whether it is maintained according to manufacturer recommendations or is in an AEM program,
+is expected to be listed in an inventory which includes a record of maintenance activities. For
+low cost/low risk equipment, such as housekeeping cleaning equipment, it is acceptable for the
+inventory to indicate under one item the number of such pieces of equipment in the hospital,
+e.g., “15 vacuum cleaners for cleaning patient rooms and common areas.”
+If the organization is using an AEM program, the equipment managed through that program
+shall be readily separately identifiable as subject to AEM. Critical equipment, whether in an AEM
+program or not, shall also be readily identified as such.
+To facilitate effective management, a well-designed equipment inventory contains the following
+information for all equipment included. However, hospitals have the flexibility to demonstrate
+how alternative means they use are effective in enabling them to manage their equipment:
+• A unique identification number;
+• The equipment manufacturer;
+• The equipment model number;
+• The equipment serial number;
+• A description of the equipment;
+• The location of the equipment (for equipment generally kept in a fixed location);
+• The identity of the department considered to “own” the equipment;
+• Identification of the service provider;
+• The acceptance date; and
+• Any additional information the hospital believes may be useful for proper management
+of the equipment.
+Surveyor Guidance:
+Interview personnel in charge of equipment maintenance:
+Select a sample of equipment for which the facility uses the manufacturer’s recommendations
+for maintenance frequency. Sample selection should be based on:
+• Risk to patient safety from equipment failure (e.g., sample high/medium/low risk).
+• Critical equipment (e.g., life support devices, key resuscitation devices, critical
+monitoring devices, equipment used for radiologic imaging etc.) with higher risk should
+make up the sample majority.
+Page 373 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+• Service Requests (e.g., sample equipment with high service requests)
+• Failure Records (e.g., sample high failure rates)
+• Equipment Usage (e.g., sample high use)
+• Type of Equipment (e.g., sample medical equipment & facility components)
+• Maintenance is being performed in accordance with manufacturer’s recommendations.
+For the sample selected, review maintenance records to determine if:
+• Maintenance, inspection, and testing records are complete and accurate;
+• Maintenance records include equipment failures and down-time;
+• Equipment failures are corrected (through repair or replacement) in a timely manner;
+• Equipment failure patterns are investigated and addressed.
+• Records contain the qualifications (e.g., training certificates, certifications, degrees,
+etc.) of hospital personnel responsible for performing maintenance and/or the
+organization is able to demonstrate how they assure contracted personnel are
+qualified. In the case of medical equipment, qualified personnel would be clinical or
+biomedical technicians or engineers.
+• Records contain documents required to support maintenance activities (e.g.,
+manufacturer’s operation and maintenance manual, standards, studies, guidance,
+recall information, service records, etc.)
+Review the organization’s routine and preventive medical equipment maintenance schedules to
+determine that ongoing maintenance inspections are performed and that necessary repairs are
+completed.
+Verify that the organization has developed and implemented a comprehensive plan to ensure
+that the safety and wellbeing of patients are assured during emergency situations.
+Interview personnel in charge of facility, supplies and equipment maintenance to verify:
+• The organization has identified supplies and equipment that are likely to be needed in
+emergency situation.
+• The organization has made adequate provisions to ensure the availability of those
+supplies and equipment when needed.
+Interview equipment users when surveying the various units/departments of the organization to
+determine if equipment failures are occurring and causing problems for patient health or safety.
+Determine if there is a complete inventory of equipment required to meet patient needs,
+regardless of ownership.
+Page 374 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+• Determine if the inventory is periodically reviewed and updated.
+• Is critical equipment readily identified?
+If the organization employs an AEM program, is equipment in this program readily identified?
+• Determine if the organization has documentation of the qualifications (e.g., training
+certificates, certifications, degrees, etc.) of hospital personnel responsible for the AEM
+program (if one is being used by the hospital) as well as for those performing
+maintenance.
+• Determine if the organization is able to demonstrate how it assures contractors use
+qualified personnel.
+If the hospital is following the manufacturer-recommended equipment maintenance
+activities and frequencies:
+In addition to reviewing maintenance records on equipment observed while inspecting various
+hospital locations for multiple compliance assessment purposes, select a sample of equipment
+from the hospital’s equipment inventory to determine whether the organization is following the
+manufacturer’s recommendations. Critical equipment, which poses a higher risk to patient safety
+if it were to fail, such as ventilators, defibrillators, robotic surgery devices, etc., should make up
+the sample majority.
+For the sample selected, determine if:
+• The organization has available manufacturer’s recommendations (e.g., manufacturer’s
+operation and maintenance manual, standards, studies, guidance, recall information,
+service records, etc.);
+• Maintenance is being performed in accordance with manufacturer’s recommendations.
+If a hospital is using an AEM for some equipment:
+• Does the hospital’s inventory include equipment, for example, any diagnostic imaging
+or therapeutic radiologic equipment, which is not eligible for AEM?
+• Determine if the organization’s development of alternate maintenance activities and
+frequencies for equipment in the AEM program as well as AEM activities are being
+performed by qualified personnel.
+• Verify the organization has documented maintenance activities and frequencies for all
+equipment included in the AEM program.
+• Verify the organization is evaluating the safety and effectiveness of the AEM program.
+• If there is equipment on the inventory the organization has identified as having such a
+very low level of risk that it has determined it can use a broad interval range or
+departmental “sweeps,” ask the organization for the evidence used to make this
+determination. Does it seem reasonable?
+Page 375 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+Select a sample of equipment in the AEM program. The majority of the sample shall include
+critical equipment which poses a higher risk to patient safety if it were to fail, such as ventilators,
+defibrillators, robotic surgery devices, etc. For the sample selected:
+• Ask the responsible personnel to explain how the decision was made to place the
+equipment in an AEM program. Does the methodology used consider risk factors and
+make use of available evidence?
+• Ask the responsible personnel to describe the methodology for applying maintenance
+strategies and determining alternative maintenance activities or frequencies for the
+sampled equipment. Can they readily provide an explanation and point to sources of
+information they relied upon?
+• Determine if maintenance is being performed in accordance with the maintenance
+activities and frequencies defined in the AEM program.
+• Verify the organization is evaluating the safety and effectiveness of the AEM
+maintenance activities for this equipment and taking corrective actions when needed.
+Page 376 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+PE.8 UTILITY MANAGEMENT SYSTEM
+SR.1 The organization shall require a Utility Management System that provides for a safe
+and efficient facility that reduces the opportunity for organization-acquired illnesses.
+SR.1a The Utility Management System shall have a water management program to
+reduce the risk of growth and spread of legionella and other opportunistic
+pathogens in building water systems.
+SR.2 The Utility Management System shall provide for a process to evaluate critical
+operating components, to include, but not limited to cybersecurity issues.
+SR.3 The Utility Management System shall develop maintenance, testing, and inspection
+processes for critical utilities.
+SR.4 The Utility Management System shall contain a process to address medical gas
+systems and HVAC systems (e.g., includes areas for negative pressure).
+SR.5 The Utility Management System shall provide for emergency processes for utility
+system failures or disruptions.
+SR.6 The Utility Management System shall provide for reliable emergency power sources
+with appropriate maintenance as required. The organization shall implement
+emergency power system inspection and testing requirements found in the Health Care
+Facilities Code, NFPA 110, and the Life Safety Code.
+SR.7 The Utility Management System shall require proper ventilation, light and temperature
+controls in patient care areas, operating rooms, sterile supply rooms, special
+procedures, isolation and protective isolation rooms, pharmaceutical, food preparation,
+and other appropriate areas.
+SR.8 There shall be emergency power and lighting in at least the operating, recovery,
+intensive care, emergency rooms, and in other areas where invasive procedures are
+conducted, stairwells, and other areas identified by the organization (e.g., blood bank
+refrigerator, etc.). In all other areas not serviced by the emergency supply source,
+battery lamps and flashlights shall be available.
+SR.8a Emergency lighting standards shall comply with Section 7.9 of the Life Safety
+Code, 101-2012, and applicable references, such as, NFPA-99, 2012: Health
+Care Facilities, for emergency lighting and emergency power.
+SR.8b NFPA 99, 2012 6.3.2.2.11, Battery-Powered Lighting Units, shall apply to new
+and existing healthcare facilities and shall be installed in accordance with NFPA
+70, National Electric Code, 2011 edition.
+SR.9 There shall be facilities for emergency gas and water supply.
+SR.10 All relevant utility systems shall be maintained, inspected, and tested.
+Page 377 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+Interpretive Guidelines:
+The organization shall ensure that the condition of the physical plant and overall hospital
+environment is developed and maintained in a manner to ensure the safety and wellbeing of
+patients, visitors, and staff. The organization will ensure that routine and preventive
+maintenance and testing activities are performed as necessary, in accordance with Federal and
+State laws, regulations, and guidelines and manufacturer’s recommendations, by establishing
+maintenance schedules and conducting ongoing maintenance inspections to identify areas in
+need of repair.
+The organization shall have processes in place to ensure the cybersecurity of utility and building
+systems. For additional guidance on cybersecurity issues see:
+- HHS 405(d) Aligning Health Care Industry Security Approaches -
+https://405d.hhs.gov/
+- NIST Cybersecurity Framework - https://www.nist.gov/cyberframework
+Organizations shall have water management plans and documentation that, at a minimum,
+ensure that the organization:
+• Conducts a facility risk assessment to identify where Legionella and other opportunistic
+waterborne pathogens (e.g., Pseudomonas, Acinetobacter, Burkholderia,
+Stenotrophomonas, nontuberculous mycobacterial, and fungi) could grow and spread
+in the facility water system.
+• Develops and implements a water management program that considers the
+recommendations of the current edition of ASHRAE 188, Legionellosis: Risk
+Management for Building Water Systems and the CDC Legionella Toolkit.
+• Specifies testing protocols and acceptable ranges for control measures and document
+the results of testing and corrective actions taken when control limits are not
+maintained.
+• Maintains compliance with other applicable Federal, State and local requirements.
+There shall be proper ventilation in at least the following areas:
+• Areas using formaldehyde, ethylene oxide, nitrous oxide, glutaraldehyde, xylene,
+pentamidine, formaldehyde, or other potentially hazardous substances;
+• Locations where oxygen is transferred from one container to another;
+• Isolation rooms and reverse isolation rooms (both shall be in compliance with Federal
+and State laws, regulations, and guidelines such as OSHA, CDC, NIH);
+• Pharmaceutical preparation areas (hoods, cabinets);
+• Laboratory locations: and,
+• Anesthetizing locations (as defined in NFPA 99-2012).
+Page 378 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+Temperature, humidity, and airflow in the anesthetizing locations shall be maintained within
+acceptable standards to inhibit microbial growth, reduce the risk of infection, control odor and
+promote patient comfort.
+Each operating room should have separate temperature control. Acceptable standards such as
+from the Association of Operating Room Nurses (AORN) or the Facilities Guidelines Institute
+(FGI) should be incorporated into organization policy.
+The organization shall have systems for emergency gas and water needs to provide care to
+inpatients and other persons who may come to the hospital in need of care. This includes
+making arrangements with local utility companies and others for the provision of emergency
+sources of water and gas. The organization should consider nationally accepted references or
+calculations made by qualified staff when determining the need for at least water and gas. For
+example, one source for information on water is the Federal Emergency Management Agency
+(FEMA).
+Emergency gas includes fuels such as propane, natural gas, fuel oil, liquefied natural gas, as
+well as any gases the hospital uses in the care of patients such as oxygen, nitrogen, nitrous
+oxide, etc.
+The organization should have a plan to protect these limited emergency supplies and have a
+plan for prioritizing their use until adequate supplies are available. The plan should also address
+the event of a disruption in supply (e.g., disruption to the entire surrounding community).
+Surveyor Guidance:
+Review and validate the organization’s Utility Management System to ensure that there is a
+process in place to provide for a safe and efficient facility that reduces the opportunity for
+hospital-acquired illnesses.
+Review and validate the condition of the hospital and that it is maintained in a manner to assure
+the safety and wellbeing of patients (e.g., condition of ceilings, walls, and floors, presence of
+patient hazards).
+Review and validate the organization’s routine and preventive maintenance schedules to
+determine that ongoing maintenance inspections are performed, and that necessary
+corrective/preventive action(s) are taken.
+The organization will maintain, test and inspect their utility systems and have adequate facilities
+for emergency gas and water supply, to provide safe care for patients. Verify that the Utility
+Management System provides for:
+• A process to evaluate critical operating components;
+• A means of addressing medical gas systems and HVAC systems;
+• A means for providing emergency processes for utility system failures or disruptions;
+and,
+• A means for providing for reliable emergency power sources with appropriate
+maintenance.
+Page 379 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+• Verify that the quality of the water supply and distribution system has been deemed
+acceptable for its intended use (drinking water, irrigation water, lab water, dialysis);
+• Emergency gases have been deemed acceptable and can be adequately supplied as
+needed; and,
+• Review the system used by hospital staff to determine the hospital’s emergency needs
+for gas and water.
+• Verify that the system accounts for not only inpatients, but also staff and other persons
+who come to the hospital in need of care during emergencies.
+• Determine the source of emergency gas and water supplies, Review the quantity and
+availability of these supplies to the hospital, and that they are available within a short
+time through period additional deliveries.
+• Verify that arrangements have been made with utility companies and others for the
+provision of emergency sources of critical utilities, such as water and gas.
+• Review and verify that food products are stored under appropriate conditions (e.g.,
+time, temperature, packaging, location) based on nationally accepted sources such as
+the United States Department of Agriculture, the Food and Drug Administration, or
+other nationally recognized standard.
+• Review and verify that pharmaceuticals are stored at temperatures recommended by
+the product manufacturer and according to organization policy.
+o Review monitoring records for temperature to ensure that appropriate levels
+are maintained.
+• Review humidity maintenance records for anesthetizing locations to ensure, if
+monitoring determined humidity levels were not within acceptable parameters, that
+corrective actions were performed in a timely manner to achieve acceptable levels.
+Page 380 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+ORGAN, TISSUE AND EYE PROCUREMENT (TO)
+TO.1 PROCESS
+SR.1 The organization shall have a process in place for the procurement of organs, tissue,
+and eyes. The organization shall have an agreement with at least one tissue bank and
+one eye bank to cooperate in the retrieval, processing, preservation, storage and
+distribution of tissues and eyes, as may be appropriate to assure that all usable tissues
+and eyes are obtained from potential donors, insofar as such an agreement does not
+interfere with organ procurement;
+TO.2 ORGAN PROCUREMENT ORGANIZATION (OPO) WRITTEN AGREEMENT
+The organization shall have a written agreement with an OPO designated under 42 CFR 486.
+This agreement shall:
+SR.1 Contain procurement protocols that have been approved by the organization’s
+governing body and medical staff.
+SR.2 Ensure that timely notification is provided to the OPO, or a third party designated by the
+OPO, for all individuals whose death is imminent or who have died in the hospital.
+SR.3 Ensure communication of the policy for organ, tissue and eye procurement to all
+appropriate areas of the organization, in addition to any revisions or modifications under
+a controlled document.
+SR.4 Acknowledge that it is the OPO’s responsibility for the determination of medical
+suitability for organ donation, and, in the absence of alternative arrangements by the
+organization, the OPO determines medical suitability for tissue and eye donation, using
+the definition of potential tissue and eye donor and the notification protocol developed
+in consultation with the tissue and eye banks identified by the organization for this
+purpose.
+SR.5 Ensure, in collaboration with the designated OPO, that the family of each potential
+donor is informed of its options to donate organs, tissues, or eyes, or to decline to
+donate. The individual designated by the organization to initiate the request to the
+family shall be an organ procurement representative or a designated requestor. If a
+designated requestor is responsible for initiating this request, this individual shall have
+completed a course offered or approved by the OPO that has been designed in
+conjunction with the tissue and eye bank community in the methodology for
+approaching potential donor families and requesting organ or tissue donation.
+SR.6 Ensure that it works cooperatively with the designated OPO, tissue bank and eye bank
+in educating staff on donation issues, reviewing death records to improve identification
+of potential donors, and maintaining potential donors while necessary testing and
+placement of potential donated organs, tissues, and eyes takes place.
+Interpretive Guidelines:
+Page 381 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+The organization has a process in place for the procurement of organs, tissue, and eyes.
+The organization shall have a written agreement with an Organ Procurement Organization
+(OPO), designated under 42 CFR Part 486. At a minimum, the written agreement shall address
+the following:
+• Procurement protocols approved by the governing body and medical staff and criteria
+for referral, including the referrals of all individuals whose death is imminent or who
+have died in the hospital and ensure timely notification;
+• Specifications as to how the tissue and/or eye bank will be notified about potential
+donors using notification protocols developed by the OPO in consultation with the
+hospital-designated tissue and eye bank(s);
+• The OPO’s responsibility for the determination of medical suitability in lieu of any
+alternative arrangement with a different tissue and/or eye bank;
+• Provisions for notification of each individual death in a timely manner to the OPO (or
+designated third party) in accordance with the terms of the agreement;
+• Documentation that the designated requestor training program offered by the OPO has
+been developed in cooperation with the tissue bank and eye bank designated by the
+hospital;
+• Procedures that permit the OPO, tissue bank, and eye bank access to the hospital’s
+death record information according to a designated schedule, e.g., monthly or
+quarterly;
+• Policies that confirm that the hospital is not required to perform credentialing reviews
+for, or grant privileges to, members of organ recovery teams as long as the OPO
+sends only “qualified, trained individuals” to perform organ recovery; and,
+• The interventions the hospital will utilize to maintain potential organ donor patients so
+that the patient organs remain viable.
+The organization shall implement a mechanism for communication of the policy for organ, tissue
+and eye procurement to all appropriate area of the organization, in addition to any revisions or
+modifications under a controlled document.
+Hospitals shall notify the OPO of every death or imminent death in the hospital. When death is
+imminent, the hospital shall notify the OPO both before a potential donor is removed from a
+ventilator and while the potential donor’s organs are still viable. The organization should have a
+written policy, developed in coordination with the OPO and approved by the hospital’s medical
+staff and governing body, to define “imminent death.” The definition for “imminent death” should
+strike a balance between the needs of the OPO and the needs of the hospital’s care givers to
+continue treatment of a patient until brain death is declared, or the patient’s family has made the
+decision to withdraw supportive measures. Collaboration between OPOs and hospitals will
+create a partnership that furthers donation, while respecting the perspective of hospital staff.
+Definition elements: “Imminent death” might include a patient with severe, acute brain injury
+who:
+Page 382 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+• Requires mechanical ventilation;
+• Is in an intensive care unit (ICU) or emergency department; AND,
+• Exhibits clinical findings consistent with a Glasgow Coma Score that is less than or
+equal to a mutually- agreed upon threshold or
+• MD/DOs are evaluating a diagnosis of brain death or
+• An MD/DO has ordered that life-sustaining therapies be withdrawn, pursuant to the
+family’s decision.
+Note: A patient with “severe, acute brain injury” is not always a trauma patient. For example,
+post myocardial infarction resuscitation may result in a patient with a beating heart and no brain
+activity.
+Definition: “Timely notification” means a hospital shall contact the OPO by telephone as soon as
+possible after an individual has died, has been placed on a ventilator due to a severe brain
+injury, or who has been declared brain dead (ideally within 1 hour). That is, a hospital shall
+notify the OPO while a brain dead or severely brain-injured, ventilator-dependent individual is
+still attached to the ventilator and as soon as possible after the death of any other individual,
+including a potential non-heart-beating donor. Even if the hospital does not consider an
+individual who is not on a ventilator to be a potential donor, the hospital shall call the OPO as
+soon as possible after the death of that individual has occurred.
+The individual designated by the organization to initiate the request to a family shall be an organ
+procurement representative, an organization representative of a tissue or eye bank, or a
+designated requestor. Any individuals involved in a request for organ, tissue, and eye donation
+shall be formally trained in the donation request process. Definition: A “designated requestor” is
+defined as a hospital-designated individual who has completed a course offered or approved by
+the OPO and designed in conjunction with the tissue and eye bank community.
+Waivers: A hospital may obtain a waiver of the above requirements from the Secretary under
+certain specified conditions. A waiver allows the hospital to have an agreement with an OPO
+other than the one initially designated by CMS, if the hospital meets certain conditions specified
+in section 1138(a)(2)(A) of the Social Security Act.
+In addition, the Secretary may review additional criteria described in section 1138(a)(2)(B) of the
+Act to evaluate the hospital's request for a waiver.
+Section 1138(a)(2)(A) of the Act states that in granting a waiver, the Secretary shall determine
+that the waiver.
+(1) Is expected to increase organ donations; and
+(2) Will ensure equitable treatment of patients referred for transplants within the service area
+served by the designated OPO and within the service area served by the OPO with which
+the hospital seeks to enter into an agreement under the waiver.
+In making a waiver determination, section 1138(a)(2)(B) of the Act provides that the Secretary
+may consider, among other factors:
+Page 383 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+(1) Cost-effectiveness;
+(2) Improvements in quality;
+(3) Whether there has been any change in a hospital's designated OPO due to the changes
+made in definitions for metropolitan statistical areas; and
+(4) The length and continuity of a hospital's relationship with an OPO other than the hospital's
+designated OPO.
+Surveyor Guidance:
+Verify that the organization has a written agreement, approved by the governing body, and that
+it addresses all required information or if they have obtained a waiver approved by the
+Secretary.
+In a sampling of records, verify that the organization has implemented its organ procurement
+policies. Verify that that all designated requestors have completed the required training.
+Verify that the organization ensures that only OPO, tissue bank, or eye bank staff or designated
+requestors are approaching families to ask them to donate.
+When possible, interview a hospital-designated requestor regarding his or her approach to
+donation requests.
+Validate that the organization ensures that all appropriate staff have attended an educational
+program regarding donation issues and how to work with the OPO, tissue bank, and eye bank.
+Review and verify that there are policies and procedures in place to ensure the coordination
+between facility staff and OPO staff in maintaining the potential donor.
+Verify that the organ, tissue, and eye procurement program is integrated into QMS oversight.
+TO.3 ALTERNATIVE AGREEMENT
+In the event the organization has an alternative agreement with a tissue and/or eye bank, this
+agreement shall:
+SR.1 Specify the criteria for referral of all individuals who have died in the organization, and,
+SR.2 Acknowledge the OPO’s responsibility for the determination of medical suitability in lieu
+of any alternative arrangement with a different tissue and/or eye bank.
+Surveyor Guidance:
+Verify that the organization has an agreement with at least one tissue bank and one eye bank
+that specifies criteria for referral of all potential tissue and eye donors, or an agreement with an
+OPO that specifies the tissue bank and eye bank to which referrals will be made.
+Verify that the OPO is responsible for the determination of medical suitability for tissue and eye
+donation, unless the organization has an alternative agreement with a different tissue and/or
+Page 384 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+eye bank.
+TO.4 RESPECT FOR PATIENT RIGHTS
+SR.1 The organ, tissue and eye procurement policies, procedures and practices shall
+demonstrate the respect for individual patient and family rights that reflect their views,
+religious beliefs and other special circumstances that have been communicated by the
+patient and/or family to the organization personnel.
+TO.5 DOCUMENTATION
+SR.1 Documents and records of organ procurement will be maintained in the manner
+directed by the OPO.
+Surveyor Guidance:
+Review a sampling of documents and records regarding organ procurement.
+TO.6 ORGAN TRANSPLANTATION
+If the organization performs organ transplantation, the organization shall:
+SR.1 Be a member in the Organ Procurement and Transplantation Network (OPTN), which is
+established and operated in accordance with section 372 of the Public Service Act (42.
+U.S.C 274) and abide by its rules. No hospital is considered to be out of compliance
+with section 1138(a)(1)(B) of the Act, or with the requirements of TO.6 (SR.1), unless
+the Secretary has given the OPTN formal notice that he or she approves the decision to
+exclude the hospital from the OPTN and has notified the hospital in writing.
+SR.2 Define the term “organ” as to what transplantation is done. The consistency in terms
+shall apply to a kidney, liver, heart, lung or pancreas, and,
+SR.3 Provide data related to the performance of organ transplantation as requested by the
+OPTN, the Scientific Registry of Transplant Recipients and the OPO. The organization
+shall be required to provide this data to CMS as requested by the Secretary.
+Surveyor Guidance:
+If the hospital performs organ transplantation, verify that the hospital is a member in the Organ
+Procurement and Transplantation Network (OPTN), and they have defined the term “organ” as
+to what transplantation is done. The consistency in terminology shall apply to a kidney, liver,
+heart, lung or pancreas, and,
+Verify by review, the reports submitted by the facility to the OPTN, the Scientific Registry, the
+OPOs, and any data submitted to the Department of Health and Human Services per request of
+the Secretary.
+Page 385 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+TO.7 TRANSPLANT CANDIDATES
+SR.1 The organization shall ensure the appropriate candidates for receipt of transplanted
+organs have been screened, matched, and medically cleared prior to receipt of any
+organs.
+SR.2 Candidate information shall be documented, accurate and available at the time of the
+organ transplantation.
+SR.3 Authority for transplantation shall be co-signed by the patient or designated
+representative of the patient and the practitioner(s) performing the transplantation.
+Interpretive Guidelines:
+The organization shall ensure that appropriate candidates for receipt of transplanted organs
+have been screened, matched, and medically cleared prior to receipt of any organs. The
+organization will take all appropriate steps to verify that this has occurred prior to the
+transplantation process is started and this has been appropriately communicated and
+documented accordingly to the transplantation team.
+The organization will accurately document the time of the organ transplantation. The
+organization will take such steps to ensure that there are no unnecessary delays when this
+process is initiated.
+The organization will ensure that authority for transplantation is co-signed by the patient or
+designated representative of the patient and the practitioner(s) performing the transplantation.
+Surveyor Guidance:
+In a review of patient records and/or policies and procedures, regarding the transplantation of
+organs, verify that candidates receiving organs are screened, matched, and medically cleared
+prior to receipt of any organs.
+In the review of records or policies and procedures in place, verify that the time of the organ
+transplantation is documented as appropriate when this process is initiated and required by
+policy.
+Verify that the organization ensures that authority for transplantation is co-signed by the patient
+or designated representative of the patient and the practitioner(s) performing the
+transplantation.
+Page 386 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+APPENDIX A - SWING BEDS (SB)
+A hospital that has a Medicare provider agreement shall meet the requirements of Appendix A
+of these NIAHO® Accreditation Requirements in order to be granted an approval from CMS to
+provide post-hospital extended care services, as specified in 42 CFR 409.30, and be
+reimbursed as a swing-bed hospital, as specified in 42 CFR 413.114.
+SB.1 FACILTY ELIGIBILITY
+SR.1 The hospital shall meet the following eligibility requirements of 42 CFR Section
+482.58(a):
+SR.1a The hospital has fewer than 100 hospital beds, excluding beds for newborns
+and beds in intensive care type inpatient units (for eligibility of hospitals with
+distinct parts electing the optional reimbursement method, see 42 CFR Section
+413.24(d)(5).
+SR.1b The hospital is located in a rural area. This includes all areas not delineated as
+“urbanized” areas by the Census Bureau, based on the most recent census.
+SR.1c The hospital does not have in effect a 24-hour nursing waiver granted under
+488.54(c).
+SR.1d The hospital has not had a swing-bed approval terminated within the two years
+previous to application.
+Interpretive Guidelines:
+Hospitals seeking swing-bed approval are screened prior to survey for their eligibility for swing-
+beds. However, the CMS RO makes the determination whether the hospital has satisfied the
+eligibility criteria, regardless of whether the state agency or accrediting organization, as
+applicable, recommends approval of swing-bed status.
+The swing-bed concept allows a hospital to use their beds interchangeably for either acute-care
+or post-acute care. A “swing-bed” is a change in reimbursement status. The patient swings from
+receiving acute-care services and reimbursement to receiving skilled nursing (SNF) services
+and reimbursement. It is not necessary for the patient to change location in the hospital when
+the reimbursement status changes but, moving to a different location is allowed.
+Swing beds do not have to be located in a special section of the hospital. The patient does not
+have to change locations in the hospital merely because their status changes unless the
+hospital requires it. Beds in a hospital IPPS-excluded rehabilitation or psychiatric unit, or a
+separately certified co-located Medicare participating entity (e.g., a distinct part SNF/NF,
+another hospital, or an inpatient hospice) cannot be used by the hospital for providing swing-bed
+services.
+A 3-day qualifying stay for the same spell of illness in any hospital is required prior to admission
+to swing-bed status for Medicare beneficiaries who seek Medicare coverage of their SNF
+services. The 3-day qualifying stay does not need to be from the same facility as the swing-bed
+Page 387 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+admission. Surveyors do not evaluate whether there is a qualifying stay, since this is a coverage
+requirement.
+There shall be discharge orders changing status from acute care services, appropriate progress
+notes, discharge summary, and subsequent admission orders to swing-bed status regardless of
+whether the patient stays in the same hospital or transfers to another hospital with swing bed
+approval. If the patient remains within the hospital, the same chart can be utilized but the swing-
+bed section of the chart shall be separate and clearly delineated, with appropriate admission
+orders, progress notes, and supporting documents.
+There is no length of stay restriction for any hospital swing-bed patient. There is no Medicare
+requirement to place a swing-bed patient in a nursing home and there are no requirements for
+transfer agreements between hospitals and nursing homes. While there is no length of stay limit
+for patients in swing-bed status, the intended use for swing beds is for a transitional time period
+to allow the patient to fully recover to return home or while awaiting placement into a nursing
+facility.
+Swing-bed patients receive a SNF level of care, and the facility is reimbursed for providing a
+SNF level of care. However, swing-bed patients are not SNF patients. Swing-bed patients in
+facilities are considered to be patients of the facility.
+Page 388 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+ADMISSION, TRANSFER AND DISCHARGE (TD)
+TD.1 TRANSFER AND DISCHARGE REQUIREMENTS
+Transfer and discharge include movement of a resident to a bed outside of the certified facility
+whether that bed is in the same physical plant or not. Transfer and discharge do not refer to
+movement of a resident to a bed within the same certified facility.
+The facility shall permit each resident to remain in the facility, and not transfer or discharge the
+resident from the facility unless:
+SR.1 The transfer or discharge is necessary for the resident’s welfare and the resident’s
+needs cannot be met in the facility;
+SR.2 The transfer or discharge is appropriate because the resident’s health has improved
+sufficiently so the resident no longer needs the services provided by the facility;
+SR.3 The safety of individuals in the facility is endangered due to the clinical or behavioral
+status of the resident;
+SR.4 The health of individuals in the facility would otherwise be endangered; or
+SR.5 The resident has failed, after reasonable and appropriate notice, to pay for (or to have
+paid under Medicare or Medicaid) a stay at the facility. Non-payment applies if the
+resident does not submit the necessary paperwork for third party payment or after the
+third party, including Medicare or Medicaid, denies the claim and the resident refuses to
+pay for his or her stay;
+SR.5a For a resident who becomes eligible for Medicaid after admission to a facility,
+the hospital may charge a resident only allowable charges under Medicaid; or,
+SR.6 The facility ceases operations.
+SR.7 The facility may not transfer or discharge a resident while an appeal is pending,
+pursuant to § 431.230 when a resident exercises his or her right to appeal a transfer or
+discharge notice from the facility pursuant to § 431.220(a)(3), unless the failure to
+discharge or transfer would endanger the health or safety of the resident or other
+individuals in the facility. The facility shall document the danger that failure to transfer or
+discharge would pose.
+Interpretive Guidelines:
+Definition: Transfer and discharge includes movement of a resident to a bed outside of the
+certified facility whether that bed is in the same physical plant or not. Transfer and discharge do
+not refer to movement of a resident to a bed within the same certified facility. Specifically,
+transfer refers to the movement of a resident from a bed in one certified facility to a bed in
+another certified facility when the resident expects to return to the original facility. Discharge
+refers to the movement of a resident from a bed in one certified facility to a bed in another
+certified facility or other location in the community, when return to the original facility is not
+Page 389 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+expected.
+The intent of the regulation on transfer and discharge provisions is to significantly restrict a
+facility’s ability to transfer or discharge a resident once that resident has been admitted to the
+facility to prevent dumping of high care or difficult residents. This requirement applies to transfer
+or discharges that are initiated by the facility, not by the resident.
+If transfer is due to a significant change in the resident’s condition, the facility shall conduct the
+appropriate assessment, prior to any transfer or discharge to determine if a new care plan would
+allow the facility to meet the resident’s needs. If the significant change in the resident’s condition
+is an emergency, immediate transfer should be arranged. Residents who are sent emergently to
+an acute care setting, such as a hospital, shall be permitted to return to the facility. In a situation
+where the facility initiates discharge while the resident is in the hospital following emergency
+transfer, the facility shall have evidence that the resident’s status at the time the resident seeks
+to return to the facility (not at the time the resident was transferred for acute care) meets one of
+the criteria at SR.1-SR.4. Additionally, the resident has the right to return to the facility pending
+an appeal of any facility-initiated discharge unless the return would endanger the health or
+safety of the resident or other individuals in the facility. The facility shall document the danger
+that the failure to transfer or discharge would pose.
+The resident cannot be discharged for nonpayment while a determination on the resident’s
+Medicaid eligibility is pending.
+Residents who are sent to the acute care setting for routine treatment/planned procedures shall
+also be allowed to return to the facility.
+A resident’s declination of treatment does not constitute grounds for discharge, unless the
+facility is unable to meet the needs of the resident or protect the health and safety of others. The
+facility shall be able to demonstrate that the resident or, if applicable, resident representative,
+received information regarding the risks of refusal of treatment, and that staff conducted the
+appropriate assessment to determine if care plan revisions would allow the facility to meet the
+resident needs or protect the health and safety of others.
+Surveyor Guidance:
+During closed record review, determine the reasons for transfer/discharge.
+• Do records document accurate assessments and attempts through care planning to
+address the resident’s needs through multidisciplinary interventions, accommodation of
+individual needs, and attention to the resident’s customary routine?
+• Did the resident’s MD/DO document in the record if the resident was
+transferred/discharged for the sake of the resident’s welfare and the resident’s needs
+could not be met in the facility (e.g., a resident develops an acute condition requiring
+hospitalization) or the resident’s health improved to the extent that the
+transferred/discharged resident no longer needed the services of the facility?
+• Did a MD/DO document in the record if residents were transferred because the health
+of individuals in the facility is endangered?
+• Do the records of residents who are transferred/discharged due to safety reasons
+Page 390 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+reflect the process by which the facility concluded that in each instance transfer or
+discharge was necessary?
+• If the entity to which the resident was discharged is another long-term care facility,
+evaluate the extent to which the discharge summary and the resident’s MD/DO justify
+why the facility could not meet the needs of this resident.
+TD.2 DOCUMENTATION
+When the facility transfers or discharges a resident under any of the circumstances specified in
+TD.1, the facility shall ensure that the transfer or discharge is documented in the resident's
+medical record and appropriate information is communicated to the receiving health care
+institution or provider.
+SR.1 Documentation in the resident's medical record shall include:
+SR.1a The basis for the transfer per TD.1.
+SR.1b In the case of paragraph TD.1 (SR.1), the specific resident need(s) that cannot
+be met, facility attempts to meet the resident needs, and the service available at
+the receiving facility to meet the need(s).
+The documentation shall be made by:
+SR.2 The resident’s physician when transfer or discharge is necessary for the resident’s
+welfare and the resident’s needs cannot be met in the facility or the resident’s health
+has improved sufficiently so the resident no longer needs the services provided by the
+facility.
+SR.3 A physician (not necessarily the attending physician) when transfer or discharge is
+necessary as the health of individuals in the facility would otherwise be endangered or
+the safety of the individuals in the facility is endangered due to the clinical or behavioral
+status of the resident.
+Interpretive Guidelines:
+A physician extender may complete documentation of the transfer/discharge unless prohibited
+by State law or facility policy.
+TD.3 NOTIFICATION
+Notification shall be provided prior to transferring or discharging a resident.
+The facility shall:
+SR.1 Notify the resident and the resident’s representative(s) of the transfer or discharge and
+the reasons for the move in writing and in a language and manner they understand.
+The facility shall send a copy of the notice to a representative of the Office of the State
+Long-Term Care Ombudsman.
+Page 391 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+SR.2 The written notice specified in TD.1 (SR.1) shall include the following:
+SR.2a The reason for transfer or discharge;
+SR.2b The effective date of transfer or discharge;
+SR.2c The location to which the resident is transferred or discharged;
+SR.2d A statement of the resident's appeal rights, including the name, address (mailing
+and email), and telephone number of the entity which receives such requests;
+and information on how to obtain an appeal form and assistance in completing
+the form and submitting the appeal hearing request;
+SR.2e The name, address (mailing and email) and telephone number of the Office of
+the State Long-Term Care Ombudsman;
+SR.2f For nursing facility residents with intellectual and developmental disabilities or
+related disabilities, the mailing and email address and telephone number of the
+agency responsible for the protection and advocacy of individuals with
+developmental disabilities established under Part C of the Developmental
+Disabilities Assistance and Bill of Rights Act of 2000 (Pub. L. 106-402, codified
+at 42 U.S.C. 15001 et seq.); and,
+SR.2g For nursing facility residents with a mental disorder or related disabilities, the
+mailing and email address and telephone number of the agency responsible for
+the protection and advocacy of individuals with a mental disorder established
+under the Protection and Advocacy for Mentally Ill Individuals Act.
+SR.3 Record the reasons for the transfer or discharge in the resident’s clinical record in
+accordance with TD.1.
+SR.4 Timing of the written notice shall be made by the facility:
+SR.4a As soon as practicable before transfer or discharge when:
+SR.4a(1) The safety of individuals in the facility would be endangered (See TD.1
+(SR.3));
+SR.4a(2) The health of individuals in the facility would be endangered (See
+TD.1 (SR.4));
+SR.4a(3) The resident’s health improves sufficiently to allow a more immediate
+transfer or discharge (See TD.1 (SR.2));
+SR.4a(4) An immediate transfer or discharge is required by the resident’s urgent
+medical needs (See TD.1 (SR.1)); or,
+SR.4a(5) A resident has not resided in the facility for 30 days.
+Page 392 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+SR.4b All other reasons require at least 30 days’ notice before transfer or discharge.
+Interpretive Guidelines:
+Notice of Transfer or Discharge and Ombudsman Notification
+For facility-initiated transfers or discharges of a resident, prior to the transfer or discharge, the
+facility shall notify the resident and the resident’s representative(s) of the transfer or discharge
+and the reasons for the move in writing and in a language and manner they understand.
+Additionally, the facility shall send a copy of the notice of transfer or discharge to the
+representative of the Office of the State Long-Term Care (LTC) Ombudsman. The intent of
+sending copies of the notice to a representative of the Office of the State LTC Ombudsman is
+to provide added protection to residents from being inappropriately transferred or discharged,
+provide residents with access to an advocate who can inform them of their options and rights,
+and to ensure that the Office of the State LTC Ombudsman is aware of facility practices and
+activities related to transfers and discharges. The facility shall maintain evidence that the
+notice was sent to the Ombudsman. While Ombudsman Programs vary from state to state,
+facilities should know the process for ombudsman notification in their state.
+Facility-Initiated Transfers and Discharges
+In situations where the facility has decided to discharge the resident while the resident is still
+hospitalized, the facility shall send a notice of discharge to the resident and resident
+representative before the discharge and shall also send a copy of the discharge notice to a
+representative of the Office of the State LTC Ombudsman. Notice to the Office of the State
+LTC Ombudsman shall occur at the same time the notice of discharge is provided to the
+resident and resident representative, even though, at the time of initial emergency transfer,
+sending a copy of the transfer notice to the ombudsman only needed to occur as soon as
+practicable as described below. For any other types of facility-initiated discharges, the facility
+shall provide notice of discharge to the resident and resident representative along with a copy
+of the notice to the Office of the State LTC Ombudsman at least 30 days prior to the discharge
+or as soon as possible. The copy of the notice to the ombudsman shall be sent at the same
+time notice is provided to the resident and resident representative.
+Emergency Transfers
+When a resident is temporarily transferred on an emergency basis to an acute care facility,
+this type of transfer is considered to be a facility-initiated transfer and a notice of transfer shall
+be provided to the resident and resident representative as soon as practicable before the
+transfer. Copies of notices for emergency transfers shall also still be sent to the ombudsman,
+but they may be sent when practicable, such as in a list of residents on a monthly basis, as
+long as the list meets all requirements for content of such notices at SR.2a-SR.2g.
+TD.4 ORIENTATION FOR TRANSFER OR DISCHARGE
+SR.1 The facility shall provide and document sufficient preparation and orientation to
+residents to ensure safe and orderly transfer or discharge from the facility. This
+orientation shall be provided in a form and manner that the resident can understand.
+Interpretive Guidelines:
+Page 393 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+This standard addresses the immediate orientation and preparation necessary for a facility-
+initiated transfer, such as to a hospital emergency room or therapeutic leave where discharge
+planning is not required because the resident will return, or for an emergent or immediate
+facility-initiated discharge where a complete discharge planning process is not practicable.
+“Sufficient preparation and orientation” means the facility informs the resident where he or she is
+going, assures safe transportation, and takes steps under its control to minimize anxiety.
+Examples of preparation and orientation may include explaining to a resident why they are
+going to the emergency room or other location or leaving the facility; working with family or
+resident’s representative to assure that the resident’s possessions (as needed or requested by
+the resident) are not left behind or lost; and ensuring that staff handle transfers and discharges
+in a manner that minimizes anxiety.
+When a complete discharge planning process is possible, the resident’s health and safety
+needs, as well as preferences and goals should be considered. The facility should actively
+involve the resident and the resident’s family in selecting the new residence. Some examples of
+orientation may include trial visits by the resident to a new location; working with family; and
+orienting staff in the receiving facility to the resident’s daily patterns.
+The facility shall orient and prepare the resident regarding his or her transfer or discharge in a
+form and manner that the resident can understand. The form and manner of this orientation and
+preparation shall take into consideration factors that may affect the resident’s ability to
+understand, such as educational level, language and/or communication barriers, and physical
+and mental impairments. The facility shall also document this orientation in the medical record,
+including the resident’s understanding of the transfer or discharge.
+Surveyor Guidance:
+Review nursing notes and any other relevant documentation to see if appropriate orientation
+and preparation of the resident prior to transfer and discharge has occurred.
+Through record review and interviews, determine if the resident received sufficient preparation
+prior to transfer or discharge, and if they understood the information provided to them.
+Were the resident’s needed/requested possessions transferred with the resident to the new
+location?
+Ask the resident or his or her representative if they understand why the transfer or discharge
+occurred.
+TD.5 CHANGE OF ROOM IN COMPOSITE DISTINCT PART
+SR.1 When a room change has been planned for the patient in the facility that is a composite
+distinct part (as defined in 483.5(c), will be limited to the patient being moved within the
+particular building in which the resident resides. If the resident is to be moved to
+another building of the distinct part location, the resident shall voluntarily agree to this
+move within the facility.
+Page 394 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+TD.6 DISCHARGE SUMMARY
+When the facility anticipates discharge a resident shall have a discharge summary that includes,
+but is not limited to, the following:
+SR.1 A recapitulation of the resident’s stay that includes, but is not limited to;
+SR.1a Diagnoses;
+SR.1b Course of illness/treatment or therapy;
+SR.1c Pertinent lab results;
+SR.1d Pertinent radiology results; and,
+SR.1e Consultation results.
+SR.2 A final summary of the resident’s status at the time of the discharge to include the items
+under PC.1 (SR.1), that is available for release to authorized individuals and agencies,
+with the consent of the resident or their legal representative;
+SR.3 Reconciliation of all pre-discharge medications with the resident’s post-discharge
+medications (both prescribed and over the counter); and,
+SR.4 A post-discharge plan of care that is developed with the participation of the
+interdisciplinary team, the resident and, with the resident’s consent, the resident’s
+representative(s), which will assist the resident to adjust to his or her new living
+environment.
+SR.4a The post-discharge plan of care shall indicate:
+SR.4a(1) Where the individual plans to reside;
+SR.4a(2) Any arrangements that have been made for the resident’s follow-up
+care and that provider’s contact information;
+SR.4a(3) Any post-discharge medical and non-medical services;
+SR.4a(4) Community care and support services, if needed; and
+SR.4a(5) When and how to contact the continuing care provider.
+Interpretive Guidelines:
+“Anticipated Discharge” is a discharge that is planned and not due to the resident’s death or an
+emergency (e.g., hospitalization for an acute condition or emergency evacuation).
+“Post discharge plan of care” means the discharge planning process that includes assessing
+continuing care needs and developing a plan designed to ensure that the individual’s needs will
+be met after discharge from the facility into the community.
+Page 395 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+“Adjust to his or her living environment” means that the post discharge plan should describe the
+resident’s and family’s preferences for care, how the resident and family will access these
+services, and how care should be coordinated if continuing treatment involves multiple care
+givers. It should identify specific resident needs after discharge such as personal care, sterile
+dressings, and physical therapy, as well as describe resident/caregiver education needs to
+ensure the resident/care giver is able to meet care needs after discharge.
+In situations where there is no continuing care provider (e.g., resident has no primary care
+physician in the community), the facility is expected to document in the medical record efforts to
+assist the resident in locating a continuing care provider.
+For residents discharged to their home, the medical record should contain documentation that
+written discharge instructions were given to the resident and if applicable, the resident
+representative. These instructions shall be discussed with the resident and resident
+representative and conveyed in a language and manner they will understand.
+Surveyor Guidance:
+In reviewing records of residents that have been transferred or discharged:
+• Is there evidence of discharge planning in the record for residents who had an
+anticipated discharge or those residents to be discharged shortly (e.g., in the next 7-14
+days)?
+• Do discharge plans address necessary post discharge care?
+• Determine what types of pre-discharge preparation and education the facility provides
+for residents and their families.
+• Review the discharge summaries. Is there information that addresses pertinent
+continuing care for the resident?
+• Is there documentation that the facility aided the resident and his/her family in locating
+and coordinating post discharge services?
+Page 396 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+PLAN OF CARE (PC)
+PC.1 ASSESSMENT
+The facility shall conduct initially and periodically a comprehensive, accurate, standardized,
+reproducible assessment of each resident’s functional capacity.
+SR.1 The assessment shall include at least the following:
+SR.1a Identification and demographic information.
+SR.1b Customary routine.
+SR.1c Cognitive patterns.
+SR.1d Communication.
+SR.1e Vision.
+SR.1f Mood and behavior patterns.
+SR.1g Psychosocial well-being.
+SR.1h Physical functioning and structural problems.
+SR.1i Continence.
+SR.1j Disease diagnoses and health conditions.
+SR.1k Dental and nutritional status.
+SR.1l Skin condition.
+SR.1m Activity pursuit.
+SR.1n Medications.
+SR.1o Special treatments and procedures.
+SR.1p Discharge planning.
+SR.1q Documentation of summary information regarding the additional assessment
+performed through the resident assessment protocols.
+SR.1r Documentation of participation in assessment.
+SR.2 A comprehensive assessment shall be performed:
+Page 397 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+SR.2a Within 14 calendar days after admission, excluding readmissions in which there
+is no significant change in the resident’s physical or mental condition, the facility
+shall make a comprehensive assessment of a resident’s needs through a
+process of direct observation and communication with the resident, as well as
+communication with licensed and non-licensed direct care staff members on all
+shifts.
+SR.2b Within 14 calendar days after the facility determines, or should have
+determined, that there has been a significant change in the resident's physical
+or mental condition.
+SR.2c Not less often than once every 12 months.
+Interpretive Guidelines:
+The intent of this regulation is to provide the facility with ongoing assessment information
+necessary to develop a care plan, to provide the appropriate care and services for each
+resident, and to modify the care plan and care/services based on the resident’s status. The
+facility is expected to use resident observation and communication as the primary source of
+information when completing the assessment. In addition to direct observation and
+communication with the resident, the facility should use a variety of other sources, including
+communication with licensed and non-licensed staff members on all shifts and may include
+discussions with the resident’s MD/DO, family members, or outside consultants and review of
+the resident’s record.
+“Admission” to the facility is defined as an initial stay or a return stay (not a readmission) in the
+facility. A “return stay” applies to those residents who are discharged without expectation that
+they will return to the facility, but who do return to the facility.
+A “readmission” is an expected return to the facility following a temporary absence for
+hospitalization, off-site visit or therapeutic leave.
+A “significant change” means a major decline or improvement in the resident's status that will
+not normally resolve itself without further intervention by staff or by implementing standard
+disease-related clinical interventions, that has an impact on more than one area of the resident's
+health status and requires interdisciplinary review or revision of the care plan, or both.
+Items in PC.1 (SR.1) would include comprehensive assessments of a resident which were done
+within 14 days of admission; within 14 days of a significant change in the resident’s physical or
+mental condition; and annually (not less than once every 12 months means within 366 days).
+These assessments need to be in the final discharge summary.
+Each resident is comprehensively assessed using the CMS-specified Resident Assessment
+Instrument (RAI) process. The RAI yields information about a resident’s functional status,
+strengths, weaknesses, and preferences, as well as offering guidance on further assessment
+once problems have been identified.
+The facility is expected to use resident observation and communication as the primary source of
+information when completing the RAI. In addition to record review, direct observation and
+communication with the resident, the facility shall use a variety of other sources, including
+Page 398 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+communication with licensed and non-licensed staff members on all shifts and may include
+discussions with the resident’s physician, the resident’s representative, family members, or
+outside consultants. The assessments are part of an ongoing process through which the facility
+identifies each resident’s preferences and goals of care, functional and health status, strengths
+and needs, as well as offering guidance for further assessment once problems have been
+identified.
+Documentation of participation in assessment refers to documentation of who participated in the
+assessment process. The assessment process shall include direct observation and
+communication with the resident, as well as communication with licensed and non-licensed
+direct care/direct access staff members on all shifts.
+Surveyor Guidance:
+Interview licensed and non-licensed direct-care staff about their participation in the resident
+assessment process.
+In a sample of resident records, validate that the facility completes a comprehensive
+assessment, using the CMS-specified RAI process, within the required timeframes (i.e., within
+14 days after admission and at least annually) for each resident in the sample.
+Did the facility identify, in a timely manner, those residents who experienced a significant
+change in status? Is there documentation in the medical record when the determination was
+made that the resident met the criteria for an assessment as a result of the change in status?
+Validate that the facility reassessed residents who had a significant change in status within 14
+days after determining the change was significant.
+Is there evidence of resident and/or resident representative participation in the assessment
+process? Examples include participating in the resident interviews, providing information about
+preferences or discharge goals.
+PC.2 CARE PLAN
+SR.1 The facility shall develop a comprehensive care plan for each resident that:
+SR.1a Meets the resident’s medical, nursing, mental and psychosocial needs identified
+in the comprehensive assessment;
+SR.1b Includes measurable objectives/goals and timeframes;
+SR.1c Is developed within 7 days after the completion of the comprehensive
+assessment;
+SR.1d Is prepared by an interdisciplinary team, that includes:
+SR.1d(1) The attending physician;
+SR.1d(2) A registered nurse with responsibility for the resident;
+SR.1d(3) A nurse aide with responsibility for the resident;
+Page 399 of 459
+NIAHO® Accreditation Requirements, Interpretive Guidelines and Surveyor Guidance for Hospitals
+Revision 25-1 (updated) – Effective September 8, 2025
+SR.1d(4) A member of food and nutrition services staff;
+SR.1d(5) To the extent practicable, the participation of the resident, the
+resident’s family or the resident’s legal representative; and
+SR.1d(5)(i) An explanation shall be included in a resident's medical record if
+the participation of the resident and their resident representative
+is determined not practicable for the development of the
+resident's care plan.
+SR.1d(6) Other appropriate staff or professionals in disciplines as determined by
+the resident's needs or as requested by the resident.
+SR.1e Is periodically reviewed and revised by a team of qualified persons after each
+assessment.
+SR.2 The care plan shall describe the following;
+SR.2a The services that are to be furnished to attain or maintain the resident’s highest
+practicable physical, mental, and psychosocial well-being as required under 42
+CFR Section 483.24, 483.25, or 483.40;
+SR.2b Any services that would otherwise be required under 42 CFR Section 483.24,
+483.25, or 483.40, but are not provided due to the resident’s exercise of rights,
+including the right to refuse treatment under 42 CFR Section 483.10(c)(6); and,
+SR.2c Documented consultation with the resident and the resident’s legal
+representative(s) that specifies:
+SR.2c(1) The resident's goals for admission and desired outcomes; and,
+SR.2c(2) The resident's preference and potential for future discharge. The
+facility shall document whether the resident's desire to return to the
+community was assessed and any referrals to local contact agencies
+and/or other appropriate entities, for this purpose.
+SR.2c(3) Discharge plans in the comprehensive care plan, as appropriate, in
+accordance with the requirements set forth in 42 CFR Section
+483.21(c).
+SR.3 The resident or his or her legal representative has the right to participate in the
+development and implementation of his or her person-centered plan of care, including
+but not limited to:
+SR.3a The right to be informed, in advance, of changes to the plan of care.
+SR.4 The services provided or arranged by the facility shall:
+SR.4a Meet professional standards of quality;
+Page 400 of 459
