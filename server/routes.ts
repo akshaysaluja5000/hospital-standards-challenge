@@ -15,7 +15,8 @@ import { generateSecret as totpGenerateSecret, verifyToken as totpVerify, totpUr
 import QRCode from "qrcode";
 import multer from "multer";
 import mammoth from "mammoth";
-const _require = require;
+import { createRequire } from "module";
+const _require = createRequire(import.meta.url);
 const pdfParse = _require("pdf-parse") as (buf: Buffer) => Promise<{ text: string }>;
 
 const upload = multer({
