@@ -231,14 +231,14 @@ export default function ComplianceTasksPage() {
         {!isLoading && (
           <div className="grid grid-cols-4 gap-3">
             {[
-              { label: "Overdue",     val: counts.overdue,     cls: "text-red-600",    bg: "bg-red-50 border-red-200" },
-              { label: "Pending",     val: counts.pending,     cls: "text-amber-600",  bg: "bg-amber-50 border-amber-200" },
-              { label: "In Progress", val: counts.in_progress, cls: "text-blue-600",   bg: "bg-blue-50 border-blue-200" },
-              { label: "Completed",   val: counts.completed,   cls: "text-emerald-600",bg: "bg-emerald-50 border-emerald-200" },
-            ].map(({ label, val, cls, bg }) => (
+              { label: "Overdue",     val: counts.overdue,     num: "text-red-600",    lbl: "text-red-500",     bg: "bg-red-50 border-red-200" },
+              { label: "Pending",     val: counts.pending,     num: "text-amber-600",  lbl: "text-amber-600",   bg: "bg-amber-50 border-amber-200" },
+              { label: "In Progress", val: counts.in_progress, num: "text-blue-600",   lbl: "text-blue-500",    bg: "bg-blue-50 border-blue-200" },
+              { label: "Completed",   val: counts.completed,   num: "text-emerald-600",lbl: "text-emerald-600", bg: "bg-emerald-50 border-emerald-200" },
+            ].map(({ label, val, num, lbl, bg }) => (
               <div key={label} className={`rounded-xl border p-3 text-center ${bg}`}>
-                <div className={`text-2xl font-black ${cls}`}>{val}</div>
-                <div className="text-xs text-muted-foreground">{label}</div>
+                <div className={`text-2xl font-black ${num}`}>{val}</div>
+                <div className={`text-xs font-medium ${lbl}`}>{label}</div>
               </div>
             ))}
           </div>
