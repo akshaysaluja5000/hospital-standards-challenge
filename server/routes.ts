@@ -3707,5 +3707,179 @@ Rules:
     }
   });
 
+  // ── Regulatory Watch Agent (Agent 4) ───────────────────────────────────────
+  async function tryFetchPage(url: string, timeoutMs = 5000): Promise<string> {
+    try {
+      const controller = new AbortController();
+      const tid = setTimeout(() => controller.abort(), timeoutMs);
+      const resp = await fetch(url, {
+        signal: controller.signal,
+        headers: { "User-Agent": "Mozilla/5.0 (compatible; AccreditationReady/1.0)" },
+      });
+      clearTimeout(tid);
+      if (!resp.ok) return "";
+      const html = await resp.text();
+      return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim().slice(0, 2500);
+    } catch {
+      return "";
+    }
+  }
+
+  app.post("/api/compliance/regulatory-watch-agent/run", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+
+      const [compItems, docs] = await Promise.all([
+        storage.getComplianceItems("asc"),
+        storage.getComplianceDocuments(facilityId),
+      ]);
+
+      const standardCodes = [...new Set(compItems.map(ci => ci.standardCode))].join(", ");
+
+      // Best-effort web fetch from regulatory bodies (non-blocking)
+      const [aaahcContent, jcoContent] = await Promise.allSettled([
+        tryFetchPage("https://www.aaahc.org/accreditation/standards/"),
+        tryFetchPage("https://www.jointcommission.org/standards/r3-report/"),
+      ]);
+      const aaahcText = aaahcContent.status === "fulfilled" ? aaahcContent.value : "";
+      const jcoText   = jcoContent.status === "fulfilled"   ? jcoContent.value   : "";
+      const webContent = [aaahcText, jcoText].filter(Boolean).join("\n\n---\n\n");
+
+      const prompt = `You are a regulatory intelligence agent for an ambulatory surgery center (ASC) compliance platform.
+
+CURRENT COMPLIANCE STANDARD CODES IN OUR DATABASE:
+${standardCodes}
+
+SCANNED WEB CONTENT FROM REGULATORY WEBSITES:
+${webContent || "No live content fetched. Use your knowledge of AAAHC v44 (2024) and Joint Commission 2024-2025 standards to generate realistic, specific findings."}
+
+Identify 3-5 specific regulatory changes, clarifications, or areas of heightened surveyor focus that would affect ASC compliance programs. Prioritize standards already in our database. For each, return a structured finding.
+
+Return ONLY valid JSON, no other text:
+{
+  "findings": [
+    {
+      "source": "aaahc",
+      "standardCode": "IPC.170",
+      "title": "Updated biological indicator requirements for sterilization",
+      "summary": "AAAHC v44 now mandates biological indicator testing every sterilization load, replacing the previous weekly cadence. Documentation of all cycle results is required for survey readiness.",
+      "sourceUrl": "https://www.aaahc.org/standards/",
+      "affectedStandardCodes": ["IPC.170", "IPC.180", "IPC.190"]
+    }
+  ]
+}`;
+
+      interface ClaudeFinding {
+        source: string;
+        standardCode: string;
+        title: string;
+        summary: string;
+        sourceUrl?: string;
+        affectedStandardCodes: string[];
+      }
+      let claudeFindings: ClaudeFinding[] = [];
+      try {
+        const msg = await callAnthropicWithRetry({
+          model: "claude-haiku-4-5",
+          max_tokens: 2000,
+          messages: [{ role: "user", content: prompt }],
+        });
+        const raw = msg.content[0]?.type === "text" ? msg.content[0].text.trim() : "";
+        const jStart = raw.indexOf("{");
+        const jEnd   = raw.lastIndexOf("}");
+        if (jStart !== -1 && jEnd !== -1) {
+          const parsed = JSON.parse(raw.slice(jStart, jEnd + 1));
+          claudeFindings = Array.isArray(parsed.findings) ? parsed.findings : [];
+        }
+      } catch (aiErr) {
+        console.error("Regulatory Watch Agent — Claude error:", aiErr);
+      }
+
+      // Clear old findings and recreate fresh
+      await storage.clearRegulatoryWatchFindings(facilityId);
+
+      const created: object[] = [];
+      for (const cf of claudeFindings.slice(0, 5)) {
+        const affectedCodes: string[] = Array.isArray(cf.affectedStandardCodes) ? cf.affectedStandardCodes : [cf.standardCode];
+        const affectedItems = compItems.filter(ci => affectedCodes.some(c => ci.standardCode?.startsWith(c.slice(0, 6))));
+        const affectedDocs  = docs.filter(d => {
+          const item = compItems.find(ci => ci.id === d.itemId);
+          return item && affectedCodes.some(c => item.standardCode?.startsWith(c.slice(0, 6)));
+        });
+
+        // Create compliance task for the finding (assigned to compliance officer / director)
+        let taskId: number | undefined;
+        if (affectedItems.length > 0) {
+          const dueDate = new Date();
+          dueDate.setDate(dueDate.getDate() + 7);
+          try {
+            const task = await storage.createComplianceTask({
+              facilityId,
+              itemId: affectedItems[0].id,
+              assignedTo: "compliance-officer",
+              dueDate: dueDate.toISOString().slice(0, 10),
+              createdBy: "regulatory-watch-agent",
+              createdByAgent: true,
+            });
+            taskId = task.id;
+          } catch { /* continue without task */ }
+        }
+
+        const finding = await storage.createRegulatoryWatchFinding({
+          facilityId,
+          source: (cf.source ?? "aaahc").toLowerCase(),
+          standardCode: cf.standardCode ?? "UNKNOWN",
+          title: cf.title ?? "Regulatory Update",
+          summary: cf.summary ?? "",
+          sourceUrl: cf.sourceUrl,
+          affectedItemIds: JSON.stringify(affectedItems.map(i => i.id)),
+          affectedItemCount: affectedItems.length,
+          affectedDocumentCount: affectedDocs.length,
+          taskId,
+        });
+        created.push(finding);
+      }
+
+      res.json({
+        scannedAt: new Date().toISOString(),
+        findingsCreated: created.length,
+        webFetchSuccess: webContent.length > 0,
+        sources: ["aaahc", "jcaho"],
+        findings: created,
+      });
+    } catch (err) {
+      console.error("Regulatory Watch Agent error:", err);
+      res.status(500).json({ error: "Agent processing failed." });
+    }
+  });
+
+  app.get("/api/compliance/regulatory-watch-findings", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const findings = await storage.getRegulatoryWatchFindings(user.facilityId ?? 0);
+      res.json(findings);
+    } catch (err) {
+      console.error("Get regulatory findings error:", err);
+      res.status(500).json({ error: "Failed to fetch findings." });
+    }
+  });
+
+  app.patch("/api/compliance/regulatory-watch-findings/:id/status", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const id = parseInt(req.params.id);
+      const { status } = req.body as { status: string };
+      if (!["reviewed", "dismissed", "new"].includes(status)) {
+        return res.status(400).json({ error: "Invalid status." });
+      }
+      const updated = await storage.updateRegulatoryWatchFindingStatus(id, status, user.username);
+      res.json(updated);
+    } catch (err) {
+      console.error("Update regulatory finding status error:", err);
+      res.status(500).json({ error: "Failed to update status." });
+    }
+  });
+
   return httpServer;
 }

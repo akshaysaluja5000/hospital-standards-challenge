@@ -7,13 +7,13 @@ import {
   ascPretestResults, ascPosttestResults,
   roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback, leadershipRoleCodes,
   complianceItems, complianceLogs, complianceDocuments, complianceTrainingModules,
-  complianceTasks, staffTrainingAlerts,
+  complianceTasks, staffTrainingAlerts, regulatoryWatchFindings,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
   type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment, type Feedback,
   type ComplianceItem, type ComplianceLog, type ComplianceDocument, type ComplianceTrainingModule,
-  type ComplianceTask, type StaffTrainingAlert,
+  type ComplianceTask, type StaffTrainingAlert, type RegulatoryWatchFinding,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -293,6 +293,23 @@ export async function ensureTablesExist() {
         is_read BOOLEAN NOT NULL DEFAULT false,
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS regulatory_watch_findings (
+        id SERIAL PRIMARY KEY,
+        facility_id INTEGER NOT NULL,
+        source TEXT NOT NULL,
+        standard_code TEXT NOT NULL,
+        title TEXT NOT NULL,
+        summary TEXT NOT NULL,
+        source_url TEXT,
+        affected_item_ids TEXT NOT NULL DEFAULT '[]',
+        affected_item_count INTEGER NOT NULL DEFAULT 0,
+        affected_document_count INTEGER NOT NULL DEFAULT 0,
+        status TEXT NOT NULL DEFAULT 'new',
+        task_id INTEGER REFERENCES compliance_tasks(id),
+        scanned_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        reviewed_at TIMESTAMP,
+        reviewed_by TEXT
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
@@ -527,6 +544,10 @@ export interface IStorage {
   clearStaffTrainingAlerts(facilityId: number): Promise<void>;
   markAllStaffTrainingAlertsRead(facilityId: number): Promise<void>;
   createComplianceTask(data: { facilityId: number; itemId: number; assignedTo: string; dueDate: string; createdBy: string; createdByAgent: boolean }): Promise<ComplianceTask>;
+  getRegulatoryWatchFindings(facilityId: number): Promise<RegulatoryWatchFinding[]>;
+  createRegulatoryWatchFinding(data: { facilityId: number; source: string; standardCode: string; title: string; summary: string; sourceUrl?: string; affectedItemIds: string; affectedItemCount: number; affectedDocumentCount: number; taskId?: number }): Promise<RegulatoryWatchFinding>;
+  updateRegulatoryWatchFindingStatus(id: number, status: string, reviewedBy?: string): Promise<RegulatoryWatchFinding>;
+  clearRegulatoryWatchFindings(facilityId: number): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1251,6 +1272,48 @@ export class DatabaseStorage implements IStorage {
       status: "pending",
     }).returning();
     return row;
+  }
+
+  async getRegulatoryWatchFindings(facilityId: number): Promise<RegulatoryWatchFinding[]> {
+    return db.select().from(regulatoryWatchFindings)
+      .where(eq(regulatoryWatchFindings.facilityId, facilityId))
+      .orderBy(desc(regulatoryWatchFindings.scannedAt));
+  }
+
+  async createRegulatoryWatchFinding(data: {
+    facilityId: number; source: string; standardCode: string; title: string;
+    summary: string; sourceUrl?: string; affectedItemIds: string;
+    affectedItemCount: number; affectedDocumentCount: number; taskId?: number;
+  }): Promise<RegulatoryWatchFinding> {
+    const [row] = await db.insert(regulatoryWatchFindings).values({
+      facilityId: data.facilityId,
+      source: data.source,
+      standardCode: data.standardCode,
+      title: data.title,
+      summary: data.summary,
+      sourceUrl: data.sourceUrl ?? null,
+      affectedItemIds: data.affectedItemIds,
+      affectedItemCount: data.affectedItemCount,
+      affectedDocumentCount: data.affectedDocumentCount,
+      taskId: data.taskId ?? null,
+    }).returning();
+    return row;
+  }
+
+  async updateRegulatoryWatchFindingStatus(id: number, status: string, reviewedBy?: string): Promise<RegulatoryWatchFinding> {
+    const [row] = await db.update(regulatoryWatchFindings)
+      .set({
+        status,
+        reviewedAt: status !== "new" ? new Date() : null,
+        reviewedBy: reviewedBy ?? null,
+      })
+      .where(eq(regulatoryWatchFindings.id, id))
+      .returning();
+    return row;
+  }
+
+  async clearRegulatoryWatchFindings(facilityId: number): Promise<void> {
+    await db.delete(regulatoryWatchFindings).where(eq(regulatoryWatchFindings.facilityId, facilityId));
   }
 }
 

@@ -517,6 +517,26 @@ export const staffTrainingAlerts = pgTable("staff_training_alerts", {
 
 export type StaffTrainingAlert = typeof staffTrainingAlerts.$inferSelect;
 
+export const regulatoryWatchFindings = pgTable("regulatory_watch_findings", {
+  id: serial("id").primaryKey(),
+  facilityId: integer("facility_id").notNull(),
+  source: text("source").notNull(),
+  standardCode: text("standard_code").notNull(),
+  title: text("title").notNull(),
+  summary: text("summary").notNull(),
+  sourceUrl: text("source_url"),
+  affectedItemIds: text("affected_item_ids").notNull().default("[]"),
+  affectedItemCount: integer("affected_item_count").notNull().default(0),
+  affectedDocumentCount: integer("affected_document_count").notNull().default(0),
+  status: text("status").notNull().default("new"),
+  taskId: integer("task_id").references(() => complianceTasks.id),
+  scannedAt: timestamp("scanned_at").notNull().defaultNow(),
+  reviewedAt: timestamp("reviewed_at"),
+  reviewedBy: text("reviewed_by"),
+});
+
+export type RegulatoryWatchFinding = typeof regulatoryWatchFindings.$inferSelect;
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;

@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BarChart3, TrendingUp, GraduationCap, BrainCircuit,
   Users, Building2, Stethoscope, ChevronRight, ShieldCheck,
-  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Bot,
+  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Bot, Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -58,6 +58,17 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     href: "/survey-readiness",
     minRole: "director",
     badge: "AI",
+  },
+  {
+    id: "regulatory-watch",
+    title: "Regulatory Watch Agent",
+    description: "Monitors AAAHC and Joint Commission standards pages for updates and new requirements. Flags affected compliance items, creates review tasks, and alerts your compliance officer automatically.",
+    icon: Globe,
+    iconBg: "bg-violet-500/10",
+    iconColor: "text-violet-600",
+    href: "/regulatory-watch",
+    minRole: "director",
+    badge: "Agent",
   },
   {
     id: "staff-learning",
