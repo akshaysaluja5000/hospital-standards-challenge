@@ -214,11 +214,12 @@ function HomeRoute() {
     }
     try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
 
-    // Role-based landing: CEO/CNO → Executive Brief · Director → Survey Readiness · Others → Dashboard
+    // Role-based landing: CEO (rank 3 only) → Executive Brief · Director → Survey Readiness · Others → Dashboard
+    // admin/super_admin (rank 4-5) land on the training dashboard — they use the hub manually
     const effective = getEffectiveRole(user);
     const rank = LEADERSHIP_RANK[effective] ?? 0;
-    if (rank >= LEADERSHIP_RANK["ceo"]) return <Redirect to="/executive-brief" />;
-    if (rank >= LEADERSHIP_RANK["director"]) return <Redirect to="/survey-readiness" />;
+    if (rank === LEADERSHIP_RANK["ceo"]) return <Redirect to="/executive-brief" />;
+    if (rank === LEADERSHIP_RANK["director"]) return <Redirect to="/survey-readiness" />;
 
     return <AppShell><DashboardPage /></AppShell>;
   }
@@ -278,6 +279,9 @@ function Router() {
       <Route path="/role-select" component={RoleSelectRoute} />
       <Route path="/role-error" component={RoleErrorRoute} />
       <Route path="/" component={HomeRoute} />
+      <Route path="/dashboard">
+        {() => <ProtectedRoute component={() => <AppShell><DashboardPage /></AppShell>} />}
+      </Route>
       <Route path="/play/:levelId">
         {() => <ProtectedRoute component={PlayPage} />}
       </Route>
