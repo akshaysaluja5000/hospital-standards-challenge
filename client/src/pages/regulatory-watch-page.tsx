@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/lib/auth";
 
 interface RegulatoryWatchFinding {
   id: number;
@@ -67,10 +68,8 @@ function FindingCard({
       className={`bg-card rounded-2xl border overflow-hidden transition-all ${
         finding.status === "dismissed" ? "opacity-60" : ""
       }`}>
-      {/* Left accent bar by source */}
       <div className={`h-1 w-full ${srcCfg.dotClass}`} />
       <div className="p-5 space-y-3">
-        {/* Header row */}
         <div className="flex items-start justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="outline" className={`text-xs border ${srcCfg.className}`}>
@@ -91,13 +90,9 @@ function FindingCard({
           </Badge>
         </div>
 
-        {/* Title */}
         <h3 className="font-semibold text-foreground leading-snug">{finding.title}</h3>
-
-        {/* Summary */}
         <p className="text-sm text-muted-foreground leading-relaxed">{finding.summary}</p>
 
-        {/* Stats row */}
         <div className="flex items-center gap-4 text-xs text-muted-foreground pt-1">
           {finding.affectedItemCount > 0 && (
             <span className="flex items-center gap-1">
@@ -117,7 +112,6 @@ function FindingCard({
           </span>
         </div>
 
-        {/* Footer row */}
         {(finding.sourceUrl || isNew) && (
           <div className="flex items-center justify-between pt-1 border-t">
             {finding.sourceUrl ? (
@@ -161,9 +155,16 @@ type FilterSource = "all" | "aaahc" | "jcaho";
 export default function RegulatoryWatchPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { user } = useAuth();
+
+  const isAsc = user?.organizationType === "asc";
+  const defaultSource: FilterSource = isAsc ? "aaahc" : "jcaho";
+  const moduleLabel = isAsc ? "ASC" : "Hospital";
+  const primarySourceLabel = isAsc ? "AAAHC" : "Joint Commission";
+
   const [agentResult, setAgentResult] = useState<AgentRunResult | null>(null);
   const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");
-  const [sourceFilter, setSourceFilter] = useState<FilterSource>("all");
+  const [sourceFilter, setSourceFilter] = useState<FilterSource>(defaultSource);
 
   const { data: findings = [], isLoading, refetch } = useQuery<RegulatoryWatchFinding[]>({
     queryKey: ["/api/compliance/regulatory-watch-findings"],
@@ -177,7 +178,7 @@ export default function RegulatoryWatchPage() {
       queryClient.invalidateQueries({ queryKey: ["/api/compliance/regulatory-watch-findings"] });
       toast({
         title: "Scan Complete",
-        description: `${data.findingsCreated} finding${data.findingsCreated !== 1 ? "s" : ""} created from AAAHC & Joint Commission scan.`,
+        description: `${data.findingsCreated} finding${data.findingsCreated !== 1 ? "s" : ""} created from ${primarySourceLabel} scan.`,
       });
     },
     onError: () => toast({ title: "Scan Failed", description: "Could not run the regulatory scan.", variant: "destructive" }),
@@ -196,9 +197,14 @@ export default function RegulatoryWatchPage() {
     return true;
   });
 
-  const newCount      = findings.filter(f => f.status === "new").length;
-  const reviewedCount = findings.filter(f => f.status === "reviewed").length;
-  const dismissedCount= findings.filter(f => f.status === "dismissed").length;
+  const newCount       = findings.filter(f => f.status === "new").length;
+  const reviewedCount  = findings.filter(f => f.status === "reviewed").length;
+  const dismissedCount = findings.filter(f => f.status === "dismissed").length;
+
+  const sourceFilterTabs: { value: FilterSource; label: string }[] = [
+    { value: defaultSource, label: primarySourceLabel },
+    { value: "all",         label: "All Sources" },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -216,7 +222,7 @@ export default function RegulatoryWatchPage() {
               <Globe className="w-5 h-5 text-violet-600" />
               <h1 className="text-xl font-bold text-foreground">Regulatory Watch Agent</h1>
               <Badge variant="outline" className="text-xs border-violet-300 text-violet-700 bg-violet-50">
-                AAAHC · JCAHO
+                {moduleLabel} · {primarySourceLabel}
               </Badge>
             </div>
           </div>
@@ -227,6 +233,16 @@ export default function RegulatoryWatchPage() {
               ? <><RefreshCw className="w-3.5 h-3.5 animate-spin" />Scanning…</>
               : <><Play className="w-3.5 h-3.5" />Run Scan</>}
           </Button>
+        </div>
+
+        {/* Module context notice */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/40 border rounded-lg px-4 py-2.5">
+          <Globe className="w-3.5 h-3.5 shrink-0 text-violet-500" />
+          <span>
+            Showing <strong className="text-foreground">{primarySourceLabel}</strong> alerts for your{" "}
+            <strong className="text-foreground">{moduleLabel}</strong> module.
+            Tap <span className="font-semibold text-foreground">All Sources</span> in the filter bar to see all regulatory bodies.
+          </span>
         </div>
 
         {/* Agent result banner */}
@@ -240,7 +256,7 @@ export default function RegulatoryWatchPage() {
               </div>
               <div className="flex gap-4 text-sm text-muted-foreground flex-wrap">
                 <span><b className="text-foreground">{agentResult.findingsCreated}</b> findings created</span>
-                <span>Sources: <b className="text-foreground">AAAHC, Joint Commission</b></span>
+                <span>Source: <b className="text-foreground">{primarySourceLabel}</b></span>
                 <span>
                   Web fetch: <b className={agentResult.webFetchSuccess ? "text-emerald-600" : "text-amber-600"}>
                     {agentResult.webFetchSuccess ? "Success" : "Offline (AI knowledge used)"}
@@ -263,7 +279,7 @@ export default function RegulatoryWatchPage() {
             <div>
               <p className="font-semibold text-foreground text-lg">No regulatory findings yet</p>
               <p className="text-sm text-muted-foreground mt-1 max-w-sm">
-                Run a scan to check AAAHC and Joint Commission standards pages for updates that could affect your compliance items.
+                Run a scan to check {primarySourceLabel} standards pages for updates that could affect your {moduleLabel} compliance items.
               </p>
             </div>
             <Button onClick={() => runMutation.mutate()} disabled={runMutation.isPending}
@@ -304,7 +320,7 @@ export default function RegulatoryWatchPage() {
 
             {/* Filter row */}
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs text-muted-foreground font-medium">Filter:</span>
+              <span className="text-xs text-muted-foreground font-medium">Status:</span>
               {(["all", "new", "reviewed", "dismissed"] as FilterStatus[]).map(s => (
                 <button key={s} onClick={() => setStatusFilter(s)}
                   data-testid={`filter-status-${s}`}
@@ -317,15 +333,18 @@ export default function RegulatoryWatchPage() {
                 </button>
               ))}
               <div className="w-px h-4 bg-border mx-1" />
-              {(["all", "aaahc", "jcaho"] as FilterSource[]).map(s => (
-                <button key={s} onClick={() => setSourceFilter(s)}
-                  data-testid={`filter-source-${s}`}
-                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors uppercase ${
-                    sourceFilter === s
+              <span className="text-xs text-muted-foreground font-medium">Source:</span>
+              {sourceFilterTabs.map(({ value, label }) => (
+                <button key={value} onClick={() => setSourceFilter(value)}
+                  data-testid={`filter-source-${value}`}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                    sourceFilter === value
                       ? "bg-foreground text-background border-foreground"
-                      : "bg-card text-muted-foreground border-border hover:text-foreground"
+                      : value === "all"
+                        ? "bg-card text-muted-foreground border-dashed border-border hover:text-foreground"
+                        : "bg-card text-muted-foreground border-border hover:text-foreground"
                   }`}>
-                  {s === "all" ? "All Sources" : s}
+                  {label}
                 </button>
               ))}
               <Button variant="ghost" size="sm" onClick={() => refetch()}
