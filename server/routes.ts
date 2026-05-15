@@ -52,7 +52,7 @@ declare module "express-session" {
     pendingMfaSecret?: string;
   }
 }
-import { deepDiveLevels } from "@shared/deep-dive-questions";
+import { deepDiveLevels, hospitalDeepDiveLevels, dnvDeepDiveLevels } from "@shared/deep-dive-questions";
 import { diagnosticQuestions } from "@shared/diagnostic-questions";
 import { masteryQuestions } from "@shared/mastery-questions";
 import { ascPretestQuestions } from "@shared/asc-pretest";
@@ -608,7 +608,7 @@ export async function registerRoutes(
 
   app.patch("/api/user/organization-type", requireAuth, async (req, res) => {
     try {
-      const allowed = ["hospital", "asc"] as const;
+      const allowed = ["hospital", "asc", "dnv"] as const;
       const { organizationType } = req.body || {};
       if (!(allowed as readonly string[]).includes(organizationType)) {
         return res.status(400).json({ message: "Invalid organization type" });
@@ -646,7 +646,7 @@ export async function registerRoutes(
 
   app.patch("/api/admin/users/:id/organization-type", requireAdmin, async (req, res) => {
     try {
-      const allowed = ["hospital", "asc"] as const;
+      const allowed = ["hospital", "asc", "dnv"] as const;
       const { organizationType } = req.body || {};
       const userId = parseInt(String(req.params.id), 10);
       if (Number.isNaN(userId)) {
@@ -1046,9 +1046,18 @@ export async function registerRoutes(
     }
   });
 
-  app.get("/api/game/deep-dive/levels", requireAuth, async (_req, res) => {
+  app.get("/api/game/deep-dive/levels", requireAuth, async (req, res) => {
     try {
-      const levelsInfo = deepDiveLevels.map((l) => ({
+      const orgType = (req.user as any).organizationType ?? "hospital";
+      let sourceLevels;
+      if (orgType === "dnv") {
+        sourceLevels = dnvDeepDiveLevels;
+      } else if (orgType === "asc") {
+        sourceLevels = hospitalDeepDiveLevels;
+      } else {
+        sourceLevels = hospitalDeepDiveLevels;
+      }
+      const levelsInfo = sourceLevels.map((l) => ({
         id: l.id,
         name: l.name,
         description: l.description,

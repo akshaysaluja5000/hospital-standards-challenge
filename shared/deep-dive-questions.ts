@@ -12,9 +12,10 @@ import { ddNpsgLevel } from "./deep-dive-questions-npsg";
 import { ddInfectionControlLevel } from "./deep-dive-questions-ic";
 import { ddPatientRightsLevel } from "./deep-dive-questions-rights";
 import { ddLifeSafetyLevel } from "./deep-dive-questions-life-safety";
+import { dnvDeepDiveLevels } from "./deep-dive-questions-dnv";
 export type { DeepDiveLevel } from "./schema";
 
-export const deepDiveLevels = [
+export const hospitalDeepDiveLevels = [
   ddTransportLevel,
   ...deepDiveLevelsPart1,
   ddSterileStorageLevel,
@@ -29,4 +30,11 @@ export const deepDiveLevels = [
   ddInfectionControlLevel,
   ddPatientRightsLevel,
   ddLifeSafetyLevel,
+];
+
+export { dnvDeepDiveLevels };
+
+export const deepDiveLevels = [
+  ...hospitalDeepDiveLevels,
+  ...dnvDeepDiveLevels,
 ];
