@@ -12,6 +12,7 @@ import { ddNpsgLevel } from "./deep-dive-questions-npsg";
 import { ddInfectionControlLevel } from "./deep-dive-questions-ic";
 import { ddPatientRightsLevel } from "./deep-dive-questions-rights";
 import { ddLifeSafetyLevel } from "./deep-dive-questions-life-safety";
+import { dnvDeepDiveLevels } from "./deep-dive-questions-dnv";
 
 export type { DeepDiveLevel } from "./schema";
 
@@ -30,4 +31,5 @@ export const deepDiveLevels = [
   ddInfectionControlLevel,
   ddPatientRightsLevel,
   ddLifeSafetyLevel,
+  ...dnvDeepDiveLevels,
 ];
