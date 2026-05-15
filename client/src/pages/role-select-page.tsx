@@ -145,10 +145,12 @@ export default function RoleSelectPage() {
 
   // Determine initial facility selection:
   // - Returning users (have a roleId): pre-select their current facility.
+  // - ASC/DNV users (no roleId): pre-select their current module — they bypass role selection anyway.
   // - New users coming from a solutions page: use the intended facility stored in sessionStorage.
   // - New users with no context: no pre-selection (they must actively choose).
   const initialFacility = (() => {
     if (user?.roleId) return facilityType;
+    if (facilityType === "asc" || facilityType === "dnv") return facilityType;
     try {
       const v = sessionStorage.getItem("mosh_intended_facility");
       if (v === "hospital" || v === "asc" || v === "dnv") return v as FacilityType;
@@ -344,8 +346,8 @@ export default function RoleSelectPage() {
         return;
       }
     }
-    // ASC users skip role selection — every ASC user sees all AAAHC chapters.
-    if (pendingFacility === "asc") {
+    // ASC and DNV users skip role selection — chapters are universal by accreditor, not by role.
+    if (pendingFacility === "asc" || pendingFacility === "dnv") {
       try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
       try { sessionStorage.removeItem(SELECTION_KEY); } catch {}
       try { sessionStorage.removeItem("mosh_intended_facility"); } catch {}

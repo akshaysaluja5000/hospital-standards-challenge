@@ -81,14 +81,15 @@ function ProtectedRoute({ component: Component }: { component: () => JSX.Element
     return <Redirect to="/auth" />;
   }
 
-  // ASC users do not have roles — chapters are universal/selective by AAAHC, not by role.
+  // ASC and DNV users do not have roles — chapters are universal by accreditor, not by role.
   const ascUser = user.organizationType === "asc";
+  const dnvUser = user.organizationType === "dnv";
   // Force the facility wizard right after login (flag set in auth-page) so the user
   // re-confirms hospital vs ASC every session, even when going directly to a deep-linked route.
   const forceRoleSelect = (() => {
     try { return sessionStorage.getItem("mosh_force_role_select") === "1"; } catch { return false; }
   })();
-  const needsSetup = !ascUser && !user.roleId;
+  const needsSetup = !ascUser && !dnvUser && !user.roleId;
   if (!user.isAdmin && (needsSetup || forceRoleSelect)) {
     return <Redirect to="/role-select" />;
   }
@@ -206,9 +207,10 @@ function HomeRoute() {
     const forceRoleSelect = (() => {
       try { return sessionStorage.getItem("mosh_force_role_select") === "1"; } catch { return false; }
     })();
-    // ASC users have no role — only require role-select if hospital user without role, OR if forced (just logged in).
+    // ASC and DNV users have no role — only require role-select if hospital user without role, OR if forced (just logged in).
     const ascUser = user.organizationType === "asc";
-    const needsSetup = !ascUser && !user.roleId;
+    const dnvUser = user.organizationType === "dnv";
+    const needsSetup = !ascUser && !dnvUser && !user.roleId;
     if (!user.isAdmin && (needsSetup || forceRoleSelect)) {
       return <Redirect to="/role-select" />;
     }

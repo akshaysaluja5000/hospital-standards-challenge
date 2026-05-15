@@ -828,7 +828,7 @@ export default function DashboardPage() {
             })()}
 
             {/* Hospital Diagnostic — first-timers: show in left column at top */}
-            {userModule !== "asc" && !(diagnosticResults && diagnosticResults.length > 0) && (
+            {userModule !== "asc" && !isDnv && !(diagnosticResults && diagnosticResults.length > 0) && (
               <motion.div
                 className="w-full rounded-2xl border-2 p-5 text-left bg-teal-500/5 border-teal-500/20"
                 initial={{ opacity: 0, y: 10 }}
@@ -888,7 +888,7 @@ export default function DashboardPage() {
             )}
 
             {/* Retake Diagnostic — shown near top once the user has a score */}
-            {userModule !== "asc" && diagnosticResults && diagnosticResults.length > 0 && (
+            {userModule !== "asc" && !isDnv && diagnosticResults && diagnosticResults.length > 0 && (
               <motion.div
                 className="w-full rounded-2xl border-2 p-5 text-left bg-teal-500/5 border-teal-500/20"
                 initial={{ opacity: 0, y: 10 }}
@@ -938,7 +938,7 @@ export default function DashboardPage() {
                   You get <span className="font-semibold text-foreground">fresh questions</span> every session — drawn from a larger pool each time you play.
                 </p>
               </div>
-              {!isAsc && assignedData?.role && (
+              {!isAsc && !isDnv && assignedData?.role && (
                 <div className="flex flex-wrap items-center gap-3 mb-4 px-4 py-3 rounded-xl bg-muted border border-border" data-testid="text-role-banner">
                   <Briefcase size={16} className="text-muted-foreground flex-shrink-0" />
                   <p className="text-sm flex-1 min-w-[180px] text-foreground">
@@ -1011,7 +1011,7 @@ export default function DashboardPage() {
                         isUnlocked={true}
                         index={index}
                         onPlay={() => setLocation(`/play/${level.id}`)}
-                        onStudy={() => setLocation(`/handbook/${level.id}`)}
+                        onStudy={() => setLocation(`/study/${level.id}`)}
                       />
                     ))
                   )}

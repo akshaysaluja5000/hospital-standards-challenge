@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp, Layers, Microscope } from "lucide-react";
+import { Star, Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, BookOpen, Play, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck, RotateCcw, PlayCircle, Trophy, AlertTriangle, ChevronDown, ChevronUp, Layers, Microscope, BarChart3, Stethoscope, Heart, UserCheck, Pill, Scissors, Shield, Building } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -7,6 +7,7 @@ import type { Level, UserProgress, QuizSession } from "@shared/schema";
 
 const iconMap: Record<string, any> = {
   Truck, Building2, ArrowLeftRight, Package, Wrench, Thermometer, FlaskConical, HeartPulse, ClipboardCheck, FileText, ShieldCheck,
+  BarChart3, Stethoscope, Heart, UserCheck, Pill, Scissors, Shield, Building, Layers, Microscope,
 };
 
 interface LevelCardProps {
