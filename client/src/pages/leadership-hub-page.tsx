@@ -115,6 +115,17 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     badge: "Exec",
   },
   {
+    id: "teams",
+    title: "Team Management",
+    description: "Create named teams within your facility, add members, and track each team's training progress and streaks side-by-side.",
+    icon: Users,
+    iconBg: "bg-violet-500/10",
+    iconColor: "text-violet-600",
+    href: "/educator",
+    minRole: "ceo",
+    badge: "New",
+  },
+  {
     id: "user-management",
     title: "User Management",
     description: "View all registered learners, track engagement and accuracy, and assign leadership roles.",

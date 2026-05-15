@@ -55,7 +55,12 @@ export default function EducatorHubPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState<"department" | "teams">("department");
+  const [activeTab, setActiveTab] = useState<"department" | "teams">(
+    LEADERSHIP_RANK[(user as any)?.leadershipRole ?? "learner"] >= LEADERSHIP_RANK["ceo"] ||
+    (user as any)?.isAdmin
+      ? "teams"
+      : "department"
+  );
 
   const effectiveRole = (user as any)?.leadershipRole ?? "learner";
   const isAdmin = (user as any)?.isAdmin ?? false;
