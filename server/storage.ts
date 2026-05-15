@@ -568,6 +568,7 @@ export interface IStorage {
   getLatestExecutiveBrief(facilityId: number): Promise<ExecutiveBrief | undefined>;
   createExecutiveBrief(data: { facilityId: number; weekOf: string; readinessScore: number; previousScore?: number | null; trendDirection: string; topRisks: string; overdueTasksCount: number; expiringDocsCount: number; trainingAlertsCount: number; regulatoryFindingsCount: number; daysToNextEvent?: number | null; narrativeSummary: string }): Promise<ExecutiveBrief>;
   updateExecutiveBriefEmailStatus(id: number, emailSentTo: string, emailSentAt: Date): Promise<ExecutiveBrief>;
+  updateComplianceTaskStatus(id: number, status: string): Promise<ComplianceTask>;
   getRegulatoryWatchFindings(facilityId: number): Promise<RegulatoryWatchFinding[]>;
   createRegulatoryWatchFinding(data: { facilityId: number; source: string; standardCode: string; title: string; summary: string; sourceUrl?: string; affectedItemIds: string; affectedItemCount: number; affectedDocumentCount: number; taskId?: number }): Promise<RegulatoryWatchFinding>;
   updateRegulatoryWatchFindingStatus(id: number, status: string, reviewedBy?: string): Promise<RegulatoryWatchFinding>;
@@ -1343,6 +1344,17 @@ export class DatabaseStorage implements IStorage {
       daysToNextEvent: data.daysToNextEvent ?? null,
       narrativeSummary: data.narrativeSummary,
     }).returning();
+    return row;
+  }
+
+  async updateComplianceTaskStatus(id: number, status: string): Promise<ComplianceTask> {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const [task] = await db.select().from(complianceTasks).where(eq(complianceTasks.id, id));
+    const isOverdue = task?.status !== "completed" && task?.dueDate && new Date(task.dueDate + "T00:00:00") < today;
+    const [row] = await db.update(complianceTasks)
+      .set({ status, escalated: status === "pending" && !!isOverdue })
+      .where(eq(complianceTasks.id, id))
+      .returning();
     return row;
   }
 

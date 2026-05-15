@@ -220,7 +220,7 @@ function ComplianceReminderBanner() {
           </span>
         </div>
         <button
-          onClick={() => setLocation("/handbook")}
+          onClick={() => setLocation("/my-log-entries")}
           data-testid="link-compliance-banner-review"
           className={`text-xs font-semibold shrink-0 hover:underline ${isEscalation ? "text-red-700" : "text-amber-700"}`}
         >

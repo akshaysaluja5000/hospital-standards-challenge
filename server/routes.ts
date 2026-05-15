@@ -3255,7 +3255,7 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
     }
   });
 
-  app.post("/api/compliance/log", requireAuth, requireLeadershipRole("director"), async (req, res) => {
+  app.post("/api/compliance/log", requireAuth, async (req, res) => {
     try {
       const user = req.user as any;
       const { itemId, notes } = req.body;
@@ -3704,6 +3704,119 @@ Rules:
     } catch (err) {
       console.error("Reject training module error:", err);
       res.status(500).json({ error: "Failed to reject module." });
+    }
+  });
+
+  // ── Compliance: staff log-item view + task management ──────────────────────
+  app.get("/api/compliance/my-log-items", requireAuth, async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+      const [items, logs] = await Promise.all([
+        storage.getComplianceItems("asc"),
+        storage.getComplianceLogs(facilityId),
+      ]);
+      const tier1 = items.filter(i => i.tier === 1);
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const latestLog = new Map<number, typeof logs[0]>();
+      for (const log of logs) if (!latestLog.has(log.itemId)) latestLog.set(log.itemId, log);
+
+      const result = tier1.map(item => {
+        const log = latestLog.get(item.id);
+        let status: "overdue" | "due_today" | "upcoming" | "current" = "overdue";
+        let nextDue: string | null = null;
+        let lastCompleted: string | null = null;
+        let daysOverdue = 0;
+        let daysUntilDue = 0;
+        if (log) {
+          lastCompleted = log.completedAt.toISOString();
+          if (log.nextDue) {
+            nextDue = log.nextDue;
+            const diff = Math.ceil((new Date(log.nextDue + "T00:00:00").getTime() - today.getTime()) / 86400000);
+            if (diff < 0)       { status = "overdue";   daysOverdue  = -diff; }
+            else if (diff === 0) { status = "due_today"; }
+            else if (diff <= 7)  { status = "upcoming";  daysUntilDue = diff; }
+            else                 { status = "current";   daysUntilDue = diff; }
+          }
+        }
+        return { id: item.id, itemName: item.itemName, standardCode: item.standardCode,
+          frequency: item.frequency, category: item.category, status, nextDue,
+          lastCompleted, daysOverdue, daysUntilDue };
+      }).sort((a, b) => {
+        const o = { overdue: 0, due_today: 1, upcoming: 2, current: 3 } as Record<string, number>;
+        return (o[a.status] ?? 3) - (o[b.status] ?? 3);
+      });
+      res.json(result);
+    } catch (err) {
+      console.error("my-log-items error:", err);
+      res.status(500).json({ error: "Failed to fetch log items." });
+    }
+  });
+
+  app.get("/api/compliance/items", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const items = await storage.getComplianceItems("asc");
+      res.json(items.map(i => ({ id: i.id, itemName: i.itemName, standardCode: i.standardCode, tier: i.tier, category: i.category, frequency: i.frequency })));
+    } catch (err) {
+      res.status(500).json({ error: "Failed to fetch items." });
+    }
+  });
+
+  app.get("/api/compliance/tasks", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const [tasks, items] = await Promise.all([
+        storage.getComplianceTasks(facilityId),
+        storage.getComplianceItems("asc"),
+      ]);
+      const itemMap = new Map(items.map(i => [i.id, i]));
+      // Auto-escalate overdue pending tasks
+      for (const t of tasks) {
+        if (t.status === "pending" && t.dueDate && new Date(t.dueDate + "T00:00:00") < today && !t.escalated) {
+          await storage.updateComplianceTaskStatus(t.id, "pending");
+          t.escalated = true;
+        }
+      }
+      res.json(tasks.map(t => ({ ...t, item: itemMap.get(t.itemId) ?? null })));
+    } catch (err) {
+      console.error("Get compliance tasks error:", err);
+      res.status(500).json({ error: "Failed to fetch tasks." });
+    }
+  });
+
+  app.post("/api/compliance/tasks", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+      const { itemId, assignedTo, dueDate } = req.body as { itemId: number; assignedTo?: string; dueDate?: string };
+      if (!itemId || typeof itemId !== "number") return res.status(400).json({ error: "itemId required." });
+      const task = await storage.createComplianceTask({
+        facilityId, itemId,
+        assignedTo: assignedTo || "compliance-officer",
+        dueDate: dueDate || new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10),
+        createdBy: user.username ?? "admin",
+        createdByAgent: false,
+      });
+      res.json(task);
+    } catch (err) {
+      console.error("Create compliance task error:", err);
+      res.status(500).json({ error: "Failed to create task." });
+    }
+  });
+
+  app.patch("/api/compliance/tasks/:id/status", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { status } = req.body as { status: string };
+      const valid = ["pending", "in_progress", "completed"];
+      if (!valid.includes(status)) return res.status(400).json({ error: "Invalid status. Use: pending | in_progress | completed" });
+      const task = await storage.updateComplianceTaskStatus(id, status);
+      res.json(task);
+    } catch (err) {
+      console.error("Update task status error:", err);
+      res.status(500).json({ error: "Failed to update task." });
     }
   });
 
