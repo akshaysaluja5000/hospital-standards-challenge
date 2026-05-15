@@ -624,7 +624,7 @@ export async function registerRoutes(
 
   app.patch("/api/user/organization-type", requireAuth, async (req, res) => {
     try {
-      const allowed = ["hospital", "asc"] as const;
+      const allowed = ["hospital", "asc", "dnv"] as const;
       const { organizationType } = req.body || {};
       if (!(allowed as readonly string[]).includes(organizationType)) {
         return res.status(400).json({ message: "Invalid organization type" });
@@ -662,7 +662,7 @@ export async function registerRoutes(
 
   app.patch("/api/admin/users/:id/organization-type", requireAdmin, async (req, res) => {
     try {
-      const allowed = ["hospital", "asc"] as const;
+      const allowed = ["hospital", "asc", "dnv"] as const;
       const { organizationType } = req.body || {};
       const userId = parseInt(String(req.params.id), 10);
       if (Number.isNaN(userId)) {
