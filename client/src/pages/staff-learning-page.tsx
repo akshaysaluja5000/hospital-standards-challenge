@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/lib/auth";
 
 interface StaffMemberStatus {
   userId: number;
@@ -187,6 +188,9 @@ function AlertCard({ alert }: { alert: EnrichedAlert }) {
 export default function StaffLearningPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const activeStandardsBody = user?.organizationType === "asc" ? "AAAHC" : user?.organizationType === "dnv" ? "DNV DIAS" : "Joint Commission";
+  const moduleTag = user?.organizationType === "asc" ? "ASC" : user?.organizationType === "dnv" ? "DNV" : "Hospital";
   const [agentResult, setAgentResult] = useState<AgentRunResult | null>(null);
   const [lastRunAt, setLastRunAt] = useState<string | null>(null);
   const [alertTab, setAlertTab] = useState<"escalations" | "reminders">("escalations");
@@ -239,7 +243,7 @@ export default function StaffLearningPage() {
               <GraduationCap className="w-5 h-5 text-primary" />
               <h1 className="text-xl font-bold text-foreground">Staff Learning Agent</h1>
               <Badge variant="outline" className="text-xs font-medium border-primary/30 text-primary bg-primary/5">
-                AAAHC · ASC
+                {activeStandardsBody} · {moduleTag}
               </Badge>
             </div>
           </div>

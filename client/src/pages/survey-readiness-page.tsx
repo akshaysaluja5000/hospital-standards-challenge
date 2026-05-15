@@ -332,6 +332,8 @@ export default function SurveyReadinessPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
+  const activeStandardsBody = user?.organizationType === "asc" ? "AAAHC" : user?.organizationType === "dnv" ? "DNV DIAS" : "Joint Commission";
+  const moduleTag = user?.organizationType === "asc" ? "ASC" : user?.organizationType === "dnv" ? "DNV" : "Hospital";
 
   const [statusFilter, setStatusFilter] = useState<"all" | ItemStatus>("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -513,7 +515,7 @@ export default function SurveyReadinessPage() {
               <ShieldCheck className="w-5 h-5 text-primary" />
               <h1 className="text-xl font-bold text-foreground">Survey Readiness Agent</h1>
               <Badge variant="outline" className="text-xs font-medium border-primary/30 text-primary bg-primary/5">
-                AAAHC · ASC
+                {activeStandardsBody} · {moduleTag}
               </Badge>
             </div>
           </div>

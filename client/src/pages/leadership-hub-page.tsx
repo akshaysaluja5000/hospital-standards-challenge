@@ -36,11 +36,11 @@ interface ConsoleCard {
   badge?: string;
 }
 
-const CONSOLE_CARDS: ConsoleCard[] = [
+function getConsoleCards(activeStandardsBody: string): ConsoleCard[] { return [
   {
     id: "survey-readiness",
     title: "Survey Readiness Agent",
-    description: "Live compliance score — all 132 AAAHC standards tracked, color-coded by surveyor risk. Green above 90%, amber 75–90%, red below 75%.",
+    description: `Live compliance score — all ${activeStandardsBody} standards tracked, color-coded by surveyor risk. Green above 90%, amber 75–90%, red below 75%.`,
     icon: ShieldCheck,
     iconBg: "bg-emerald-500/10",
     iconColor: "text-emerald-600",
@@ -51,7 +51,7 @@ const CONSOLE_CARDS: ConsoleCard[] = [
   {
     id: "content-intelligence",
     title: "Content Intelligence Agent",
-    description: "Upload a policy document and AI reads it, tags AAAHC standards, generates quiz questions, flags conflicts, and creates a mini-training module ready for one-click approval.",
+    description: `Upload a policy document and AI reads it, tags ${activeStandardsBody} standards, generates quiz questions, flags conflicts, and creates a mini-training module ready for one-click approval.`,
     icon: Bot,
     iconBg: "bg-violet-500/10",
     iconColor: "text-violet-600",
@@ -84,7 +84,7 @@ const CONSOLE_CARDS: ConsoleCard[] = [
   {
     id: "regulatory-watch",
     title: "Regulatory Watch Agent",
-    description: "Monitors AAAHC and Joint Commission standards pages for updates and new requirements. Flags affected compliance items, creates review tasks, and alerts your compliance officer automatically.",
+    description: `Monitors ${activeStandardsBody} standards pages for updates and new requirements. Flags affected compliance items, creates review tasks, and alerts your compliance officer automatically.`,
     icon: Globe,
     iconBg: "bg-violet-500/10",
     iconColor: "text-violet-600",
@@ -95,7 +95,7 @@ const CONSOLE_CARDS: ConsoleCard[] = [
   {
     id: "staff-learning",
     title: "Staff Learning Agent",
-    description: "Maps quiz completions to AAAHC compliance items. Identifies staff with training gaps, fires targeted reminders, and escalates to managers when anyone is 14+ days overdue.",
+    description: `Maps quiz completions to ${activeStandardsBody} compliance items. Identifies staff with training gaps, fires targeted reminders, and escalates to managers when anyone is 14+ days overdue.`,
     icon: GraduationCap,
     iconBg: "bg-blue-500/10",
     iconColor: "text-blue-600",
@@ -156,7 +156,7 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     minRole: "director",
     badge: "AI",
   },
-];
+];}
 
 interface TeamRiskEntry {
   id: number;
@@ -336,6 +336,7 @@ export default function LeadershipHubPage() {
   const isAsc = user?.organizationType === "asc";
   const isDnv = user?.organizationType === "dnv";
   const moduleLabel = isAsc ? "ASC" : isDnv ? "DNV" : "Hospital";
+  const activeStandardsBody = isAsc ? "AAAHC" : isDnv ? "DNV DIAS" : "Joint Commission";
   const ModuleIcon = isAsc ? Stethoscope : Building2;
 
   const leadershipLabel = user
@@ -484,7 +485,7 @@ export default function LeadershipHubPage() {
             Leadership Tools
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {CONSOLE_CARDS.map((card, i) => {
+            {getConsoleCards(activeStandardsBody).map((card, i) => {
               const accessible = canAccess(card);
               const Icon = card.icon;
               return (

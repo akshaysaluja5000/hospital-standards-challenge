@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useAuth } from "@/lib/auth";
 
 interface ComplianceItem { id: number; itemName: string; standardCode: string; tier: number; category: string; frequency: string; }
 interface TrainingModule {
@@ -139,6 +140,8 @@ type ModFilter = "all" | "pending" | "approved" | "rejected";
 export default function ContentIntelligencePage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const activeStandardsBody = user?.organizationType === "asc" ? "AAAHC" : user?.organizationType === "dnv" ? "DNV DIAS" : "Joint Commission";
 
   const [docName, setDocName] = useState("");
   const [docExpiry, setDocExpiry] = useState("");
@@ -232,7 +235,7 @@ export default function ContentIntelligencePage() {
         </div>
 
         <p className="text-sm text-muted-foreground -mt-4">
-          Upload a policy or procedure document. The agent reads it, tags AAAHC standards, generates quiz questions, and flags any conflicts — ready for one-click approval.
+          Upload a policy or procedure document. The agent reads it, tags {activeStandardsBody} standards, generates quiz questions, and flags any conflicts — ready for one-click approval.
         </p>
 
         {/* Upload card */}
