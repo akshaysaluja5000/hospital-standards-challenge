@@ -3019,7 +3019,7 @@ Return ONLY valid JSON (no markdown, no explanation):
     try {
       const caller = req.user as User;
       const module = (req.query.module as string) || "hospital";
-      const facilityId = isFacilityScopeBypass(caller) ? null : (caller.facilityId ?? null);
+      const facilityId = isFacilityScopeBypass(caller) ? null : ((caller as any).facilityId ?? null);
       const assessments = await storage.getRiskAssessmentsByFacility(facilityId, module);
       res.json({ assessments });
     } catch (err: any) {
@@ -3059,6 +3059,116 @@ Return ONLY valid JSON (no markdown, no explanation):
       }));
 
       res.json({ team: result, department: callerDept });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  // ── Teams ─────────────────────────────────────────────────────────────────
+
+  app.get("/api/teams", requireLeadershipRole("educator"), async (req, res) => {
+    try {
+      const caller = req.user!;
+      const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
+      let result;
+      if (callerRank >= LEADERSHIP_RANK["super_admin"]) {
+        result = await storage.getAllTeams();
+      } else {
+        result = await storage.getTeamsForFacility((caller as any).facilityId ?? null);
+      }
+      res.json(result);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/teams", requireLeadershipRole("ceo"), async (req, res) => {
+    try {
+      const schema = z.object({ name: z.string().min(1).max(100), department: z.string().optional() });
+      const parsed = schema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid request" });
+      const caller = req.user!;
+      const team = await storage.createTeam({
+        name: parsed.data.name,
+        facilityId: (caller as any).facilityId ?? null,
+        department: parsed.data.department ?? null,
+        createdByUserId: caller.id,
+      });
+      res.json(team);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.put("/api/teams/:id", requireLeadershipRole("ceo"), async (req, res) => {
+    try {
+      const teamId = parseInt(req.params.id);
+      if (isNaN(teamId)) return res.status(400).json({ message: "Invalid team ID" });
+      const schema = z.object({ name: z.string().min(1).max(100) });
+      const parsed = schema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid request" });
+      const caller = req.user!;
+      const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
+      const facilityTeams = callerRank >= LEADERSHIP_RANK["super_admin"]
+        ? await storage.getAllTeams()
+        : await storage.getTeamsForFacility((caller as any).facilityId ?? null);
+      if (!facilityTeams.find(t => t.id === teamId)) return res.status(403).json({ message: "Forbidden" });
+      const team = await storage.renameTeam(teamId, parsed.data.name);
+      res.json(team);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.delete("/api/teams/:id", requireLeadershipRole("ceo"), async (req, res) => {
+    try {
+      const teamId = parseInt(req.params.id);
+      if (isNaN(teamId)) return res.status(400).json({ message: "Invalid team ID" });
+      const caller = req.user!;
+      const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
+      const facilityTeams = callerRank >= LEADERSHIP_RANK["super_admin"]
+        ? await storage.getAllTeams()
+        : await storage.getTeamsForFacility((caller as any).facilityId ?? null);
+      if (!facilityTeams.find(t => t.id === teamId)) return res.status(403).json({ message: "Forbidden" });
+      await storage.deleteTeam(teamId);
+      res.json({ ok: true });
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.get("/api/teams/:id/members", requireLeadershipRole("educator"), async (req, res) => {
+    try {
+      const teamId = parseInt(req.params.id);
+      if (isNaN(teamId)) return res.status(400).json({ message: "Invalid team ID" });
+      const caller = req.user!;
+      const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
+      const facilityTeams = callerRank >= LEADERSHIP_RANK["super_admin"]
+        ? await storage.getAllTeams()
+        : await storage.getTeamsForFacility((caller as any).facilityId ?? null);
+      if (!facilityTeams.find(t => t.id === teamId)) return res.status(403).json({ message: "Forbidden" });
+      const members = await storage.getTeamMembersWithStats(teamId);
+      res.json(members);
+    } catch (err: any) {
+      res.status(500).json({ message: err.message });
+    }
+  });
+
+  app.post("/api/teams/:id/members", requireLeadershipRole("ceo"), async (req, res) => {
+    try {
+      const teamId = parseInt(req.params.id);
+      if (isNaN(teamId)) return res.status(400).json({ message: "Invalid team ID" });
+      const schema = z.object({ userIds: z.array(z.number().int()) });
+      const parsed = schema.safeParse(req.body);
+      if (!parsed.success) return res.status(400).json({ message: "Invalid request" });
+      const caller = req.user!;
+      const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
+      const facilityTeams = callerRank >= LEADERSHIP_RANK["super_admin"]
+        ? await storage.getAllTeams()
+        : await storage.getTeamsForFacility((caller as any).facilityId ?? null);
+      if (!facilityTeams.find(t => t.id === teamId)) return res.status(403).json({ message: "Forbidden" });
+      await storage.setTeamMembers(teamId, parsed.data.userIds);
+      res.json({ ok: true });
     } catch (err: any) {
       res.status(500).json({ message: err.message });
     }

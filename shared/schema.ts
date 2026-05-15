@@ -349,6 +349,27 @@ export interface DeepDiveLevel {
   questions: DeepDiveQuestion[];
 }
 
+// ── Teams ─────────────────────────────────────────────────────────────────────
+
+export const teams = pgTable("teams", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  facilityId: integer("facility_id").references(() => facilities.id),
+  department: text("department"),
+  createdByUserId: integer("created_by_user_id").references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const teamMembers = pgTable("team_members", {
+  id: serial("id").primaryKey(),
+  teamId: integer("team_id").notNull().references(() => teams.id),
+  userId: integer("user_id").notNull().references(() => users.id),
+  addedAt: timestamp("added_at").notNull().defaultNow(),
+});
+
+export type Team = typeof teams.$inferSelect;
+export type TeamMember = typeof teamMembers.$inferSelect;
+
 // ── Audit Log ────────────────────────────────────────────────────────────────
 
 export const auditLogs = pgTable("audit_logs", {

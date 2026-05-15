@@ -8,12 +8,14 @@ import {
   roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback, leadershipRoleCodes,
   complianceItems, complianceLogs, complianceDocuments, complianceTrainingModules,
   complianceTasks, staffTrainingAlerts, regulatoryWatchFindings, executiveBriefs,
+  teams, teamMembers,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
   type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment, type Feedback,
   type ComplianceItem, type ComplianceLog, type ComplianceDocument, type ComplianceTrainingModule,
   type ComplianceTask, type StaffTrainingAlert, type RegulatoryWatchFinding, type ExecutiveBrief,
+  type Team,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -328,6 +330,21 @@ export async function ensureTablesExist() {
         reviewed_at TIMESTAMP,
         reviewed_by TEXT
       );
+      CREATE TABLE IF NOT EXISTS teams (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        facility_id INTEGER REFERENCES facilities(id),
+        department TEXT,
+        created_by_user_id INTEGER REFERENCES users(id),
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE TABLE IF NOT EXISTS team_members (
+        id SERIAL PRIMARY KEY,
+        team_id INTEGER NOT NULL REFERENCES teams(id) ON DELETE CASCADE,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        added_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        UNIQUE(team_id, user_id)
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
@@ -585,6 +602,16 @@ export interface IStorage {
   createRegulatoryWatchFinding(data: { facilityId: number; source: string; standardCode: string; title: string; summary: string; sourceUrl?: string; affectedItemIds: string; affectedItemCount: number; affectedDocumentCount: number; taskId?: number }): Promise<RegulatoryWatchFinding>;
   updateRegulatoryWatchFindingStatus(id: number, status: string, reviewedBy?: string): Promise<RegulatoryWatchFinding>;
   clearRegulatoryWatchFindings(facilityId: number): Promise<void>;
+
+  // Teams
+  createTeam(data: { name: string; facilityId: number | null; department?: string | null; createdByUserId: number }): Promise<Team>;
+  getTeamsForFacility(facilityId: number | null): Promise<(Team & { memberCount: number })[]>;
+  getAllTeams(): Promise<(Team & { memberCount: number })[]>;
+  renameTeam(teamId: number, name: string): Promise<Team>;
+  deleteTeam(teamId: number): Promise<void>;
+  getTeamMemberIds(teamId: number): Promise<number[]>;
+  getTeamMembersWithStats(teamId: number): Promise<{ id: number; username: string; firstName: string; lastName: string; department: string | null; totalXp: number; currentStreak: number; leadershipRole: string }[]>;
+  setTeamMembers(teamId: number, userIds: number[]): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1418,6 +1445,77 @@ export class DatabaseStorage implements IStorage {
 
   async clearRegulatoryWatchFindings(facilityId: number): Promise<void> {
     await db.delete(regulatoryWatchFindings).where(eq(regulatoryWatchFindings.facilityId, facilityId));
+  }
+
+  async createTeam(data: { name: string; facilityId: number | null; department?: string | null; createdByUserId: number }): Promise<Team> {
+    const [row] = await db.insert(teams).values({
+      name: data.name,
+      facilityId: data.facilityId ?? null,
+      department: data.department ?? null,
+      createdByUserId: data.createdByUserId,
+    }).returning();
+    return row;
+  }
+
+  private async _getTeamsWithCounts(whereClause?: any): Promise<(Team & { memberCount: number })[]> {
+    const allTeams = whereClause
+      ? await db.select().from(teams).where(whereClause).orderBy(desc(teams.createdAt))
+      : await db.select().from(teams).orderBy(desc(teams.createdAt));
+    if (allTeams.length === 0) return [];
+    const counts = await db.select({
+      teamId: teamMembers.teamId,
+      count: sql<number>`COUNT(*)::int`,
+    }).from(teamMembers).groupBy(teamMembers.teamId);
+    const countMap = new Map(counts.map(c => [c.teamId, c.count]));
+    return allTeams.map(t => ({ ...t, memberCount: countMap.get(t.id) ?? 0 }));
+  }
+
+  async getTeamsForFacility(facilityId: number | null): Promise<(Team & { memberCount: number })[]> {
+    if (facilityId === null) return this._getTeamsWithCounts();
+    return this._getTeamsWithCounts(eq(teams.facilityId, facilityId));
+  }
+
+  async getAllTeams(): Promise<(Team & { memberCount: number })[]> {
+    return this._getTeamsWithCounts();
+  }
+
+  async renameTeam(teamId: number, name: string): Promise<Team> {
+    const [row] = await db.update(teams).set({ name }).where(eq(teams.id, teamId)).returning();
+    return row;
+  }
+
+  async deleteTeam(teamId: number): Promise<void> {
+    await db.delete(teams).where(eq(teams.id, teamId));
+  }
+
+  async getTeamMemberIds(teamId: number): Promise<number[]> {
+    const rows = await db.select({ userId: teamMembers.userId }).from(teamMembers).where(eq(teamMembers.teamId, teamId));
+    return rows.map(r => r.userId);
+  }
+
+  async getTeamMembersWithStats(teamId: number): Promise<{ id: number; username: string; firstName: string; lastName: string; department: string | null; totalXp: number; currentStreak: number; leadershipRole: string }[]> {
+    const memberIds = await this.getTeamMemberIds(teamId);
+    if (memberIds.length === 0) return [];
+    const memberUsers = await db.select().from(users).where(sql`${users.id} = ANY(${memberIds})`);
+    const allStreaks = await db.select().from(userStreaks).where(sql`${userStreaks.userId} = ANY(${memberIds})`);
+    const streakMap = new Map(allStreaks.map(s => [s.userId, s]));
+    return memberUsers.map(u => ({
+      id: u.id,
+      username: u.username,
+      firstName: u.firstName || "",
+      lastName: u.lastName || "",
+      department: (u as any).department ?? null,
+      totalXp: streakMap.get(u.id)?.totalXp ?? 0,
+      currentStreak: streakMap.get(u.id)?.currentStreak ?? 0,
+      leadershipRole: u.leadershipRole,
+    }));
+  }
+
+  async setTeamMembers(teamId: number, userIds: number[]): Promise<void> {
+    await db.delete(teamMembers).where(eq(teamMembers.teamId, teamId));
+    if (userIds.length > 0) {
+      await db.insert(teamMembers).values(userIds.map(userId => ({ teamId, userId })));
+    }
   }
 }
 
