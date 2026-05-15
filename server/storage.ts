@@ -6,10 +6,12 @@ import {
   diagnosticResults, masteryResults, diagnosticSessions, masterySessions,
   ascPretestResults, ascPosttestResults,
   roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback, leadershipRoleCodes,
+  complianceItems, complianceLogs, complianceDocuments,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
   type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment, type Feedback,
+  type ComplianceItem, type ComplianceLog, type ComplianceDocument,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -213,11 +215,60 @@ export async function ensureTablesExist() {
         facility_id INTEGER REFERENCES facilities(id),
         created_at TIMESTAMP NOT NULL DEFAULT NOW()
       );
+      CREATE TABLE IF NOT EXISTS compliance_items (
+        id SERIAL PRIMARY KEY,
+        module TEXT NOT NULL DEFAULT 'asc',
+        volume TEXT NOT NULL,
+        standard_code TEXT NOT NULL,
+        item_name TEXT NOT NULL,
+        frequency TEXT NOT NULL,
+        tier INTEGER NOT NULL,
+        category TEXT NOT NULL,
+        surveyor_priority INTEGER NOT NULL DEFAULT 2,
+        agent_watch BOOLEAN NOT NULL DEFAULT true
+      );
+      CREATE TABLE IF NOT EXISTS compliance_logs (
+        id SERIAL PRIMARY KEY,
+        facility_id INTEGER NOT NULL,
+        item_id INTEGER NOT NULL REFERENCES compliance_items(id),
+        completed_by TEXT NOT NULL,
+        completed_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        status TEXT NOT NULL DEFAULT 'completed',
+        notes TEXT,
+        next_due DATE,
+        agent_flagged BOOLEAN NOT NULL DEFAULT false
+      );
+      CREATE TABLE IF NOT EXISTS compliance_documents (
+        id SERIAL PRIMARY KEY,
+        facility_id INTEGER NOT NULL,
+        item_id INTEGER NOT NULL REFERENCES compliance_items(id),
+        document_name TEXT NOT NULL,
+        uploaded_by TEXT NOT NULL,
+        uploaded_at TIMESTAMP NOT NULL DEFAULT NOW(),
+        effective_date DATE,
+        expiration_date DATE,
+        status TEXT NOT NULL DEFAULT 'current',
+        ai_tagged_standards TEXT NOT NULL DEFAULT '[]',
+        ai_questions_generated BOOLEAN NOT NULL DEFAULT false
+      );
+      CREATE TABLE IF NOT EXISTS compliance_tasks (
+        id SERIAL PRIMARY KEY,
+        facility_id INTEGER NOT NULL,
+        item_id INTEGER NOT NULL REFERENCES compliance_items(id),
+        assigned_to TEXT,
+        due_date DATE,
+        created_by TEXT,
+        created_by_agent BOOLEAN NOT NULL DEFAULT false,
+        status TEXT NOT NULL DEFAULT 'pending',
+        reminder_sent BOOLEAN NOT NULL DEFAULT false,
+        escalated BOOLEAN NOT NULL DEFAULT false
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
     await seedRoles(client);
     await seedLeadershipCodes(client);
+    await seedComplianceItems(client);
   } catch (err) {
     console.error("Error ensuring tables exist:", err);
   } finally {
@@ -271,6 +322,20 @@ const LEADERSHIP_CODES_BY_FACILITY: Record<string, string[]> = {
     "MOSH-C6LD-Y3HZ",
   ],
 };
+
+async function seedComplianceItems(client: pg.PoolClient) {
+  const { ASC_COMPLIANCE_ITEMS } = await import("./compliance-seed-data.js");
+  const { rows } = await client.query("SELECT COUNT(*) FROM compliance_items");
+  if (parseInt(rows[0].count) > 0) return;
+  for (const item of ASC_COMPLIANCE_ITEMS) {
+    await client.query(
+      `INSERT INTO compliance_items (module, volume, standard_code, item_name, frequency, tier, category, surveyor_priority, agent_watch)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+      ["asc", item.volume, item.standardCode, item.itemName, item.frequency, item.tier, item.category, item.surveyorPriority, true]
+    );
+  }
+  console.log(`Seeded ${ASC_COMPLIANCE_ITEMS.length} ASC compliance items`);
+}
 
 async function seedLeadershipCodes(client: pg.PoolClient) {
   for (const [facilityCode, codes] of Object.entries(LEADERSHIP_CODES_BY_FACILITY)) {
@@ -416,6 +481,13 @@ export interface IStorage {
 
   validateLeadershipCode(code: string, facilityId: number | null): Promise<boolean>;
   getLeadershipCodes(): Promise<{ id: number; code: string; facilityId: number | null; facilityName: string | null; createdAt: Date }[]>;
+
+  // Compliance
+  getComplianceItems(module?: string): Promise<ComplianceItem[]>;
+  getComplianceLogs(facilityId: number): Promise<ComplianceLog[]>;
+  createComplianceLog(data: { facilityId: number; itemId: number; completedBy: string; notes?: string; nextDue?: string }): Promise<ComplianceLog>;
+  getComplianceDocuments(facilityId: number): Promise<ComplianceDocument[]>;
+  createComplianceDocument(data: { facilityId: number; itemId: number; documentName: string; uploadedBy: string; expirationDate?: string; effectiveDate?: string }): Promise<ComplianceDocument>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1001,6 +1073,56 @@ export class DatabaseStorage implements IStorage {
       lastName: userMap.get(r.userId)?.lastName ?? "",
       department: userMap.get(r.userId)?.department ?? null,
     }));
+  }
+
+  // ── Compliance ───────────────────────────────────────────────────────────────
+
+  async getComplianceItems(module = "asc"): Promise<ComplianceItem[]> {
+    return db.select().from(complianceItems)
+      .where(eq(complianceItems.module, module))
+      .orderBy(complianceItems.volume, complianceItems.surveyorPriority);
+  }
+
+  async getComplianceLogs(facilityId: number): Promise<ComplianceLog[]> {
+    return db.select().from(complianceLogs)
+      .where(eq(complianceLogs.facilityId, facilityId))
+      .orderBy(desc(complianceLogs.completedAt));
+  }
+
+  async createComplianceLog(data: {
+    facilityId: number; itemId: number; completedBy: string; notes?: string; nextDue?: string;
+  }): Promise<ComplianceLog> {
+    const [row] = await db.insert(complianceLogs).values({
+      facilityId: data.facilityId,
+      itemId: data.itemId,
+      completedBy: data.completedBy,
+      notes: data.notes ?? null,
+      nextDue: data.nextDue ?? null,
+      status: "completed",
+    }).returning();
+    return row;
+  }
+
+  async getComplianceDocuments(facilityId: number): Promise<ComplianceDocument[]> {
+    return db.select().from(complianceDocuments)
+      .where(eq(complianceDocuments.facilityId, facilityId))
+      .orderBy(desc(complianceDocuments.uploadedAt));
+  }
+
+  async createComplianceDocument(data: {
+    facilityId: number; itemId: number; documentName: string; uploadedBy: string;
+    expirationDate?: string; effectiveDate?: string;
+  }): Promise<ComplianceDocument> {
+    const [row] = await db.insert(complianceDocuments).values({
+      facilityId: data.facilityId,
+      itemId: data.itemId,
+      documentName: data.documentName,
+      uploadedBy: data.uploadedBy,
+      expirationDate: data.expirationDate ?? null,
+      effectiveDate: data.effectiveDate ?? null,
+      status: "current",
+    }).returning();
+    return row;
   }
 }
 

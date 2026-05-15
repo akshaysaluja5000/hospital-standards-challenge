@@ -38,6 +38,17 @@ interface ConsoleCard {
 
 const CONSOLE_CARDS: ConsoleCard[] = [
   {
+    id: "survey-readiness",
+    title: "Survey Readiness Agent",
+    description: "Live compliance score — all 132 AAAHC standards tracked, color-coded by surveyor risk. Green above 90%, amber 75–90%, red below 75%.",
+    icon: ShieldCheck,
+    iconBg: "bg-emerald-500/10",
+    iconColor: "text-emerald-600",
+    href: "/survey-readiness",
+    minRole: "director",
+    badge: "Live",
+  },
+  {
     id: "executive-report",
     title: "Executive Readiness Report",
     description: "Facility-wide readiness scores, trend charts, and guided education plan status with CSV/PDF export.",

@@ -421,6 +421,68 @@ export const leadershipRoleCodes = pgTable("leadership_role_codes", {
 
 export type LeadershipRoleCode = typeof leadershipRoleCodes.$inferSelect;
 
+// ── Compliance System (ASC Survey Readiness) ─────────────────────────────────
+
+export const complianceItems = pgTable("compliance_items", {
+  id: serial("id").primaryKey(),
+  module: text("module").notNull().default("asc"),
+  volume: text("volume").notNull(),
+  standardCode: text("standard_code").notNull(),
+  itemName: text("item_name").notNull(),
+  frequency: text("frequency").notNull(),
+  tier: integer("tier").notNull(), // 1=Log, 2=Vault, 3=Wall, 4=ThirdParty
+  category: text("category").notNull(),
+  surveyorPriority: integer("surveyor_priority").notNull().default(2),
+  agentWatch: boolean("agent_watch").notNull().default(true),
+});
+
+export type ComplianceItem = typeof complianceItems.$inferSelect;
+
+export const complianceLogs = pgTable("compliance_logs", {
+  id: serial("id").primaryKey(),
+  facilityId: integer("facility_id").notNull(),
+  itemId: integer("item_id").notNull().references(() => complianceItems.id),
+  completedBy: text("completed_by").notNull(),
+  completedAt: timestamp("completed_at").notNull().defaultNow(),
+  status: text("status").notNull().default("completed"),
+  notes: text("notes"),
+  nextDue: date("next_due"),
+  agentFlagged: boolean("agent_flagged").notNull().default(false),
+});
+
+export type ComplianceLog = typeof complianceLogs.$inferSelect;
+
+export const complianceDocuments = pgTable("compliance_documents", {
+  id: serial("id").primaryKey(),
+  facilityId: integer("facility_id").notNull(),
+  itemId: integer("item_id").notNull().references(() => complianceItems.id),
+  documentName: text("document_name").notNull(),
+  uploadedBy: text("uploaded_by").notNull(),
+  uploadedAt: timestamp("uploaded_at").notNull().defaultNow(),
+  effectiveDate: date("effective_date"),
+  expirationDate: date("expiration_date"),
+  status: text("status").notNull().default("current"),
+  aiTaggedStandards: text("ai_tagged_standards").notNull().default("[]"),
+  aiQuestionsGenerated: boolean("ai_questions_generated").notNull().default(false),
+});
+
+export type ComplianceDocument = typeof complianceDocuments.$inferSelect;
+
+export const complianceTasks = pgTable("compliance_tasks", {
+  id: serial("id").primaryKey(),
+  facilityId: integer("facility_id").notNull(),
+  itemId: integer("item_id").notNull().references(() => complianceItems.id),
+  assignedTo: text("assigned_to"),
+  dueDate: date("due_date"),
+  createdBy: text("created_by"),
+  createdByAgent: boolean("created_by_agent").notNull().default(false),
+  status: text("status").notNull().default("pending"),
+  reminderSent: boolean("reminder_sent").notNull().default(false),
+  escalated: boolean("escalated").notNull().default(false),
+});
+
+export type ComplianceTask = typeof complianceTasks.$inferSelect;
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;

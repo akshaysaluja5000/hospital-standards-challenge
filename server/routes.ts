@@ -3086,5 +3086,191 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
     }
   });
 
+  // ── Survey Readiness Agent ────────────────────────────────────────────────────
+
+  function getNextDueDate(frequency: string): string {
+    const d = new Date();
+    const f = frequency.toLowerCase();
+    if (f === "daily") d.setDate(d.getDate() + 1);
+    else if (f === "weekly") d.setDate(d.getDate() + 7);
+    else if (f === "monthly") d.setMonth(d.getMonth() + 1);
+    else if (f === "quarterly") d.setMonth(d.getMonth() + 3);
+    else if (f === "semiannually") d.setMonth(d.getMonth() + 6);
+    else if (f === "annually") d.setFullYear(d.getFullYear() + 1);
+    else if (f === "biennially") d.setFullYear(d.getFullYear() + 2);
+    else if (f === "triennially") d.setFullYear(d.getFullYear() + 3);
+    else if (f === "quadrennially") d.setFullYear(d.getFullYear() + 4);
+    else if (f === "quinquennially") d.setFullYear(d.getFullYear() + 5);
+    else d.setFullYear(d.getFullYear() + 1);
+    return d.toISOString().slice(0, 10);
+  }
+
+  app.get("/api/compliance/readiness", requireAuth, requireLeadershipRole("director"), async (req, res) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+
+      const [items, logs, docs] = await Promise.all([
+        storage.getComplianceItems("asc"),
+        storage.getComplianceLogs(facilityId),
+        storage.getComplianceDocuments(facilityId),
+      ]);
+
+      // Build most-recent maps keyed by itemId
+      const latestLog = new Map<number, typeof logs[0]>();
+      for (const log of logs) {
+        if (!latestLog.has(log.itemId)) latestLog.set(log.itemId, log);
+      }
+      const latestDoc = new Map<number, typeof docs[0]>();
+      for (const doc of docs) {
+        if (!latestDoc.has(doc.itemId)) latestDoc.set(doc.itemId, doc);
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const sixtyDaysOut = new Date(today);
+      sixtyDaysOut.setDate(sixtyDaysOut.getDate() + 60);
+
+      type ItemStatus = "current" | "overdue" | "expiring_soon" | "not_logged";
+
+      const actionItems = items.filter(i => i.agentWatch).map(item => {
+        let status: ItemStatus = "not_logged";
+        let lastCompleted: string | null = null;
+        let nextDue: string | null = null;
+        let documentExpiresOn: string | null = null;
+
+        if (item.tier === 1) {
+          const log = latestLog.get(item.id);
+          if (log) {
+            lastCompleted = log.completedAt.toISOString();
+            if (log.nextDue) {
+              nextDue = log.nextDue;
+              const nd = new Date(log.nextDue + "T00:00:00");
+              status = nd >= today ? "current" : "overdue";
+            } else {
+              status = "overdue";
+            }
+          }
+        } else {
+          const doc = latestDoc.get(item.id);
+          if (doc) {
+            lastCompleted = doc.uploadedAt.toISOString();
+            if (doc.expirationDate) {
+              documentExpiresOn = doc.expirationDate;
+              const exp = new Date(doc.expirationDate + "T00:00:00");
+              if (exp < today) status = "overdue";
+              else if (exp <= sixtyDaysOut) status = "expiring_soon";
+              else status = "current";
+            } else {
+              status = doc.status === "current" ? "current" : "overdue";
+            }
+          }
+        }
+
+        return {
+          itemId: item.id,
+          volume: item.volume,
+          standardCode: item.standardCode,
+          itemName: item.itemName,
+          frequency: item.frequency,
+          tier: item.tier,
+          tierLabel: item.tier === 1 ? "LOG" : item.tier === 2 ? "VAULT" : "3RD PARTY",
+          category: item.category,
+          surveyorPriority: item.surveyorPriority,
+          status,
+          lastCompleted,
+          nextDue,
+          documentExpiresOn,
+        };
+      });
+
+      const totalItems = actionItems.length;
+      const currentItems = actionItems.filter(i => i.status === "current").length;
+      const expiringSoonItems = actionItems.filter(i => i.status === "expiring_soon").length;
+      const overdueItems = actionItems.filter(i => i.status === "overdue").length;
+      const notLoggedItems = actionItems.filter(i => i.status === "not_logged").length;
+      const score = totalItems > 0 ? Math.round(((currentItems + expiringSoonItems) / totalItems) * 100) : 0;
+      const color = score >= 90 ? "green" : score >= 75 ? "amber" : "red";
+
+      const byCategory: Record<string, { total: number; current: number; expiring: number; overdue: number; score: number }> = {};
+      for (const item of actionItems) {
+        if (!byCategory[item.category]) byCategory[item.category] = { total: 0, current: 0, expiring: 0, overdue: 0, score: 0 };
+        byCategory[item.category].total++;
+        if (item.status === "current") byCategory[item.category].current++;
+        else if (item.status === "expiring_soon") byCategory[item.category].expiring++;
+        else if (item.status === "overdue") byCategory[item.category].overdue++;
+      }
+      for (const cat of Object.values(byCategory)) {
+        cat.score = cat.total > 0 ? Math.round(((cat.current + cat.expiring) / cat.total) * 100) : 0;
+      }
+
+      const statusOrder: Record<string, number> = { overdue: 0, expiring_soon: 1, not_logged: 2, current: 3 };
+      const sortedActionItems = actionItems
+        .filter(i => i.status !== "current")
+        .sort((a, b) => {
+          if (a.surveyorPriority !== b.surveyorPriority) return a.surveyorPriority - b.surveyorPriority;
+          return (statusOrder[a.status] ?? 3) - (statusOrder[b.status] ?? 3);
+        });
+
+      res.json({
+        score, color, totalItems, currentItems, overdueItems, expiringSoonItems, notLoggedItems,
+        byCategory, actionItems: sortedActionItems,
+        lastCalculated: new Date().toISOString(),
+      });
+    } catch (err) {
+      console.error("Compliance readiness error:", err);
+      res.status(500).json({ error: "Failed to calculate readiness score." });
+    }
+  });
+
+  app.post("/api/compliance/log", requireAuth, requireLeadershipRole("director"), async (req, res) => {
+    try {
+      const user = req.user as any;
+      const { itemId, notes } = req.body;
+      if (!itemId || typeof itemId !== "number") return res.status(400).json({ error: "itemId required" });
+      const facilityId: number = user.facilityId ?? 0;
+
+      const items = await storage.getComplianceItems("asc");
+      const item = items.find(i => i.id === itemId);
+      if (!item) return res.status(404).json({ error: "Compliance item not found" });
+
+      const nextDue = getNextDueDate(item.frequency);
+      const log = await storage.createComplianceLog({
+        facilityId,
+        itemId,
+        completedBy: user.username ?? "unknown",
+        notes: notes || undefined,
+        nextDue,
+      });
+      res.json(log);
+    } catch (err) {
+      console.error("Compliance log error:", err);
+      res.status(500).json({ error: "Failed to create log entry." });
+    }
+  });
+
+  app.post("/api/compliance/document", requireAuth, requireLeadershipRole("director"), async (req, res) => {
+    try {
+      const user = req.user as any;
+      const { itemId, documentName, expirationDate, effectiveDate } = req.body;
+      if (!itemId || typeof itemId !== "number") return res.status(400).json({ error: "itemId required" });
+      if (!documentName || typeof documentName !== "string") return res.status(400).json({ error: "documentName required" });
+      const facilityId: number = user.facilityId ?? 0;
+
+      const doc = await storage.createComplianceDocument({
+        facilityId,
+        itemId,
+        documentName: documentName.trim(),
+        uploadedBy: user.username ?? "unknown",
+        expirationDate: expirationDate || undefined,
+        effectiveDate: effectiveDate || undefined,
+      });
+      res.json(doc);
+    } catch (err) {
+      console.error("Compliance document error:", err);
+      res.status(500).json({ error: "Failed to mark document." });
+    }
+  });
+
   return httpServer;
 }
