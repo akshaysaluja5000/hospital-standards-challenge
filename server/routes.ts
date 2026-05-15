@@ -31,6 +31,21 @@ const upload = multer({
   },
 });
 
+// Staff Learning Agent — chapter-slug to compliance-category mapping
+const CATEGORY_LEVEL_PREFIXES: Record<string, string[]> = {
+  "Infection Control":      ["asc_ipc", "infection_control"],
+  "Emergency Preparedness": ["asc_emg", "emergency_management"],
+  "Fire Safety":            ["asc_saf", "life_safety"],
+  "Building & Life Safety": ["asc_fac", "eoc_safety"],
+  "Utility Systems":        ["asc_fac", "facilities"],
+  "Hazardous Materials":    ["asc_saf", "environment", "segregation"],
+  "Medical Equipment":      ["asc_med"],
+  "Quality Management":     ["asc_qua", "asc_gov", "asc_adm"],
+};
+const FREQUENCY_DAYS: Record<string, number> = {
+  Daily: 1, Weekly: 7, Monthly: 30, Quarterly: 90, Annually: 365, Biennially: 730,
+};
+
 declare module "express-session" {
   interface SessionData {
     mfaVerified?: boolean;
@@ -3286,6 +3301,225 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
     } catch (err) {
       console.error("Compliance document error:", err);
       res.status(500).json({ error: "Failed to mark document." });
+    }
+  });
+
+  // ── Staff Learning Agent (Agent 3) ─────────────────────────────────────────
+  app.post("/api/compliance/staff-learning-agent/run", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+      const now = new Date();
+
+      const allUsers = await storage.getUsersByFacility(facilityId);
+      const staffUsers = allUsers.filter(u =>
+        !u.isAdmin && ["learner", "educator", "director"].includes(u.leadershipRole ?? "learner")
+      );
+
+      const [items, logs] = await Promise.all([
+        storage.getComplianceItems("asc"),
+        storage.getComplianceLogs(facilityId),
+      ]);
+
+      const allProgressData = await Promise.all(
+        staffUsers.map(async u => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
+      );
+      const progressByUser = new Map(allProgressData.map(p => [p.userId, p.progress]));
+
+      await storage.clearStaffTrainingAlerts(facilityId);
+
+      let alertsCreated = 0;
+      let tasksCreated = 0;
+      const staffStatus: object[] = [];
+
+      for (const staffUser of staffUsers) {
+        const progress = progressByUser.get(staffUser.id) ?? [];
+        const completedLevelIds = new Set(progress.filter(p => p.completed).map(p => p.levelId));
+
+        const trainedCategories = new Set<string>();
+        for (const [category, prefixes] of Object.entries(CATEGORY_LEVEL_PREFIXES)) {
+          for (const levelId of completedLevelIds) {
+            if (prefixes.some(prefix => levelId === prefix || levelId.startsWith(prefix + "_"))) {
+              trainedCategories.add(category);
+              break;
+            }
+          }
+        }
+
+        const notTrainedCategories: string[] = [];
+
+        for (const [category] of Object.entries(CATEGORY_LEVEL_PREFIXES)) {
+          if (trainedCategories.has(category)) continue;
+          notTrainedCategories.push(category);
+
+          const catItems = items.filter(ci => ci.category === category && ci.tier === 1);
+          const bestItem = catItems.sort((a, b) => a.surveyorPriority - b.surveyorPriority)[0]
+            ?? items.filter(ci => ci.category === category)[0];
+
+          const catLogs = logs.filter(l => {
+            const ci = items.find(ci => ci.id === l.itemId);
+            return ci?.category === category;
+          }).sort((a, b) => new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime());
+          const lastLog = catLogs[0];
+
+          let daysOverdue = 0;
+          if (lastLog && bestItem) {
+            const freqDays = FREQUENCY_DAYS[bestItem.frequency as keyof typeof FREQUENCY_DAYS] ?? 365;
+            const daysSince = Math.floor((now.getTime() - new Date(lastLog.completedAt).getTime()) / 86400000);
+            daysOverdue = Math.max(0, daysSince - freqDays);
+          }
+
+          const isEscalation = daysOverdue > 14 || (trainedCategories.size === 0 && notTrainedCategories.length >= Object.keys(CATEGORY_LEVEL_PREFIXES).length);
+          const alertType = isEscalation ? "escalation" : "reminder";
+          const fullName = [staffUser.firstName, staffUser.lastName].filter(Boolean).join(" ") || staffUser.username;
+
+          let message: string;
+          if (daysOverdue > 14) {
+            const dueD = new Date(now.getTime() - daysOverdue * 86400000);
+            message = `${fullName} is ${daysOverdue} days overdue on ${category} training required for ${bestItem?.standardCode ?? category} compliance. Due date: ${dueD.toLocaleDateString("en-US", { month: "long", day: "numeric" })}.`;
+          } else {
+            message = `${fullName} has required ${category} training due${bestItem ? ` for ${bestItem.standardCode} compliance` : ""}. Complete training within 14 days.`;
+          }
+
+          await storage.createStaffTrainingAlert({
+            facilityId,
+            userId: staffUser.id,
+            complianceItemId: bestItem?.id ?? null,
+            alertType,
+            category,
+            message,
+            daysOverdue,
+          });
+          alertsCreated++;
+
+          if (isEscalation && bestItem) {
+            const dueDate = new Date();
+            dueDate.setDate(dueDate.getDate() + 14);
+            await storage.createComplianceTask({
+              facilityId,
+              itemId: bestItem.id,
+              assignedTo: staffUser.username ?? "",
+              dueDate: dueDate.toISOString().slice(0, 10),
+              createdBy: "staff-learning-agent",
+              createdByAgent: true,
+            });
+            tasksCreated++;
+          }
+        }
+
+        const statusLevel = notTrainedCategories.length === 0 ? "compliant"
+          : notTrainedCategories.length <= 2 ? "attention" : "critical";
+
+        staffStatus.push({
+          userId: staffUser.id,
+          username: staffUser.username,
+          firstName: staffUser.firstName,
+          lastName: staffUser.lastName,
+          role: staffUser.leadershipRole ?? "learner",
+          trainedCategories: [...trainedCategories],
+          notTrainedCategories,
+          totalLevelsCompleted: completedLevelIds.size,
+          status: statusLevel,
+        });
+      }
+
+      res.json({
+        runAt: now.toISOString(),
+        facilityId,
+        staffAnalyzed: staffUsers.length,
+        alertsCreated,
+        tasksCreated,
+        escalationCount: (staffStatus as any[]).filter(s => s.status === "critical").length,
+        staffStatus,
+      });
+    } catch (err) {
+      console.error("Staff Learning Agent error:", err);
+      res.status(500).json({ error: "Agent processing failed." });
+    }
+  });
+
+  app.get("/api/compliance/staff-learning-dashboard", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      const facilityId: number = user.facilityId ?? 0;
+
+      const [alerts, allUsers, items] = await Promise.all([
+        storage.getStaffTrainingAlerts(facilityId),
+        storage.getUsersByFacility(facilityId),
+        storage.getComplianceItems("asc"),
+      ]);
+
+      const staffUsers = allUsers.filter(u =>
+        !u.isAdmin && ["learner", "educator", "director"].includes(u.leadershipRole ?? "learner")
+      );
+
+      const allProgressData = await Promise.all(
+        staffUsers.map(async u => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
+      );
+      const progressByUser = new Map(allProgressData.map(p => [p.userId, p.progress]));
+
+      const staffStatus = staffUsers.map(staffUser => {
+        const progress = progressByUser.get(staffUser.id) ?? [];
+        const completedLevelIds = new Set(progress.filter(p => p.completed).map(p => p.levelId));
+
+        const trainedCategories = new Set<string>();
+        for (const [category, prefixes] of Object.entries(CATEGORY_LEVEL_PREFIXES)) {
+          for (const levelId of completedLevelIds) {
+            if (prefixes.some(prefix => levelId === prefix || levelId.startsWith(prefix + "_"))) {
+              trainedCategories.add(category);
+              break;
+            }
+          }
+        }
+        const notTrainedCategories = Object.keys(CATEGORY_LEVEL_PREFIXES).filter(c => !trainedCategories.has(c));
+
+        return {
+          userId: staffUser.id,
+          username: staffUser.username,
+          firstName: staffUser.firstName,
+          lastName: staffUser.lastName,
+          role: staffUser.leadershipRole ?? "learner",
+          trainedCategories: [...trainedCategories],
+          notTrainedCategories,
+          totalLevelsCompleted: completedLevelIds.size,
+          status: notTrainedCategories.length === 0 ? "compliant"
+            : notTrainedCategories.length <= 2 ? "attention" : "critical",
+        };
+      });
+
+      const userMap = new Map(allUsers.map(u => [u.id, u]));
+      const enrichedAlerts = alerts.map(a => ({
+        ...a,
+        userName: userMap.get(a.userId)?.username ?? "Unknown",
+        fullName: [userMap.get(a.userId)?.firstName, userMap.get(a.userId)?.lastName]
+          .filter(Boolean).join(" ") || (userMap.get(a.userId)?.username ?? "Unknown"),
+      }));
+
+      res.json({
+        staffStatus,
+        alerts: enrichedAlerts,
+        summary: {
+          totalStaff: staffUsers.length,
+          compliant: staffStatus.filter(s => s.status === "compliant").length,
+          attention: staffStatus.filter(s => s.status === "attention").length,
+          critical: staffStatus.filter(s => s.status === "critical").length,
+          pendingAlerts: alerts.filter(a => !a.isRead).length,
+          hasRunBefore: alerts.length > 0,
+        },
+      });
+    } catch (err) {
+      console.error("Staff Learning dashboard error:", err);
+      res.status(500).json({ error: "Failed to load dashboard." });
+    }
+  });
+
+  app.post("/api/compliance/staff-training-alerts/read-all", requireAuth, requireLeadershipRole("director"), async (req: Request, res: Response) => {
+    try {
+      const user = req.user as any;
+      await storage.markAllStaffTrainingAlertsRead(user.facilityId ?? 0);
+      res.json({ success: true });
+    } catch (err) {
+      res.status(500).json({ error: "Failed to mark alerts as read." });
     }
   });
 

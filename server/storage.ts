@@ -7,11 +7,13 @@ import {
   ascPretestResults, ascPosttestResults,
   roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback, leadershipRoleCodes,
   complianceItems, complianceLogs, complianceDocuments, complianceTrainingModules,
+  complianceTasks, staffTrainingAlerts,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
   type AscPretestResult, type AscPosttestResult, type FlashcardReview, type AuditLog, type RiskAssessment, type Feedback,
   type ComplianceItem, type ComplianceLog, type ComplianceDocument, type ComplianceTrainingModule,
+  type ComplianceTask, type StaffTrainingAlert,
 } from "@shared/schema";
 
 const pool = new pg.Pool({
@@ -279,6 +281,18 @@ export async function ensureTablesExist() {
         approved_at TIMESTAMP,
         approved_by TEXT
       );
+      CREATE TABLE IF NOT EXISTS staff_training_alerts (
+        id SERIAL PRIMARY KEY,
+        facility_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        compliance_item_id INTEGER REFERENCES compliance_items(id),
+        alert_type TEXT NOT NULL DEFAULT 'reminder',
+        category TEXT NOT NULL,
+        message TEXT NOT NULL,
+        days_overdue INTEGER NOT NULL DEFAULT 0,
+        is_read BOOLEAN NOT NULL DEFAULT false,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
@@ -508,6 +522,11 @@ export interface IStorage {
   getComplianceTrainingModule(id: number): Promise<ComplianceTrainingModule | undefined>;
   createComplianceTrainingModule(data: { facilityId: number; documentId: number; itemId: number; title: string; taggedStandards: string; questions: string; conflictFlags: string; assignedRoles: string; assignedMemberCount: number }): Promise<ComplianceTrainingModule>;
   updateComplianceTrainingModuleStatus(id: number, status: string, approvedBy?: string): Promise<ComplianceTrainingModule>;
+  getStaffTrainingAlerts(facilityId: number): Promise<StaffTrainingAlert[]>;
+  createStaffTrainingAlert(data: { facilityId: number; userId: number; complianceItemId?: number | null; alertType: string; category: string; message: string; daysOverdue: number }): Promise<StaffTrainingAlert>;
+  clearStaffTrainingAlerts(facilityId: number): Promise<void>;
+  markAllStaffTrainingAlertsRead(facilityId: number): Promise<void>;
+  createComplianceTask(data: { facilityId: number; itemId: number; assignedTo: string; dueDate: string; createdBy: string; createdByAgent: boolean }): Promise<ComplianceTask>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1183,6 +1202,54 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(complianceTrainingModules.id, id))
       .returning();
+    return row;
+  }
+
+  async getStaffTrainingAlerts(facilityId: number): Promise<StaffTrainingAlert[]> {
+    return db.select().from(staffTrainingAlerts)
+      .where(eq(staffTrainingAlerts.facilityId, facilityId))
+      .orderBy(desc(staffTrainingAlerts.daysOverdue), desc(staffTrainingAlerts.createdAt));
+  }
+
+  async createStaffTrainingAlert(data: {
+    facilityId: number; userId: number; complianceItemId?: number | null;
+    alertType: string; category: string; message: string; daysOverdue: number;
+  }): Promise<StaffTrainingAlert> {
+    const [row] = await db.insert(staffTrainingAlerts).values({
+      facilityId: data.facilityId,
+      userId: data.userId,
+      complianceItemId: data.complianceItemId ?? null,
+      alertType: data.alertType,
+      category: data.category,
+      message: data.message,
+      daysOverdue: data.daysOverdue,
+    }).returning();
+    return row;
+  }
+
+  async clearStaffTrainingAlerts(facilityId: number): Promise<void> {
+    await db.delete(staffTrainingAlerts).where(eq(staffTrainingAlerts.facilityId, facilityId));
+  }
+
+  async markAllStaffTrainingAlertsRead(facilityId: number): Promise<void> {
+    await db.update(staffTrainingAlerts)
+      .set({ isRead: true })
+      .where(eq(staffTrainingAlerts.facilityId, facilityId));
+  }
+
+  async createComplianceTask(data: {
+    facilityId: number; itemId: number; assignedTo: string;
+    dueDate: string; createdBy: string; createdByAgent: boolean;
+  }): Promise<ComplianceTask> {
+    const [row] = await db.insert(complianceTasks).values({
+      facilityId: data.facilityId,
+      itemId: data.itemId,
+      assignedTo: data.assignedTo,
+      dueDate: data.dueDate,
+      createdBy: data.createdBy,
+      createdByAgent: data.createdByAgent,
+      status: "pending",
+    }).returning();
     return row;
   }
 }

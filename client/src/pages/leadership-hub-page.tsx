@@ -60,6 +60,17 @@ const CONSOLE_CARDS: ConsoleCard[] = [
     badge: "AI",
   },
   {
+    id: "staff-learning",
+    title: "Staff Learning Agent",
+    description: "Maps quiz completions to AAAHC compliance items. Identifies staff with training gaps, fires targeted reminders, and escalates to managers when anyone is 14+ days overdue.",
+    icon: GraduationCap,
+    iconBg: "bg-blue-500/10",
+    iconColor: "text-blue-600",
+    href: "/staff-learning",
+    minRole: "director",
+    badge: "Agent",
+  },
+  {
     id: "executive-report",
     title: "Executive Readiness Report",
     description: "Facility-wide readiness scores, trend charts, and guided education plan status with CSV/PDF export.",

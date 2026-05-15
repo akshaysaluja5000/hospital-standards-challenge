@@ -502,6 +502,21 @@ export const complianceTrainingModules = pgTable("compliance_training_modules", 
 
 export type ComplianceTrainingModule = typeof complianceTrainingModules.$inferSelect;
 
+export const staffTrainingAlerts = pgTable("staff_training_alerts", {
+  id: serial("id").primaryKey(),
+  facilityId: integer("facility_id").notNull(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  complianceItemId: integer("compliance_item_id").references(() => complianceItems.id),
+  alertType: text("alert_type").notNull().default("reminder"),
+  category: text("category").notNull(),
+  message: text("message").notNull(),
+  daysOverdue: integer("days_overdue").notNull().default(0),
+  isRead: boolean("is_read").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type StaffTrainingAlert = typeof staffTrainingAlerts.$inferSelect;
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;
