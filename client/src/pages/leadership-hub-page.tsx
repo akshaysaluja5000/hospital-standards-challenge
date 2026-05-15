@@ -348,7 +348,7 @@ export default function LeadershipHubPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => setLocation("/")}
+            onClick={() => setLocation("/dashboard")}
             data-testid="button-back-to-training"
             aria-label="Back to training"
           >
@@ -563,7 +563,7 @@ export default function LeadershipHubPage() {
         <div className="flex justify-center">
           <Button
             variant="outline"
-            onClick={() => setLocation("/")}
+            onClick={() => setLocation("/dashboard")}
             data-testid="button-back-to-learning"
             className="gap-2"
           >
