@@ -51,7 +51,7 @@ const PATHWAYS: Pathway[] = [
     module: "dnv",
     icon: Shield,
     title: "Hospital (DNV NIAHO)",
-    description: "DNV DIAS & NIAHO 25-1 standards",
+    description: "NIAHO 25-1 standards",
     testId: "link-pathway-dnv",
   },
 ];

@@ -336,7 +336,7 @@ export default function LeadershipHubPage() {
   const isAsc = user?.organizationType === "asc";
   const isDnv = user?.organizationType === "dnv";
   const moduleLabel = isAsc ? "ASC" : isDnv ? "DNV" : "Hospital";
-  const activeStandardsBody = isAsc ? "AAAHC" : isDnv ? "DNV DIAS" : "Joint Commission";
+  const activeStandardsBody = isAsc ? "AAAHC" : isDnv ? "DNV NIAHO" : "Joint Commission";
   const ModuleIcon = isAsc ? Stethoscope : Building2;
 
   const leadershipLabel = user

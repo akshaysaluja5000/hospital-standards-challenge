@@ -141,7 +141,7 @@ export default function ContentIntelligencePage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
-  const activeStandardsBody = user?.organizationType === "asc" ? "AAAHC" : user?.organizationType === "dnv" ? "DNV DIAS" : "Joint Commission";
+  const activeStandardsBody = user?.organizationType === "asc" ? "AAAHC" : user?.organizationType === "dnv" ? "DNV NIAHO" : "Joint Commission";
 
   const [docName, setDocName] = useState("");
   const [docExpiry, setDocExpiry] = useState("");

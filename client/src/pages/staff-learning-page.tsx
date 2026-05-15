@@ -189,7 +189,7 @@ export default function StaffLearningPage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const { user } = useAuth();
-  const activeStandardsBody = user?.organizationType === "asc" ? "AAAHC" : user?.organizationType === "dnv" ? "DNV DIAS" : "Joint Commission";
+  const activeStandardsBody = user?.organizationType === "asc" ? "AAAHC" : user?.organizationType === "dnv" ? "DNV NIAHO" : "Joint Commission";
   const moduleTag = user?.organizationType === "asc" ? "ASC" : user?.organizationType === "dnv" ? "DNV" : "Hospital";
   const [agentResult, setAgentResult] = useState<AgentRunResult | null>(null);
   const [lastRunAt, setLastRunAt] = useState<string | null>(null);

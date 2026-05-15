@@ -161,7 +161,7 @@ export default function RegulatoryWatchPage() {
   const isDnv = user?.organizationType === "dnv";
   const defaultSource: FilterSource = isAsc ? "aaahc" : "jcaho";
   const moduleLabel = isAsc ? "ASC" : isDnv ? "DNV" : "Hospital";
-  const primarySourceLabel = isAsc ? "AAAHC" : isDnv ? "DNV DIAS" : "Joint Commission";
+  const primarySourceLabel = isAsc ? "AAAHC" : isDnv ? "DNV NIAHO" : "Joint Commission";
 
   const [agentResult, setAgentResult] = useState<AgentRunResult | null>(null);
   const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");

@@ -961,7 +961,7 @@ export default function DashboardPage() {
                   {moduleLevels.length === 0 ? (
                     <div className="rounded-2xl border-2 border-dashed border-border bg-muted/30 p-6 text-center" data-testid="empty-state-dnv-domains">
                       <p className="font-semibold text-base mb-1">DNV content is in development</p>
-                      <p className="text-sm text-muted-foreground">DNV DIAS domains are set up, but training questions and study material aren't published yet. Check back soon.</p>
+                      <p className="text-sm text-muted-foreground">DNV NIAHO domains are set up, but training questions and study material aren't published yet. Check back soon.</p>
                     </div>
                   ) : (
                     moduleLevels.map((level, index) => (
