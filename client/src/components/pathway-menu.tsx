@@ -1,4 +1,4 @@
-import { ChevronDown, Hospital, Activity, Check, Loader2 } from "lucide-react";
+import { ChevronDown, Hospital, Activity, Check, Loader2, Shield } from "lucide-react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -45,6 +45,14 @@ const PATHWAYS: Pathway[] = [
     title: "Ambulatory Surgery Centers",
     description: "AAAHC, Joint Commission & CMS pathways",
     testId: "link-pathway-asc",
+  },
+  {
+    href: "/hospitals",
+    module: "dnv",
+    icon: Shield,
+    title: "Hospital (DNV NIAHO)",
+    description: "DNV DIAS & NIAHO 25-1 standards",
+    testId: "link-pathway-dnv",
   },
 ];
 
