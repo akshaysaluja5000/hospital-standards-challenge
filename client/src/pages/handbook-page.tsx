@@ -249,7 +249,7 @@ export default function HandbookPage() {
   }
 
   const introCopy = isAsc
-    ? "The full AAAHC Accreditation Handbook for Medicare Deemed Status (v42), organized by chapter exactly as published. Universal Standards apply to every accredited ASC; Selective Standards apply when the listed service is provided."
+    ? "The full AAAHC Accreditation Handbook for Medicare Deemed Status (v44), organized by chapter exactly as published. Universal Standards apply to every accredited ASC; Selective Standards apply when the listed service is provided."
     : isDnv
     ? "Comprehensive coverage of DNV NIAHO 25-1 standards — organized by chapter with detailed explanations, critical values, and real-world scenarios. Use this alongside the quizzes to build deep understanding of NIAHO requirements."
     : "Everything you need to know for Joint Commission compliance — organized by topic with detailed explanations, critical values, and real-world scenarios. Use this alongside the quizzes to build deep understanding.";
@@ -311,7 +311,7 @@ export default function HandbookPage() {
       <div className="max-w-2xl mx-auto w-full px-4 py-6 flex flex-col gap-5">
         <div className="rounded-xl bg-primary/5 border border-primary/20 p-5">
           <h2 className="font-bold text-base mb-1.5" data-testid="text-handbook-subtitle">
-            {isAsc ? "AAAHC Medicare Deemed Status, v42" : isDnv ? "NIAHO 25-1 Standards" : "Your Complete Reference Guide"}
+            {isAsc ? "AAAHC Medicare Deemed Status, v44" : isDnv ? "NIAHO 25-1 Standards" : "Your Complete Reference Guide"}
           </h2>
           <p className="text-sm text-foreground/70 leading-relaxed">
             {introCopy}
