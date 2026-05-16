@@ -7,29 +7,29 @@ and content removals. Each entry should be added before or immediately after the
 
 ## Versioning Protocol (apply for every future update)
 
-1. **Document first** — add an entry to this file before touching any content files.
-2. **Snapshot the outgoing version** — export or save a copy outside the project (Google Drive / Innovans LLC folder / email) before overwriting.
-3. **Apply the update** — replace handbook content, question files, and standard code references.
-4. **Verify** — confirm the new version label appears in the handbook page, all standard codes match the new edition, and no code imports the old content.
-5. **Commit** — ensure the transition is captured in Replit version history so the removal itself is timestamped.
+1. Always keep the current manual in the project.
+2. Before applying a future update, create a content snapshot.
+3. Document the transition in CONTENT_HISTORY.md.
+4. Then remove the prior manual file.
+
+That way each manual upgrade has a clean record without storage bloat.
 
 ---
 
 ## Change Log
 
-### 2026-05-15 — AAAHC v42 → v44 (2025/2026 edition)
+```
+2026-05-15: AAAHC manual updated from prior version to v44 (2025/2026 edition).
+Old manual file removed from platform storage on this date.
+Reason for removal: v44 is now the operative standard. Old manual no longer needed.
+Removed by: Akshay Saluja.
+```
 
-| Field | Detail |
-|---|---|
-| **Standard body** | AAAHC (Accreditation Association for Ambulatory Health Care) |
-| **Outgoing version** | v42 (prior edition) |
-| **Incoming version** | v44 — AAAHC Accreditation Handbook for Ambulatory Health Care (©2025 AAAHC) |
-| **Scope** | ASC module — all handbook chapters, question files, and UI version labels |
-| **Files updated** | `shared/asc-handbook.ts`, `shared/asc-gov.ts`, `shared/asc-med.ts`, `shared/asc-saf.ts`, and all `shared/asc-*.ts` question files; `client/src/pages/handbook-page.tsx` (version label) |
-| **Old manual status** | Content superseded in-platform. v42 manual is no longer operative. A copy should be retained offline (Google Drive / Innovans LLC folder) for reference if ever needed. |
-| **Reason for update** | v44 is now the operative AAAHC standard. v42 content is no longer current and was removed from the platform to prevent staff from training on outdated standards. |
-| **Removed by** | Akshay Saluja |
-| **Verified by** | Code audit confirmed: all standard codes use v44 GOV/MED/SAF/etc. prefix structure; no legacy "Standard 2.II.K" or chapter-numeric citations remain in active question files; handbook page displays "v44" to all ASC users. |
+**Verification (2026-05-15):**
+- The compliance_items database table reflects v44 standards.
+- Module content references v44 chapter structure (GOV/MED/SAF/etc. prefix codes throughout).
+- No code in the platform imports or reads from the old manual file.
+- Handbook page displays "AAAHC Medicare Deemed Status, v44" to all ASC users.
 
 ---
 
