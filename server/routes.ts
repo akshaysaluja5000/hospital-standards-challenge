@@ -11,7 +11,7 @@ import connectPgSimple from "connect-pg-simple";
 import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
 import { LEADERSHIP_RANK } from "@shared/schema";
-import type { User, DailyActivity } from "@shared/schema";
+import type { User, DailyActivity, UserProgress } from "@shared/schema";
 import { generateSecret as totpGenerateSecret, verifyToken as totpVerify, totpUri } from "./totp";
 import QRCode from "qrcode";
 import multer from "multer";
@@ -254,6 +254,53 @@ async function getModuleLevelsForUser(userId: number) {
   const user = await storage.getUser(userId);
   const module: ModuleId = (user?.organizationType as ModuleId) || "hospital";
   return getVisibleLevelsForModule(module);
+}
+
+// MEDIUM-6: shared aggregation helpers used by leaderboard, admin stats, and AI insights
+
+/** Groups any array of rows that have a `userId` field into a per-user Map. */
+function groupById<T extends { userId: number }>(items: T[]): Map<number, T[]> {
+  const map = new Map<number, T[]>();
+  for (const item of items) {
+    const list = map.get(item.userId) ?? [];
+    list.push(item);
+    map.set(item.userId, list);
+  }
+  return map;
+}
+
+interface UserActivityStats {
+  questionsAnswered: number;
+  correct: number;
+  accuracy: number;
+  levelsCompleted: number;
+  inProgressSessions: { levelId: string; currentQuestion: number; correctAnswers: number; xpEarned?: number | null }[];
+  completedLevelIds: Set<string>;
+}
+
+/**
+ * Computes per-user activity stats from their progress rows and quiz sessions.
+ * Sessions whose levelId already exists in progress are treated as completed,
+ * not counted a second time.
+ */
+function computeUserActivityStats(
+  progress: UserProgress[],
+  sessions: { levelId: string; currentQuestion: number; correctAnswers: number; xpEarned?: number | null }[],
+): UserActivityStats {
+  const completedLevelIds = new Set(progress.map(p => p.levelId));
+  const inProgressSessions = sessions.filter(sess => !completedLevelIds.has(sess.levelId));
+
+  const progressQ = progress.reduce((s, p) => s + p.totalQuestions, 0);
+  const progressC = progress.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0);
+  const sessionQ = inProgressSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
+  const sessionC = inProgressSessions.reduce((s, sess) => s + Math.min(sess.correctAnswers, sess.currentQuestion), 0);
+
+  const questionsAnswered = progressQ + sessionQ;
+  const correct = Math.min(progressC + sessionC, questionsAnswered);
+  const accuracy = questionsAnswered > 0 ? Math.min(100, Math.round((correct / questionsAnswered) * 100)) : 0;
+  const levelsCompleted = progress.filter(p => p.completed).length;
+
+  return { questionsAnswered, correct, accuracy, levelsCompleted, inProgressSessions, completedLevelIds };
 }
 
 // HIGH-6: single factory replaces 5 repeated inline rate-limit blocks
@@ -1216,18 +1263,8 @@ export async function registerRoutes(
       }
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
-      const sessionsByUser = new Map<number, typeof allSessions>();
-      for (const s of allSessions) {
-        const list = sessionsByUser.get(s.userId) ?? [];
-        list.push(s);
-        sessionsByUser.set(s.userId, list);
-      }
-      const progressByUser = new Map<number, UserProgress[]>();
-      for (const p of allProgressFlat) {
-        const arr = progressByUser.get(p.userId) ?? [];
-        arr.push(p);
-        progressByUser.set(p.userId, arr);
-      }
+      const sessionsByUser = groupById(allSessions);
+      const progressByUser = groupById(allProgressFlat);
 
       const leaderboard = allUsers.map((u) => {
         const streak = streakMap.get(u.id);
@@ -1236,16 +1273,7 @@ export async function registerRoutes(
         const userSessions = (sessionsByUser.get(u.id) || []).filter((s) => moduleLevelIds.has(s.levelId));
         const userProgress = (progressByUser.get(u.id) || []).filter((p) => moduleLevelIds.has(p.levelId));
 
-        const progressQ = userProgress.reduce((s, p) => s + p.totalQuestions, 0);
-        const progressC = userProgress.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0);
-        const completedLevelIds = new Set(userProgress.map((p) => p.levelId));
-        const inProgressSessions = userSessions.filter((sess) => !completedLevelIds.has(sess.levelId));
-        const sessionQ = inProgressSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
-        const sessionC = inProgressSessions.reduce((s, sess) => s + Math.min(sess.correctAnswers, sess.currentQuestion), 0);
-        const questionsAnswered = progressQ + sessionQ;
-        const correct = Math.min(progressC + sessionC, questionsAnswered);
-        const accuracy = questionsAnswered > 0 ? Math.min(100, Math.round((correct / questionsAnswered) * 100)) : 0;
-        const levelsCompleted = userProgress.filter((p) => p.completed).length;
+        const { questionsAnswered, correct, accuracy, levelsCompleted, inProgressSessions } = computeUserActivityStats(userProgress, userSessions);
         const moduleTotalXp = userSessions.reduce((s, sess) => s + (sess.xpEarned || 0), 0);
         const periodXp = periodActivityByUser ? (periodActivityByUser.get(u.id) || 0) : moduleTotalXp;
 
@@ -1358,38 +1386,21 @@ export async function registerRoutes(
       const today = toCentralDate(new Date());
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
-      const activitiesByUser = new Map<number, DailyActivity[]>();
-      for (const a of allActivities) {
-        const list = activitiesByUser.get(a.userId) ?? [];
-        list.push(a);
-        activitiesByUser.set(a.userId, list);
-      }
-      const sessionsByUser = new Map<number, typeof allSessions>();
-      for (const s of allSessions) {
-        const list = sessionsByUser.get(s.userId) ?? [];
-        list.push(s);
-        sessionsByUser.set(s.userId, list);
-      }
-      const progressByUser = new Map<number, UserProgress[]>();
-      for (const p of allProgressFlat) {
-        const arr = progressByUser.get(p.userId) ?? [];
-        arr.push(p);
-        progressByUser.set(p.userId, arr);
-      }
+      const activitiesByUser = groupById(allActivities);
+      const sessionsByUser = groupById(allSessions);
+      const progressByUser = groupById(allProgressFlat);
 
       const facilityUserIds = new Set(allUsers.map((u) => u.id));
 
       let totalQuestionsAnswered = 0;
       let totalCorrect = 0;
       allUsers.forEach((u) => {
-        const up = progressByUser.get(u.id) || [];
-        const us = sessionsByUser.get(u.id) || [];
-        const completedIds = new Set(up.map((p) => p.levelId));
-        const inProgress = us.filter((sess) => !completedIds.has(sess.levelId));
-        const userQ = up.reduce((s, p) => s + p.totalQuestions, 0) + inProgress.reduce((s, sess) => s + sess.currentQuestion, 0);
-        const userC = up.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0) + inProgress.reduce((s, sess) => s + Math.min(sess.correctAnswers, sess.currentQuestion), 0);
-        totalQuestionsAnswered += userQ;
-        totalCorrect += Math.min(userC, userQ);
+        const { questionsAnswered, correct } = computeUserActivityStats(
+          progressByUser.get(u.id) || [],
+          sessionsByUser.get(u.id) || [],
+        );
+        totalQuestionsAnswered += questionsAnswered;
+        totalCorrect += correct;
       });
       const averageAccuracy = totalQuestionsAnswered > 0
         ? Math.min(100, Math.round((totalCorrect / totalQuestionsAnswered) * 100))
@@ -1410,15 +1421,7 @@ export async function registerRoutes(
         const userSessions = sessionsByUser.get(u.id) || [];
         const userProg = progressByUser.get(u.id) || [];
 
-        const progressQ = userProg.reduce((s, p) => s + p.totalQuestions, 0);
-        const progressC = userProg.reduce((s, p) => s + Math.min(p.score, p.totalQuestions), 0);
-        const completedLevelIds = new Set(userProg.map((p) => p.levelId));
-        const inProgressSessions = userSessions.filter((sess) => !completedLevelIds.has(sess.levelId));
-        const sessionQ = inProgressSessions.reduce((s, sess) => s + sess.currentQuestion, 0);
-        const sessionC = inProgressSessions.reduce((s, sess) => s + Math.min(sess.correctAnswers, sess.currentQuestion), 0);
-        const questionsAnswered = progressQ + sessionQ;
-        const correct = Math.min(progressC + sessionC, questionsAnswered);
-        const accuracy = questionsAnswered > 0 ? Math.min(100, Math.round((correct / questionsAnswered) * 100)) : 0;
+        const { questionsAnswered, correct, accuracy, inProgressSessions } = computeUserActivityStats(userProg, userSessions);
 
         let lastActiveTimestamp: string | null = null;
         const latestSession = userSessions.reduce((latest: Date | null, sess) => {
@@ -1680,12 +1683,7 @@ Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do dif
       const allUsers = allUsersRaw.filter(getFacilityFilter(adminUser));
       const aiInsightsUserIds = allUsers.map(u => u.id);
       const aiProgressFlat = await storage.getProgressForUsers(aiInsightsUserIds);
-      const aiProgressByUser = new Map<number, UserProgress[]>();
-      for (const p of aiProgressFlat) {
-        const arr = aiProgressByUser.get(p.userId) ?? [];
-        arr.push(p);
-        aiProgressByUser.set(p.userId, arr);
-      }
+      const aiProgressByUser = groupById(aiProgressFlat);
       const allProgressData = allUsers.map(u => ({
         userId: u.id,
         username: u.username,
