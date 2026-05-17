@@ -256,6 +256,11 @@ async function getModuleLevelsForUser(userId: number) {
   return getVisibleLevelsForModule(module);
 }
 
+// HIGH-9: safe JSON parser — returns fallback instead of throwing on malformed input
+function safeJsonParse<T>(raw: string, fallback: T): T {
+  try { return JSON.parse(raw); } catch { return fallback; }
+}
+
 // MEDIUM-6: shared aggregation helpers used by leaderboard, admin stats, and AI insights
 
 /** Groups any array of rows that have a `userId` field into a per-user Map. */
@@ -1982,16 +1987,13 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
         return res.status(502).json({ error: "Unable to generate lesson plan." });
       }
 
-      let planArray: any[];
-      try {
-        const raw = content.text.trim();
-        const jsonStart = raw.indexOf("[");
-        const jsonEnd = raw.lastIndexOf("]");
-        if (jsonStart === -1 || jsonEnd === -1) throw new Error("No JSON array found");
-        planArray = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
-      } catch {
-        return res.status(502).json({ error: "Could not parse lesson plan from AI response." });
-      }
+      const rawPlan = content.text.trim();
+      const jsonStart = rawPlan.indexOf("[");
+      const jsonEnd = rawPlan.lastIndexOf("]");
+      const planArray = jsonStart !== -1 && jsonEnd !== -1
+        ? safeJsonParse<any[] | null>(rawPlan.slice(jsonStart, jsonEnd + 1), null)
+        : null;
+      if (!planArray) return res.status(502).json({ error: "Could not parse lesson plan from AI response." });
 
       res.json({ lessonPlan: planArray });
     } catch (error: any) {
@@ -2179,14 +2181,12 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       });
       const raw = message.content[0]?.type === "text" ? message.content[0].text.trim() : "[]";
       const jsonText = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```\s*$/, "").trim();
-      let generated: { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
-      try {
-        generated = JSON.parse(jsonText);
-      } catch {
+      const generatedRaw = safeJsonParse<{ id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[] | null>(jsonText, null);
+      if (!generatedRaw) {
         console.error("[Diagnostic AI] JSON parse failed:", jsonText.slice(0, 200));
         return res.status(500).json({ message: "Failed to parse AI-generated questions" });
       }
-      generated = generated.filter(q =>
+      const generated = generatedRaw.filter(q =>
         q.id && q.sectionId && q.question &&
         Array.isArray(q.options) && q.options.length === 4 &&
         typeof q.correctIndex === "number" && q.correctIndex >= 0 && q.correctIndex < 4
@@ -2961,12 +2961,8 @@ Return ONLY valid JSON (no markdown, no explanation):
       if (jsonStart === -1 || jsonEnd === -1) {
         return res.status(502).json({ error: "Could not generate action plan. Please try again." });
       }
-      let actionPlan: Record<string, unknown>;
-      try {
-        actionPlan = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
-      } catch {
-        return res.status(502).json({ error: "Could not parse action plan. Please try again." });
-      }
+      const actionPlan = safeJsonParse<Record<string, unknown> | null>(raw.slice(jsonStart, jsonEnd + 1), null);
+      if (!actionPlan) return res.status(502).json({ error: "Could not parse action plan. Please try again." });
 
       const saved = await storage.upsertRiskAssessment(
         userId,
@@ -3204,8 +3200,8 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
       if (jsonStart === -1 || jsonEnd === -1) {
         return res.status(502).json({ error: "AI returned an unexpected format. Please try again." });
       }
-      const parsed2 = JSON.parse(raw.slice(jsonStart, jsonEnd + 1));
-      if (!Array.isArray(parsed2?.questions) || parsed2.questions.length === 0) {
+      const parsed2 = safeJsonParse<{ questions?: unknown[] } | null>(raw.slice(jsonStart, jsonEnd + 1), null);
+      if (!parsed2 || !Array.isArray(parsed2.questions) || parsed2.questions.length === 0) {
         return res.status(502).json({ error: "AI returned an unexpected format. Please try again." });
       }
       res.json({ topic, questions: parsed2.questions });
@@ -3723,7 +3719,7 @@ Rules:
           const jStart = raw.indexOf("{");
           const jEnd = raw.lastIndexOf("}");
           if (jStart !== -1 && jEnd !== -1) {
-            parsed = JSON.parse(raw.slice(jStart, jEnd + 1));
+            parsed = safeJsonParse(raw.slice(jStart, jEnd + 1), parsed);
           }
         } catch (aiErr) {
           console.error("Content Intelligence Agent — Claude error:", aiErr);
@@ -4280,8 +4276,8 @@ Return ONLY valid JSON, no other text:
         const jStart = raw.indexOf("{");
         const jEnd   = raw.lastIndexOf("}");
         if (jStart !== -1 && jEnd !== -1) {
-          const parsed = JSON.parse(raw.slice(jStart, jEnd + 1));
-          claudeFindings = Array.isArray(parsed.findings) ? parsed.findings : [];
+          const parsed = safeJsonParse<{ findings?: ClaudeFinding[] } | null>(raw.slice(jStart, jEnd + 1), null);
+          claudeFindings = parsed && Array.isArray(parsed.findings) ? parsed.findings : [];
         }
       } catch (aiErr) {
         console.error("Regulatory Watch Agent — Claude error:", aiErr);
