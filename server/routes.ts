@@ -32,6 +32,21 @@ const upload = multer({
   },
 });
 
+/** M-9: verify actual file content matches declared type via magic bytes. */
+function checkMagicBytes(buf: Buffer, originalname: string): boolean {
+  if (buf.length < 4) return false;
+  const [b0, b1, b2, b3] = [buf[0], buf[1], buf[2], buf[3]];
+  // PDF: %PDF (25 50 44 46)
+  if (b0 === 0x25 && b1 === 0x50 && b2 === 0x44 && b3 === 0x46) return true;
+  // DOCX / ZIP: PK\x03\x04 (50 4B 03 04)
+  if (b0 === 0x50 && b1 === 0x4B && b2 === 0x03 && b3 === 0x04) return true;
+  // DOC / OLE2 compound document: D0 CF 11 E0
+  if (b0 === 0xD0 && b1 === 0xCF && b2 === 0x11 && b3 === 0xE0) return true;
+  // Plain text: no reliable magic bytes — allow if extension is .txt
+  if (/\.txt$/i.test(originalname)) return true;
+  return false;
+}
+
 // Staff Learning Agent — chapter-slug to compliance-category mapping
 const CATEGORY_LEVEL_PREFIXES: Record<string, string[]> = {
   "Infection Control":      ["asc_ipc", "infection_control"],
@@ -247,7 +262,8 @@ async function userCanAccessLevel(userId: number, levelId: string): Promise<bool
 
 async function getModuleLevelsForUser(userId: number) {
   const user = await storage.getUser(userId);
-  const module: ModuleId = (user?.organizationType as ModuleId) || "hospital";
+  if (!user) return storage.getLevelsByModule("hospital");
+  const module: ModuleId = (user.organizationType as ModuleId) || "hospital";
   return storage.getLevelsByModule(module);
 }
 
@@ -1466,10 +1482,13 @@ export async function registerRoutes(
       });
     }
 
+    // NEW-2: fetch activities once; only load sessions/users/progress if backfill is needed
     const existingActs = await storage.getAllActivities();
     if (existingActs.length === 0) {
-      const allSessionsForBackfill = await storage.getAllQuizSessions();
-      const allUsersForBackfill = await storage.getAllUsers();
+      const [allSessionsForBackfill, allUsersForBackfill] = await Promise.all([
+        storage.getAllQuizSessions(),
+        storage.getAllUsers(),
+      ]);
 
       for (const sess of allSessionsForBackfill) {
         if (sess.updatedAt) {
@@ -1486,8 +1505,14 @@ export async function registerRoutes(
           }
         }
       }
+
+      // M-7: batch-fetch all user progress in one query instead of N+1 getProgress() calls
+      const backfillUserIds = allUsersForBackfill.map(u => u.id);
+      const allProgressForBackfill = await storage.getProgressForUsers(backfillUserIds);
+      const backfillProgressByUser = groupById(allProgressForBackfill);
+
       for (const u of allUsersForBackfill) {
-        const prog = await storage.getProgress(u.id);
+        const prog = backfillProgressByUser.get(u.id) || [];
         for (const p of prog) {
           if (p.completedAt) {
             const completedDate = toCentralDate(new Date(p.completedAt));
@@ -1498,7 +1523,8 @@ export async function registerRoutes(
     }
 
     const allStreaks = await storage.getAllStreaks();
-    const allActs = await storage.getAllActivities();
+    // NEW-2: reuse the already-fetched activities; only refetch if backfill ran (existingActs was empty)
+    const allActs = existingActs.length > 0 ? existingActs : await storage.getAllActivities();
     const today = toCentralDate(new Date());
     for (const s of allStreaks) {
       const userActs = allActs.filter((a) => a.userId === s.userId && a.questionsAnswered > 0);
@@ -3001,7 +3027,8 @@ Return ONLY valid JSON (no markdown, no explanation):
     try {
       const caller = req.user!;
       const callerData = await storage.getUser(caller.id);
-      const callerDept = (callerData as any)?.department ?? null;
+      if (!callerData) return res.status(404).json({ message: "User not found" });
+      const callerDept = (callerData as any).department ?? null;
       const callerRank = LEADERSHIP_RANK[getEffectiveLeadershipRole(caller)] ?? 0;
 
       const allUsersRaw = await storage.getAllUsers();
@@ -3644,6 +3671,11 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
         // If no file uploaded, return document only (no AI processing)
         if (!req.file) {
           return res.json({ document: doc, module: null, summary: null });
+        }
+
+        // M-9: magic-byte check — reject files whose content doesn't match declared type
+        if (!checkMagicBytes(req.file.buffer, req.file.originalname)) {
+          return res.status(400).json({ message: "File content does not match the declared type." });
         }
 
         // Extract text from uploaded file
