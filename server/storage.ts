@@ -346,6 +346,48 @@ export async function ensureTablesExist() {
         UNIQUE(team_id, user_id)
       );
 
+      -- CRITICAL-4: Indexes on all heavily-queried FK and filter columns
+      CREATE INDEX IF NOT EXISTS idx_users_facility_id ON users(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_users_leadership_role ON users(leadership_role);
+      CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress(user_id);
+      CREATE INDEX IF NOT EXISTS idx_user_progress_user_level ON user_progress(user_id, level_id);
+      CREATE INDEX IF NOT EXISTS idx_daily_activity_user_id ON daily_activity(user_id);
+      CREATE INDEX IF NOT EXISTS idx_daily_activity_user_date ON daily_activity(user_id, date);
+      CREATE INDEX IF NOT EXISTS idx_quiz_sessions_user_id ON quiz_sessions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_quiz_sessions_user_level ON quiz_sessions(user_id, level_id);
+      CREATE INDEX IF NOT EXISTS idx_diagnostic_sessions_user_id ON diagnostic_sessions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_mastery_sessions_user_id ON mastery_sessions(user_id);
+      CREATE INDEX IF NOT EXISTS idx_diagnostic_results_user_id ON diagnostic_results(user_id);
+      CREATE INDEX IF NOT EXISTS idx_mastery_results_user_id ON mastery_results(user_id);
+      CREATE INDEX IF NOT EXISTS idx_asc_pretest_results_user_id ON asc_pretest_results(user_id);
+      CREATE INDEX IF NOT EXISTS idx_asc_posttest_results_user_id ON asc_posttest_results(user_id);
+      CREATE INDEX IF NOT EXISTS idx_flashcard_reviews_user_level ON flashcard_reviews(user_id, level_id);
+      CREATE INDEX IF NOT EXISTS idx_flashcard_reviews_next_review ON flashcard_reviews(user_id, next_review_at);
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_user_id ON audit_logs(user_id);
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON audit_logs(created_at DESC);
+      CREATE INDEX IF NOT EXISTS idx_risk_assessments_user_id ON risk_assessments(user_id);
+      CREATE INDEX IF NOT EXISTS idx_teams_facility_id ON teams(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_team_members_user_id ON team_members(user_id);
+      CREATE INDEX IF NOT EXISTS idx_team_members_team_id ON team_members(team_id);
+      CREATE INDEX IF NOT EXISTS idx_compliance_logs_facility_id ON compliance_logs(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_compliance_logs_facility_completed ON compliance_logs(facility_id, completed_at);
+      CREATE INDEX IF NOT EXISTS idx_compliance_documents_facility_id ON compliance_documents(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_compliance_tasks_facility_id ON compliance_tasks(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_compliance_training_modules_facility ON compliance_training_modules(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_staff_training_alerts_facility_id ON staff_training_alerts(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_staff_training_alerts_facility_user ON staff_training_alerts(facility_id, user_id);
+      CREATE INDEX IF NOT EXISTS idx_regulatory_watch_findings_facility ON regulatory_watch_findings(facility_id);
+      CREATE INDEX IF NOT EXISTS idx_executive_briefs_facility_week ON executive_briefs(facility_id, week_of DESC);
+
+      -- HIGH-4: FK constraints on compliance tables (idempotent)
+      DO $$ BEGIN ALTER TABLE compliance_logs ADD CONSTRAINT compliance_logs_facility_fk FOREIGN KEY (facility_id) REFERENCES facilities(id); EXCEPTION WHEN duplicate_object THEN NULL; WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_documents ADD CONSTRAINT compliance_documents_facility_fk FOREIGN KEY (facility_id) REFERENCES facilities(id); EXCEPTION WHEN duplicate_object THEN NULL; WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_tasks ADD CONSTRAINT compliance_tasks_facility_fk FOREIGN KEY (facility_id) REFERENCES facilities(id); EXCEPTION WHEN duplicate_object THEN NULL; WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_training_modules ADD CONSTRAINT compliance_training_modules_facility_fk FOREIGN KEY (facility_id) REFERENCES facilities(id); EXCEPTION WHEN duplicate_object THEN NULL; WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE staff_training_alerts ADD CONSTRAINT staff_training_alerts_facility_fk FOREIGN KEY (facility_id) REFERENCES facilities(id); EXCEPTION WHEN duplicate_object THEN NULL; WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE regulatory_watch_findings ADD CONSTRAINT regulatory_watch_findings_facility_fk FOREIGN KEY (facility_id) REFERENCES facilities(id); EXCEPTION WHEN duplicate_object THEN NULL; WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE executive_briefs ADD CONSTRAINT executive_briefs_facility_fk FOREIGN KEY (facility_id) REFERENCES facilities(id); EXCEPTION WHEN duplicate_object THEN NULL; WHEN others THEN NULL; END $$;
+
       -- MEDIUM-4: Enforce leadershipRole as DB enum
       DO $$ BEGIN
         CREATE TYPE leadership_role_type AS ENUM ('learner', 'educator', 'director', 'ceo', 'admin', 'super_admin');

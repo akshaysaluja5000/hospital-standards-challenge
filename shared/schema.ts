@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, boolean, timestamp, date, serial, jsonb, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, boolean, timestamp, date, serial, jsonb, pgEnum, index, uniqueIndex } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -78,7 +78,10 @@ export const users = pgTable("users", {
   dailyGoal: integer("daily_goal").notNull().default(5),
   reminderEnabled: boolean("reminder_enabled").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_users_facility_id").on(t.facilityId),
+  index("idx_users_leadership_role").on(t.leadershipRole),
+]);
 
 export type Role = typeof roles.$inferSelect;
 export type RoleChapterMapping = typeof roleChapterMappings.$inferSelect;
@@ -92,7 +95,10 @@ export const userProgress = pgTable("user_progress", {
   bestScore: integer("best_score").notNull().default(0),
   completed: boolean("completed").notNull().default(false),
   completedAt: timestamp("completed_at"),
-});
+}, (t) => [
+  index("idx_user_progress_user_id").on(t.userId),
+  index("idx_user_progress_user_level").on(t.userId, t.levelId),
+]);
 
 export const userStreaks = pgTable("user_streaks", {
   id: serial("id").primaryKey(),
@@ -110,7 +116,10 @@ export const dailyActivity = pgTable("daily_activity", {
   questionsAnswered: integer("questions_answered").notNull().default(0),
   correctAnswers: integer("correct_answers").notNull().default(0),
   xpEarned: integer("xp_earned").notNull().default(0),
-});
+}, (t) => [
+  index("idx_daily_activity_user_id").on(t.userId),
+  index("idx_daily_activity_user_date").on(t.userId, t.date),
+]);
 
 export const quizSessions = pgTable("quiz_sessions", {
   id: serial("id").primaryKey(),
@@ -122,7 +131,10 @@ export const quizSessions = pgTable("quiz_sessions", {
   correctAnswers: integer("correct_answers").notNull().default(0),
   xpEarned: integer("xp_earned").notNull().default(0),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_quiz_sessions_user_id").on(t.userId),
+  index("idx_quiz_sessions_user_level").on(t.userId, t.levelId),
+]);
 
 export type QuizSession = typeof quizSessions.$inferSelect;
 
@@ -180,7 +192,9 @@ export const diagnosticResults = pgTable("diagnostic_results", {
   totalQuestions: integer("total_questions").notNull(),
   answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_diagnostic_results_user_id").on(t.userId),
+]);
 
 export const masteryResults = pgTable("mastery_results", {
   id: serial("id").primaryKey(),
@@ -189,7 +203,9 @@ export const masteryResults = pgTable("mastery_results", {
   totalQuestions: integer("total_questions").notNull(),
   answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_mastery_results_user_id").on(t.userId),
+]);
 
 export const diagnosticSessions = pgTable("diagnostic_sessions", {
   id: serial("id").primaryKey(),
@@ -200,7 +216,9 @@ export const diagnosticSessions = pgTable("diagnostic_sessions", {
   shuffleMaps: jsonb("shuffle_maps").notNull().default(sql`'{}'::jsonb`),
   questionData: jsonb("question_data"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_diagnostic_sessions_user_id").on(t.userId),
+]);
 
 export const masterySessions = pgTable("mastery_sessions", {
   id: serial("id").primaryKey(),
@@ -210,7 +228,9 @@ export const masterySessions = pgTable("mastery_sessions", {
   currentQuestion: integer("current_question").notNull().default(0),
   shuffleMaps: jsonb("shuffle_maps").notNull().default(sql`'{}'::jsonb`),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_mastery_sessions_user_id").on(t.userId),
+]);
 
 export const ascPretestResults = pgTable("asc_pretest_results", {
   id: serial("id").primaryKey(),
@@ -220,7 +240,9 @@ export const ascPretestResults = pgTable("asc_pretest_results", {
   answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   chapterScores: jsonb("chapter_scores").notNull().default(sql`'{}'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_asc_pretest_results_user_id").on(t.userId),
+]);
 
 export const ascPosttestResults = pgTable("asc_posttest_results", {
   id: serial("id").primaryKey(),
@@ -230,7 +252,9 @@ export const ascPosttestResults = pgTable("asc_posttest_results", {
   answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   chapterScores: jsonb("chapter_scores").notNull().default(sql`'{}'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_asc_posttest_results_user_id").on(t.userId),
+]);
 
 export type DiagnosticSession = typeof diagnosticSessions.$inferSelect;
 export type MasterySession = typeof masterySessions.$inferSelect;
@@ -360,14 +384,19 @@ export const teams = pgTable("teams", {
   department: text("department"),
   createdByUserId: integer("created_by_user_id").references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_teams_facility_id").on(t.facilityId),
+]);
 
 export const teamMembers = pgTable("team_members", {
   id: serial("id").primaryKey(),
   teamId: integer("team_id").notNull().references(() => teams.id),
   userId: integer("user_id").notNull().references(() => users.id),
   addedAt: timestamp("added_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_team_members_user_id").on(t.userId),
+  index("idx_team_members_team_id").on(t.teamId),
+]);
 
 export type Team = typeof teams.$inferSelect;
 export type TeamMember = typeof teamMembers.$inferSelect;
@@ -385,7 +414,10 @@ export const auditLogs = pgTable("audit_logs", {
   meta: text("meta"),
   ipAddress: text("ip_address"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_audit_logs_user_id").on(t.userId),
+  index("idx_audit_logs_created_at").on(t.createdAt),
+]);
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 
@@ -414,7 +446,9 @@ export const riskAssessments = pgTable("risk_assessments", {
   notes: text("notes").notNull().default(""),
   actionPlan: jsonb("action_plan").notNull().default(sql`'{}'::jsonb`),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_risk_assessments_user_id").on(t.userId),
+]);
 
 export type RiskAssessment = typeof riskAssessments.$inferSelect;
 
@@ -430,7 +464,10 @@ export const flashcardReviews = pgTable("flashcard_reviews", {
   reviewCount: integer("review_count").notNull().default(0),
   lastRating: text("last_rating").notNull().default("good"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_flashcard_reviews_user_level").on(t.userId, t.levelId),
+  index("idx_flashcard_reviews_next_review").on(t.userId, t.nextReviewAt),
+]);
 
 export type FlashcardReview = typeof flashcardReviews.$inferSelect;
 
@@ -464,7 +501,7 @@ export type ComplianceItem = typeof complianceItems.$inferSelect;
 
 export const complianceLogs = pgTable("compliance_logs", {
   id: serial("id").primaryKey(),
-  facilityId: integer("facility_id").notNull(),
+  facilityId: integer("facility_id").notNull().references(() => facilities.id),
   itemId: integer("item_id").notNull().references(() => complianceItems.id),
   completedBy: text("completed_by").notNull(),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
@@ -472,13 +509,16 @@ export const complianceLogs = pgTable("compliance_logs", {
   notes: text("notes"),
   nextDue: date("next_due"),
   agentFlagged: boolean("agent_flagged").notNull().default(false),
-});
+}, (t) => [
+  index("idx_compliance_logs_facility_id").on(t.facilityId),
+  index("idx_compliance_logs_facility_completed").on(t.facilityId, t.completedAt),
+]);
 
 export type ComplianceLog = typeof complianceLogs.$inferSelect;
 
 export const complianceDocuments = pgTable("compliance_documents", {
   id: serial("id").primaryKey(),
-  facilityId: integer("facility_id").notNull(),
+  facilityId: integer("facility_id").notNull().references(() => facilities.id),
   itemId: integer("item_id").notNull().references(() => complianceItems.id),
   documentName: text("document_name").notNull(),
   uploadedBy: text("uploaded_by").notNull(),
@@ -488,13 +528,15 @@ export const complianceDocuments = pgTable("compliance_documents", {
   status: text("status").notNull().default("current"),
   aiTaggedStandards: jsonb("ai_tagged_standards").notNull().default(sql`'[]'::jsonb`),
   aiQuestionsGenerated: boolean("ai_questions_generated").notNull().default(false),
-});
+}, (t) => [
+  index("idx_compliance_documents_facility_id").on(t.facilityId),
+]);
 
 export type ComplianceDocument = typeof complianceDocuments.$inferSelect;
 
 export const complianceTasks = pgTable("compliance_tasks", {
   id: serial("id").primaryKey(),
-  facilityId: integer("facility_id").notNull(),
+  facilityId: integer("facility_id").notNull().references(() => facilities.id),
   itemId: integer("item_id").notNull().references(() => complianceItems.id),
   assignedTo: text("assigned_to"),
   dueDate: date("due_date"),
@@ -503,13 +545,15 @@ export const complianceTasks = pgTable("compliance_tasks", {
   status: text("status").notNull().default("pending"),
   reminderSent: boolean("reminder_sent").notNull().default(false),
   escalated: boolean("escalated").notNull().default(false),
-});
+}, (t) => [
+  index("idx_compliance_tasks_facility_id").on(t.facilityId),
+]);
 
 export type ComplianceTask = typeof complianceTasks.$inferSelect;
 
 export const complianceTrainingModules = pgTable("compliance_training_modules", {
   id: serial("id").primaryKey(),
-  facilityId: integer("facility_id").notNull(),
+  facilityId: integer("facility_id").notNull().references(() => facilities.id),
   documentId: integer("document_id").notNull().references(() => complianceDocuments.id),
   itemId: integer("item_id").notNull().references(() => complianceItems.id),
   title: text("title").notNull(),
@@ -522,13 +566,15 @@ export const complianceTrainingModules = pgTable("compliance_training_modules", 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   approvedAt: timestamp("approved_at"),
   approvedBy: text("approved_by"),
-});
+}, (t) => [
+  index("idx_compliance_training_modules_facility").on(t.facilityId),
+]);
 
 export type ComplianceTrainingModule = typeof complianceTrainingModules.$inferSelect;
 
 export const staffTrainingAlerts = pgTable("staff_training_alerts", {
   id: serial("id").primaryKey(),
-  facilityId: integer("facility_id").notNull(),
+  facilityId: integer("facility_id").notNull().references(() => facilities.id),
   userId: integer("user_id").notNull().references(() => users.id),
   complianceItemId: integer("compliance_item_id").references(() => complianceItems.id),
   alertType: text("alert_type").notNull().default("reminder"),
@@ -537,13 +583,16 @@ export const staffTrainingAlerts = pgTable("staff_training_alerts", {
   daysOverdue: integer("days_overdue").notNull().default(0),
   isRead: boolean("is_read").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_staff_training_alerts_facility_user").on(t.facilityId, t.userId),
+  index("idx_staff_training_alerts_facility_id").on(t.facilityId),
+]);
 
 export type StaffTrainingAlert = typeof staffTrainingAlerts.$inferSelect;
 
 export const regulatoryWatchFindings = pgTable("regulatory_watch_findings", {
   id: serial("id").primaryKey(),
-  facilityId: integer("facility_id").notNull(),
+  facilityId: integer("facility_id").notNull().references(() => facilities.id),
   source: text("source").notNull(),
   standardCode: text("standard_code").notNull(),
   title: text("title").notNull(),
@@ -557,13 +606,15 @@ export const regulatoryWatchFindings = pgTable("regulatory_watch_findings", {
   scannedAt: timestamp("scanned_at").notNull().defaultNow(),
   reviewedAt: timestamp("reviewed_at"),
   reviewedBy: text("reviewed_by"),
-});
+}, (t) => [
+  index("idx_regulatory_watch_findings_facility").on(t.facilityId),
+]);
 
 export type RegulatoryWatchFinding = typeof regulatoryWatchFindings.$inferSelect;
 
 export const executiveBriefs = pgTable("executive_briefs", {
   id: serial("id").primaryKey(),
-  facilityId: integer("facility_id").notNull(),
+  facilityId: integer("facility_id").notNull().references(() => facilities.id),
   weekOf: date("week_of").notNull(),
   readinessScore: integer("readiness_score").notNull().default(0),
   previousScore: integer("previous_score"),
@@ -578,7 +629,9 @@ export const executiveBriefs = pgTable("executive_briefs", {
   emailSentAt: timestamp("email_sent_at"),
   emailSentTo: jsonb("email_sent_to").notNull().default(sql`'[]'::jsonb`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-});
+}, (t) => [
+  index("idx_executive_briefs_facility_week").on(t.facilityId, t.weekOf),
+]);
 
 export type ExecutiveBrief = typeof executiveBriefs.$inferSelect;
 
