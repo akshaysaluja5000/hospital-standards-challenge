@@ -292,10 +292,11 @@ export async function registerRoutes(
       resave: false,
       saveUninitialized: false,
       cookie: {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+        maxAge: 8 * 60 * 60 * 1000,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
+        rolling: true,
       },
     })
   );
@@ -542,7 +543,7 @@ export async function registerRoutes(
 
       res.json({ message: "Password updated successfully" });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -561,7 +562,7 @@ export async function registerRoutes(
       const { password: _, ...safeUser } = user;
       res.json(safeUser);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -584,7 +585,7 @@ export async function registerRoutes(
       await storage.updateUser(req.user!.id, { password: hashedPassword });
       res.json({ message: "Password updated successfully" });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -602,7 +603,7 @@ export async function registerRoutes(
       const { password: _, ...safeUser } = user;
       res.json(safeUser);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -618,7 +619,7 @@ export async function registerRoutes(
       const { password: _, ...safeUser } = user;
       res.json(safeUser);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -640,7 +641,7 @@ export async function registerRoutes(
       if (!updated) return res.status(404).json({ message: "User not found" });
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -660,7 +661,7 @@ export async function registerRoutes(
       const { password: _, ...safeUser } = user;
       res.json(safeUser);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -691,7 +692,7 @@ export async function registerRoutes(
       });
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -701,7 +702,7 @@ export async function registerRoutes(
       const logs = await storage.getAuditLogs(limit);
       res.json(logs);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -730,7 +731,7 @@ export async function registerRoutes(
       });
       res.json({ rows });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -746,7 +747,7 @@ export async function registerRoutes(
       }
       res.json(streak);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -755,7 +756,7 @@ export async function registerRoutes(
       const progress = await storage.getProgress(req.user!.id);
       res.json(progress);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -764,7 +765,7 @@ export async function registerRoutes(
       const activities = await storage.getActivities(req.user!.id);
       res.json(activities);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -777,7 +778,7 @@ export async function registerRoutes(
       }
       res.json(activity);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -850,7 +851,7 @@ export async function registerRoutes(
 
       res.json({ success: true, streak });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -859,7 +860,7 @@ export async function registerRoutes(
       const sessions = await storage.getUserQuizSessions(req.user!.id);
       res.json(sessions);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -875,7 +876,7 @@ export async function registerRoutes(
       }
       res.json(session);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -895,7 +896,7 @@ export async function registerRoutes(
 
       const session = await storage.upsertQuizSession(userId, levelId, {
         questionOrder,
-        answers: JSON.stringify(answers),
+        answers,
         currentQuestion,
         correctAnswers,
         xpEarned,
@@ -948,7 +949,7 @@ export async function registerRoutes(
 
       res.json(session);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -958,7 +959,7 @@ export async function registerRoutes(
       await storage.deleteQuizSession(req.user!.id, levelId);
       res.json({ success: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -997,7 +998,7 @@ export async function registerRoutes(
       }
       res.json(session);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1032,7 +1033,7 @@ export async function registerRoutes(
       if (err instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid session data" });
       }
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1042,7 +1043,7 @@ export async function registerRoutes(
       await storage.deleteQuizSession(req.user!.id, levelId);
       res.json({ success: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1068,7 +1069,7 @@ export async function registerRoutes(
       }));
       res.json(levelsInfo);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1081,7 +1082,7 @@ export async function registerRoutes(
       }
       res.json(level);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1150,7 +1151,7 @@ export async function registerRoutes(
       if (err instanceof z.ZodError) {
         return res.status(400).json({ message: "Invalid submission data" });
       }
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1169,11 +1170,12 @@ export async function registerRoutes(
 
       const allUsersRaw = await storage.getAllUsers();
       const allUsers = allUsersRaw.filter((u) => facilityFilter(u) && orgTypeFilter(u));
-      const allStreaks = await storage.getAllStreaks();
-      const allSessions = await storage.getAllQuizSessions();
-      const allProgressData = await Promise.all(
-        allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
-      );
+      const userIds = allUsers.map(u => u.id);
+      const [allStreaks, allSessions, allProgressFlat] = await Promise.all([
+        storage.getStreaksForUsers(userIds),
+        storage.getQuizSessionsForUsers(userIds),
+        storage.getProgressForUsers(userIds),
+      ]);
 
       // For time-based periods, pull daily_activity since startDate
       let periodActivityByUser: Map<number, number> | null = null;
@@ -1199,12 +1201,17 @@ export async function registerRoutes(
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
       const sessionsByUser = new Map<number, typeof allSessions>();
-      allSessions.forEach((s) => {
-        const list = sessionsByUser.get(s.userId) || [];
+      for (const s of allSessions) {
+        const list = sessionsByUser.get(s.userId) ?? [];
         list.push(s);
         sessionsByUser.set(s.userId, list);
-      });
-      const progressByUser = new Map(allProgressData.map((p) => [p.userId, p.progress]));
+      }
+      const progressByUser = new Map<number, UserProgress[]>();
+      for (const p of allProgressFlat) {
+        const arr = progressByUser.get(p.userId) ?? [];
+        arr.push(p);
+        progressByUser.set(p.userId, arr);
+      }
 
       const leaderboard = allUsers.map((u) => {
         const streak = streakMap.get(u.id);
@@ -1249,7 +1256,7 @@ export async function registerRoutes(
 
       res.json(leaderboard);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1325,29 +1332,34 @@ export async function registerRoutes(
       const facilityFilter = getFacilityFilter(adminUser);
       const allUsersRaw = await storage.getAllUsers();
       const allUsers = allUsersRaw.filter(facilityFilter);
-      const allStreaks = await storage.getAllStreaks();
-      const allActivities = await storage.getAllActivities();
-      const allSessions = await storage.getAllQuizSessions();
-      const allProgressData = await Promise.all(
-        allUsers.map(async (u) => ({ userId: u.id, progress: await storage.getProgress(u.id) }))
-      );
+      const statsUserIds = allUsers.map(u => u.id);
+      const [allStreaks, allActivities, allSessions, allProgressFlat] = await Promise.all([
+        storage.getStreaksForUsers(statsUserIds),
+        storage.getActivitiesForUsers(statsUserIds),
+        storage.getQuizSessionsForUsers(statsUserIds),
+        storage.getProgressForUsers(statsUserIds),
+      ]);
       const today = toCentralDate(new Date());
 
       const streakMap = new Map(allStreaks.map((s) => [s.userId, s]));
       const activitiesByUser = new Map<number, DailyActivity[]>();
-      allActivities.forEach((a) => {
-        const list = activitiesByUser.get(a.userId) || [];
+      for (const a of allActivities) {
+        const list = activitiesByUser.get(a.userId) ?? [];
         list.push(a);
         activitiesByUser.set(a.userId, list);
-      });
-
+      }
       const sessionsByUser = new Map<number, typeof allSessions>();
-      allSessions.forEach((s) => {
-        const list = sessionsByUser.get(s.userId) || [];
+      for (const s of allSessions) {
+        const list = sessionsByUser.get(s.userId) ?? [];
         list.push(s);
         sessionsByUser.set(s.userId, list);
-      });
-      const progressByUser = new Map(allProgressData.map((p) => [p.userId, p.progress]));
+      }
+      const progressByUser = new Map<number, UserProgress[]>();
+      for (const p of allProgressFlat) {
+        const arr = progressByUser.get(p.userId) ?? [];
+        arr.push(p);
+        progressByUser.set(p.userId, arr);
+      }
 
       const facilityUserIds = new Set(allUsers.map((u) => u.id));
 
@@ -1435,7 +1447,7 @@ export async function registerRoutes(
         userList,
       });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -1469,7 +1481,7 @@ export async function registerRoutes(
           let answeredCount = 0;
           let correctCount = 0;
           try {
-            const answers = JSON.parse(sess.answers || "[]");
+            const answers = (sess.answers as any[]) || [];
             answeredCount = answers.length;
             correctCount = answers.filter((a: any) => a.correct).length;
           } catch {}
@@ -1687,9 +1699,19 @@ Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do dif
       const adminUser = req.user as User;
       const allUsersRaw = await storage.getAllUsers();
       const allUsers = allUsersRaw.filter(getFacilityFilter(adminUser));
-      const allProgressData = await Promise.all(
-        allUsers.map(async (u) => ({ userId: u.id, username: u.username, progress: await storage.getProgress(u.id) }))
-      );
+      const aiInsightsUserIds = allUsers.map(u => u.id);
+      const aiProgressFlat = await storage.getProgressForUsers(aiInsightsUserIds);
+      const aiProgressByUser = new Map<number, UserProgress[]>();
+      for (const p of aiProgressFlat) {
+        const arr = aiProgressByUser.get(p.userId) ?? [];
+        arr.push(p);
+        aiProgressByUser.set(p.userId, arr);
+      }
+      const allProgressData = allUsers.map(u => ({
+        userId: u.id,
+        username: u.username,
+        progress: aiProgressByUser.get(u.id) ?? [],
+      }));
 
       const { levels } = await import("@shared/questions");
 
@@ -2216,10 +2238,10 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       });
       await storage.upsertDiagnosticSession(req.user!.id, {
         questionOrder: generated.map(q => q.id),
-        answers: "[]",
+        answers: [],
         currentQuestion: 0,
-        shuffleMaps: JSON.stringify(shuffleMaps),
-        questionData: JSON.stringify(generated),
+        shuffleMaps,
+        questionData: generated,
       });
       res.json(clientQuestions);
     } catch (err: any) {
@@ -2232,7 +2254,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const results = await storage.getDiagnosticResults(req.user!.id);
     const enriched = results.map(r => {
       try {
-        const parsed = JSON.parse(r.answers);
+        const parsed = r.answers as any;
         if (parsed && parsed.version === 2) {
           return { ...r, detailedResults: parsed.detailedResults, sectionScores: parsed.sectionScores };
         }
@@ -2245,11 +2267,11 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   app.get("/api/diagnostic/session", requireAuth, async (req, res) => {
     const session = await storage.getDiagnosticSession(req.user!.id);
     if (!session) return res.json(null);
-    const savedAnswers = JSON.parse(session.answers);
-    const savedShuffleMaps = session.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const savedAnswers = session.answers as any[];
+    const savedShuffleMaps = (session.shuffleMaps as any) ?? null;
     let questionsData: any[];
     if (session.questionData) {
-      const stored = JSON.parse(session.questionData) as { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
+      const stored = session.questionData as { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
       questionsData = stored.map(q => {
         if (savedShuffleMaps && savedShuffleMaps[q.id]) {
           const sm = savedShuffleMaps[q.id] as number[];
@@ -2282,9 +2304,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const { questionOrder, answers, currentQuestion, shuffleMaps } = req.body;
     await storage.upsertDiagnosticSession(req.user!.id, {
       questionOrder,
-      answers: JSON.stringify(answers),
+      answers,
       currentQuestion,
-      shuffleMaps: JSON.stringify(shuffleMaps || {}),
+      shuffleMaps: shuffleMaps || {},
     });
     res.json({ success: true });
   });
@@ -2301,10 +2323,10 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
 
     const session = await storage.getDiagnosticSession(req.user!.id);
-    const serverShuffleMaps = session?.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const serverShuffleMaps = (session?.shuffleMaps as any) ?? null;
     const trustedMaps = serverShuffleMaps || clientShuffleMaps || {};
     const storedQuestions: { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[] | null =
-      session?.questionData ? JSON.parse(session.questionData) : null;
+      (session?.questionData as any) ?? null;
 
     let score = 0;
     const detailedResults: {
@@ -2342,7 +2364,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       sectionScores[d.sectionId].total++;
       if (d.correct) sectionScores[d.sectionId].correct++;
     }
-    const storedPayload = JSON.stringify({ version: 2, detailedResults, sectionScores });
+    const storedPayload = { version: 2, detailedResults, sectionScores };
     const result = await storage.createDiagnosticResult(
       req.user!.id, score, totalAnswered, storedPayload
     );
@@ -2488,7 +2510,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
 
   app.get("/api/asc-pretest/questions", requireAuth, requireAsc, async (req, res) => {
     const { items, shuffleMaps } = buildAscTestPayload(ascPretestQuestions);
-    await storage.upsertAscTestSession(req.user!.id, "pretest", JSON.stringify(shuffleMaps));
+    await storage.upsertAscTestSession(req.user!.id, "pretest", shuffleMaps);
     res.json(items);
   });
 
@@ -2503,7 +2525,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     if (!peek) {
       return res.status(400).json({ message: "No active pretest session. Please start the test from the beginning." });
     }
-    const serverShuffleMaps = JSON.parse(peek.shuffleMaps) as Record<string, number[]>;
+    const serverShuffleMaps = peek.shuffleMaps as Record<string, number[]>;
     const issuedIds = Object.keys(serverShuffleMaps);
     const validation = validateAscAnswerSet(answers, issuedIds, ascPretestQuestions);
     if (!validation.ok) {
@@ -2521,14 +2543,14 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct,
     }));
     const result = await storage.createAscPretestResult(
-      req.user!.id, score, totalQuestions, JSON.stringify(graded), JSON.stringify(chapterScores),
+      req.user!.id, score, totalQuestions, graded, chapterScores,
     );
     res.json({ score, totalQuestions, resultId: result.id, detailedResults, chapterScores });
   });
 
   app.get("/api/asc-posttest/questions", requireAuth, requireAsc, async (req, res) => {
     const { items, shuffleMaps } = buildAscTestPayload(ascPosttestQuestions);
-    await storage.upsertAscTestSession(req.user!.id, "posttest", JSON.stringify(shuffleMaps));
+    await storage.upsertAscTestSession(req.user!.id, "posttest", shuffleMaps);
     res.json(items);
   });
 
@@ -2543,7 +2565,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     if (!peek) {
       return res.status(400).json({ message: "No active posttest session. Please start the test from the beginning." });
     }
-    const serverShuffleMaps = JSON.parse(peek.shuffleMaps) as Record<string, number[]>;
+    const serverShuffleMaps = peek.shuffleMaps as Record<string, number[]>;
     const issuedIds = Object.keys(serverShuffleMaps);
     const validation = validateAscAnswerSet(answers, issuedIds, ascPosttestQuestions);
     if (!validation.ok) {
@@ -2561,7 +2583,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       questionId: d.questionId, selectedIndex: d.selectedIndex, correct: d.correct,
     }));
     const result = await storage.createAscPosttestResult(
-      req.user!.id, score, totalQuestions, JSON.stringify(graded), JSON.stringify(chapterScores),
+      req.user!.id, score, totalQuestions, graded, chapterScores,
     );
     res.json({ score, totalQuestions, resultId: result.id, detailedResults, chapterScores });
   });
@@ -2626,8 +2648,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const session = await storage.getMasterySession(req.user!.id);
     if (!session) return res.json(null);
     const questionIds = session.questionOrder;
-    const savedAnswers = JSON.parse(session.answers);
-    const savedShuffleMaps = session.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const savedAnswers = session.answers as any[];
+    const savedShuffleMaps = (session.shuffleMaps as any) ?? null;
     const questionsData = questionIds.map((id) => {
       const q = masteryQuestions.find(mq => mq.id === id);
       if (!q) return null;
@@ -2649,9 +2671,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const { questionOrder, answers, currentQuestion, shuffleMaps } = req.body;
     await storage.upsertMasterySession(req.user!.id, {
       questionOrder,
-      answers: JSON.stringify(answers),
+      answers,
       currentQuestion,
-      shuffleMaps: JSON.stringify(shuffleMaps || {}),
+      shuffleMaps: shuffleMaps || {},
     });
     res.json({ success: true });
   });
@@ -2665,7 +2687,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const results = await storage.getMasteryResults(req.user!.id);
     const enriched = results.map(r => {
       try {
-        const parsed = JSON.parse(r.answers);
+        const parsed = r.answers as any;
         if (parsed && parsed.version === 2) {
           return { ...r, detailedResults: parsed.detailedResults, sectionScores: parsed.sectionScores };
         }
@@ -2720,7 +2742,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
 
     const session = await storage.getMasterySession(req.user!.id);
-    const serverShuffleMaps = session?.shuffleMaps ? JSON.parse(session.shuffleMaps as string) : null;
+    const serverShuffleMaps = (session?.shuffleMaps as any) ?? null;
     const trustedMaps = serverShuffleMaps || clientShuffleMaps || {};
 
     let score = 0;
@@ -2757,7 +2779,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       sectionScores[d.sectionId].total++;
       if (d.correct) sectionScores[d.sectionId].correct++;
     }
-    const storedPayload = JSON.stringify({ version: 2, detailedResults, sectionScores });
+    const storedPayload = { version: 2, detailedResults, sectionScores };
     const result = await storage.createMasteryResult(
       req.user!.id, score, totalAnswered, storedPayload
     );
@@ -2860,7 +2882,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       const qrCode = await QRCode.toDataURL(uri);
       res.json({ secret, qrCode });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -2876,7 +2898,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       delete req.session.pendingMfaSecret;
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -2892,7 +2914,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       req.session.mfaVerified = true;
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -2909,7 +2931,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       req.session.mfaVerified = false;
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -2922,7 +2944,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       const assessment = await storage.getRiskAssessment(userId, module);
       res.json({ assessment: assessment || null });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -2985,9 +3007,9 @@ Return ONLY valid JSON (no markdown, no explanation):
       const saved = await storage.upsertRiskAssessment(
         userId,
         module,
-        JSON.stringify(riskAreas),
+        riskAreas,
         notes,
-        JSON.stringify(actionPlan),
+        actionPlan,
       );
       res.json({ assessment: saved, actionPlan });
     } catch (error: any) {
@@ -3016,7 +3038,7 @@ Return ONLY valid JSON (no markdown, no explanation):
       const assessments = await storage.getRiskAssessmentsByFacility(facilityId, module);
       res.json({ assessments });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3053,7 +3075,7 @@ Return ONLY valid JSON (no markdown, no explanation):
 
       res.json({ team: result, department: callerDept });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3071,7 +3093,7 @@ Return ONLY valid JSON (no markdown, no explanation):
       }
       res.json(result);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3089,7 +3111,7 @@ Return ONLY valid JSON (no markdown, no explanation):
       });
       res.json(team);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3109,7 +3131,7 @@ Return ONLY valid JSON (no markdown, no explanation):
       const team = await storage.renameTeam(teamId, parsed.data.name);
       res.json(team);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3126,7 +3148,7 @@ Return ONLY valid JSON (no markdown, no explanation):
       await storage.deleteTeam(teamId);
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3143,7 +3165,7 @@ Return ONLY valid JSON (no markdown, no explanation):
       const members = await storage.getTeamMembersWithStats(teamId);
       res.json(members);
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3163,7 +3185,7 @@ Return ONLY valid JSON (no markdown, no explanation):
       await storage.setTeamMembers(teamId, parsed.data.userIds);
       res.json({ ok: true });
     } catch (err: any) {
-      res.status(500).json({ message: err.message });
+      console.error(err); res.status(500).json({ message: "An unexpected error occurred" });
     }
   });
 
@@ -3768,10 +3790,10 @@ Rules:
           documentId: doc.id,
           itemId,
           title: parsed.moduleTitle || documentName,
-          taggedStandards: JSON.stringify(parsed.taggedStandards ?? []),
-          questions: JSON.stringify(parsed.questions ?? []),
-          conflictFlags: JSON.stringify(parsed.conflictFlags ?? []),
-          assignedRoles: JSON.stringify(parsed.suggestedRoles ?? []),
+          taggedStandards: parsed.taggedStandards ?? [],
+          questions: parsed.questions ?? [],
+          conflictFlags: parsed.conflictFlags ?? [],
+          assignedRoles: parsed.suggestedRoles ?? [],
           assignedMemberCount: memberCount,
         });
 
@@ -3967,7 +3989,7 @@ Rules:
     const trendColor = trend === "up" ? "#16a34a" : trend === "down" ? "#dc2626" : "#64748b";
     const scoreColor = brief.readinessScore >= 90 ? "#16a34a" : brief.readinessScore >= 75 ? "#d97706" : "#dc2626";
     let topRisks: { category: string; reason: string; count: number; severity: string }[] = [];
-    try { topRisks = JSON.parse(brief.topRisks); } catch { topRisks = []; }
+    topRisks = Array.isArray(brief.topRisks) ? brief.topRisks as any[] : [];
     const prevText = brief.previousScore != null ? ` (prev: ${brief.previousScore}%)` : "";
     return `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Compliance Brief</title></head><body style="font-family:Arial,sans-serif;background:#f1f5f9;margin:0;padding:24px;">
 <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08);">
@@ -4150,7 +4172,7 @@ Write a 3-4 sentence executive summary. Open with the readiness status and trend
 
       const brief = await storage.createExecutiveBrief({
         facilityId, weekOf, readinessScore, previousScore, trendDirection,
-        topRisks: JSON.stringify(topRisks), overdueTasksCount, expiringDocsCount,
+        topRisks, overdueTasksCount, expiringDocsCount,
         trainingAlertsCount, regulatoryFindingsCount, daysToNextEvent, narrativeSummary,
       });
 
@@ -4200,7 +4222,7 @@ Write a 3-4 sentence executive summary. Open with the readiness status and trend
       const facilityName = (facility as any)?.name ?? "Your Facility";
       const html = buildEmailHtml(brief as any, facilityName);
       const score = brief.readinessScore;
-      let topRisks: { count: number }[] = []; try { topRisks = JSON.parse(brief.topRisks); } catch { topRisks = []; }
+      let topRisks: { count: number }[] = Array.isArray(brief.topRisks) ? brief.topRisks as any[] : [];
       const weekDisplay = new Date(brief.weekOf + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
       const subject = `Compliance Brief: Week of ${weekDisplay} | Readiness: ${score}% | ${topRisks.length} Area${topRisks.length !== 1 ? "s" : ""} Need Attention`;
       const from = process.env.RESEND_FROM_EMAIL ?? "Accreditation Ready <noreply@accreditationready.ai>";
@@ -4216,7 +4238,7 @@ Write a 3-4 sentence executive summary. Open with the readiness status and trend
         return res.status(400).json({ error: errBody?.message ?? "Failed to send email. Check your Resend domain verification." });
       }
 
-      const updated = await storage.updateExecutiveBriefEmailStatus(id, JSON.stringify(recipients), new Date());
+      const updated = await storage.updateExecutiveBriefEmailStatus(id, recipients, new Date());
       res.json({ success: true, brief: updated, recipients });
     } catch (err) {
       console.error("Send executive brief email error:", err);
@@ -4350,7 +4372,7 @@ Return ONLY valid JSON, no other text:
           title: cf.title ?? "Regulatory Update",
           summary: cf.summary ?? "",
           sourceUrl: cf.sourceUrl,
-          affectedItemIds: JSON.stringify(affectedItems.map(i => i.id)),
+          affectedItemIds: affectedItems.map(i => i.id),
           affectedItemCount: affectedItems.length,
           affectedDocumentCount: affectedDocs.length,
           taskId,

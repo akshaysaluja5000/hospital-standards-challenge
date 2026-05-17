@@ -1,0 +1,28 @@
+🟠 HIGH-10: err.message Returned Directly to Clients
+Files: server/routes.ts — present in nearly every catch block
+typescript} catch (err: any) {
+  res.status(500).json({ message: err.message });
+}
+Database error messages routinely include table names, column names, constraint names, and query fragments. A PostgreSQL FK violation message reads: insert or update on table "quiz_sessions" violates foreign key constraint "quiz_sessions_user_id_fkey". This is information disclosure.
+Fix: Log err server-side (with a correlation ID), return only a generic message to clients: { message: "An unexpected error occurred", requestId: "..." }.
+
+🟡 MEDIUM-8: No Unhandled Promise Rejection / Uncaught Exception Handler
+File: server/index.ts
+Node.js will print a deprecation warning and (in newer versions) terminate the process on unhandled rejections. There is no process.on('unhandledRejection', ...) handler, meaning any unhandled async error causes silent log noise or a crash without cleanup.
+Fix:
+typescriptprocess.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled rejection at:', promise, 'reason:', reason);
+  // Alert, then graceful shutdown
+});
+
+🟡 MEDIUM-9: File Upload Route Accepts MIME Type from Client
+File: server/routes.ts:26
+typescriptfileFilter: (_req, file, cb) => {
+  const ok = /\.(pdf|doc|docx|txt)$/i.test(file.originalname) ||
+    [...mimeTypes].includes(file.mimetype);
+file.mimetype is set by the client's Content-Type header — it is trivially spoofable. A client can send a malicious executable with Content-Type: application/pdf and the extension check on originalname (also client-controlled) passes if they name the file malware.pdf.
+Since files are processed in-memory with mammoth and pdf-parse, the real risk is a malformed file triggering a parsing library crash. But for defense in depth, MIME type should be verified server-side using file magic bytes (e.g., file-type npm package).
+
+🟢 LOW-1: storage.getUser() Return Value Used Without Null Check in Several Routes
+Files: Multiple routes that call storage.getUser(userId) then immediately access .organizationType etc.
+If a user's account is deleted mid-session (admin action), subsequent requests will throw a null-access error rather than returning a clean 401/403.

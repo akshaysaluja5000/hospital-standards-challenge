@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, integer, boolean, timestamp, date, serial } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, integer, boolean, timestamp, date, serial, jsonb, pgEnum } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -32,6 +32,8 @@ export type ModuleId = (typeof MODULE_IDS)[number];
 export const LEADERSHIP_ROLES = ["learner", "educator", "director", "ceo", "admin", "super_admin"] as const;
 export type LeadershipRole = (typeof LEADERSHIP_ROLES)[number];
 
+export const leadershipRoleEnum = pgEnum("leadership_role_type", ["learner", "educator", "director", "ceo", "admin", "super_admin"]);
+
 export const LEADERSHIP_RANK: Record<LeadershipRole, number> = {
   learner: 0,
   educator: 1,
@@ -63,7 +65,7 @@ export const users = pgTable("users", {
   lastName: text("last_name").notNull().default(""),
   password: text("password").notNull(),
   isAdmin: boolean("is_admin").notNull().default(false),
-  leadershipRole: text("leadership_role").notNull().default("learner"),
+  leadershipRole: leadershipRoleEnum("leadership_role").notNull().default("learner"),
   facilityId: integer("facility_id").references(() => facilities.id),
   department: text("department"),
   mfaSecret: text("mfa_secret"),
@@ -115,7 +117,7 @@ export const quizSessions = pgTable("quiz_sessions", {
   userId: integer("user_id").notNull().references(() => users.id),
   levelId: text("level_id").notNull(),
   questionOrder: text("question_order").array().notNull(),
-  answers: text("answers").notNull().default("[]"),
+  answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   currentQuestion: integer("current_question").notNull().default(0),
   correctAnswers: integer("correct_answers").notNull().default(0),
   xpEarned: integer("xp_earned").notNull().default(0),
@@ -176,7 +178,7 @@ export const diagnosticResults = pgTable("diagnostic_results", {
   userId: integer("user_id").notNull().references(() => users.id),
   score: integer("score").notNull(),
   totalQuestions: integer("total_questions").notNull(),
-  answers: text("answers").notNull().default("[]"),
+  answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
@@ -185,7 +187,7 @@ export const masteryResults = pgTable("mastery_results", {
   userId: integer("user_id").notNull().references(() => users.id),
   score: integer("score").notNull(),
   totalQuestions: integer("total_questions").notNull(),
-  answers: text("answers").notNull().default("[]"),
+  answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
@@ -193,10 +195,10 @@ export const diagnosticSessions = pgTable("diagnostic_sessions", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   questionOrder: text("question_order").array().notNull(),
-  answers: text("answers").notNull().default("[]"),
+  answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   currentQuestion: integer("current_question").notNull().default(0),
-  shuffleMaps: text("shuffle_maps").notNull().default("{}"),
-  questionData: text("question_data"),
+  shuffleMaps: jsonb("shuffle_maps").notNull().default(sql`'{}'::jsonb`),
+  questionData: jsonb("question_data"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
@@ -204,9 +206,9 @@ export const masterySessions = pgTable("mastery_sessions", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   questionOrder: text("question_order").array().notNull(),
-  answers: text("answers").notNull().default("[]"),
+  answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   currentQuestion: integer("current_question").notNull().default(0),
-  shuffleMaps: text("shuffle_maps").notNull().default("{}"),
+  shuffleMaps: jsonb("shuffle_maps").notNull().default(sql`'{}'::jsonb`),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
@@ -215,8 +217,8 @@ export const ascPretestResults = pgTable("asc_pretest_results", {
   userId: integer("user_id").notNull().references(() => users.id),
   score: integer("score").notNull(),
   totalQuestions: integer("total_questions").notNull(),
-  answers: text("answers").notNull().default("[]"),
-  chapterScores: text("chapter_scores").notNull().default("{}"),
+  answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
+  chapterScores: jsonb("chapter_scores").notNull().default(sql`'{}'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
@@ -225,8 +227,8 @@ export const ascPosttestResults = pgTable("asc_posttest_results", {
   userId: integer("user_id").notNull().references(() => users.id),
   score: integer("score").notNull(),
   totalQuestions: integer("total_questions").notNull(),
-  answers: text("answers").notNull().default("[]"),
-  chapterScores: text("chapter_scores").notNull().default("{}"),
+  answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
+  chapterScores: jsonb("chapter_scores").notNull().default(sql`'{}'::jsonb`),
   completedAt: timestamp("completed_at").notNull().defaultNow(),
 });
 
@@ -376,7 +378,7 @@ export const auditLogs = pgTable("audit_logs", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id),
   username: text("username"),
-  leadershipRole: text("leadership_role").notNull().default("learner"),
+  leadershipRole: leadershipRoleEnum("leadership_role").notNull().default("learner"),
   facilityId: text("facility_id"),
   facilityName: text("facility_name"),
   action: text("action").notNull(),
@@ -408,9 +410,9 @@ export const riskAssessments = pgTable("risk_assessments", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   module: text("module").notNull().default("hospital"),
-  riskAreas: text("risk_areas").notNull().default("[]"),
+  riskAreas: jsonb("risk_areas").notNull().default(sql`'[]'::jsonb`),
   notes: text("notes").notNull().default(""),
-  actionPlan: text("action_plan").notNull().default("{}"),
+  actionPlan: jsonb("action_plan").notNull().default(sql`'{}'::jsonb`),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
@@ -452,7 +454,7 @@ export const complianceItems = pgTable("compliance_items", {
   standardCode: text("standard_code").notNull(),
   itemName: text("item_name").notNull(),
   frequency: text("frequency").notNull(),
-  tier: integer("tier").notNull(), // 1=Log, 2=Vault, 3=Wall, 4=ThirdParty
+  tier: integer("tier").notNull(),
   category: text("category").notNull(),
   surveyorPriority: integer("surveyor_priority").notNull().default(2),
   agentWatch: boolean("agent_watch").notNull().default(true),
@@ -484,7 +486,7 @@ export const complianceDocuments = pgTable("compliance_documents", {
   effectiveDate: date("effective_date"),
   expirationDate: date("expiration_date"),
   status: text("status").notNull().default("current"),
-  aiTaggedStandards: text("ai_tagged_standards").notNull().default("[]"),
+  aiTaggedStandards: jsonb("ai_tagged_standards").notNull().default(sql`'[]'::jsonb`),
   aiQuestionsGenerated: boolean("ai_questions_generated").notNull().default(false),
 });
 
@@ -511,10 +513,10 @@ export const complianceTrainingModules = pgTable("compliance_training_modules", 
   documentId: integer("document_id").notNull().references(() => complianceDocuments.id),
   itemId: integer("item_id").notNull().references(() => complianceItems.id),
   title: text("title").notNull(),
-  taggedStandards: text("tagged_standards").notNull().default("[]"),
-  questions: text("questions").notNull().default("[]"),
-  conflictFlags: text("conflict_flags").notNull().default("[]"),
-  assignedRoles: text("assigned_roles").notNull().default("[]"),
+  taggedStandards: jsonb("tagged_standards").notNull().default(sql`'[]'::jsonb`),
+  questions: jsonb("questions").notNull().default(sql`'[]'::jsonb`),
+  conflictFlags: jsonb("conflict_flags").notNull().default(sql`'[]'::jsonb`),
+  assignedRoles: jsonb("assigned_roles").notNull().default(sql`'[]'::jsonb`),
   assignedMemberCount: integer("assigned_member_count").notNull().default(0),
   status: text("status").notNull().default("pending"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -547,7 +549,7 @@ export const regulatoryWatchFindings = pgTable("regulatory_watch_findings", {
   title: text("title").notNull(),
   summary: text("summary").notNull(),
   sourceUrl: text("source_url"),
-  affectedItemIds: text("affected_item_ids").notNull().default("[]"),
+  affectedItemIds: jsonb("affected_item_ids").notNull().default(sql`'[]'::jsonb`),
   affectedItemCount: integer("affected_item_count").notNull().default(0),
   affectedDocumentCount: integer("affected_document_count").notNull().default(0),
   status: text("status").notNull().default("new"),
@@ -566,7 +568,7 @@ export const executiveBriefs = pgTable("executive_briefs", {
   readinessScore: integer("readiness_score").notNull().default(0),
   previousScore: integer("previous_score"),
   trendDirection: text("trend_direction").notNull().default("stable"),
-  topRisks: text("top_risks").notNull().default("[]"),
+  topRisks: jsonb("top_risks").notNull().default(sql`'[]'::jsonb`),
   overdueTasksCount: integer("overdue_tasks_count").notNull().default(0),
   expiringDocsCount: integer("expiring_docs_count").notNull().default(0),
   trainingAlertsCount: integer("training_alerts_count").notNull().default(0),
@@ -574,7 +576,7 @@ export const executiveBriefs = pgTable("executive_briefs", {
   daysToNextEvent: integer("days_to_next_event"),
   narrativeSummary: text("narrative_summary").notNull().default(""),
   emailSentAt: timestamp("email_sent_at"),
-  emailSentTo: text("email_sent_to").notNull().default("[]"),
+  emailSentTo: jsonb("email_sent_to").notNull().default(sql`'[]'::jsonb`),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

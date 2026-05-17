@@ -4,6 +4,15 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 import { ensureTablesExist } from "./storage";
 
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled promise rejection at:", promise, "reason:", reason);
+});
+
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught exception:", err);
+  process.exit(1);
+});
+
 const app = express();
 const httpServer = createServer(app);
 

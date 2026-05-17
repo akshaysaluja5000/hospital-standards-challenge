@@ -1,4 +1,4 @@
-import { eq, and, desc, lte, gte, sql } from "drizzle-orm";
+import { eq, and, desc, lte, gte, sql, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
@@ -345,6 +345,45 @@ export async function ensureTablesExist() {
         added_at TIMESTAMP NOT NULL DEFAULT NOW(),
         UNIQUE(team_id, user_id)
       );
+
+      -- MEDIUM-4: Enforce leadershipRole as DB enum
+      DO $$ BEGIN
+        CREATE TYPE leadership_role_type AS ENUM ('learner', 'educator', 'director', 'ceo', 'admin', 'super_admin');
+      EXCEPTION WHEN duplicate_object THEN NULL;
+      END $$;
+      DO $$ BEGIN
+        ALTER TABLE users ALTER COLUMN leadership_role TYPE leadership_role_type USING leadership_role::leadership_role_type;
+      EXCEPTION WHEN others THEN NULL;
+      END $$;
+      DO $$ BEGIN
+        ALTER TABLE audit_logs ALTER COLUMN leadership_role TYPE leadership_role_type USING leadership_role::leadership_role_type;
+      EXCEPTION WHEN others THEN NULL;
+      END $$;
+
+      -- MEDIUM-3: Migrate JSON-as-TEXT columns to jsonb
+      DO $$ BEGIN ALTER TABLE quiz_sessions ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE diagnostic_results ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE mastery_results ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE diagnostic_sessions ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE diagnostic_sessions ALTER COLUMN shuffle_maps TYPE jsonb USING shuffle_maps::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE diagnostic_sessions ALTER COLUMN question_data TYPE jsonb USING question_data::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE mastery_sessions ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE mastery_sessions ALTER COLUMN shuffle_maps TYPE jsonb USING shuffle_maps::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE asc_pretest_results ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE asc_pretest_results ALTER COLUMN chapter_scores TYPE jsonb USING chapter_scores::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE asc_posttest_results ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE asc_posttest_results ALTER COLUMN chapter_scores TYPE jsonb USING chapter_scores::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE asc_test_sessions ALTER COLUMN shuffle_maps TYPE jsonb USING shuffle_maps::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE risk_assessments ALTER COLUMN risk_areas TYPE jsonb USING risk_areas::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE risk_assessments ALTER COLUMN action_plan TYPE jsonb USING action_plan::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_documents ALTER COLUMN ai_tagged_standards TYPE jsonb USING ai_tagged_standards::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_training_modules ALTER COLUMN tagged_standards TYPE jsonb USING tagged_standards::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_training_modules ALTER COLUMN questions TYPE jsonb USING questions::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_training_modules ALTER COLUMN conflict_flags TYPE jsonb USING conflict_flags::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE compliance_training_modules ALTER COLUMN assigned_roles TYPE jsonb USING assigned_roles::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE regulatory_watch_findings ALTER COLUMN affected_item_ids TYPE jsonb USING affected_item_ids::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE executive_briefs ALTER COLUMN top_risks TYPE jsonb USING top_risks::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+      DO $$ BEGIN ALTER TABLE executive_briefs ALTER COLUMN email_sent_to TYPE jsonb USING email_sent_to::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
@@ -483,6 +522,7 @@ export interface IStorage {
   upsertStreak(userId: number, data: Partial<UserStreak>): Promise<UserStreak>;
 
   getProgress(userId: number): Promise<UserProgress[]>;
+  getProgressForUsers(userIds: number[]): Promise<UserProgress[]>;
   getProgressByLevel(userId: number, levelId: string): Promise<UserProgress | undefined>;
   upsertProgress(userId: number, levelId: string, score: number, totalQuestions: number): Promise<UserProgress>;
 
@@ -493,13 +533,16 @@ export interface IStorage {
   getQuizSession(userId: number, levelId: string): Promise<QuizSession | undefined>;
   getUserQuizSessions(userId: number): Promise<QuizSession[]>;
   getAllQuizSessions(): Promise<QuizSession[]>;
+  getQuizSessionsForUsers(userIds: number[]): Promise<QuizSession[]>;
   upsertQuizSession(userId: number, levelId: string, data: Partial<QuizSession>): Promise<QuizSession>;
   deleteQuizSession(userId: number, levelId: string): Promise<void>;
 
   getAllUsers(): Promise<User[]>;
   getUsersByFacility(facilityId: number): Promise<User[]>;
   getAllStreaks(): Promise<UserStreak[]>;
+  getStreaksForUsers(userIds: number[]): Promise<UserStreak[]>;
   getAllActivities(): Promise<DailyActivity[]>;
+  getActivitiesForUsers(userIds: number[]): Promise<DailyActivity[]>;
   clearAllActivities(): Promise<void>;
 
   createFacility(data: InsertFacility): Promise<Facility>;
@@ -508,14 +551,14 @@ export interface IStorage {
   getAllFacilities(): Promise<Facility[]>;
 
   getDiagnosticResults(userId: number): Promise<DiagnosticResult[]>;
-  createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<DiagnosticResult>;
+  createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: unknown): Promise<DiagnosticResult>;
   getMasteryResults(userId: number): Promise<MasteryResult[]>;
-  createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult>;
+  createMasteryResult(userId: number, score: number, totalQuestions: number, answers: unknown): Promise<MasteryResult>;
 
   getAscPretestResults(userId: number): Promise<AscPretestResult[]>;
-  createAscPretestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPretestResult>;
+  createAscPretestResult(userId: number, score: number, totalQuestions: number, answers: unknown, chapterScores: unknown): Promise<AscPretestResult>;
   getAscPosttestResults(userId: number): Promise<AscPosttestResult[]>;
-  createAscPosttestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPosttestResult>;
+  createAscPosttestResult(userId: number, score: number, totalQuestions: number, answers: unknown, chapterScores: unknown): Promise<AscPosttestResult>;
 
   getAllRoles(): Promise<Role[]>;
   getRoleById(id: number): Promise<Role | undefined>;
@@ -553,7 +596,7 @@ export interface IStorage {
   getAuditLogsByUser(userId: number): Promise<AuditLog[]>;
 
   getRiskAssessment(userId: number, module: string): Promise<RiskAssessment | undefined>;
-  upsertRiskAssessment(userId: number, module: string, riskAreas: string, notes: string, actionPlan: string): Promise<RiskAssessment>;
+  upsertRiskAssessment(userId: number, module: string, riskAreas: unknown, notes: string, actionPlan: unknown): Promise<RiskAssessment>;
   deleteRiskAssessment(userId: number, module: string): Promise<void>;
   getRiskAssessmentsByFacility(facilityId: number | null, module: string): Promise<(RiskAssessment & { username: string; firstName: string; lastName: string; department: string | null })[]>;
 
@@ -573,7 +616,7 @@ export interface IStorage {
   createComplianceDocument(data: { facilityId: number; itemId: number; documentName: string; uploadedBy: string; expirationDate?: string; effectiveDate?: string }): Promise<ComplianceDocument>;
   getComplianceTrainingModules(facilityId: number, status?: string): Promise<ComplianceTrainingModule[]>;
   getComplianceTrainingModule(id: number): Promise<ComplianceTrainingModule | undefined>;
-  createComplianceTrainingModule(data: { facilityId: number; documentId: number; itemId: number; title: string; taggedStandards: string; questions: string; conflictFlags: string; assignedRoles: string; assignedMemberCount: number }): Promise<ComplianceTrainingModule>;
+  createComplianceTrainingModule(data: { facilityId: number; documentId: number; itemId: number; title: string; taggedStandards: unknown; questions: unknown; conflictFlags: unknown; assignedRoles: unknown; assignedMemberCount: number }): Promise<ComplianceTrainingModule>;
   updateComplianceTrainingModuleStatus(id: number, status: string, approvedBy?: string): Promise<ComplianceTrainingModule>;
   getStaffTrainingAlerts(facilityId: number): Promise<StaffTrainingAlert[]>;
   createStaffTrainingAlert(data: { facilityId: number; userId: number; complianceItemId?: number | null; alertType: string; category: string; message: string; daysOverdue: number }): Promise<StaffTrainingAlert>;
@@ -584,11 +627,11 @@ export interface IStorage {
   getExecutiveBriefs(facilityId: number): Promise<ExecutiveBrief[]>;
   getExecutiveBrief(id: number): Promise<ExecutiveBrief | undefined>;
   getLatestExecutiveBrief(facilityId: number): Promise<ExecutiveBrief | undefined>;
-  createExecutiveBrief(data: { facilityId: number; weekOf: string; readinessScore: number; previousScore?: number | null; trendDirection: string; topRisks: string; overdueTasksCount: number; expiringDocsCount: number; trainingAlertsCount: number; regulatoryFindingsCount: number; daysToNextEvent?: number | null; narrativeSummary: string }): Promise<ExecutiveBrief>;
-  updateExecutiveBriefEmailStatus(id: number, emailSentTo: string, emailSentAt: Date): Promise<ExecutiveBrief>;
+  createExecutiveBrief(data: { facilityId: number; weekOf: string; readinessScore: number; previousScore?: number | null; trendDirection: string; topRisks: unknown; overdueTasksCount: number; expiringDocsCount: number; trainingAlertsCount: number; regulatoryFindingsCount: number; daysToNextEvent?: number | null; narrativeSummary: string }): Promise<ExecutiveBrief>;
+  updateExecutiveBriefEmailStatus(id: number, emailSentTo: unknown, emailSentAt: Date): Promise<ExecutiveBrief>;
   updateComplianceTaskStatus(id: number, status: string): Promise<ComplianceTask>;
   getRegulatoryWatchFindings(facilityId: number): Promise<RegulatoryWatchFinding[]>;
-  createRegulatoryWatchFinding(data: { facilityId: number; source: string; standardCode: string; title: string; summary: string; sourceUrl?: string; affectedItemIds: string; affectedItemCount: number; affectedDocumentCount: number; taskId?: number }): Promise<RegulatoryWatchFinding>;
+  createRegulatoryWatchFinding(data: { facilityId: number; source: string; standardCode: string; title: string; summary: string; sourceUrl?: string; affectedItemIds: unknown; affectedItemCount: number; affectedDocumentCount: number; taskId?: number }): Promise<RegulatoryWatchFinding>;
   updateRegulatoryWatchFindingStatus(id: number, status: string, reviewedBy?: string): Promise<RegulatoryWatchFinding>;
   clearRegulatoryWatchFindings(facilityId: number): Promise<void>;
 
@@ -649,6 +692,11 @@ export class DatabaseStorage implements IStorage {
 
   async getProgress(userId: number): Promise<UserProgress[]> {
     return db.select().from(userProgress).where(eq(userProgress.userId, userId));
+  }
+
+  async getProgressForUsers(userIds: number[]): Promise<UserProgress[]> {
+    if (userIds.length === 0) return [];
+    return db.select().from(userProgress).where(inArray(userProgress.userId, userIds));
   }
 
   async getProgressByLevel(userId: number, levelId: string): Promise<UserProgress | undefined> {
@@ -733,6 +781,11 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(quizSessions);
   }
 
+  async getQuizSessionsForUsers(userIds: number[]): Promise<QuizSession[]> {
+    if (userIds.length === 0) return [];
+    return db.select().from(quizSessions).where(inArray(quizSessions.userId, userIds));
+  }
+
   async upsertQuizSession(userId: number, levelId: string, data: Partial<QuizSession>): Promise<QuizSession> {
     const existing = await this.getQuizSession(userId, levelId);
     if (existing) {
@@ -746,7 +799,7 @@ export class DatabaseStorage implements IStorage {
       userId,
       levelId,
       questionOrder: data.questionOrder || [],
-      answers: data.answers || "[]",
+      answers: (data.answers as any) ?? [],
       currentQuestion: data.currentQuestion || 0,
       correctAnswers: data.correctAnswers || 0,
       xpEarned: data.xpEarned || 0,
@@ -772,8 +825,18 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(userStreaks);
   }
 
+  async getStreaksForUsers(userIds: number[]): Promise<UserStreak[]> {
+    if (userIds.length === 0) return [];
+    return db.select().from(userStreaks).where(inArray(userStreaks.userId, userIds));
+  }
+
   async getAllActivities(): Promise<DailyActivity[]> {
     return db.select().from(dailyActivity);
+  }
+
+  async getActivitiesForUsers(userIds: number[]): Promise<DailyActivity[]> {
+    if (userIds.length === 0) return [];
+    return db.select().from(dailyActivity).where(inArray(dailyActivity.userId, userIds));
   }
 
   async getDailyActivitySince(startDate: string): Promise<DailyActivity[]> {
@@ -807,7 +870,7 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(diagnosticResults).where(eq(diagnosticResults.userId, userId)).orderBy(desc(diagnosticResults.completedAt));
   }
 
-  async createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<DiagnosticResult> {
+  async createDiagnosticResult(userId: number, score: number, totalQuestions: number, answers: unknown): Promise<DiagnosticResult> {
     const [result] = await db.insert(diagnosticResults).values({ userId, score, totalQuestions, answers }).returning();
     return result;
   }
@@ -816,7 +879,7 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(masteryResults).where(eq(masteryResults.userId, userId)).orderBy(desc(masteryResults.completedAt));
   }
 
-  async createMasteryResult(userId: number, score: number, totalQuestions: number, answers: string): Promise<MasteryResult> {
+  async createMasteryResult(userId: number, score: number, totalQuestions: number, answers: unknown): Promise<MasteryResult> {
     const [result] = await db.insert(masteryResults).values({ userId, score, totalQuestions, answers }).returning();
     return result;
   }
@@ -825,12 +888,12 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(ascPretestResults).where(eq(ascPretestResults.userId, userId)).orderBy(desc(ascPretestResults.completedAt));
   }
 
-  async createAscPretestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPretestResult> {
+  async createAscPretestResult(userId: number, score: number, totalQuestions: number, answers: unknown, chapterScores: unknown): Promise<AscPretestResult> {
     const [result] = await db.insert(ascPretestResults).values({ userId, score, totalQuestions, answers, chapterScores }).returning();
     return result;
   }
 
-  async getAscTestSession(userId: number, testType: string): Promise<{ shuffleMaps: string } | null> {
+  async getAscTestSession(userId: number, testType: string): Promise<{ shuffleMaps: unknown } | null> {
     const client = await pool.connect();
     try {
       const r = await client.query(
@@ -838,13 +901,13 @@ export class DatabaseStorage implements IStorage {
         [userId, testType],
       );
       if (r.rows.length === 0) return null;
-      return { shuffleMaps: r.rows[0].shuffle_maps as string };
+      return { shuffleMaps: r.rows[0].shuffle_maps };
     } finally {
       client.release();
     }
   }
 
-  async upsertAscTestSession(userId: number, testType: string, shuffleMaps: string): Promise<void> {
+  async upsertAscTestSession(userId: number, testType: string, shuffleMaps: unknown): Promise<void> {
     const client = await pool.connect();
     try {
       await client.query(
@@ -871,7 +934,7 @@ export class DatabaseStorage implements IStorage {
     }
   }
 
-  async claimAscTestSession(userId: number, testType: string): Promise<{ shuffleMaps: string } | null> {
+  async claimAscTestSession(userId: number, testType: string): Promise<{ shuffleMaps: unknown } | null> {
     const client = await pool.connect();
     try {
       const r = await client.query(
@@ -879,7 +942,7 @@ export class DatabaseStorage implements IStorage {
         [userId, testType],
       );
       if (r.rows.length === 0) return null;
-      return { shuffleMaps: r.rows[0].shuffle_maps as string };
+      return { shuffleMaps: r.rows[0].shuffle_maps };
     } finally {
       client.release();
     }
@@ -889,7 +952,7 @@ export class DatabaseStorage implements IStorage {
     return db.select().from(ascPosttestResults).where(eq(ascPosttestResults.userId, userId)).orderBy(desc(ascPosttestResults.completedAt));
   }
 
-  async createAscPosttestResult(userId: number, score: number, totalQuestions: number, answers: string, chapterScores: string): Promise<AscPosttestResult> {
+  async createAscPosttestResult(userId: number, score: number, totalQuestions: number, answers: unknown, chapterScores: unknown): Promise<AscPosttestResult> {
     const [result] = await db.insert(ascPosttestResults).values({ userId, score, totalQuestions, answers, chapterScores }).returning();
     return result;
   }
@@ -911,9 +974,9 @@ export class DatabaseStorage implements IStorage {
     const [created] = await db.insert(diagnosticSessions).values({
       userId,
       questionOrder: data.questionOrder || [],
-      answers: data.answers || "[]",
+      answers: (data.answers as any) ?? [],
       currentQuestion: data.currentQuestion || 0,
-      shuffleMaps: data.shuffleMaps || "{}",
+      shuffleMaps: (data.shuffleMaps as any) ?? {},
       questionData: data.questionData ?? null,
     }).returning();
     return created;
@@ -940,9 +1003,9 @@ export class DatabaseStorage implements IStorage {
     const [created] = await db.insert(masterySessions).values({
       userId,
       questionOrder: data.questionOrder || [],
-      answers: data.answers || "[]",
+      answers: (data.answers as any) ?? [],
       currentQuestion: data.currentQuestion || 0,
-      shuffleMaps: data.shuffleMaps || "{}",
+      shuffleMaps: (data.shuffleMaps as any) ?? {},
     }).returning();
     return created;
   }
