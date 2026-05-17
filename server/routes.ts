@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import connectPgSimple from "connect-pg-simple";
 import { z } from "zod";
 import Anthropic from "@anthropic-ai/sdk";
+import { LEADERSHIP_RANK } from "@shared/schema";
 import type { User, DailyActivity } from "@shared/schema";
 import { generateSecret as totpGenerateSecret, verifyToken as totpVerify, totpUri } from "./totp";
 import QRCode from "qrcode";
@@ -166,15 +167,6 @@ declare global {
   }
 }
 
-const LEADERSHIP_RANK: Record<string, number> = {
-  learner: 0,
-  educator: 1,
-  director: 2,
-  ceo: 3,
-  admin: 4,
-  super_admin: 5,
-};
-
 function getEffectiveLeadershipRole(user: Express.User): string {
   const lr = user.leadershipRole || "learner";
   if (user.isAdmin && (LEADERSHIP_RANK[lr] ?? 0) < LEADERSHIP_RANK["admin"]) return "admin";
@@ -262,6 +254,25 @@ async function getModuleLevelsForUser(userId: number) {
   const user = await storage.getUser(userId);
   const module: ModuleId = (user?.organizationType as ModuleId) || "hospital";
   return getVisibleLevelsForModule(module);
+}
+
+// HIGH-6: single factory replaces 5 repeated inline rate-limit blocks
+let lastRateLimitPrune = 0;
+function makeAiRateLimit(endpoint: string, maxCalls: number, windowMs: number) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const now = Date.now();
+    if (now - lastRateLimitPrune > 60 * 60 * 1000) {
+      lastRateLimitPrune = now;
+      storage.pruneRateLimitEvents().catch(() => {});
+    }
+    const userId = (req.user as User).id;
+    const count = await storage.countRateLimitEvents(userId, endpoint, windowMs);
+    if (count >= maxCalls) {
+      return res.status(429).json({ error: "Rate limit reached. Please try again later." });
+    }
+    await storage.recordRateLimitEvent(userId, endpoint);
+    next();
+  };
 }
 
 export async function registerRoutes(
@@ -1566,20 +1577,7 @@ export async function registerRoutes(
     }
   });
 
-  const AI_TUTOR_MAX_CALLS = 30;
-  const AI_TUTOR_WINDOW_MS = 60 * 60 * 1000;
-
-  // Prune stale rate limit rows once per hour (lazy cleanup)
-  let lastRateLimitPrune = 0;
-  async function maybePruneRateLimit() {
-    const now = Date.now();
-    if (now - lastRateLimitPrune > 60 * 60 * 1000) {
-      lastRateLimitPrune = now;
-      storage.pruneRateLimitEvents().catch(() => {});
-    }
-  }
-
-  app.post("/api/ai-tutor", requireAuth, async (req: Request, res: Response) => {
+  app.post("/api/ai-tutor", requireAuth, makeAiRateLimit("ai", 30, 60 * 60 * 1000), async (req: Request, res: Response) => {
     const aiTutorSchema = z.object({
       question: z.string().max(1000),
       userAnswer: z.string().max(1500),
@@ -1594,14 +1592,6 @@ export async function registerRoutes(
     if (!parsed.success) {
       return res.status(400).json({ error: "Invalid request data." });
     }
-
-    const userId = (req.user as User).id;
-    await maybePruneRateLimit();
-    const aiTutorCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
-    if (aiTutorCount >= AI_TUTOR_MAX_CALLS) {
-      return res.status(429).json({ error: "You've reached the AI Tutor limit. Please try again later." });
-    }
-    await storage.recordRateLimitEvent(userId, "ai");
 
     try {
       const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations, allOptions, module: tutorModule } = parsed.data;
@@ -1683,15 +1673,7 @@ Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do dif
     }
   });
 
-  app.post("/api/admin/ai-insights", requireLeadershipRole("director"), requireMfa, async (req: Request, res: Response) => {
-    const userId = (req.user as User).id;
-    await maybePruneRateLimit();
-    const aiInsightsCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
-    if (aiInsightsCount >= AI_TUTOR_MAX_CALLS) {
-      return res.status(429).json({ error: "Rate limit reached. Please try again later." });
-    }
-    await storage.recordRateLimitEvent(userId, "ai");
-
+  app.post("/api/admin/ai-insights", requireLeadershipRole("director"), requireMfa, makeAiRateLimit("ai", 30, 60 * 60 * 1000), async (req: Request, res: Response) => {
     try {
       const adminUser = req.user as User;
       const allUsersRaw = await storage.getAllUsers();
@@ -1797,14 +1779,6 @@ Write a 5-6 sentence plain-text summary. Cover: overall readiness, the #1 priori
       return res.status(400).json({ error: "Invalid request data." });
     }
 
-    const userId = (req.user as User).id;
-    await maybePruneRateLimit();
-    const aiDebriefCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
-    if (aiDebriefCount >= AI_TUTOR_MAX_CALLS) {
-      return res.status(429).json({ error: "Rate limit reached. Please try again later." });
-    }
-    await storage.recordRateLimitEvent(userId, "ai");
-
     try {
       const { levelTitle, totalQuestions, correctAnswers, missedQuestions } = parsed.data;
       const percentage = Math.round((correctAnswers / totalQuestions) * 100);
@@ -1850,14 +1824,6 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
     if (!parsed.success) {
       return res.status(400).json({ error: "Please enter a question (at least 3 characters)." });
     }
-
-    const userId = (req.user as User).id;
-    await maybePruneRateLimit();
-    const aiHandbookCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
-    if (aiHandbookCount >= AI_TUTOR_MAX_CALLS) {
-      return res.status(429).json({ error: "Rate limit reached. Please try again later." });
-    }
-    await storage.recordRateLimitEvent(userId, "ai");
 
     try {
       const { query } = parsed.data;
@@ -3190,10 +3156,7 @@ Return ONLY valid JSON (no markdown, no explanation):
   });
 
   // ── AI Topic Quiz ──────────────────────────────────────────────────────────
-  const TOPIC_QUIZ_MAX = 20;
-  const TOPIC_QUIZ_WINDOW_MS = 60 * 60 * 1000;
-
-  app.post("/api/ai/topic-quiz", requireAuth, async (req: Request, res: Response) => {
+  app.post("/api/ai/topic-quiz", requireAuth, makeAiRateLimit("topic-quiz", 20, 60 * 60 * 1000), async (req: Request, res: Response) => {
     const schema = z.object({
       topic: z.string().min(1).max(200),
       context: z.string().max(4000).optional(),
@@ -3201,14 +3164,6 @@ Return ONLY valid JSON (no markdown, no explanation):
     });
     const parsed = schema.safeParse(req.body);
     if (!parsed.success) return res.status(400).json({ error: "Invalid request." });
-
-    const userId = (req.user as User).id;
-    await maybePruneRateLimit();
-    const topicQuizCount = await storage.countRateLimitEvents(userId, "topic-quiz", TOPIC_QUIZ_WINDOW_MS);
-    if (topicQuizCount >= TOPIC_QUIZ_MAX) {
-      return res.status(429).json({ error: "You've reached the topic quiz limit. Try again later." });
-    }
-    await storage.recordRateLimitEvent(userId, "topic-quiz");
 
     const { topic, context, module: mod } = parsed.data;
     const standard = mod === "asc" ? "AAAHC accreditation" : mod === "dnv" ? "DNV NIAHO hospital accreditation" : "Joint Commission (TJC) hospital accreditation";
