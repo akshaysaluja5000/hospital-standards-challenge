@@ -456,8 +456,8 @@ export async function registerRoutes(
         const { password: _, ...safeUser } = user;
         res.status(201).json(safeUser);
       });
-    } catch (err: any) {
-      res.status(500).json({ message: err.message || "Registration failed" });
+    } catch (_err: unknown) {
+      res.status(500).json({ message: "Registration failed" });
     }
   });
 
@@ -1388,28 +1388,17 @@ export async function registerRoutes(
 
       const facilityUserIds = new Set(allUsers.map((u) => u.id));
 
-      let totalQuestionsAnswered = 0;
-      let totalCorrect = 0;
-      allUsers.forEach((u) => {
-        const { questionsAnswered, correct } = computeUserActivityStats(
-          progressByUser.get(u.id) || [],
-          sessionsByUser.get(u.id) || [],
-        );
-        totalQuestionsAnswered += questionsAnswered;
-        totalCorrect += correct;
-      });
-      const averageAccuracy = totalQuestionsAnswered > 0
-        ? Math.min(100, Math.round((totalCorrect / totalQuestionsAnswered) * 100))
-        : 0;
-
       const activeTodayFromActivities = new Set(
         allActivities.filter((a) => facilityUserIds.has(a.userId) && a.date === today && a.questionsAnswered > 0).map((a) => a.userId)
       );
       const activeTodayFromStreaks = new Set(
         allStreaks.filter((s) => facilityUserIds.has(s.userId) && s.lastPlayedDate === today).map((s) => s.userId)
       );
-      const activeTodaySet = new Set(Array.from(activeTodayFromActivities).concat(Array.from(activeTodayFromStreaks)));
+      const activeTodaySet = new Set([...activeTodayFromActivities, ...activeTodayFromStreaks]);
       const activeToday = activeTodaySet.size;
+
+      let totalQuestionsAnswered = 0;
+      let totalCorrect = 0;
 
       const userList = allUsers.map((u) => {
         const streak = streakMap.get(u.id);
@@ -1418,6 +1407,8 @@ export async function registerRoutes(
         const userProg = progressByUser.get(u.id) || [];
 
         const { questionsAnswered, correct, accuracy, inProgressSessions } = computeUserActivityStats(userProg, userSessions);
+        totalQuestionsAnswered += questionsAnswered;
+        totalCorrect += correct;
 
         let lastActiveTimestamp: string | null = null;
         const latestSession = userSessions.reduce((latest: Date | null, sess) => {
@@ -2224,7 +2215,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     let questionsData: any[];
     if (session.questionData) {
       const stored = (typeof session.questionData === "string"
-        ? JSON.parse(session.questionData)
+        ? safeJsonParse<{ id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[]>(session.questionData, [])
         : session.questionData) as { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
       questionsData = stored.map(q => {
         if (savedShuffleMaps && savedShuffleMaps[q.id]) {
@@ -2282,7 +2273,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const trustedMaps = serverShuffleMaps || clientShuffleMaps || {};
     const storedQuestions: { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[] | null =
       session?.questionData
-        ? (typeof session.questionData === "string" ? JSON.parse(session.questionData) : session.questionData)
+        ? (typeof session.questionData === "string"
+            ? safeJsonParse<{ id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[]>(session.questionData, [])
+            : session.questionData as { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[])
         : null;
 
     let score = 0;
