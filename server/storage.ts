@@ -438,7 +438,6 @@ export async function ensureTablesExist() {
       DO $$ BEGIN ALTER TABLE mastery_results ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
       DO $$ BEGIN ALTER TABLE diagnostic_sessions ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
       DO $$ BEGIN ALTER TABLE diagnostic_sessions ALTER COLUMN shuffle_maps TYPE jsonb USING shuffle_maps::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
-      DO $$ BEGIN ALTER TABLE diagnostic_sessions ALTER COLUMN question_data TYPE jsonb USING question_data::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
       DO $$ BEGIN ALTER TABLE mastery_sessions ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
       DO $$ BEGIN ALTER TABLE mastery_sessions ALTER COLUMN shuffle_maps TYPE jsonb USING shuffle_maps::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
       DO $$ BEGIN ALTER TABLE asc_pretest_results ALTER COLUMN answers TYPE jsonb USING answers::jsonb; EXCEPTION WHEN others THEN NULL; END $$;

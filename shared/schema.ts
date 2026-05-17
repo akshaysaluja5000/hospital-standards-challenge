@@ -214,7 +214,7 @@ export const diagnosticSessions = pgTable("diagnostic_sessions", {
   answers: jsonb("answers").notNull().default(sql`'[]'::jsonb`),
   currentQuestion: integer("current_question").notNull().default(0),
   shuffleMaps: jsonb("shuffle_maps").notNull().default(sql`'{}'::jsonb`),
-  questionData: jsonb("question_data"),
+  questionData: text("question_data"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 }, (t) => [
   index("idx_diagnostic_sessions_user_id").on(t.userId),

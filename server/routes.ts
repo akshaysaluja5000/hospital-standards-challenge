@@ -2223,7 +2223,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const savedShuffleMaps = (session.shuffleMaps as any) ?? null;
     let questionsData: any[];
     if (session.questionData) {
-      const stored = session.questionData as { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
+      const stored = (typeof session.questionData === "string"
+        ? JSON.parse(session.questionData)
+        : session.questionData) as { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[];
       questionsData = stored.map(q => {
         if (savedShuffleMaps && savedShuffleMaps[q.id]) {
           const sm = savedShuffleMaps[q.id] as number[];
@@ -2279,7 +2281,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const serverShuffleMaps = (session?.shuffleMaps as any) ?? null;
     const trustedMaps = serverShuffleMaps || clientShuffleMaps || {};
     const storedQuestions: { id: string; sectionId: string; question: string; options: string[]; correctIndex: number }[] | null =
-      (session?.questionData as any) ?? null;
+      session?.questionData
+        ? (typeof session.questionData === "string" ? JSON.parse(session.questionData) : session.questionData)
+        : null;
 
     let score = 0;
     const detailedResults: {
