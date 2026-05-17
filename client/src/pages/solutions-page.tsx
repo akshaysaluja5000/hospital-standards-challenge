@@ -317,7 +317,7 @@ export function SolutionsPage({ slug }: { slug: keyof typeof SOLUTIONS }) {
           </div>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Accreditation <em>Ready</em> is not affiliated with, endorsed by, or
-            sponsored by The Joint Commission, AAAHC, or CMS. All content is for
+            sponsored by The Joint Commission, DNV, AAAHC, or CMS. All content is for
             educational and training purposes only.
           </p>
         </div>

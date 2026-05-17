@@ -126,7 +126,7 @@ export default function LandingPage() {
               Know your gaps. Close them before the surveyor does.
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-normal" data-testid="text-hero-subtitle">
-              Accreditation <em>Ready</em> turns Joint Commission, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
+              Accreditation <em>Ready</em> turns Joint Commission, DNV, AAAHC, and CMS standards into focused daily training — so your staff stays prepared year-round, not just before survey week.
             </p>
             <div className="flex items-center gap-3 mt-2 flex-wrap justify-center">
               <Button
@@ -374,7 +374,7 @@ export default function LandingPage() {
                       </div>
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">
-                      Monitors Joint Commission, AAAHC, and CMS public channels for standard updates, new chapters, and survey focus shifts. When the NPG chapter launched January 2026, this agent would have flagged it automatically and initiated a content build task — rather than discovering the gap months later.
+                      Monitors Joint Commission, DNV, AAAHC, and CMS public channels for standard updates, new chapters, and survey focus shifts. When the NPG chapter launched January 2026, this agent would have flagged it automatically and initiated a content build task — rather than discovering the gap months later.
                     </p>
                     <div className="mt-auto pt-2 border-t border-border">
                       <p className="text-xs text-muted-foreground leading-relaxed">
@@ -582,7 +582,7 @@ export default function LandingPage() {
       <footer className="relative z-10 border-t border-border py-6 px-4 bg-muted/30">
         <div className="max-w-5xl mx-auto text-center">
           <p className="text-sm text-muted-foreground leading-relaxed" data-testid="text-disclaimer">
-            Accreditation <em>Ready</em> is not affiliated with, endorsed by, or sponsored by The Joint Commission, AAAHC, or CMS. All content is for training and educational purposes only.
+            Accreditation <em>Ready</em> is not affiliated with, endorsed by, or sponsored by The Joint Commission, DNV, AAAHC, or CMS. All content is for training and educational purposes only.
           </p>
           <p className="text-sm text-muted-foreground mt-2 flex items-center justify-center gap-3 flex-wrap">
             <a href="/terms" className="underline hover:text-foreground" data-testid="link-terms-landing">Terms & Privacy</a>

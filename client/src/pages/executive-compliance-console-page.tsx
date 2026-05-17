@@ -67,7 +67,7 @@ const AGENTS: Agent[] = [
     number: 5,
     title: "Regulatory Watch Agent",
     description:
-      "Monitors Joint Commission, AAAHC, and CMS public channels for standard updates, new chapters, and survey focus shifts. When the NPG chapter launched January 2026, this agent would have flagged it automatically and initiated a content build task — rather than discovering the gap months later.",
+      "Monitors Joint Commission, DNV, AAAHC, and CMS public channels for standard updates, new chapters, and survey focus shifts. When the NPG chapter launched January 2026, this agent would have flagged it automatically and initiated a content build task — rather than discovering the gap months later.",
     replaces: "Manual monitoring of accreditation body bulletins, field communications, and update emails.",
     icon: Telescope,
     iconBg: "bg-amber-500/10",
