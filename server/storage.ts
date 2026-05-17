@@ -1,4 +1,4 @@
-import { eq, and, desc, lte, gte, sql, inArray, gt } from "drizzle-orm";
+import { eq, and, desc, asc, lte, gte, sql, inArray, gt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
@@ -9,6 +9,8 @@ import {
   complianceItems, complianceLogs, complianceDocuments, complianceTrainingModules,
   complianceTasks, staffTrainingAlerts, regulatoryWatchFindings, executiveBriefs,
   teams, teamMembers, rateLimitEvents,
+  contentLevels, contentQuestions, contentDeepDiveLevels, contentDeepDiveQuestions,
+  contentHandbookChapters, contentAssessmentQuestions,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
@@ -16,7 +18,11 @@ import {
   type ComplianceItem, type ComplianceLog, type ComplianceDocument, type ComplianceTrainingModule,
   type ComplianceTask, type StaffTrainingAlert, type RegulatoryWatchFinding, type ExecutiveBrief,
   type Team,
+  type Level, type Question, type DeepDiveLevel, type HandbookChapter, type ModuleId,
 } from "@shared/schema";
+import type { DiagnosticQuestion } from "@shared/diagnostic-questions";
+import type { MasteryQuestion } from "@shared/mastery-questions";
+import type { AscPretestQuestion } from "@shared/asc-pretest";
 
 const pool = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -450,6 +456,91 @@ export async function ensureTablesExist() {
       DO $$ BEGIN ALTER TABLE regulatory_watch_findings ALTER COLUMN affected_item_ids TYPE jsonb USING affected_item_ids::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
       DO $$ BEGIN ALTER TABLE executive_briefs ALTER COLUMN top_risks TYPE jsonb USING top_risks::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
       DO $$ BEGIN ALTER TABLE executive_briefs ALTER COLUMN email_sent_to TYPE jsonb USING email_sent_to::jsonb; EXCEPTION WHEN others THEN NULL; END $$;
+
+      -- MEDIUM-7: Content tables (quiz levels, questions, deep-dive, handbook, assessments)
+      CREATE TABLE IF NOT EXISTS content_levels (
+        id TEXT PRIMARY KEY,
+        module_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        icon TEXT NOT NULL,
+        color TEXT NOT NULL,
+        required_score INTEGER NOT NULL DEFAULT 0,
+        chapter_summary JSONB,
+        study_material JSONB,
+        is_draft BOOLEAN NOT NULL DEFAULT false,
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_content_levels_module ON content_levels(module_id);
+      CREATE TABLE IF NOT EXISTS content_questions (
+        id TEXT PRIMARY KEY,
+        level_id TEXT NOT NULL,
+        question TEXT NOT NULL,
+        scenario TEXT,
+        options TEXT[] NOT NULL,
+        correct_index INTEGER NOT NULL,
+        explanation TEXT NOT NULL DEFAULT '',
+        xp_reward INTEGER NOT NULL DEFAULT 10,
+        is_swipe BOOLEAN NOT NULL DEFAULT false,
+        is_draft BOOLEAN NOT NULL DEFAULT false,
+        cms_tag TEXT,
+        tutor JSONB,
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_content_questions_level ON content_questions(level_id);
+      CREATE TABLE IF NOT EXISTS content_deep_dive_levels (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT '',
+        icon TEXT NOT NULL DEFAULT '',
+        color TEXT NOT NULL DEFAULT '',
+        base_level_id TEXT NOT NULL DEFAULT '',
+        module_id TEXT NOT NULL DEFAULT 'hospital',
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_content_dd_levels_module ON content_deep_dive_levels(module_id);
+      CREATE TABLE IF NOT EXISTS content_deep_dive_questions (
+        id TEXT PRIMARY KEY,
+        level_id TEXT NOT NULL,
+        base_question TEXT NOT NULL,
+        base_options TEXT[] NOT NULL,
+        base_correct_index INTEGER NOT NULL,
+        base_explanation TEXT NOT NULL DEFAULT '',
+        base_xp INTEGER NOT NULL DEFAULT 15,
+        follow_ups JSONB NOT NULL DEFAULT '[]',
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_content_dd_questions_level ON content_deep_dive_questions(level_id);
+      CREATE TABLE IF NOT EXISTS content_handbook_chapters (
+        id SERIAL PRIMARY KEY,
+        level_id TEXT NOT NULL,
+        module_id TEXT NOT NULL,
+        title TEXT NOT NULL,
+        overview TEXT NOT NULL DEFAULT '',
+        sections JSONB NOT NULL DEFAULT '[]',
+        quick_reference JSONB NOT NULL DEFAULT '[]',
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_content_handbook_level_module ON content_handbook_chapters(level_id, module_id);
+      CREATE INDEX IF NOT EXISTS idx_content_handbook_module ON content_handbook_chapters(module_id);
+      CREATE TABLE IF NOT EXISTS content_assessment_questions (
+        id TEXT PRIMARY KEY,
+        assessment_type TEXT NOT NULL,
+        section_id TEXT NOT NULL DEFAULT '',
+        chapter_id TEXT NOT NULL DEFAULT '',
+        chapter_name TEXT NOT NULL DEFAULT '',
+        question TEXT NOT NULL,
+        scenario TEXT,
+        options TEXT[] NOT NULL,
+        correct_index INTEGER NOT NULL,
+        explanation TEXT NOT NULL DEFAULT '',
+        xp_reward INTEGER NOT NULL DEFAULT 10,
+        is_swipe BOOLEAN NOT NULL DEFAULT false,
+        cms_tag TEXT,
+        tutor JSONB,
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
+      CREATE INDEX IF NOT EXISTS idx_content_assessment_type ON content_assessment_questions(assessment_type);
     `);
     console.log("Ensured all database tables exist");
     await seedFacilities(client);
@@ -460,6 +551,13 @@ export async function ensureTablesExist() {
     console.error("Error ensuring tables exist:", err);
   } finally {
     client.release();
+  }
+  // MEDIUM-7: seed question/level/handbook content (idempotent — skips if already seeded)
+  try {
+    const { seedAllContent } = await import("./seed-content.js");
+    await seedAllContent();
+  } catch (err) {
+    console.error("Error seeding content:", err);
   }
 }
 
@@ -715,6 +813,17 @@ export interface IStorage {
   recordRateLimitEvent(userId: number, endpoint: string): Promise<void>;
   countRateLimitEvents(userId: number, endpoint: string, windowMs: number): Promise<number>;
   pruneRateLimitEvents(): Promise<void>;
+
+  // Content queries (MEDIUM-7: question/level/handbook content served from DB)
+  getLevelsByModule(moduleId: ModuleId, opts?: { includeDraft?: boolean }): Promise<Level[]>;
+  getLevelById(levelId: string): Promise<Level | undefined>;
+  getAllDeepDiveLevels(): Promise<DeepDiveLevel[]>;
+  getDeepDiveLevelsByModule(moduleId: string): Promise<DeepDiveLevel[]>;
+  getHandbookByModule(moduleId: string): Promise<HandbookChapter[]>;
+  getDiagnosticQuestions(): Promise<DiagnosticQuestion[]>;
+  getMasteryQuestions(): Promise<MasteryQuestion[]>;
+  getAscPretestQuestions(): Promise<AscPretestQuestion[]>;
+  getAscPosttestQuestions(): Promise<AscPretestQuestion[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1663,6 +1772,196 @@ export class DatabaseStorage implements IStorage {
   async pruneRateLimitEvents(): Promise<void> {
     const cutoff = new Date(Date.now() - 25 * 60 * 60 * 1000);
     await db.delete(rateLimitEvents).where(lte(rateLimitEvents.createdAt, cutoff));
+  }
+
+  // ── MEDIUM-7: Content queries ─────────────────────────────────────────────
+
+  async getLevelsByModule(moduleId: ModuleId, opts?: { includeDraft?: boolean }): Promise<Level[]> {
+    const where = opts?.includeDraft
+      ? eq(contentLevels.moduleId, moduleId)
+      : and(eq(contentLevels.moduleId, moduleId), eq(contentLevels.isDraft, false));
+    const levelRows = await db.select().from(contentLevels).where(where).orderBy(asc(contentLevels.displayOrder));
+    if (levelRows.length === 0) return [];
+    const levelIds = levelRows.map(l => l.id);
+    const questionRows = await db.select().from(contentQuestions)
+      .where(inArray(contentQuestions.levelId, levelIds))
+      .orderBy(asc(contentQuestions.displayOrder));
+    const qByLevel = new Map<string, typeof questionRows>();
+    for (const q of questionRows) {
+      const arr = qByLevel.get(q.levelId) ?? [];
+      arr.push(q);
+      qByLevel.set(q.levelId, arr);
+    }
+    return levelRows.map(l => ({
+      id: l.id,
+      name: l.name,
+      description: l.description,
+      icon: l.icon,
+      color: l.color,
+      requiredScore: l.requiredScore,
+      module: l.moduleId as ModuleId,
+      draft: l.isDraft,
+      chapterSummary: (l.chapterSummary as any) ?? undefined,
+      studyMaterial: (l.studyMaterial as any) ?? [],
+      questions: (qByLevel.get(l.id) ?? []).map(q => ({
+        id: q.id,
+        question: q.question,
+        scenario: q.scenario ?? undefined,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+        xpReward: q.xpReward,
+        isSwipe: q.isSwipe,
+        module: l.moduleId as ModuleId,
+        draft: q.isDraft,
+        cmsTag: q.cmsTag ?? undefined,
+        tutor: (q.tutor as any) ?? undefined,
+      } as Question)),
+    } as Level));
+  }
+
+  async getLevelById(levelId: string): Promise<Level | undefined> {
+    const [levelRow] = await db.select().from(contentLevels).where(eq(contentLevels.id, levelId));
+    if (!levelRow) return undefined;
+    const questionRows = await db.select().from(contentQuestions)
+      .where(eq(contentQuestions.levelId, levelId))
+      .orderBy(asc(contentQuestions.displayOrder));
+    return {
+      id: levelRow.id,
+      name: levelRow.name,
+      description: levelRow.description,
+      icon: levelRow.icon,
+      color: levelRow.color,
+      requiredScore: levelRow.requiredScore,
+      module: levelRow.moduleId as ModuleId,
+      draft: levelRow.isDraft,
+      chapterSummary: (levelRow.chapterSummary as any) ?? undefined,
+      studyMaterial: (levelRow.studyMaterial as any) ?? [],
+      questions: questionRows.map(q => ({
+        id: q.id,
+        question: q.question,
+        scenario: q.scenario ?? undefined,
+        options: q.options,
+        correctIndex: q.correctIndex,
+        explanation: q.explanation,
+        xpReward: q.xpReward,
+        isSwipe: q.isSwipe,
+        module: levelRow.moduleId as ModuleId,
+        draft: q.isDraft,
+        cmsTag: q.cmsTag ?? undefined,
+        tutor: (q.tutor as any) ?? undefined,
+      } as Question)),
+    };
+  }
+
+  async getAllDeepDiveLevels(): Promise<DeepDiveLevel[]> {
+    return this._fetchDeepDiveLevels();
+  }
+
+  async getDeepDiveLevelsByModule(moduleId: string): Promise<DeepDiveLevel[]> {
+    return this._fetchDeepDiveLevels(moduleId);
+  }
+
+  private async _fetchDeepDiveLevels(moduleId?: string): Promise<DeepDiveLevel[]> {
+    const levelRows = moduleId
+      ? await db.select().from(contentDeepDiveLevels).where(eq(contentDeepDiveLevels.moduleId, moduleId)).orderBy(asc(contentDeepDiveLevels.displayOrder))
+      : await db.select().from(contentDeepDiveLevels).orderBy(asc(contentDeepDiveLevels.displayOrder));
+    if (levelRows.length === 0) return [];
+    const levelIds = levelRows.map(l => l.id);
+    const questionRows = await db.select().from(contentDeepDiveQuestions)
+      .where(inArray(contentDeepDiveQuestions.levelId, levelIds))
+      .orderBy(asc(contentDeepDiveQuestions.displayOrder));
+    const qByLevel = new Map<string, typeof questionRows>();
+    for (const q of questionRows) {
+      const arr = qByLevel.get(q.levelId) ?? [];
+      arr.push(q);
+      qByLevel.set(q.levelId, arr);
+    }
+    return levelRows.map(l => ({
+      id: l.id,
+      name: l.name,
+      description: l.description,
+      icon: l.icon,
+      color: l.color,
+      baseLevelId: l.baseLevelId,
+      questions: (qByLevel.get(l.id) ?? []).map(q => ({
+        id: q.id,
+        baseQuestion: q.baseQuestion,
+        baseOptions: q.baseOptions,
+        baseCorrectIndex: q.baseCorrectIndex,
+        baseExplanation: q.baseExplanation,
+        baseXp: q.baseXp,
+        followUps: (q.followUps as any) ?? [],
+      })),
+    } as DeepDiveLevel));
+  }
+
+  async getHandbookByModule(moduleId: string): Promise<HandbookChapter[]> {
+    const rows = await db.select().from(contentHandbookChapters)
+      .where(eq(contentHandbookChapters.moduleId, moduleId))
+      .orderBy(asc(contentHandbookChapters.displayOrder));
+    return rows.map(r => ({
+      levelId: r.levelId,
+      title: r.title,
+      overview: r.overview,
+      sections: (r.sections as any) ?? [],
+      quickReference: (r.quickReference as any) ?? [],
+    } as HandbookChapter));
+  }
+
+  async getDiagnosticQuestions(): Promise<DiagnosticQuestion[]> {
+    const rows = await db.select().from(contentAssessmentQuestions)
+      .where(eq(contentAssessmentQuestions.assessmentType, "diagnostic"))
+      .orderBy(asc(contentAssessmentQuestions.displayOrder));
+    return rows.map(r => ({
+      id: r.id,
+      sectionId: r.sectionId,
+      question: r.question,
+      options: r.options,
+      correctIndex: r.correctIndex,
+    }));
+  }
+
+  async getMasteryQuestions(): Promise<MasteryQuestion[]> {
+    const rows = await db.select().from(contentAssessmentQuestions)
+      .where(eq(contentAssessmentQuestions.assessmentType, "mastery"))
+      .orderBy(asc(contentAssessmentQuestions.displayOrder));
+    return rows.map(r => ({
+      id: r.id,
+      sectionId: r.sectionId,
+      question: r.question,
+      options: r.options,
+      correctIndex: r.correctIndex,
+      explanation: r.explanation,
+    }));
+  }
+
+  async getAscPretestQuestions(): Promise<AscPretestQuestion[]> {
+    return this._fetchAscAssessmentQuestions("asc_pretest");
+  }
+
+  async getAscPosttestQuestions(): Promise<AscPretestQuestion[]> {
+    return this._fetchAscAssessmentQuestions("asc_posttest");
+  }
+
+  private async _fetchAscAssessmentQuestions(type: "asc_pretest" | "asc_posttest"): Promise<AscPretestQuestion[]> {
+    const rows = await db.select().from(contentAssessmentQuestions)
+      .where(eq(contentAssessmentQuestions.assessmentType, type))
+      .orderBy(asc(contentAssessmentQuestions.displayOrder));
+    return rows.map(r => ({
+      id: r.id,
+      chapterId: r.chapterId,
+      chapterName: r.chapterName,
+      question: r.question,
+      scenario: r.scenario ?? undefined,
+      options: r.options,
+      correctIndex: r.correctIndex,
+      explanation: r.explanation,
+      xpReward: r.xpReward,
+      isSwipe: r.isSwipe,
+      cmsTag: r.cmsTag ?? undefined,
+      tutor: (r.tutor as any) ?? undefined,
+    } as AscPretestQuestion));
   }
 }
 

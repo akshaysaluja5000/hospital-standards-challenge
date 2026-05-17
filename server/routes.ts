@@ -53,14 +53,9 @@ declare module "express-session" {
     pendingMfaSecret?: string;
   }
 }
-import { deepDiveLevels, hospitalDeepDiveLevels, dnvDeepDiveLevels } from "@shared/deep-dive-questions";
-import { diagnosticQuestions } from "@shared/diagnostic-questions";
-import { masteryQuestions } from "@shared/mastery-questions";
-import { ascPretestQuestions } from "@shared/asc-pretest";
-import { ascPosttestQuestions } from "@shared/asc-posttest";
-import { levels } from "@shared/questions";
-import { findLevelById, getVisibleLevelsForModule } from "@shared/all-levels";
 import type { ModuleId } from "@shared/schema";
+import type { AscPretestQuestion } from "@shared/asc-pretest";
+import type { MasteryQuestion } from "@shared/mastery-questions";
 import { getRoleConfig, ROLE_CONFIGS } from "@shared/roles";
 
 function getFacilityFilter(user: User | undefined | null): (other: { facilityId: number | null }) => boolean {
@@ -236,7 +231,7 @@ async function userCanAccessLevel(userId: number, levelId: string): Promise<bool
   const user = await storage.getUser(userId);
   if (!user) return false;
   if (user.isAdmin) return true;
-  const level = findLevelById(levelId);
+  const level = await storage.getLevelById(levelId);
   if (!level) return false;
   if (level.draft) return false;
   const userModule = (user.organizationType as ModuleId) || "hospital";
@@ -253,7 +248,7 @@ async function userCanAccessLevel(userId: number, levelId: string): Promise<bool
 async function getModuleLevelsForUser(userId: number) {
   const user = await storage.getUser(userId);
   const module: ModuleId = (user?.organizationType as ModuleId) || "hospital";
-  return getVisibleLevelsForModule(module);
+  return storage.getLevelsByModule(module);
 }
 
 // HIGH-9: safe JSON parser — returns fallback instead of throwing on malformed input
@@ -852,19 +847,15 @@ export async function registerRoutes(
       const alreadyTrackedXp = existingSession?.xpEarned || 0;
 
       // MEDIUM-1: compute XP server-side — never trust client-submitted xpEarned
-      const { getLevelsForModule } = await import("@shared/all-levels");
       const sessionAnswers = (existingSession?.answers as { questionId: string; correct: boolean }[] | null) ?? [];
       let serverXp = 0;
-      for (const mod of ["hospital", "asc", "dnv"] as const) {
-        const found = getLevelsForModule(mod).find(l => l.id === levelId);
-        if (found) {
-          serverXp = sessionAnswers.reduce((sum, a) => {
-            if (!a.correct) return sum;
-            const q = found.questions.find(q => q.id === a.questionId);
-            return sum + (q?.xpReward ?? 10);
-          }, 0);
-          break;
-        }
+      const foundLevel = await storage.getLevelById(levelId);
+      if (foundLevel) {
+        serverXp = sessionAnswers.reduce((sum, a) => {
+          if (!a.correct) return sum;
+          const q = foundLevel.questions.find(q => q.id === a.questionId);
+          return sum + (q?.xpReward ?? 10);
+        }, 0);
       }
       if (serverXp === 0 && score > 0) serverXp = score * 10;
 
@@ -1047,16 +1038,17 @@ export async function registerRoutes(
     asc_hb_val: "npsg", asc_val: "npsg",
   };
 
-  function resolveDeepDiveLevel(levelId: string) {
-    return deepDiveLevels.find((l) => l.id === levelId)
-        ?? deepDiveLevels.find((l) => l.baseLevelId === levelId)
-        ?? deepDiveLevels.find((l) => l.baseLevelId === ASC_TO_DEEP_DIVE_BASE[levelId]);
+  async function resolveDeepDiveLevel(levelId: string) {
+    const allDd = await storage.getAllDeepDiveLevels();
+    return allDd.find((l) => l.id === levelId)
+        ?? allDd.find((l) => l.baseLevelId === levelId)
+        ?? allDd.find((l) => l.baseLevelId === ASC_TO_DEEP_DIVE_BASE[levelId]);
   }
 
   app.get("/api/game/deep-dive/session/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId as string;
-      const ddLevel = resolveDeepDiveLevel(levelId);
+      const ddLevel = await resolveDeepDiveLevel(levelId);
       if (!ddLevel) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }
@@ -1082,7 +1074,7 @@ export async function registerRoutes(
     try {
       const levelId = req.params.levelId as string;
       const userId = req.user!.id;
-      const ddLevel = resolveDeepDiveLevel(levelId);
+      const ddLevel = await resolveDeepDiveLevel(levelId);
       if (!ddLevel) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }
@@ -1118,14 +1110,8 @@ export async function registerRoutes(
   app.get("/api/game/deep-dive/levels", requireAuth, async (req, res) => {
     try {
       const orgType = (req.user as any).organizationType ?? "hospital";
-      let sourceLevels;
-      if (orgType === "dnv") {
-        sourceLevels = dnvDeepDiveLevels;
-      } else if (orgType === "asc") {
-        sourceLevels = hospitalDeepDiveLevels;
-      } else {
-        sourceLevels = hospitalDeepDiveLevels;
-      }
+      const ddModule = orgType === "dnv" ? "dnv" : "hospital";
+      const sourceLevels = await storage.getDeepDiveLevelsByModule(ddModule);
       const levelsInfo = sourceLevels.map((l) => ({
         id: l.id,
         name: l.name,
@@ -1144,7 +1130,7 @@ export async function registerRoutes(
   app.get("/api/game/deep-dive/:levelId", requireAuth, async (req, res) => {
     try {
       const levelId = req.params.levelId;
-      const level = resolveDeepDiveLevel(levelId);
+      const level = await resolveDeepDiveLevel(levelId);
       if (!level) {
         return res.status(404).json({ message: "Deep dive level not found" });
       }
@@ -1230,10 +1216,15 @@ export async function registerRoutes(
       const orgTypeFilter = getOrganizationTypeFilter(currentUser);
       const period = (req.query.period as string) || "all";
 
+      const [hospitalLvls, ascLvls, dnvLvls] = await Promise.all([
+        storage.getLevelsByModule("hospital", { includeDraft: true }),
+        storage.getLevelsByModule("asc", { includeDraft: true }),
+        storage.getLevelsByModule("dnv", { includeDraft: true }),
+      ]);
       const moduleLevelIdsByModule = new Map<ModuleId, Set<string>>([
-        ["hospital", new Set(getVisibleLevelsForModule("hospital", { includeDraft: true }).map((l) => l.id))],
-        ["asc", new Set(getVisibleLevelsForModule("asc", { includeDraft: true }).map((l) => l.id))],
-        ["dnv", new Set(getVisibleLevelsForModule("dnv", { includeDraft: true }).map((l) => l.id))],
+        ["hospital", new Set(hospitalLvls.map((l) => l.id))],
+        ["asc", new Set(ascLvls.map((l) => l.id))],
+        ["dnv", new Set(dnvLvls.map((l) => l.id))],
       ]);
 
       const allUsersRaw = await storage.getAllUsers();
@@ -1695,10 +1686,10 @@ Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do dif
         progress: aiProgressByUser.get(u.id) ?? [],
       }));
 
-      const { levels } = await import("@shared/questions");
+      const allLevels = await storage.getLevelsByModule("hospital");
 
       const levelStats: { levelId: string; levelName: string; attempts: number; avgScore: number; totalCorrect: number; totalQuestions: number }[] = [];
-      for (const level of levels) {
+      for (const level of allLevels) {
         let totalScore = 0;
         let totalQ = 0;
         let attempts = 0;
@@ -1766,7 +1757,7 @@ Write a 5-6 sentence plain-text summary. Cover: overall readiness, the #1 priori
     }
   });
 
-  app.post("/api/ai-debrief", requireAuth, async (req: Request, res: Response) => {
+  app.post("/api/ai-debrief", requireAuth, makeAiRateLimit("ai", 30, 60 * 60 * 1000), async (req: Request, res: Response) => {
     const debriefSchema = z.object({
       levelId: z.string().max(100),
       levelTitle: z.string().max(200),
@@ -1819,7 +1810,7 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
     }
   });
 
-  app.post("/api/ai-handbook", requireAuth, async (req: Request, res: Response) => {
+  app.post("/api/ai-handbook", requireAuth, makeAiRateLimit("ai", 30, 60 * 60 * 1000), async (req: Request, res: Response) => {
     const handbookSchema = z.object({
       query: z.string().min(3).max(500),
     });
@@ -1831,17 +1822,15 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
     try {
       const { query } = parsed.data;
 
-      const { handbook } = await import("@shared/handbook");
-      const { ascHandbook } = await import("@shared/asc-handbook");
-      const { dnvHandbook } = await import("@shared/dnv-niaho-handbook");
-      const { getVisibleLevelsForModule } = await import("@shared/all-levels");
-
       const userRecord = await storage.getUser(userId);
       const userModule = (userRecord?.organizationType as string) || "hospital";
       const isAsc = userModule === "asc";
       const isDnv = userModule === "dnv";
 
-      const activeHandbook = isAsc ? ascHandbook : isDnv ? dnvHandbook : handbook;
+      const [activeHandbook, moduleLevels] = await Promise.all([
+        storage.getHandbookByModule(userModule),
+        storage.getLevelsByModule(userModule as any),
+      ]);
       const standardBody = isAsc ? "AAAHC" : isDnv ? "DNV NIAHO" : "Joint Commission";
 
       const queryLower = query.toLowerCase();
@@ -1882,7 +1871,6 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
 
       // If handbook didn't have enough context, also search the module's quiz study material
       if (relevantSections.length < 4) {
-        const moduleLevels = getVisibleLevelsForModule(userModule as any);
         for (const lvl of moduleLevels) {
           const matchingConcepts = (lvl.studyMaterial ?? []).filter(c => {
             const hay = `${c.title} ${c.content} ${c.keyPoint} ${c.extraInfo ?? ""}`.toLowerCase();
@@ -1929,7 +1917,7 @@ After your answer, add one line: "See: [source]" naming the specific chapter or 
     }
   });
 
-  app.post("/api/admin/lesson-plan/generate", requireLeadershipRole("director"), requireMfa, async (req: Request, res: Response) => {
+  app.post("/api/admin/lesson-plan/generate", requireLeadershipRole("director"), requireMfa, makeAiRateLimit("ai", 30, 60 * 60 * 1000), async (req: Request, res: Response) => {
     const schema = z.object({
       assignedDate: z.string().min(1),
       dueDate: z.string().min(1),
@@ -2245,9 +2233,10 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
         return { id: q.id, sectionId: q.sectionId, question: q.question, options, shuffleMap };
       });
     } else {
+      const allDiagnosticQ = await storage.getDiagnosticQuestions();
       const questionIds = session.questionOrder;
       questionsData = questionIds.map(id => {
-        const q = diagnosticQuestions.find(dq => dq.id === id);
+        const q = allDiagnosticQ.find(dq => dq.id === id);
         if (!q) return null;
         if (savedShuffleMaps && savedShuffleMaps[id]) {
           const sm = savedShuffleMaps[id] as number[];
@@ -2300,7 +2289,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     for (const ans of answers) {
       const q = storedQuestions
         ? storedQuestions.find(sq => sq.id === ans.questionId)
-        : diagnosticQuestions.find(dq => dq.id === ans.questionId);
+        : (await storage.getDiagnosticQuestions()).find(dq => dq.id === ans.questionId);
       if (q) {
         const sm = trustedMaps[q.id] as number[] | undefined;
         let displayOptions = q.options;
@@ -2336,7 +2325,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     res.json({ score, totalQuestions: totalAnswered, resultId: result.id, detailedResults, sectionScores });
   });
 
-  function buildAscTestPayload(pool: typeof ascPretestQuestions) {
+  function buildAscTestPayload(pool: AscPretestQuestion[]) {
     const shuffleMaps: Record<string, number[]> = {};
     const items = pool.map(q => {
       const { options, shuffleMap } = shuffleQuestionOptions(q);
@@ -2353,7 +2342,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   }
 
   function gradeAscTest(
-    pool: typeof ascPretestQuestions,
+    pool: AscPretestQuestion[],
     answers: { questionId: string; selectedIndex: number }[],
     serverShuffleMaps: Record<string, number[]>,
   ) {
@@ -2473,7 +2462,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   }
 
   app.get("/api/asc-pretest/questions", requireAuth, requireAsc, async (req, res) => {
-    const { items, shuffleMaps } = buildAscTestPayload(ascPretestQuestions);
+    const pretestPool = await storage.getAscPretestQuestions();
+    const { items, shuffleMaps } = buildAscTestPayload(pretestPool);
     await storage.upsertAscTestSession(req.user!.id, "pretest", shuffleMaps);
     res.json(items);
   });
@@ -2491,7 +2481,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
     const serverShuffleMaps = peek.shuffleMaps as Record<string, number[]>;
     const issuedIds = Object.keys(serverShuffleMaps);
-    const validation = validateAscAnswerSet(answers, issuedIds, ascPretestQuestions);
+    const pretestPool = await storage.getAscPretestQuestions();
+    const validation = validateAscAnswerSet(answers, issuedIds, pretestPool);
     if (!validation.ok) {
       return res.status(400).json({ message: validation.message });
     }
@@ -2500,7 +2491,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       return res.status(409).json({ message: "Pretest already submitted." });
     }
     const { score, detailedResults, chapterScores } = gradeAscTest(
-      ascPretestQuestions, validation.cleaned, serverShuffleMaps,
+      pretestPool, validation.cleaned, serverShuffleMaps,
     );
     const totalQuestions = issuedIds.length;
     const graded = detailedResults.map(d => ({
@@ -2513,7 +2504,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   });
 
   app.get("/api/asc-posttest/questions", requireAuth, requireAsc, async (req, res) => {
-    const { items, shuffleMaps } = buildAscTestPayload(ascPosttestQuestions);
+    const posttestPool = await storage.getAscPosttestQuestions();
+    const { items, shuffleMaps } = buildAscTestPayload(posttestPool);
     await storage.upsertAscTestSession(req.user!.id, "posttest", shuffleMaps);
     res.json(items);
   });
@@ -2531,7 +2523,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
     const serverShuffleMaps = peek.shuffleMaps as Record<string, number[]>;
     const issuedIds = Object.keys(serverShuffleMaps);
-    const validation = validateAscAnswerSet(answers, issuedIds, ascPosttestQuestions);
+    const posttestPool = await storage.getAscPosttestQuestions();
+    const validation = validateAscAnswerSet(answers, issuedIds, posttestPool);
     if (!validation.ok) {
       return res.status(400).json({ message: validation.message });
     }
@@ -2540,7 +2533,7 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       return res.status(409).json({ message: "Posttest already submitted." });
     }
     const { score, detailedResults, chapterScores } = gradeAscTest(
-      ascPosttestQuestions, validation.cleaned, serverShuffleMaps,
+      posttestPool, validation.cleaned, serverShuffleMaps,
     );
     const totalQuestions = issuedIds.length;
     const graded = detailedResults.map(d => ({
@@ -2570,9 +2563,10 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const MASTERY_PER_SECTION = 2;
     const MASTERY_EXTRAS = 3;
     const assignedChapters = await storage.getUserAssignedChapters(req.user!.id);
+    const allMasteryQ = await storage.getMasteryQuestions();
     const pool = assignedChapters.length > 0
-      ? masteryQuestions.filter(q => assignedChapters.includes(q.sectionId))
-      : masteryQuestions;
+      ? allMasteryQ.filter(q => assignedChapters.includes(q.sectionId))
+      : allMasteryQ;
     let selected = pickRandomPerSection(pool, MASTERY_PER_SECTION);
     const usedIds = new Set(selected.map(q => q.id));
     const remaining = pool.filter(q => !usedIds.has(q.id));
@@ -2591,12 +2585,13 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }));
   });
 
-  app.post("/api/mastery/check", requireAuth, (req, res) => {
+  app.post("/api/mastery/check", requireAuth, async (req, res) => {
     const { questionId, selectedIndex } = req.body;
     if (!questionId || selectedIndex === undefined) {
       return res.status(400).json({ message: "questionId and selectedIndex required" });
     }
-    const q = masteryQuestions.find(mq => mq.id === questionId);
+    const allMasteryQ = await storage.getMasteryQuestions();
+    const q = allMasteryQ.find(mq => mq.id === questionId);
     if (!q) {
       return res.status(404).json({ message: "Question not found" });
     }
@@ -2613,8 +2608,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     const questionIds = session.questionOrder;
     const savedAnswers = session.answers as any[];
     const savedShuffleMaps = (session.shuffleMaps as any) ?? null;
+    const allMasteryQ = await storage.getMasteryQuestions();
     const questionsData = questionIds.map((id) => {
-      const q = masteryQuestions.find(mq => mq.id === id);
+      const q = allMasteryQ.find(mq => mq.id === id);
       if (!q) return null;
       if (savedShuffleMaps && savedShuffleMaps[id]) {
         const sm = savedShuffleMaps[id] as number[];
@@ -2711,8 +2707,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
       questionId: string; sectionId: string; question: string; options: string[];
       selectedIndex: number; correctIndex: number; correct: boolean; explanation: string;
     }[] = [];
+    const allMasteryQ = await storage.getMasteryQuestions();
     for (const ans of answers) {
-      const q = masteryQuestions.find(mq => mq.id === ans.questionId);
+      const q = allMasteryQ.find(mq => mq.id === ans.questionId);
       if (q) {
         const sm = trustedMaps[q.id] as number[] | undefined;
         let displayOptions = q.options;

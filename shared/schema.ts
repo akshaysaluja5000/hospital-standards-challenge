@@ -647,6 +647,103 @@ export const rateLimitEvents = pgTable("rate_limit_events", {
   index("idx_rate_limit_events_created_at").on(t.createdAt),
 ]);
 
+// ── Content Tables (MEDIUM-7: question/level/handbook content moved from TS to DB) ──
+
+export const contentLevels = pgTable("content_levels", {
+  id: text("id").primaryKey(),
+  moduleId: text("module_id").notNull(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  icon: text("icon").notNull(),
+  color: text("color").notNull(),
+  requiredScore: integer("required_score").notNull().default(0),
+  chapterSummary: jsonb("chapter_summary"),
+  studyMaterial: jsonb("study_material"),
+  isDraft: boolean("is_draft").notNull().default(false),
+  displayOrder: integer("display_order").notNull().default(0),
+}, (t) => [
+  index("idx_content_levels_module").on(t.moduleId),
+]);
+
+export const contentQuestions = pgTable("content_questions", {
+  id: text("id").primaryKey(),
+  levelId: text("level_id").notNull(),
+  question: text("question").notNull(),
+  scenario: text("scenario"),
+  options: text("options").array().notNull(),
+  correctIndex: integer("correct_index").notNull(),
+  explanation: text("explanation").notNull().default(""),
+  xpReward: integer("xp_reward").notNull().default(10),
+  isSwipe: boolean("is_swipe").notNull().default(false),
+  isDraft: boolean("is_draft").notNull().default(false),
+  cmsTag: text("cms_tag"),
+  tutor: jsonb("tutor"),
+  displayOrder: integer("display_order").notNull().default(0),
+}, (t) => [
+  index("idx_content_questions_level").on(t.levelId),
+]);
+
+export const contentDeepDiveLevels = pgTable("content_deep_dive_levels", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull().default(""),
+  icon: text("icon").notNull().default(""),
+  color: text("color").notNull().default(""),
+  baseLevelId: text("base_level_id").notNull().default(""),
+  moduleId: text("module_id").notNull().default("hospital"),
+  displayOrder: integer("display_order").notNull().default(0),
+}, (t) => [
+  index("idx_content_dd_levels_module").on(t.moduleId),
+]);
+
+export const contentDeepDiveQuestions = pgTable("content_deep_dive_questions", {
+  id: text("id").primaryKey(),
+  levelId: text("level_id").notNull(),
+  baseQuestion: text("base_question").notNull(),
+  baseOptions: text("base_options").array().notNull(),
+  baseCorrectIndex: integer("base_correct_index").notNull(),
+  baseExplanation: text("base_explanation").notNull().default(""),
+  baseXp: integer("base_xp").notNull().default(15),
+  followUps: jsonb("follow_ups").notNull().default(sql`'[]'::jsonb`),
+  displayOrder: integer("display_order").notNull().default(0),
+}, (t) => [
+  index("idx_content_dd_questions_level").on(t.levelId),
+]);
+
+export const contentHandbookChapters = pgTable("content_handbook_chapters", {
+  id: serial("id").primaryKey(),
+  levelId: text("level_id").notNull(),
+  moduleId: text("module_id").notNull(),
+  title: text("title").notNull(),
+  overview: text("overview").notNull().default(""),
+  sections: jsonb("sections").notNull().default(sql`'[]'::jsonb`),
+  quickReference: jsonb("quick_reference").notNull().default(sql`'[]'::jsonb`),
+  displayOrder: integer("display_order").notNull().default(0),
+}, (t) => [
+  uniqueIndex("idx_content_handbook_level_module").on(t.levelId, t.moduleId),
+  index("idx_content_handbook_module").on(t.moduleId),
+]);
+
+export const contentAssessmentQuestions = pgTable("content_assessment_questions", {
+  id: text("id").primaryKey(),
+  assessmentType: text("assessment_type").notNull(),
+  sectionId: text("section_id").notNull().default(""),
+  chapterId: text("chapter_id").notNull().default(""),
+  chapterName: text("chapter_name").notNull().default(""),
+  question: text("question").notNull(),
+  scenario: text("scenario"),
+  options: text("options").array().notNull(),
+  correctIndex: integer("correct_index").notNull(),
+  explanation: text("explanation").notNull().default(""),
+  xpReward: integer("xp_reward").notNull().default(10),
+  isSwipe: boolean("is_swipe").notNull().default(false),
+  cmsTag: text("cms_tag"),
+  tutor: jsonb("tutor"),
+  displayOrder: integer("display_order").notNull().default(0),
+}, (t) => [
+  index("idx_content_assessment_type").on(t.assessmentType),
+]);
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;
