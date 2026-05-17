@@ -62,21 +62,15 @@ import { findLevelById, getVisibleLevelsForModule } from "@shared/all-levels";
 import type { ModuleId } from "@shared/schema";
 import { getRoleConfig, ROLE_CONFIGS } from "@shared/roles";
 
-const BYPASS_USERNAMES = ["akshaysaluja", "rsaluja"] as const;
-
-function isFacilityScopeBypass(user: { username?: string | null } | undefined | null): boolean {
-  const u = (user?.username || "").trim().toLowerCase();
-  return (BYPASS_USERNAMES as readonly string[]).includes(u);
-}
-
 function getFacilityFilter(user: User | undefined | null): (other: { facilityId: number | null }) => boolean {
-  if (isFacilityScopeBypass(user)) return () => true;
+  // super_admin can see all facilities; all other roles are scoped to their own facility
+  if ((user?.leadershipRole as string) === "super_admin") return () => true;
   const fid = user?.facilityId ?? null;
   return (other) => other.facilityId === fid;
 }
 
 function getOrganizationTypeFilter(user: User | undefined | null): (other: { organizationType: string | null }) => boolean {
-  if (isFacilityScopeBypass(user)) return () => true;
+  if ((user?.leadershipRole as string) === "super_admin") return () => true;
   const orgType = user?.organizationType ?? "hospital";
   return (other) => (other.organizationType ?? "hospital") === orgType;
 }
@@ -183,7 +177,6 @@ const LEADERSHIP_RANK: Record<string, number> = {
 
 function getEffectiveLeadershipRole(user: Express.User): string {
   const lr = user.leadershipRole || "learner";
-  if (isFacilityScopeBypass(user)) return "super_admin";
   if (user.isAdmin && (LEADERSHIP_RANK[lr] ?? 0) < LEADERSHIP_RANK["admin"]) return "admin";
   return lr;
 }
@@ -234,9 +227,6 @@ function requireLeadershipRole(minRole: string) {
 function requireMfa(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) {
     return res.status(401).json({ message: "Not authenticated" });
-  }
-  if (isFacilityScopeBypass(req.user!)) {
-    return next();
   }
   const rank = LEADERSHIP_RANK[getEffectiveLeadershipRole(req.user!)] ?? 0;
   if (rank >= LEADERSHIP_RANK["ceo"]) {
@@ -384,8 +374,6 @@ export async function registerRoutes(
 
       const hashedPassword = await hashPassword(password);
       const isFirstUser = (await storage.getAllUsers()).length === 0;
-      const isBypassUser = isFacilityScopeBypass({ username });
-
       let user = await storage.createUser({
         username,
         firstName: firstName.trim(),
@@ -396,7 +384,7 @@ export async function registerRoutes(
 
       user = (await storage.updateUser(user.id, {
         organizationType: normalizedOrgType,
-        ...(isFirstUser || isBypassUser ? { isAdmin: true } : {}),
+        ...(isFirstUser ? { isAdmin: true } : {}),
       }))!;
 
       await storage.upsertStreak(user.id, {
@@ -1305,7 +1293,7 @@ export async function registerRoutes(
           },
           body: JSON.stringify({
             from: "AccreditationReady Feedback <feedback@innovans.ai>",
-            to: ["akshay@innovans.ai", "anand@innovans.ai"],
+            to: (process.env.FEEDBACK_RECIPIENTS || "").split(",").map(e => e.trim()).filter(Boolean),
             subject: `New Feedback from ${displayName}`,
             text: `From: ${displayName} (@${u.username})\nFacility ID: ${u.facilityId || "N/A"}\n\n${message.trim()}`,
           }),
@@ -1475,13 +1463,6 @@ export async function registerRoutes(
         name: "Midwest Orthopedic Specialty Hospital",
         code: "SITE486045",
       });
-    }
-
-    for (const adminUsername of BYPASS_USERNAMES) {
-      const adminUser = await storage.getUserByUsername(adminUsername);
-      if (adminUser && (!adminUser.isAdmin || adminUser.facilityId !== facility.id)) {
-        await storage.updateUser(adminUser.id, { isAdmin: true, facilityId: facility.id });
-      }
     }
 
     const existingActs = await storage.getAllActivities();
@@ -2145,7 +2126,6 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     }
   });
 
-  const ADMIN_USERNAMES = ["akshaysaluja", "rsaluja"];
   const QUESTIONS_PER_SECTION = 5;
 
   function pickRandomPerSection<T extends { sectionId: string }>(pool: T[], perSection: number): T[] {
@@ -2609,10 +2589,9 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   });
 
   app.get("/api/mastery/questions", requireAuth, async (req, res) => {
-    const username = req.user!.username;
-    const isAdmin = ADMIN_USERNAMES.includes(username);
+    const isSuperAdmin = (req.user! as User).leadershipRole === "super_admin";
     const assignedChaptersForCheck = await storage.getUserAssignedChapters(req.user!.id);
-    if (!isAdmin) {
+    if (!isSuperAdmin) {
       const progress = await storage.getProgress(req.user!.id);
       const moduleLevels = await getModuleLevelsForUser(req.user!.id);
       const requiredLevels = assignedChaptersForCheck.length > 0 ? moduleLevels.filter(l => assignedChaptersForCheck.includes(l.id)) : moduleLevels;
@@ -2718,9 +2697,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   });
 
   app.get("/api/mastery/eligibility", requireAuth, async (req, res) => {
-    const username = req.user!.username;
     const moduleLevels = await getModuleLevelsForUser(req.user!.id);
-    if (ADMIN_USERNAMES.includes(username)) {
+    if ((req.user! as User).leadershipRole === "super_admin") {
       return res.json({ eligible: true, completedSections: moduleLevels.map(l => l.id), missingSections: [], isAdmin: true });
     }
     const progress = await storage.getProgress(req.user!.id);
@@ -2745,9 +2723,8 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
     if (!answers || !Array.isArray(answers)) {
       return res.status(400).json({ message: "Answers required" });
     }
-    const username = req.user!.username;
-    const isAdmin = ADMIN_USERNAMES.includes(username);
-    if (!isAdmin) {
+    const isSuperAdmin = (req.user! as User).leadershipRole === "super_admin";
+    if (!isSuperAdmin) {
       const progress = await storage.getProgress(req.user!.id);
       const assignedSubmit = await storage.getUserAssignedChapters(req.user!.id);
       const moduleLevelsSubmit = await getModuleLevelsForUser(req.user!.id);
@@ -3057,7 +3034,7 @@ Return ONLY valid JSON (no markdown, no explanation):
     try {
       const caller = req.user as User;
       const module = (req.query.module as string) || "hospital";
-      const facilityId = isFacilityScopeBypass(caller) ? null : ((caller as any).facilityId ?? null);
+      const facilityId = (caller.leadershipRole as string) === "super_admin" ? null : ((caller as any).facilityId ?? null);
       const assessments = await storage.getRiskAssessmentsByFacility(facilityId, module);
       res.json({ assessments });
     } catch (err: any) {

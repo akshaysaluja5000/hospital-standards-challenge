@@ -149,7 +149,7 @@ export default function RoleSelectPage() {
   const [codeError, setCodeError] = useState("");
   const [codeLoading, setCodeLoading] = useState(false);
 
-  const isSuperAdmin = user?.username === "akshaysaluja" || user?.username === "rsaluja" || user?.leadershipRole === "super_admin";
+  const isSuperAdmin = user?.leadershipRole === "super_admin";
 
   const facilityType: FacilityType = (user?.organizationType as FacilityType) || "hospital";
   const visibleRoles = useMemo(() => rolesForFacility(facilityType), [facilityType]);

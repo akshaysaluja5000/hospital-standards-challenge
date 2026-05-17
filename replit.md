@@ -30,7 +30,7 @@ React 18 + TypeScript, Vite, Tailwind CSS, Framer Motion, wouter, TanStack Query
 - **Server-side enforcement**: `/api/admin/stats`, `/api/admin/ai-insights`, `/api/admin/lesson-plan/generate` require director+ AND requireMfa; `/api/admin/users/:id/leadership-role` requires admin+; `/api/admin/export/users-csv` requires ceo+ AND requireMfa; `/api/audit-log` GET requires admin+ AND requireMfa.
 - **Persistent audit log**: `audit_logs` DB table; client fires `POST /api/audit-log` on exec-report views & exports; server fires on users-csv export. Viewer visible to admin+ in User Management page.
 - **Facility & module scoping**: Hospital leaders see only hospital data; ASC administrators see only ASC data. Multi-site admin/super_admin can see all.
-- **Bypass accounts**: `akshaysaluja` and `rsaluja` always receive `super_admin` effective rank.
+- **super_admin** access is granted exclusively via `leadershipRole = 'super_admin'` in the DB — no hardcoded username bypasses exist.
 - `darkMode: ["class"]` — light mode enforced via inline script in `index.html` + `useEffect` in `App.tsx`.
 
 ## Product
