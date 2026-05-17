@@ -359,7 +359,22 @@ export async function ensureTablesExist() {
       CREATE INDEX IF NOT EXISTS idx_users_facility_id ON users(facility_id);
       CREATE INDEX IF NOT EXISTS idx_users_leadership_role ON users(leadership_role);
       CREATE INDEX IF NOT EXISTS idx_user_progress_user_id ON user_progress(user_id);
-      CREATE INDEX IF NOT EXISTS idx_user_progress_user_level ON user_progress(user_id, level_id);
+
+      -- MEDIUM-5: deduplicate before adding unique constraint (keep row with highest best_score)
+      DELETE FROM user_progress
+      WHERE id NOT IN (
+        SELECT DISTINCT ON (user_id, level_id) id
+        FROM user_progress
+        ORDER BY user_id, level_id, best_score DESC, id ASC
+      );
+      DO $$ BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'user_progress_user_level_unique'
+        ) THEN
+          ALTER TABLE user_progress
+            ADD CONSTRAINT user_progress_user_level_unique UNIQUE (user_id, level_id);
+        END IF;
+      END $$;
       CREATE INDEX IF NOT EXISTS idx_daily_activity_user_id ON daily_activity(user_id);
       CREATE INDEX IF NOT EXISTS idx_daily_activity_user_date ON daily_activity(user_id, date);
       CREATE INDEX IF NOT EXISTS idx_quiz_sessions_user_id ON quiz_sessions(user_id);
@@ -763,30 +778,30 @@ export class DatabaseStorage implements IStorage {
   }
 
   async upsertProgress(userId: number, levelId: string, score: number, totalQuestions: number): Promise<UserProgress> {
-    const existing = await this.getProgressByLevel(userId, levelId);
-
-    if (existing) {
-      const newBestScore = Math.max(existing.bestScore, score);
-      const [updated] = await db.update(userProgress).set({
+    // MEDIUM-5: single atomic INSERT … ON CONFLICT DO UPDATE — eliminates race-condition duplicates
+    const [row] = await db
+      .insert(userProgress)
+      .values({
+        userId,
+        levelId,
         score,
         totalQuestions,
-        bestScore: newBestScore,
+        bestScore: score,
         completed: true,
-        completedAt: existing.completedAt || new Date(),
-      }).where(eq(userProgress.id, existing.id)).returning();
-      return updated;
-    }
-
-    const [created] = await db.insert(userProgress).values({
-      userId,
-      levelId,
-      score,
-      totalQuestions,
-      bestScore: score,
-      completed: true,
-      completedAt: new Date(),
-    }).returning();
-    return created;
+        completedAt: new Date(),
+      })
+      .onConflictDoUpdate({
+        target: [userProgress.userId, userProgress.levelId],
+        set: {
+          score,
+          totalQuestions,
+          bestScore: sql`GREATEST(user_progress.best_score, ${score})`,
+          completed: true,
+          completedAt: sql`COALESCE(user_progress.completed_at, NOW())`,
+        },
+      })
+      .returning();
+    return row;
   }
 
   async getDailyActivity(userId: number, date: string): Promise<DailyActivity | undefined> {

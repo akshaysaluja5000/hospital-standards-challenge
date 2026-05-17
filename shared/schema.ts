@@ -97,7 +97,7 @@ export const userProgress = pgTable("user_progress", {
   completedAt: timestamp("completed_at"),
 }, (t) => [
   index("idx_user_progress_user_id").on(t.userId),
-  index("idx_user_progress_user_level").on(t.userId, t.levelId),
+  uniqueIndex("idx_user_progress_user_level").on(t.userId, t.levelId),
 ]);
 
 export const userStreaks = pgTable("user_streaks", {
