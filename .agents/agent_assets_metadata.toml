@@ -83,13 +83,13 @@ title = "Content Audit Prompt Library — All 8 Prompts"
 id = "g3TExPsgHe_4KHAK1vuyq"
 uri = "file://export-1-server.zip"
 type = "unspecified"
-title = "1 — Server (routes, storage, auth)"
+title = "Server (routes, storage, seed, etc.)"
 
 [[outputs]]
 id = "od1-MSwo8ZL2X7uMZP5sU"
 uri = "file://export-2-client.zip"
 type = "unspecified"
-title = "2 — Client (pages, components, lib, public)"
+title = "Client (React pages, components, lib)"
 
 [[outputs]]
 id = "1kPBI5xr8Zyk8jzitpl7R"
@@ -108,3 +108,15 @@ id = "4natOp08ucEZZcP8wVfny"
 uri = "file://export-5-hospital-dnv-questions.zip"
 type = "unspecified"
 title = "5 — Hospital + DNV questions (quiz, deep-dive, diagnostic, mastery)"
+
+[[outputs]]
+id = "DynEJOJxtDL43jFzAtBaJ"
+uri = "file://export-3-shared.zip"
+type = "unspecified"
+title = "Shared (schema, types, content files)"
+
+[[outputs]]
+id = "OGr-yjkiC6ShLVunW7_LS"
+uri = "file://export-4-config.zip"
+type = "unspecified"
+title = "Config (package.json, tsconfig, tailwind, etc.)"
