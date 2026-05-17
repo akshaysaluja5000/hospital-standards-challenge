@@ -788,7 +788,7 @@ export async function registerRoutes(
       if (!parsed.success) {
         return res.status(400).json({ message: "Invalid submission data" });
       }
-      const { levelId, score, totalQuestions, xpEarned } = parsed.data;
+      const { levelId, score, totalQuestions } = parsed.data;
       const userId = req.user!.id;
       if (!(await userCanAccessLevel(userId, levelId))) {
         return res.status(403).json({ message: "This chapter is not assigned to your role." });
@@ -800,9 +800,26 @@ export async function registerRoutes(
       const alreadyTrackedC = existingSession?.correctAnswers || 0;
       const alreadyTrackedXp = existingSession?.xpEarned || 0;
 
+      // MEDIUM-1: compute XP server-side — never trust client-submitted xpEarned
+      const { getLevelsForModule } = await import("@shared/all-levels");
+      const sessionAnswers = (existingSession?.answers as { questionId: string; correct: boolean }[] | null) ?? [];
+      let serverXp = 0;
+      for (const mod of ["hospital", "asc", "dnv"] as const) {
+        const found = getLevelsForModule(mod).find(l => l.id === levelId);
+        if (found) {
+          serverXp = sessionAnswers.reduce((sum, a) => {
+            if (!a.correct) return sum;
+            const q = found.questions.find(q => q.id === a.questionId);
+            return sum + (q?.xpReward ?? 10);
+          }, 0);
+          break;
+        }
+      }
+      if (serverXp === 0 && score > 0) serverXp = score * 10;
+
       const remainingQ = totalQuestions - alreadyTrackedQ;
       const remainingC = score - alreadyTrackedC;
-      const remainingXp = xpEarned - alreadyTrackedXp;
+      const remainingXp = serverXp - alreadyTrackedXp;
 
       await storage.upsertProgress(userId, levelId, score, totalQuestions);
       if (remainingQ > 0) {
@@ -814,7 +831,7 @@ export async function registerRoutes(
         streak = await storage.upsertStreak(userId, {
           currentStreak: 1,
           longestStreak: 1,
-          totalXp: xpEarned,
+          totalXp: serverXp,
           lastPlayedDate: today,
         });
       } else if (streak.lastPlayedDate !== today) {
@@ -840,12 +857,12 @@ export async function registerRoutes(
         streak = await storage.upsertStreak(userId, {
           currentStreak: newStreak,
           longestStreak: newLongest,
-          totalXp: streak.totalXp + xpEarned,
+          totalXp: streak.totalXp + serverXp,
           lastPlayedDate: today,
         });
       } else {
         streak = await storage.upsertStreak(userId, {
-          totalXp: streak.totalXp + xpEarned,
+          totalXp: streak.totalXp + serverXp,
         });
       }
 
@@ -1577,9 +1594,18 @@ export async function registerRoutes(
     }
   });
 
-  const aiTutorRateLimit = new Map<number, number[]>();
   const AI_TUTOR_MAX_CALLS = 30;
   const AI_TUTOR_WINDOW_MS = 60 * 60 * 1000;
+
+  // Prune stale rate limit rows once per hour (lazy cleanup)
+  let lastRateLimitPrune = 0;
+  async function maybePruneRateLimit() {
+    const now = Date.now();
+    if (now - lastRateLimitPrune > 60 * 60 * 1000) {
+      lastRateLimitPrune = now;
+      storage.pruneRateLimitEvents().catch(() => {});
+    }
+  }
 
   app.post("/api/ai-tutor", requireAuth, async (req: Request, res: Response) => {
     const aiTutorSchema = z.object({
@@ -1598,13 +1624,12 @@ export async function registerRoutes(
     }
 
     const userId = (req.user as User).id;
-    const now = Date.now();
-    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
-    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+    await maybePruneRateLimit();
+    const aiTutorCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
+    if (aiTutorCount >= AI_TUTOR_MAX_CALLS) {
       return res.status(429).json({ error: "You've reached the AI Tutor limit. Please try again later." });
     }
-    userCalls.push(now);
-    aiTutorRateLimit.set(userId, userCalls);
+    await storage.recordRateLimitEvent(userId, "ai");
 
     try {
       const { question, userAnswer, correctAnswer, explanation, depth, previousExplanations, allOptions, module: tutorModule } = parsed.data;
@@ -1688,13 +1713,12 @@ Give ONE actionable takeaway in 2 sentences about what great ${orgLabel}s do dif
 
   app.post("/api/admin/ai-insights", requireLeadershipRole("director"), requireMfa, async (req: Request, res: Response) => {
     const userId = (req.user as User).id;
-    const now = Date.now();
-    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
-    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+    await maybePruneRateLimit();
+    const aiInsightsCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
+    if (aiInsightsCount >= AI_TUTOR_MAX_CALLS) {
       return res.status(429).json({ error: "Rate limit reached. Please try again later." });
     }
-    userCalls.push(now);
-    aiTutorRateLimit.set(userId, userCalls);
+    await storage.recordRateLimitEvent(userId, "ai");
 
     try {
       const adminUser = req.user as User;
@@ -1802,13 +1826,12 @@ Write a 5-6 sentence plain-text summary. Cover: overall readiness, the #1 priori
     }
 
     const userId = (req.user as User).id;
-    const now = Date.now();
-    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
-    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+    await maybePruneRateLimit();
+    const aiDebriefCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
+    if (aiDebriefCount >= AI_TUTOR_MAX_CALLS) {
       return res.status(429).json({ error: "Rate limit reached. Please try again later." });
     }
-    userCalls.push(now);
-    aiTutorRateLimit.set(userId, userCalls);
+    await storage.recordRateLimitEvent(userId, "ai");
 
     try {
       const { levelTitle, totalQuestions, correctAnswers, missedQuestions } = parsed.data;
@@ -1857,13 +1880,12 @@ Write a 4-5 sentence plain-text debrief for the manager. Include: what went well
     }
 
     const userId = (req.user as User).id;
-    const now = Date.now();
-    const userCalls = (aiTutorRateLimit.get(userId) || []).filter(t => now - t < AI_TUTOR_WINDOW_MS);
-    if (userCalls.length >= AI_TUTOR_MAX_CALLS) {
+    await maybePruneRateLimit();
+    const aiHandbookCount = await storage.countRateLimitEvents(userId, "ai", AI_TUTOR_WINDOW_MS);
+    if (aiHandbookCount >= AI_TUTOR_MAX_CALLS) {
       return res.status(429).json({ error: "Rate limit reached. Please try again later." });
     }
-    userCalls.push(now);
-    aiTutorRateLimit.set(userId, userCalls);
+    await storage.recordRateLimitEvent(userId, "ai");
 
     try {
       const { query } = parsed.data;
@@ -3200,7 +3222,6 @@ Return ONLY valid JSON (no markdown, no explanation):
   });
 
   // ── AI Topic Quiz ──────────────────────────────────────────────────────────
-  const topicQuizRateLimit = new Map<number, number[]>();
   const TOPIC_QUIZ_MAX = 20;
   const TOPIC_QUIZ_WINDOW_MS = 60 * 60 * 1000;
 
@@ -3214,13 +3235,12 @@ Return ONLY valid JSON (no markdown, no explanation):
     if (!parsed.success) return res.status(400).json({ error: "Invalid request." });
 
     const userId = (req.user as User).id;
-    const now = Date.now();
-    const calls = (topicQuizRateLimit.get(userId) || []).filter(t => now - t < TOPIC_QUIZ_WINDOW_MS);
-    if (calls.length >= TOPIC_QUIZ_MAX) {
+    await maybePruneRateLimit();
+    const topicQuizCount = await storage.countRateLimitEvents(userId, "topic-quiz", TOPIC_QUIZ_WINDOW_MS);
+    if (topicQuizCount >= TOPIC_QUIZ_MAX) {
       return res.status(429).json({ error: "You've reached the topic quiz limit. Try again later." });
     }
-    calls.push(now);
-    topicQuizRateLimit.set(userId, calls);
+    await storage.recordRateLimitEvent(userId, "topic-quiz");
 
     const { topic, context, module: mod } = parsed.data;
     const standard = mod === "asc" ? "AAAHC accreditation" : mod === "dnv" ? "DNV NIAHO hospital accreditation" : "Joint Commission (TJC) hospital accreditation";

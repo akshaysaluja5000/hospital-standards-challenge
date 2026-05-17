@@ -1,4 +1,4 @@
-import { eq, and, desc, lte, gte, sql, inArray } from "drizzle-orm";
+import { eq, and, desc, lte, gte, sql, inArray, gt } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import {
@@ -8,7 +8,7 @@ import {
   roles, roleChapterMappings, flashcardReviews, auditLogs, riskAssessments, feedback, leadershipRoleCodes,
   complianceItems, complianceLogs, complianceDocuments, complianceTrainingModules,
   complianceTasks, staffTrainingAlerts, regulatoryWatchFindings, executiveBriefs,
-  teams, teamMembers,
+  teams, teamMembers, rateLimitEvents,
   type User, type InsertUser, type UserProgress, type UserStreak, type DailyActivity, type QuizSession,
   type Facility, type InsertFacility, type DiagnosticResult, type MasteryResult,
   type DiagnosticSession, type MasterySession, type Role, type RoleChapterMapping,
@@ -345,6 +345,15 @@ export async function ensureTablesExist() {
         added_at TIMESTAMP NOT NULL DEFAULT NOW(),
         UNIQUE(team_id, user_id)
       );
+
+      CREATE TABLE IF NOT EXISTS rate_limit_events (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id),
+        endpoint TEXT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      );
+      CREATE INDEX IF NOT EXISTS idx_rate_limit_events_user_endpoint ON rate_limit_events(user_id, endpoint);
+      CREATE INDEX IF NOT EXISTS idx_rate_limit_events_created_at ON rate_limit_events(created_at);
 
       -- CRITICAL-4: Indexes on all heavily-queried FK and filter columns
       CREATE INDEX IF NOT EXISTS idx_users_facility_id ON users(facility_id);
@@ -686,6 +695,11 @@ export interface IStorage {
   getTeamMemberIds(teamId: number): Promise<number[]>;
   getTeamMembersWithStats(teamId: number): Promise<{ id: number; username: string; firstName: string; lastName: string; department: string | null; totalXp: number; currentStreak: number; leadershipRole: string }[]>;
   setTeamMembers(teamId: number, userIds: number[]): Promise<void>;
+
+  // Rate limiting (HIGH-3: persistent, restart-safe)
+  recordRateLimitEvent(userId: number, endpoint: string): Promise<void>;
+  countRateLimitEvents(userId: number, endpoint: string, windowMs: number): Promise<number>;
+  pruneRateLimitEvents(): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1610,6 +1624,30 @@ export class DatabaseStorage implements IStorage {
     if (userIds.length > 0) {
       await db.insert(teamMembers).values(userIds.map(userId => ({ teamId, userId })));
     }
+  }
+
+  async recordRateLimitEvent(userId: number, endpoint: string): Promise<void> {
+    await db.insert(rateLimitEvents).values({ userId, endpoint });
+  }
+
+  async countRateLimitEvents(userId: number, endpoint: string, windowMs: number): Promise<number> {
+    const cutoff = new Date(Date.now() - windowMs);
+    const result = await db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(rateLimitEvents)
+      .where(
+        and(
+          eq(rateLimitEvents.userId, userId),
+          eq(rateLimitEvents.endpoint, endpoint),
+          gt(rateLimitEvents.createdAt, cutoff),
+        ),
+      );
+    return result[0]?.count ?? 0;
+  }
+
+  async pruneRateLimitEvents(): Promise<void> {
+    const cutoff = new Date(Date.now() - 25 * 60 * 60 * 1000);
+    await db.delete(rateLimitEvents).where(lte(rateLimitEvents.createdAt, cutoff));
   }
 }
 

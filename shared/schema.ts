@@ -635,6 +635,18 @@ export const executiveBriefs = pgTable("executive_briefs", {
 
 export type ExecutiveBrief = typeof executiveBriefs.$inferSelect;
 
+// ── Rate Limit Events (persistent, restart-safe) ─────────────────────────────
+
+export const rateLimitEvents = pgTable("rate_limit_events", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  endpoint: text("endpoint").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+}, (t) => [
+  index("idx_rate_limit_events_user_endpoint").on(t.userId, t.endpoint),
+  index("idx_rate_limit_events_created_at").on(t.createdAt),
+]);
+
 export interface DeepDiveGameState {
   currentQuestion: number;
   totalQuestions: number;
