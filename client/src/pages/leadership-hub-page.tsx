@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, BarChart3, TrendingUp, GraduationCap, BrainCircuit,
   Users, Building2, Stethoscope, ChevronRight, ShieldCheck,
-  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Bot, Globe, Briefcase,
+  ClipboardList, FileText, Lock, AlertTriangle, ShieldAlert, Bot, Globe, Briefcase, Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -14,6 +14,15 @@ import { LEADERSHIP_LABELS } from "@shared/schema";
 const LEADERSHIP_RANK: Record<string, number> = {
   learner: 0, educator: 1, director: 2, ceo: 3, admin: 4, super_admin: 5,
 };
+
+const COMPLIANCE_CARD_IDS = new Set([
+  "survey-readiness",
+  "compliance-tasks",
+  "executive-brief",
+  "regulatory-watch",
+  "content-intelligence",
+  "staff-learning",
+]);
 
 function getEffectiveRole(user: { isAdmin: boolean; leadershipRole?: string | null }) {
   const lr = (user.leadershipRole as string) || "learner";
@@ -326,6 +335,9 @@ function TeamRiskSummary({ module }: { module: string }) {
 export default function LeadershipHubPage() {
   const { user } = useAuth();
   const [, setLocation] = useLocation();
+  const [onboardingDismissed, setOnboardingDismissed] = useState<boolean>(() => {
+    try { return localStorage.getItem("ar_compliance_onboarding_done") === "1"; } catch { return false; }
+  });
 
   const effectiveRole = user ? getEffectiveRole(user) : "learner";
   const effectiveRank = LEADERSHIP_RANK[effectiveRole] ?? 0;
@@ -348,6 +360,28 @@ export default function LeadershipHubPage() {
     queryKey: ["/api/mfa/status"],
     enabled: needsMfa,
   });
+
+  const { data: facilitySettings, isLoading: settingsLoading } = useQuery<{ complianceMode: string }>({
+    queryKey: ["/api/facility/settings"],
+    enabled: !!user && effectiveRank >= LEADERSHIP_RANK["director"],
+  });
+
+  const complianceMode = facilitySettings?.complianceMode ?? "education_only";
+  const showComplianceCards = complianceMode === "full_platform";
+  const showOnboardingBanner = !settingsLoading && complianceMode !== "full_platform" && !onboardingDismissed && effectiveRank >= LEADERSHIP_RANK["director"];
+
+  function dismissOnboarding(enableFull: boolean) {
+    try { localStorage.setItem("ar_compliance_onboarding_done", "1"); } catch {}
+    setOnboardingDismissed(true);
+    if (enableFull) {
+      fetch("/api/admin/facility/compliance-mode", {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ complianceMode: "full_platform" }),
+      });
+    }
+  }
 
   return (
     <div className="min-h-screen pb-20">
@@ -475,13 +509,50 @@ export default function LeadershipHubPage() {
           </motion.div>
         )}
 
+        {/* Compliance onboarding banner */}
+        {showOnboardingBanner && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border-2 border-primary/50 bg-primary/5 p-5 flex items-start gap-4"
+            data-testid="banner-compliance-onboarding"
+          >
+            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Zap size={20} className="text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-bold text-sm mb-1">Set up compliance management</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                Would you like to enable the full compliance management suite — Survey Readiness Agent, Compliance Task Manager, Regulatory Watch, and AI compliance agents? You can change this any time in Facility Settings.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => dismissOnboarding(true)}
+                  data-testid="button-onboarding-enable-full"
+                >
+                  Enable Full Platform
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => dismissOnboarding(false)}
+                  data-testid="button-onboarding-keep-education"
+                >
+                  Education Only — skip for now
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
         {/* Console cards */}
         <div>
           <h2 className="text-sm font-bold uppercase tracking-wider text-foreground/60 mb-4" data-testid="text-tools-label">
             Leadership Tools
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {getConsoleCards(activeStandardsBody).map((card, i) => {
+            {getConsoleCards(activeStandardsBody).filter(card => showComplianceCards || !COMPLIANCE_CARD_IDS.has(card.id)).map((card, i) => {
               const accessible = canAccess(card);
               const Icon = card.icon;
               return (

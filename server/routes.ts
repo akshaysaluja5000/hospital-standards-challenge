@@ -2844,6 +2844,36 @@ Keep the total entries to at most ${Math.min(totalPeriods, cadence === "daily" ?
   });
 
   // ── MFA routes ──────────────────────────────────────────────────────────
+  // ── Facility settings ────────────────────────────────────────────────────────
+  app.get("/api/facility/settings", requireAuth, async (req, res) => {
+    try {
+      const user = req.user!;
+      const facilityId = (user as any).facilityId as number | null | undefined;
+      if (!facilityId) return res.json({ complianceMode: "education_only" });
+      const facility = await storage.getFacility(facilityId);
+      res.json({ complianceMode: facility?.complianceMode ?? "education_only" });
+    } catch {
+      res.status(500).json({ error: "Failed to fetch facility settings" });
+    }
+  });
+
+  app.patch("/api/admin/facility/compliance-mode", requireAuth, requireLeadershipRole("director"), async (req, res) => {
+    try {
+      const user = req.user!;
+      const facilityId = (user as any).facilityId as number | null | undefined;
+      if (!facilityId) return res.status(400).json({ error: "No facility associated with your account" });
+      const { complianceMode } = req.body;
+      const allowed = ["off", "education_only", "full_platform"];
+      if (!allowed.includes(complianceMode)) {
+        return res.status(400).json({ error: "Invalid compliance mode. Must be off, education_only, or full_platform." });
+      }
+      const facility = await storage.updateFacility(facilityId, { complianceMode });
+      res.json({ complianceMode: facility.complianceMode });
+    } catch {
+      res.status(500).json({ error: "Failed to update compliance mode" });
+    }
+  });
+
   app.get("/api/mfa/status", requireAuth, (req, res) => {
     const user = req.user!;
     const rank = LEADERSHIP_RANK[getEffectiveLeadershipRole(user)] ?? 0;

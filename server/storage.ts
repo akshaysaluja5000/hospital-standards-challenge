@@ -78,6 +78,7 @@ export async function ensureTablesExist() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS department TEXT;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS mfa_secret TEXT;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS mfa_enabled BOOLEAN NOT NULL DEFAULT false;
+      ALTER TABLE facilities ADD COLUMN IF NOT EXISTS compliance_mode TEXT NOT NULL DEFAULT 'education_only';
       CREATE TABLE IF NOT EXISTS audit_logs (
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES users(id),
@@ -726,6 +727,7 @@ export interface IStorage {
   clearAllActivities(): Promise<void>;
 
   createFacility(data: InsertFacility): Promise<Facility>;
+  updateFacility(id: number, data: { complianceMode?: string }): Promise<Facility>;
   getFacility(id: number): Promise<Facility | undefined>;
   getFacilityByCode(code: string): Promise<Facility | undefined>;
   getAllFacilities(): Promise<Facility[]>;
@@ -1045,6 +1047,14 @@ export class DatabaseStorage implements IStorage {
 
   async createFacility(data: InsertFacility): Promise<Facility> {
     const [facility] = await db.insert(facilities).values(data).returning();
+    return facility;
+  }
+
+  async updateFacility(id: number, data: { complianceMode?: string }): Promise<Facility> {
+    const [facility] = await db.update(facilities)
+      .set({ ...(data.complianceMode !== undefined ? { complianceMode: data.complianceMode } : {}) })
+      .where(eq(facilities.id, id))
+      .returning();
     return facility;
   }
 

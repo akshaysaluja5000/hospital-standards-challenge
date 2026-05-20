@@ -1,7 +1,7 @@
 import { Switch, Route, useLocation, Redirect } from "wouter";
 import { useEffect, Component, type ReactNode } from "react";
 import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth";
@@ -170,6 +170,51 @@ function EducatorRoute({ component: Component }: { component: () => JSX.Element 
   return <AppShell><Component /></AppShell>;
 }
 
+function ComplianceModeRoute({ component: Component, minRole = "director" }: { component: () => JSX.Element; minRole?: string }) {
+  const { user, isLoading } = useAuth();
+  const { data: facilitySettings, isLoading: settingsLoading } = useQuery<{ complianceMode: string }>({
+    queryKey: ["/api/facility/settings"],
+    enabled: !!user,
+  });
+
+  if (isLoading || settingsLoading) {
+    return (
+      <AppShell>
+        <div className="flex flex-col items-center justify-center py-32 gap-4">
+          <Loader2 size={32} className="animate-spin text-primary" />
+          <p className="text-muted-foreground font-medium">Loading...</p>
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (!user) return <Redirect to="/auth" />;
+
+  const effective = getEffectiveRole(user);
+  if ((LEADERSHIP_RANK[effective] ?? 0) < (LEADERSHIP_RANK[minRole] ?? 0)) {
+    return (
+      <AppShell>
+        <div className="min-h-screen flex items-center justify-center p-6">
+          <div className="max-w-sm text-center flex flex-col items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-destructive/15 flex items-center justify-center">
+              <AlertCircle size={28} className="text-destructive" />
+            </div>
+            <h2 className="text-xl font-bold">Access Restricted</h2>
+            <p className="text-sm text-muted-foreground">This page requires a leadership role.</p>
+            <Button variant="outline" onClick={() => window.history.back()}>Go Back</Button>
+          </div>
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (facilitySettings?.complianceMode !== "full_platform") {
+    return <Redirect to="/leadership" />;
+  }
+
+  return <AppShell><Component /></AppShell>;
+}
+
 function AuthRoute() {
   const { user, isLoading } = useAuth();
 
@@ -214,12 +259,12 @@ function HomeRoute() {
     }
     try { sessionStorage.removeItem("mosh_force_role_select"); } catch {}
 
-    // Role-based landing: CEO (rank 3 only) → Executive Brief · Director → Survey Readiness · Others → Dashboard
+    // Role-based landing: CEO/Director → Leadership Hub (which routes further based on compliance mode)
     // admin/super_admin (rank 4-5) land on the training dashboard — they use the hub manually
     const effective = getEffectiveRole(user);
     const rank = LEADERSHIP_RANK[effective] ?? 0;
-    if (rank === LEADERSHIP_RANK["ceo"]) return <Redirect to="/executive-brief" />;
-    if (rank === LEADERSHIP_RANK["director"]) return <Redirect to="/survey-readiness" />;
+    if (rank === LEADERSHIP_RANK["ceo"]) return <Redirect to="/leadership" />;
+    if (rank === LEADERSHIP_RANK["director"]) return <Redirect to="/leadership" />;
 
     return <AppShell><DashboardPage /></AppShell>;
   }
@@ -345,25 +390,25 @@ function Router() {
         {() => <LeadershipRoute component={ExecutiveComplianceConsolePage} minRole="ceo" />}
       </Route>
       <Route path="/staff-learning">
-        {() => <LeadershipRoute component={StaffLearningPage} minRole="director" />}
+        {() => <ComplianceModeRoute component={StaffLearningPage} minRole="director" />}
       </Route>
       <Route path="/regulatory-watch">
-        {() => <LeadershipRoute component={RegulatoryWatchPage} minRole="director" />}
+        {() => <ComplianceModeRoute component={RegulatoryWatchPage} minRole="director" />}
       </Route>
       <Route path="/executive-brief">
-        {() => <LeadershipRoute component={ExecutiveBriefPage} minRole="ceo" />}
+        {() => <ComplianceModeRoute component={ExecutiveBriefPage} minRole="ceo" />}
       </Route>
       <Route path="/my-log-entries">
         {() => <ProtectedRoute component={MyLogEntriesPage} />}
       </Route>
       <Route path="/compliance-tasks">
-        {() => <LeadershipRoute component={ComplianceTasksPage} minRole="director" />}
+        {() => <ComplianceModeRoute component={ComplianceTasksPage} minRole="director" />}
       </Route>
       <Route path="/content-intelligence">
-        {() => <LeadershipRoute component={ContentIntelligencePage} minRole="director" />}
+        {() => <ComplianceModeRoute component={ContentIntelligencePage} minRole="director" />}
       </Route>
       <Route path="/survey-readiness">
-        {() => <LeadershipRoute component={SurveyReadinessPage} minRole="director" />}
+        {() => <ComplianceModeRoute component={SurveyReadinessPage} minRole="director" />}
       </Route>
       <Route component={NotFound} />
     </Switch>

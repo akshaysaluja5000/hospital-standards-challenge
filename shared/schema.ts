@@ -3,10 +3,14 @@ import { pgTable, text, varchar, integer, boolean, timestamp, date, serial, json
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+export const COMPLIANCE_MODES = ["off", "education_only", "full_platform"] as const;
+export type ComplianceMode = (typeof COMPLIANCE_MODES)[number];
+
 export const facilities = pgTable("facilities", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   code: text("code").notNull().unique(),
+  complianceMode: text("compliance_mode").notNull().default("education_only"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
