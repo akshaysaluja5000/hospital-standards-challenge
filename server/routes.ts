@@ -3256,9 +3256,10 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
     try {
       const user = req.user as any;
       const facilityId: number = user.facilityId ?? 0;
+      const orgType: string = (user.organizationType as string) || "asc";
 
       const [items, logs, docs] = await Promise.all([
-        storage.getComplianceItems("asc"),
+        storage.getComplianceItems(orgType),
         storage.getComplianceLogs(facilityId),
         storage.getComplianceDocuments(facilityId),
       ]);
@@ -3377,7 +3378,8 @@ Return ONLY valid JSON in this exact structure, no markdown, no commentary:
       if (!itemId || typeof itemId !== "number") return res.status(400).json({ error: "itemId required" });
       const facilityId: number = user.facilityId ?? 0;
 
-      const items = await storage.getComplianceItems("asc");
+      const orgType: string = (user.organizationType as string) || "asc";
+      const items = await storage.getComplianceItems(orgType);
       const item = items.find(i => i.id === itemId);
       if (!item) return res.status(404).json({ error: "Compliance item not found" });
 

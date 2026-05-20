@@ -228,6 +228,7 @@ export async function ensureTablesExist() {
       CREATE TABLE IF NOT EXISTS compliance_items (
         id SERIAL PRIMARY KEY,
         module TEXT NOT NULL DEFAULT 'asc',
+        module_scope TEXT NOT NULL DEFAULT 'ASC',
         volume TEXT NOT NULL,
         standard_code TEXT NOT NULL,
         item_name TEXT NOT NULL,
@@ -608,17 +609,33 @@ const LEADERSHIP_CODES_BY_FACILITY: Record<string, string[]> = {
 };
 
 async function seedComplianceItems(client: pg.PoolClient) {
-  const { ASC_COMPLIANCE_ITEMS } = await import("./compliance-seed-data.js");
-  const { rows } = await client.query("SELECT COUNT(*) FROM compliance_items WHERE module = 'asc'");
-  if (parseInt(rows[0].count) === 0) {
+  // Ensure module_scope column exists on pre-migration DBs
+  await client.query(`ALTER TABLE compliance_items ADD COLUMN IF NOT EXISTS module_scope TEXT NOT NULL DEFAULT 'ASC'`);
+
+  const { ASC_COMPLIANCE_ITEMS, HOSPITAL_COMPLIANCE_ITEMS } = await import("./compliance-seed-data.js");
+
+  const { rows: ascRows } = await client.query("SELECT COUNT(*) FROM compliance_items WHERE module_scope = 'ASC'");
+  if (parseInt(ascRows[0].count) === 0) {
     for (const item of ASC_COMPLIANCE_ITEMS) {
       await client.query(
-        `INSERT INTO compliance_items (module, volume, standard_code, item_name, frequency, tier, category, surveyor_priority, agent_watch)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-        ["asc", item.volume, item.standardCode, item.itemName, item.frequency, item.tier, item.category, item.surveyorPriority, true]
+        `INSERT INTO compliance_items (module, module_scope, volume, standard_code, item_name, frequency, tier, category, surveyor_priority, agent_watch)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        ["asc", "ASC", item.volume, item.standardCode, item.itemName, item.frequency, item.tier, item.category, item.surveyorPriority, true]
       );
     }
     console.log(`Seeded ${ASC_COMPLIANCE_ITEMS.length} ASC compliance items`);
+  }
+
+  const { rows: hospRows } = await client.query("SELECT COUNT(*) FROM compliance_items WHERE module_scope = 'Hospital'");
+  if (parseInt(hospRows[0].count) === 0) {
+    for (const item of HOSPITAL_COMPLIANCE_ITEMS) {
+      await client.query(
+        `INSERT INTO compliance_items (module, module_scope, volume, standard_code, item_name, frequency, tier, category, surveyor_priority, agent_watch)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+        ["hospital", "Hospital", item.volume, item.standardCode, item.itemName, item.frequency, item.tier, item.category, item.surveyorPriority, true]
+      );
+    }
+    console.log(`Seeded ${HOSPITAL_COMPLIANCE_ITEMS.length} Hospital compliance items`);
   }
 }
 
@@ -772,7 +789,7 @@ export interface IStorage {
   getLeadershipCodes(): Promise<{ id: number; code: string; facilityId: number | null; facilityName: string | null; createdAt: Date }[]>;
 
   // Compliance
-  getComplianceItems(module?: string): Promise<ComplianceItem[]>;
+  getComplianceItems(organizationType?: string): Promise<ComplianceItem[]>;
   getComplianceLogs(facilityId: number): Promise<ComplianceLog[]>;
   createComplianceLog(data: { facilityId: number; itemId: number; completedBy: string; notes?: string; nextDue?: string }): Promise<ComplianceLog>;
   getComplianceDocuments(facilityId: number): Promise<ComplianceDocument[]>;
@@ -1432,9 +1449,11 @@ export class DatabaseStorage implements IStorage {
 
   // ── Compliance ───────────────────────────────────────────────────────────────
 
-  async getComplianceItems(module = "asc"): Promise<ComplianceItem[]> {
+  async getComplianceItems(organizationType = "asc"): Promise<ComplianceItem[]> {
+    // Hospital users see Hospital + Both; ASC users see ASC + Both
+    const scopes = organizationType === "hospital" ? ["Hospital", "Both"] : ["ASC", "Both"];
     return db.select().from(complianceItems)
-      .where(eq(complianceItems.module, module))
+      .where(inArray(complianceItems.moduleScope, scopes))
       .orderBy(complianceItems.volume, complianceItems.surveyorPriority);
   }
 

@@ -487,6 +487,7 @@ export type LeadershipRoleCode = typeof leadershipRoleCodes.$inferSelect;
 export const complianceItems = pgTable("compliance_items", {
   id: serial("id").primaryKey(),
   module: text("module").notNull().default("asc"),
+  moduleScope: text("module_scope").notNull().default("ASC"),
   volume: text("volume").notNull(),
   standardCode: text("standard_code").notNull(),
   itemName: text("item_name").notNull(),
